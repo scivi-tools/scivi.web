@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from onto import Onto
@@ -9,12 +9,25 @@ import math
 def duplicate_id(onto1, onto2, node, prototypes):
     dupli = onto1.get_nodes_by_name(node["name"])
     if len(dupli) == 1:
+        isaNodes = onto1.get_nodes_linked_from(dupli[0], "is_a")
+        for isaNode in isaNodes:
+            if isaNode in prototypes:
+                return None
         isaNodes = onto2.get_nodes_linked_from(node, "is_a")
         for isaNode in isaNodes:
             if isaNode in prototypes:
                 return None
         return dupli[0]["id"]
     return None
+
+def merge_attrs(node1, node2):
+    attrs1 = node1["attributes"]
+    attrs2 = node2["attributes"]
+    for attr in attrs2:
+        if (attr in attrs1) and (attrs1[attr] != attrs2[attr]):
+            print("Warning: conflicting attribute <%s> of node %s, value <%s> from first onto used" % (attr, node1["name"], attrs1[attr]))
+        else:
+            attrs1[attr] = attrs2[attr]
 
 ########### MAIN ###########
 
@@ -33,7 +46,10 @@ for link in onto2.links():
     link["source_node_id"] = str(int(link["source_node_id"]) + lastID)
     link["destination_node_id"] = str(int(link["destination_node_id"]) + lastID)
 
-prototypes = onto2.get_nodes_by_name("Input")
+prototypes = onto1.get_nodes_by_name("Input")
+prototypes.extend(onto1.get_nodes_by_name("Output"))
+prototypes.extend(onto1.get_nodes_by_name("Setting"))
+prototypes.extend(onto2.get_nodes_by_name("Input"))
 prototypes.extend(onto2.get_nodes_by_name("Output"))
 prototypes.extend(onto2.get_nodes_by_name("Setting"))
 
@@ -43,6 +59,7 @@ for node in onto2.nodes():
         onto1.nodes().append(node)
     else:
         node["merged_id"] = dID
+        merge_attrs(onto1.get_node_by_id(dID), node)
 for link in onto2.links():
     srcNode = onto2.get_node_by_id(link["source_node_id"])
     dstNode = onto2.get_node_by_id(link["destination_node_id"])
