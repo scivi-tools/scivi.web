@@ -1,0 +1,299 @@
+/***************************/
+/*        Body stuff       */
+/***************************/
+html
+{
+    height: 100%;
+    margin: 0px;
+    overflow: hidden;
+}
+
+body
+{
+    height: 100%;
+    margin: 0px;
+    /*overflow: auto;*/
+}
+
+ul
+{
+    margin: 0px;
+}
+
+/***************************/
+/*      TreeView stuff     */
+/***************************/
+[data-ui-css-component="treeview"]
+{
+    font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+    margin: 10px;
+}
+
+[data-ui-css-component="treeview"] [type=checkbox]
+{
+    display: none;
+}
+
+[data-ui-css-component="treeview"] ul
+{
+    padding: 0 0 0 40px;
+    display: none;
+    list-style: none;
+}
+
+[data-ui-css-component="treeview"] ul:first-child
+{
+    padding-left: 0;
+}
+
+[data-ui-css-component="treeview"] li
+{
+    padding: 0;
+}
+
+[data-ui-css-component="treeview"] li span
+{
+    margin: 2px 0;
+    display: list-item;
+    list-style: square;
+    cursor: pointer;
+}
+
+[data-ui-css-component="treeview"] label
+{
+    display: inline-block;
+    transition: 0.2s;
+    padding-right: 10px;
+    margin: 5px 0;
+    height: 20px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+[data-ui-css-component="treeview"] label::before
+{
+    display: inline-block;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+[data-ui-css-component="treeview"] ul:first-child, [data-ui-css-component="treeview"] [type=checkbox]:checked ~ ul
+{
+    display: block;
+}
+
+[data-ui-css-component="treeview"] [type=checkbox]:checked ~ label::before
+{
+    content: "▾";
+}
+
+[data-ui-css-component="treeview"] [type=checkbox]:not(:checked) ~ label::before
+{
+    content: "▸";
+}
+
+/***************************/
+/*       Split stuff       */
+/***************************/
+.split 
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.content 
+{
+    border: 1px solid #C0C0C0;
+    box-shadow: inset 0 1px 2px #e4e4e4;
+    background-color: #fff;
+}
+
+.gutter 
+{
+    background-repeat: no-repeat;
+    border: 1px solid #C0C0C0;
+    margin: -1px;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal 
+{
+    cursor: col-resize;
+    background-image: url('images/vertical.png');
+}
+
+.gutter.gutter-vertical 
+{
+    cursor: row-resize;
+    background-image: url('images/horizontal.png');
+}
+
+.split.split-horizontal, .gutter.gutter-horizontal 
+{
+    height: 100%;
+    float: left;
+}
+
+/***************************/
+/*    Node editor stuff    */
+/***************************/
+.node-editor .node 
+{
+    background: rgba(222, 221, 234, 0.8);
+}
+
+.node-editor .node .title, .node-editor .node .input-title, .node-editor .node .output-title
+{
+    color: #000;
+}
+
+.node-editor .node:hover
+{
+    background: rgba(169, 185, 255, 0.8);
+}
+
+.node-editor .node.selected
+{
+    background: rgba(161, 178, 255, 1.0); 
+    border-color: #0000ff;
+    box-shadow: 0 0 10px rgba(82, 224, 255, 1.0);
+}
+
+/***************************/
+/*           UI            */
+/***************************/
+.ui-widget
+{
+    font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+.scivi_pane
+{
+    font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+    height: calc(100% - 12px);
+    padding: 5px;
+}
+
+#scivi_toolbar
+{
+    border: 1px solid #C0C0C0;
+    width: auto;
+    float: left;
+}
+
+#scivi_settings
+{
+    width: auto;
+}
+
+#scivi_settings_header
+{
+    text-align: center;
+}
+
+#scivi_btn_rmnode
+{
+    text-decoration: none;
+}
+
+#scivi_preview
+{
+    padding-left: 1px;
+}
+
+input[type="file"]
+{
+    display: none;
+}
+
+.scivi_menu_button
+{
+    background-color: #b8b8b9;
+    height: 30px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 15px;
+    border: none;
+    color: #333745;
+    text-transform: uppercase;
+    transition: all .2s;
+    cursor: pointer;
+}
+.scivi_menu_button:hover
+{
+    transform: scale(1.06);
+    background-color: #B8B8E0;
+}
+.scivi_menu_button:focus
+{
+    outline: 0;
+}
+
+#scivi_btn_visualize
+{
+    padding-left: 15px;
+    padding-right: 10px;
+}
+
+.scivi_menu
+{
+    position: absolute;
+    margin-top: 20px;
+    margin-left: calc(100vw - 120px);
+    z-index: 1;
+    transition: all 1s;
+}
+
+.scivi_slide_wrapper
+{
+    display: block;
+    background: #FFF;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.scivi_slide
+{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 1;
+    z-index: 0;
+    display: flex;
+    border-right-style: solid;
+    border-width: 1px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    -webkit-transition: -webkit-transform 1s;
+    transition: -webkit-transform 1s, transform 1s;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.scivi_slide_1
+{
+    /*background: #F5F6F7;*/
+    left: 0;
+}
+.scivi_slide_2
+{
+    left: 100%;
+}

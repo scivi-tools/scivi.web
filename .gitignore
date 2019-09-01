@@ -1,0 +1,4 @@
+*.pyc
+node_modules
+client/lib
+kb/result.ont
