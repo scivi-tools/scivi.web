@@ -124,7 +124,7 @@ class SciViServer:
     def resolve_containers(self, code, inputs, outputs):
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
-        code = "if (!node.data.settings) { node.data.settings = {}; node.data.settingsVal = {}; node.data.settingsChanged = {}; } " + code
+        code = "if (!node.data.settings) { node.data.settings = {}; node.data.settingsVal = {}; node.data.settingsChanged = {}; } var ADD_VISUAL = function (con) { editor.viewportContainer().appendChild(con); }; " + code
         for i, inp in enumerate(ins):
             code = code.replace("HAS_INPUT[\"" + inp["name"] + "\"]", "(inputs[" + str(i) + "].length > 0)")
             code = code.replace("INPUT[\"" + inp["name"] + "\"]", "inputs[" + str(i) + "][0]")

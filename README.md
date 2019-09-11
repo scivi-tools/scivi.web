@@ -76,6 +76,8 @@ For the plugin code, following macros are supported:
 
 * `IN_VISUALIZATION` -- read-only flag determining if user hit "Visualize" button. The idea is, that there are two types of DFD processing. First is a lightweight one that appears each time user changes something: connects/disconnects nodes, changes settings, etc. In this case `IN_VISUALIZATION` will give you `false`. In this processing nodes normally do nothing, or do some tiny work to update their settings according to the current DFD state. Second processing type is a havy one, when user hits "Visualize" button and nodes should actually prepare the data for visualization (or the visualization itself). In this case `IN_VISUALIZATION` will give you `true`.
 
+* `ADD_VISUAL` -- append visual object to visualization page. Do it like this: `ADD_VISUAL(yourVisualizationContainer)`.
+
 ## Writing widgets ##
 
 Widgets are almost like plugins, but they are used for interactive change of nodes' parameters, and not directly for data processing or visualization. Widgets are associated with data types allowing the user to input or modify corresponding data. They have the following ontological description: Widget <-is_a- YourWidget -use_for-> YourType -is_a-> Type. "Widget" and "Type" are conventional top-level SciVi ontology concepts. "YourWidget" should also have attribute `inline` or `path` and may have dependencies, just like plugin.

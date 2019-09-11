@@ -207,6 +207,12 @@ ul
     padding-left: 1px;
 }
 
+#scivi_viewport
+{
+    padding-left: 1px;
+    width: 100%;
+}
+
 input[type="file"]
 {
     display: none;
