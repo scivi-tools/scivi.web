@@ -49,7 +49,7 @@ class SciViHTTPServerRequestHandler(BaseHTTPRequestHandler):
         if path == "/":
             path = "/index.html"
         if path == "/index.html":
-            srv = SciViServer(Onto("kb/result.ont"), None)
+            srv = SciViServer(Onto("kb/csv/csv.merged.ont"), None)
             self.req("editor.html")
         elif path == "/scivi-editor-main.js":
             msg = srv.get_editor_js()
@@ -84,11 +84,11 @@ class SciViHTTPServerRequestHandler(BaseHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             self.wfile.write(bytes("HW", "utf8"))
-        elif path == "/demo.html":
-            srv = SciViServer(Onto("kb/cgraph_iot/result.ont"), None)
+        elif path == "/glove":
+            srv = SciViServer(Onto("kb/glove/glove.merged.ont"), None)
             self.req("editor.html")
-        elif path == "/for_images.html":
-            srv = SciViServer(Onto("kb/cgraph_iot/for_images/result.ont"), None)
+        elif path == "/csv":
+            srv = SciViServer(Onto("kb/csv/csv.merged.ont"), None)
             self.req("editor.html")
         else:
             try:
