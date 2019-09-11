@@ -1,0 +1,215 @@
+html
+{
+    height: 100%;
+    margin: 0px;
+    overflow: hidden;
+}
+
+body
+{
+    height: 100%;
+    margin: 0px;
+    overflow: auto;
+}
+
+canvas
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+ul
+{
+    margin: 0px;
+}
+
+#scivi_cgraph_view
+{
+    height: 100%;
+    overflow: hidden;
+}
+
+#scivi_cgraph_title
+{
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#scivi_cgraph_info, #scivi_cgraph_ginfo, #scivi_cgraph_list
+{
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+    padding: 10px 10px 10px 20px;
+}
+
+#scivi_cgraph_settings, #scivi_cgraph_filters
+{
+    padding: 10px;
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+#scivi_cgraph_stats
+{
+    padding: 10px;
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+#scivi_cgraph_stateline
+{
+    padding: 10px 20px 0px 20px;
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+    color: #333333;
+    /*height: calc(100% - 12px);*/
+    border: 1px solid #C0C0C0;
+}
+
+.split 
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.content 
+{
+    border: 1px solid #C0C0C0;
+    box-shadow: inset 0 1px 2px #e4e4e4;
+    background-color: #fff;
+}
+
+.gutter 
+{
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal 
+{
+    cursor: col-resize;
+    background-image: url('images/vertical.png');
+}
+
+.gutter.gutter-vertical
+{
+    cursor: row-resize;
+    background-image: url('images/horizontal.png');
+}
+
+.split.split-horizontal, .gutter.gutter-horizontal 
+{
+    height: 100%;
+    float: left;
+}
+
+.split.split-vertical, .gutter.gutter-vertical 
+{
+    width: 100%;
+    float: left;
+}
+
+.scivi_graph_tooltip
+{
+    position: absolute;
+    background: #fefeff;
+    opacity: 0.9;
+    border-radius: 5px;
+    border: 1px solid #333333;
+    padding: 3px;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+.scivi_stateline label 
+{
+    position: absolute;
+    width: 30px;
+    margin-left: -15px;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.ui-slider .ui-slider-handle
+{
+    position: absolute;
+    z-index: 2;
+    width: 15px;
+    height: 15px;
+    cursor: default;
+}
+
+.ui-slider-horizontal .ui-slider-handle
+{
+    top: -4px;
+    margin-left: -8.5px;
+}
+
+.scivi_remove
+{
+    background-color: #f00000;
+    color: #fff;
+    border-radius: 10px;
+    margin-left: 5px;
+    display: inline-block;
+    width: 15px;
+    cursor: pointer;
+}
+
+.context-menu-list
+{
+    z-index: 10000 !important;
+}
+
+.context-menu-item
+{
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+.scivi_button
+{
+    background: #F6F6F6;
+    color: #000;
+    cursor: pointer;
+    border: solid 1px #c5c5c5;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.scivi_button:hover
+{
+    background: #ededed;
+}
+
+.scivi_button:active
+{
+    background: #007bff;
+}
+
+.scivi_button.pushed
+{
+    background: #007bff;
+    color: #fff;
+}
+
+.scivi_color_wrapper
+{
+    width: 40px;
+    cursor: pointer;
+    border: solid 1px #000;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    display: inline-block;
+    margin-right: 5px;
+}

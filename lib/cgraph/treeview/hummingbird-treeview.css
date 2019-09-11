@@ -1,0 +1,50 @@
+.hummingbird-treeview,
+.hummingbird-treeview *
+{
+    list-style: none;
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+    line-height: 24px;
+}
+
+.hummingbird-treeview label
+{
+    font-weight: normal;
+}
+
+.hummingbird-treeview input[type=checkbox]
+{
+    padding: 0px;
+    margin: 0px;
+}
+
+.hummingbird-treeview ul:not(.hummingbird-base)
+{
+    display: none;
+}
+
+.hummingbird-treeview .fa
+{
+    font-style: normal;
+    cursor: pointer;
+}
+
+.hummingbird-base
+{
+    white-space: nowrap;
+}
+
+.fa 
+{
+    font-size: 16px;
+    font-style: normal;
+    cursor: pointer;
+    display: inline-block;
+}
+.fa-minus::before
+{
+    content: "▾";
+}
+.fa-plus::before
+{
+    content: "▸";
+}

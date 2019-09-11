@@ -4,8 +4,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from os import curdir, sep, stat
-from multipart import tob
-import multipart as mp
 
 from server.server import SciViServer
 from onto.onto import Onto
@@ -103,37 +101,11 @@ class SciViHTTPServerRequestHandler(BaseHTTPRequestHandler):
             except IOError:
                 self.send_error(404, "File Not Found: %s" % self.path)
 
-    def post_multipart(self):
-        cLen = int(self.headers['content-length'])
-        data = self.rfile.read(cLen).decode('utf8')
-        s = data.split("\r")[0][2:]
-        p = mp.MultipartParser(BytesIO(tob(data)),s)
-        return p.parts()[0].value
-
     def do_GET(self):
         self.req()
 
     def do_POST(self):
-        global srv
-        p = urlparse(self.path)
-        url = p.path
-        if url == "/" or url == "index.html":
-            blob = self.post_multipart()
-            srv = SciViServer(Onto("kb/result.ont"), blob)
-            self.req("editor.html")
-        elif url == "/uploadFile.html":
-            blob = self.post_multipart()
-            params = dict(qc.split("=") for qc in p.query.split("&"))
-            result = srv.execute_serverside(int(params["nodeID"]), int(params["instanceID"]))
-            if result:
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(result.encode())
-            else:
-                self.send_error(404, "No Data")
-        else:
-            self.send_error(404, "File Not Found: %s" % self.path)
+        self.send_error(404, "File Not Found: %s" % self.path)
 
 
 

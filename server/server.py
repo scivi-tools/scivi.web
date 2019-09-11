@@ -94,6 +94,7 @@ class SciViServer:
                 if not (lang in self.dependencies):
                     self.dependencies[lang] = {}
                 self.dependencies[lang][d["id"]] = self.get_code(d)
+                self.add_dependencies(d)
 
     def execute(self, node):
         if "inline" in node["attributes"]:

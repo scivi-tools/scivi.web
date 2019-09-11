@@ -82,7 +82,6 @@ SciViEditor.prototype.run = function ()
     });
 
     $("#scivi_btn_visualize").click(function () {
-        console.log("viz");
         if (viewPortVisible) {
             $(".scivi_slide").css({"transform": "translateX(0%)"});
             $("#scivi_btn_visualize").html("Visualize ▶");
@@ -95,6 +94,8 @@ SciViEditor.prototype.run = function ()
             $(".scivi_menu").css({"margin-left": "20px"});
         }
         viewPortVisible = !viewPortVisible;
+        _this.inVisualization = viewPortVisible;
+        _this.process();
     });
 
     this.editor = editor;
