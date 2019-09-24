@@ -250,6 +250,24 @@ input[type="file"]
     padding-right: 10px;
 }
 
+#scivi_btn_save
+{
+    padding-left: 10px;
+    padding-right: 15px;
+}
+
+#scivi_btn_load
+{
+    padding-left: 10px;
+    padding-right: 15px;
+}
+
+.scivi_filemenu
+{
+    text-align: center;
+    margin-top: 20px;
+}
+
 .scivi_menu
 {
     position: absolute;

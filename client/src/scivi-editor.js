@@ -28,6 +28,7 @@ SciViEditor.prototype.run = function ()
     var engine = new D3NE.Engine("SciViNodeEditor@0.1.0", components);
     var selectedNode = null;
     var viewPortVisible = false;
+    var processingAllowed = true;
 
     Split(["#scivi_editor_left", "#scivi_editor_right"], {
         gutterSize: 8,
@@ -71,8 +72,10 @@ SciViEditor.prototype.run = function ()
     });
 
     editor.eventListener.on("nodecreate noderemove connectioncreate connectionremove", async function () {
-        await engine.abort();
-        await engine.process(editor.toJSON());
+        if (processingAllowed) {
+            await engine.abort();
+            await engine.process(editor.toJSON());
+        }
     });
 
     $("#scivi_btn_rmnode").click(function () {
@@ -96,6 +99,33 @@ SciViEditor.prototype.run = function ()
         viewPortVisible = !viewPortVisible;
         _this.inVisualization = viewPortVisible;
         _this.process();
+    });
+
+    $("#scivi_btn_save").click(function() {
+        var filename = "dataflow.json";
+        var content = JSON.stringify(editor.toJSON());
+        var element = document.createElement("a");
+        element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(content));
+        element.setAttribute("download", filename);
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    });
+
+    $("#scivi_btn_load").click(function() {
+        processingAllowed = false;
+        var element = document.createElement("input");
+        element.setAttribute("type", "file");
+        element.addEventListener("change", function () {
+            var reader = new FileReader();
+            reader.onload = async function (e) {
+                await editor.fromJSON(JSON.parse(e.target.result));
+                processingAllowed = true;
+            };
+            reader.readAsText(element.files[0]);
+        }, false);
+        element.click();
     });
 
     this.editor = editor;
@@ -144,6 +174,10 @@ SciViEditor.prototype.createNode = function (name)
 SciViEditor.prototype.selectNode = function (node)
 {
     if (node) {
+        if (!node.syncSettings) {
+            var nodeProto = this.components[node.title];
+            node.syncSettings = nodeProto.syncSettings;
+        }
         $("#scivi_settings_title").html(node.title);
         $("#scivi_settings_title").show();
         $("#scivi_btn_rmnode").show();
