@@ -85,7 +85,10 @@ SciViEditor.prototype.run = function ()
     });
 
     $("#scivi_btn_visualize").click(function () {
-        if (viewPortVisible) {
+        viewPortVisible = !viewPortVisible;
+        _this.inVisualization = viewPortVisible;
+        _this.process();
+        if (!viewPortVisible) {
             $(".scivi_slide").css({"transform": "translateX(0%)"});
             $("#scivi_btn_visualize").html("Visualize ▶");
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
@@ -96,9 +99,6 @@ SciViEditor.prototype.run = function ()
             $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "20px"});
         }
-        viewPortVisible = !viewPortVisible;
-        _this.inVisualization = viewPortVisible;
-        _this.process();
     });
 
     $("#scivi_btn_save").click(function() {
