@@ -103,7 +103,9 @@ SciViEditor.prototype.run = function ()
 
     $("#scivi_btn_save").click(function() {
         var filename = "dataflow.json";
-        var content = JSON.stringify(editor.toJSON());
+        var content = JSON.stringify(editor.toJSON(), function(key, value) {
+            return key === "cache" ? undefined : value;
+        });
         var element = document.createElement("a");
         element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(content));
         element.setAttribute("download", filename);

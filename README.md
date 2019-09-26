@@ -70,7 +70,9 @@ For the plugin code, following macros are supported:
 
 * `SETTINGS_CHANGED` -- dict of boolean flags, notifying that the user changed the value of corresponding setting (and probably your node should recalculate its state). It's up to you to set `false` here, when the changes are accepted.
 
-* `DATA` -- dict for arbitrary data of your node. You can use it in a way you want, it is actually the memory of the node. This memory persists between processing calls.
+* `DATA` -- dict for arbitrary data of your node. You can use it in a way you want, it is actually the memory of the node. This memory persists between processing calls. The content of this dict is serialized by saving the settings.
+
+* `CACHE` -- dict for arbitrary _transient_ data of your node. This is much like `DATA`, it persists between processing calls, but is _not_ serialized by saving. Use it for huge objects, that are (or can be) recalculated during processing and do not require saving.
 
 * `PROCESS` -- macro to call processing. Technically it terminates the previous processing (if any) and initiates the new one. Beware of locking up: the code of your plugin is called when the data reach the node that corresponds to your plugin. So, if you call `PROCESS()` in the code without any conditions, processing will start again, again and again, causing the system to lock up. Normally you don't need to call this method at all. But sometimes your plugin may do something asynchronous, for example waiting for WebSocket, parsing something huge, etc. So, you may want to place deferred calls (completion callbacks, etc.) in your code. And you will need to notify DFD about the deferred call is done -- here goes `PROCESS()`.
 

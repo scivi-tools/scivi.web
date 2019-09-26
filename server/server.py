@@ -125,6 +125,7 @@ class SciViServer:
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
         code = "if (!node.data.settings) { " +\
+               "node.data.cache = {}; " +\
                "node.data.settings = {}; " +\
                "node.data.settingsVal = {}; " +\
                "node.data.settingsChanged = {}; " +\
@@ -139,11 +140,12 @@ class SciViServer:
         for i, outp in enumerate(outs):
             code = code.replace("OUTPUT[\"" + outp["name"] + "\"]", "outputs[" + str(i) + "]")
         code = code.replace("DATA", "node.data")
-        code = code.replace("PROCESS", "editor.process");
-        code = code.replace("IN_VISUALIZATION", "editor.inVisualization");
-        code = code.replace("SETTINGS_VAL", "node.data.settingsVal");
-        code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged");
-        code = code.replace("SETTINGS", "node.data.settings");
+        code = code.replace("CACHE", "node.data.cache")
+        code = code.replace("PROCESS", "editor.process")
+        code = code.replace("IN_VISUALIZATION", "editor.inVisualization")
+        code = code.replace("SETTINGS_VAL", "node.data.settingsVal")
+        code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged")
+        code = code.replace("SETTINGS", "node.data.settings")
         return code
 
     def gen_worker(self, workers, inputs, outputs):
@@ -168,9 +170,9 @@ class SciViServer:
                         break
                 if widget:
                     code = self.get_code(widget)
-                    code = code.replace("SETTINGS_VAL", "node.data.settingsVal");
-                    code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged");
-                    code = code.replace("SETTINGS", "node.data.settings");
+                    code = code.replace("SETTINGS_VAL", "node.data.settingsVal")
+                    code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged")
+                    code = code.replace("SETTINGS", "node.data.settings")
                     code = code.replace("SETTING_ID", s["id"])
                     code = code.replace("SETTING_NAME", s["name"])
                     code = code.replace("NODE_ID", "node.id")
