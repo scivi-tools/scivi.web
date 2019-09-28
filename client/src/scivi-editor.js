@@ -102,7 +102,11 @@ SciViEditor.prototype.run = function ()
     });
 
     $("#scivi_btn_save").click(function() {
-        var filename = "dataflow.json";
+        var filename = prompt("Enter name of file to save", "dataflow.json");
+        if (!filename)
+            return;
+        if (!filename.includes("."))
+            filename += ".json";
         var content = JSON.stringify(editor.toJSON(), function(key, value) {
             return key === "cache" ? undefined : value;
         });
