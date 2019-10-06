@@ -124,8 +124,9 @@ class SciViServer:
     def resolve_containers(self, code, inputs, outputs):
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
-        code = "if (!node.data.settings) { " +\
+        code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
+               "if (!node.data.settings) { " +\
                "node.data.settings = {}; " +\
                "node.data.settingsVal = {}; " +\
                "node.data.settingsChanged = {}; " +\

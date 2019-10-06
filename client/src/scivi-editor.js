@@ -22,9 +22,9 @@ require("jquery-ui/ui/widgets/resizable");
 require("jquery-ui/ui/widgets/dialog");
 require("jquery-ui/ui/widgets/slider");
 require("jquery-ui/ui/widgets/tabs");
+require("jquery-contextmenu");
 var Split = require("split.js");
 var D3NE = require("d3-node-editor");
-var JQ = window.$;
 
 module.exports = SciViEditor;
 
@@ -38,9 +38,6 @@ function SciViEditor()
 
 SciViEditor.prototype.run = function ()
 {
-    window.jQuery = JQ;
-    window.$ = JQ;
-
     var _this = this;
     var container = $("#scivi_node_editor")[0];
     var components = $.map(this.components, function(value, key) { return value });
@@ -181,6 +178,7 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                 workerFunc(node, inputs, outputs);
                 settingsFunc(node);
             } catch(err) {
+                console.log(err);
                 $("#scivi_error_text").html(err);
                 var dlg = $("#scivi_error").dialog({
                     modal: true,
