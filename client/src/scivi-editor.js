@@ -1,13 +1,30 @@
 
 window.$ = require("jquery");
 window.jQuery = $;
-require("jquery-ui/ui/core");
+require("jquery-ui/ui/version");
+require("jquery-ui/ui/ie");
+require("jquery-ui/ui/data");
+require("jquery-ui/ui/plugin");
+require("jquery-ui/ui/focusable");
+require("jquery-ui/ui/keycode");
+require("jquery-ui/ui/position");
+require("jquery-ui/ui/safe-active-element");
+require("jquery-ui/ui/safe-blur");
+require("jquery-ui/ui/scroll-parent");
+require("jquery-ui/ui/disable-selection");
+require("jquery-ui/ui/tabbable");
+require("jquery-ui/ui/unique-id");
 require("jquery-ui/ui/widget");
-require("jquery-ui/ui/mouse");
-require("jquery-ui/ui/slider");
-require("jquery-ui/ui/tabs");
+require("jquery-ui/ui/widgets/button");
+require("jquery-ui/ui/widgets/mouse");
+require("jquery-ui/ui/widgets/draggable");
+require("jquery-ui/ui/widgets/resizable");
+require("jquery-ui/ui/widgets/dialog");
+require("jquery-ui/ui/widgets/slider");
+require("jquery-ui/ui/widgets/tabs");
 var Split = require("split.js");
 var D3NE = require("d3-node-editor");
+var JQ = window.$;
 
 module.exports = SciViEditor;
 
@@ -21,6 +38,9 @@ function SciViEditor()
 
 SciViEditor.prototype.run = function ()
 {
+    window.jQuery = JQ;
+    window.$ = JQ;
+
     var _this = this;
     var container = $("#scivi_node_editor")[0];
     var components = $.map(this.components, function(value, key) { return value });
@@ -157,8 +177,20 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
             return node;
         },
         worker(node, inputs, outputs) {
-            workerFunc(node, inputs, outputs);
-            settingsFunc(node);
+            try {
+                workerFunc(node, inputs, outputs);
+                settingsFunc(node);
+            } catch(err) {
+                $("#scivi_error_text").html(err);
+                $("#scivi_error").dialog({
+                    modal: true,
+                    buttons: {
+                        Ok: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
         }
     });
     node.syncSettings = settingsFunc;
