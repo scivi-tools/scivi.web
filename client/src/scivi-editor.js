@@ -182,7 +182,7 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                 settingsFunc(node);
             } catch(err) {
                 $("#scivi_error_text").html(err);
-                $("#scivi_error").dialog({
+                var dlg = $("#scivi_error").dialog({
                     modal: true,
                     buttons: {
                         Ok: function() {
@@ -190,6 +190,11 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                         }
                     }
                 });
+                var dp = dlg.parent();
+                dp.css("background", "#FBDAC9").css("border", "1px solid #3F3F3F");
+                dp.find(".ui-dialog-buttonpane").css("background", "#FBDAC9").css("border-top", "1px solid #3F3F3F");
+                dp.find(".ui-dialog-titlebar").css("background", "#FF4D00").css("color", "#FFFFFF");
+                dp.find(".ui-button").css("border", "1px solid #3F3F3F");
             }
         }
     });
