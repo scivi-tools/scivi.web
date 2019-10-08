@@ -251,7 +251,8 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
 
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
 {
-    var value = $("#" + settingID.toString()).val();
+    var el = $("#" + settingID.toString())
+    var value = el.is(":checkbox") ? el.is(":checked") : el.val();
     var node = this.getNodeByID(nodeID);
     node.data.settingsVal[settingName] = value;
 }
