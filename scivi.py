@@ -16,32 +16,32 @@ srv = None
 def csv_page():
     global srv
     srv = SciViServer(Onto("kb/csv/csv.merged.ont"), None)
-    return send_from_directory("client", "editor.html")
+    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/scivi-editor-main.js")
 def editor_main():
     global srv
-    return srv.get_editor_js()
+    return srv.get_editor_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 @app.route("/scivi-editor-dependencies.js")
 def editor_deps():
     global srv
-    return srv.get_editor_dependencies_js()
+    return srv.get_editor_dependencies_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 @app.route("/css/scivi-editor-dependencies.css")
 def editor_deps_css():
     global srv
-    return srv.get_editor_dependencies_css()
+    return srv.get_editor_dependencies_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/scivi-sockets.css")
 def editor_sockets_css():
     global srv
-    return srv.get_editor_css()
+    return srv.get_editor_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/css/<path:filename>")
 def editor_css(filename):
-    return send_from_directory("client/css", filename)
+    return send_from_directory("client/css", filename), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/lib/<path:filename>")
 def editor_lib(filename):
-    return send_from_directory("client/lib", filename)
+    return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
