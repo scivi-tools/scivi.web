@@ -121,14 +121,23 @@ class SciViServer:
                 code = code.replace("%<" + mask["name"] + ">", res)
         return code
 
-    def resolve_containers(self, code, inputs, outputs):
+    def resolve_containers(self, code, inputs, outputs, settings):
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
+        defs = ""
+        for s in settings:
+            if ("attributes" in s) and ("default" in s["attributes"]):
+                dv = s["attributes"]["default"]
+                if isinstance(dv, str):
+                    dv = "\"" + dv + "\""
+                else:
+                    dv = str(dv).lower()
+                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
         code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
                "if (!node.data.settings) { " +\
                "node.data.settings = {}; " +\
-               "node.data.settingsVal = {}; " +\
+               "node.data.settingsVal = {" + defs + "}; " +\
                "node.data.settingsChanged = {}; " +\
                "} " +\
                "var ADD_VISUAL = function (con) { " +\
@@ -149,13 +158,13 @@ class SciViServer:
         code = code.replace("SETTINGS", "node.data.settings")
         return code
 
-    def gen_worker(self, workers, inputs, outputs):
+    def gen_worker(self, workers, inputs, outputs, settings):
         w = self.onto.first(workers)
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
             code = self.get_code(w)
             self.add_dependencies(w)
-            return "function (node, inputs, outputs) { " + self.resolve_containers(self.process_code(code, masks), inputs, outputs) + " }"
+            return "function (node, inputs, outputs) { " + self.resolve_containers(self.process_code(code, masks), inputs, outputs, settings) + " }"
         return "function (node, inputs, outputs){}"
 
     def gen_settings(self, settings):
@@ -189,8 +198,9 @@ class SciViServer:
         inputs = self.gen_sockets(inputNodes)
         outputNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Output")
         outputs = self.gen_sockets(outputNodes)
-        worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ClientSideWorker"), inputNodes, outputNodes)
-        sett = self.gen_settings(self.onto.get_typed_nodes_linked_from(leaf, "has", "Setting"))
+        settingNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Setting")
+        worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
+        sett = self.gen_settings(settingNodes)
         self.treeNodes = self.treeNodes +\
                          "editor.registerNode('" + leaf["name"] + "', " + inputs + ", " + outputs + ", " + worker + ", " + sett + ");"
         self.treeHandlers = self.treeHandlers +\
