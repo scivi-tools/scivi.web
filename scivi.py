@@ -21,22 +21,34 @@ def csv_page():
 @app.route("/scivi-editor-main.js")
 def editor_main():
     global srv
-    return srv.get_editor_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+    if not srv:
+        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
+    else:
+        return srv.get_editor_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 @app.route("/scivi-editor-dependencies.js")
 def editor_deps():
     global srv
-    return srv.get_editor_dependencies_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+    if not srv:
+        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
+    else:
+        return srv.get_editor_dependencies_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 @app.route("/css/scivi-editor-dependencies.css")
 def editor_deps_css():
     global srv
-    return srv.get_editor_dependencies_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
+    if not srv:
+        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
+    else:
+        return srv.get_editor_dependencies_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/scivi-sockets.css")
 def editor_sockets_css():
     global srv
-    return srv.get_editor_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
+    if not srv:
+        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
+    else:
+        return srv.get_editor_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/css/<path:filename>")
 def editor_css(filename):
