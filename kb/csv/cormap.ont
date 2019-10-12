@@ -113,7 +113,7 @@
                 "path": "lib/csvGetters/csvCMap.js"
             },
             "id": "25",
-            "name": "SMapWorker",
+            "name": "CMapWorker",
             "namespace": "http://knova.ru/user/1570564190858",
             "position_x": -145,
             "position_y": -115
