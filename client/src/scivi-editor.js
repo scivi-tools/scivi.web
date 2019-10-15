@@ -43,9 +43,10 @@ SciViEditor.prototype.run = function ()
     var components = $.map(this.components, function(value, key) { return value });
     var editor = new D3NE.NodeEditor("SciViNodeEditor@0.1.0", container, components);
     var engine = new D3NE.Engine("SciViNodeEditor@0.1.0", components);
-    var selectedNode = null;
     var viewPortVisible = false;
     var processingAllowed = true;
+
+    this.selectedNode = null;
 
     Split(["#scivi_editor_left", "#scivi_editor_right"], {
         gutterSize: 8,
@@ -74,18 +75,18 @@ SciViEditor.prototype.run = function ()
     };
 
     editor.eventListener.on("nodeselect", function (node) {
-        selectedNode = node;
+        _this.selectedNode = node;
         _this.selectNode(node);
     });
 
     editor.eventListener.on("noderemove", function (node) {
-        selectedNode = null;
+        _this.selectedNode = null;
         _this.selectNode(null);
     });
 
     editor.eventListener.on("connectioncreate connectionremove", function () {
-        if (selectedNode)
-            setTimeout(function() { _this.selectNode(selectedNode); }, 1);
+        if (_this.selectedNode)
+            setTimeout(function() { _this.selectNode(_this.selectedNode); }, 1);
     });
 
     editor.eventListener.on("nodecreate noderemove connectioncreate connectionremove", async function () {
@@ -277,4 +278,10 @@ SciViEditor.prototype.uploadFile = function (settingName, settingID, nodeID)
     node.data.settingsVal[settingName + "_meta"] = meta;
     node.data.settingsChanged[settingName] = true;
     this.process();
+}
+
+SciViEditor.prototype.updateWidgets = function (node)
+{
+    if (node.id === this.selectedNode.id)
+        this.selectNode(this.selectedNode);
 }
