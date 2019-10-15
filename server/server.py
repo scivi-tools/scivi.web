@@ -143,7 +143,9 @@ class SciViServer:
                "var ADD_VISUAL = function (con) { " +\
                "while (editor.viewportContainer().firstChild) editor.viewportContainer().removeChild(editor.viewportContainer().firstChild); " +\
                "editor.viewportContainer().appendChild(con); " +\
-               "}; " + code
+               "}; " +\
+               "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
+               code
         for i, inp in enumerate(ins):
             code = code.replace("HAS_INPUT[\"" + inp["name"] + "\"]", "(inputs[" + str(i) + "].length > 0)")
             code = code.replace("INPUT[\"" + inp["name"] + "\"]", "inputs[" + str(i) + "][0]")

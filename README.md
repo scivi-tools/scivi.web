@@ -70,6 +70,8 @@ For the plugin code, following macros are supported:
 
 * `SETTINGS_CHANGED` -- dict of boolean flags, notifying that the user changed the value of corresponding setting (and probably your node should recalculate its state). It's up to you to set `false` here, when the changes are accepted.
 
+* `UPDATE_WIDGETS` -- function to force the settings widgets to update reflecting settings changes.
+
 * `DATA` -- dict for arbitrary data of your node. You can use it in a way you want, it is actually the memory of the node. This memory persists between processing calls. The content of this dict is serialized by saving the settings.
 
 * `CACHE` -- dict for arbitrary _transient_ data of your node. This is much like `DATA`, it persists between processing calls, but is _not_ serialized by saving. Use it for huge objects, that are (or can be) recalculated during processing and do not require saving.
