@@ -282,6 +282,6 @@ SciViEditor.prototype.uploadFile = function (settingName, settingID, nodeID)
 
 SciViEditor.prototype.updateWidgets = function (node)
 {
-    if (node.id === this.selectedNode.id)
+    if (this.selectedNode && node.id === this.selectedNode.id)
         this.selectNode(this.selectedNode);
 }
