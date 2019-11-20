@@ -57,6 +57,8 @@ class SciViServer:
             t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "base_type", "Type"))
             if not t:
                 t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
+            if not t:
+                print("WARNING: Ignoring socket with no type <" + s["name"] + ">")
             if ("attributes" in t) and ("color" in t["attributes"]):
                 self.typeColors[t["name"]] = t["attributes"]["color"]
             else:
@@ -162,12 +164,12 @@ class SciViServer:
 
     def gen_worker(self, workers, inputs, outputs, settings):
         w = self.onto.first(workers)
+        code = ""
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
-            code = self.get_code(w)
+            code = self.process_code(self.get_code(w), masks)
             self.add_dependencies(w)
-            return "function (node, inputs, outputs) { " + self.resolve_containers(self.process_code(code, masks), inputs, outputs, settings) + " }"
-        return "function (node, inputs, outputs){}"
+        return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
 
     def gen_settings(self, settings):
         if len(settings) > 0:

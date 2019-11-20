@@ -18,6 +18,12 @@ def csv_page():
     srv = SciViServer(Onto("kb/csv/csv.merged.ont"), None)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route("/es")
+def es_page():
+    global srv
+    srv = SciViServer(Onto("kb/es/es.merged.ont"), None)
+    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
+
 @app.route("/scivi-editor-main.js")
 def editor_main():
     global srv
@@ -57,3 +63,9 @@ def editor_css(filename):
 @app.route("/lib/<path:filename>")
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 0
+    response.no_cache = True
+    return response
