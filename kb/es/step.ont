@@ -1,5 +1,5 @@
 {
-    "last_id": "28",
+    "last_id": "30",
     "namespaces": {
         "default": "http://knova.ru/user/1574192365918",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -127,6 +127,15 @@
             "namespace": "http://knova.ru/user/1574192365918",
             "position_x": 572,
             "position_y": 345
+        },
+        {
+            "attributes": {
+            },
+            "id": "29",
+            "name": "Root",
+            "namespace": "http://knova.ru/user/1574192365918",
+            "position_x": 0,
+            "position_y": 0
         }
     ],
     "relations": [
@@ -255,6 +264,15 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1574192365918",
             "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "29",
+            "id": "30",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1574192365918",
+            "source_node_id": "2"
         }
     ],
     "visualize_ont_path": ""

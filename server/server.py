@@ -123,22 +123,37 @@ class SciViServer:
                 code = code.replace("%<" + mask["name"] + ">", res)
         return code
 
+    def resolve_domain(self, dom, s):
+        if "," in dom:
+            vals = dom.split(",")
+            result = ""
+            for v in vals:
+                result = result + "\"" + v.strip() + "\","
+            return "[" + result + "]"
+        print("WARNING: malformed domain for <" + s["name"] + ">")
+        return ""
+
     def resolve_containers(self, code, inputs, outputs, settings):
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
         defs = ""
+        doms = ""
         for s in settings:
-            if ("attributes" in s) and ("default" in s["attributes"]):
-                dv = s["attributes"]["default"]
-                if isinstance(dv, str):
-                    dv = "\"" + dv + "\""
-                else:
-                    dv = str(dv).lower()
-                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
+            if "attributes" in s:
+                if "default" in s["attributes"]:
+                    dv = s["attributes"]["default"]
+                    if isinstance(dv, str):
+                        dv = "\"" + dv + "\""
+                    else:
+                        dv = str(dv).lower()
+                    defs = defs + "\"" + s["name"] + "\": " + dv + ", "
+                if "domain" in s["attributes"]:
+                    dm = s["attributes"]["domain"]
+                    doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
         code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
                "if (!node.data.settings) { " +\
-               "node.data.settings = {}; " +\
+               "node.data.settings = {" + doms + "}; " +\
                "node.data.settingsVal = {" + defs + "}; " +\
                "node.data.settingsChanged = {}; " +\
                "} " +\
@@ -222,20 +237,12 @@ class SciViServer:
     def gen_tree(self):
         self.tree = "<ul>"
 
-        rootNode = self.onto.first(self.onto.get_nodes_by_name("DataSource"))
-        if rootNode:
-            leafs = self.onto.get_nodes_linked_to(rootNode, "is_a")
-            self.add_tree_level(Localizer.localize("Data Sources", self.loc), leafs)
+        rootNode = self.onto.first(self.onto.get_nodes_by_name("Root"))
+        categories = self.onto.get_nodes_linked_to(rootNode, "is_a")
+        for category in categories:
+            leafs = self.onto.get_nodes_linked_to(category, "is_a")
+            self.add_tree_level(category["name"], leafs)
 
-        rootNode = self.onto.first(self.onto.get_nodes_by_name("Filter"))
-        if rootNode:
-            leafs = self.onto.get_nodes_linked_to(rootNode, "is_a")
-            self.add_tree_level(Localizer.localize("Filters", self.loc), leafs)
-
-        rootNode = self.onto.first(self.onto.get_nodes_by_name("VisualObject"))
-        if rootNode:
-            leafs = self.onto.get_nodes_linked_to(rootNode, "is_a")
-            self.add_tree_level(Localizer.localize("Visual Objects", self.loc), leafs)
         self.tree = self.tree + "</ul>"
 
     def get_editor_js(self):
