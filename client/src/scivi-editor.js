@@ -26,6 +26,9 @@ require("jquery-contextmenu");
 var Split = require("split.js");
 var D3NE = require("d3-node-editor");
 
+const VISUALIZATION_MODE = 1;
+const IOT_PROGRAMMING_MODE = 2;
+
 module.exports = SciViEditor;
 
 function SciViEditor()
@@ -36,7 +39,7 @@ function SciViEditor()
     SciViEditor.prototype.inVisualization = false;
 }
 
-SciViEditor.prototype.run = function ()
+SciViEditor.prototype.run = function (mode)
 {
     var _this = this;
     var container = $("#scivi_node_editor")[0];
@@ -61,6 +64,9 @@ SciViEditor.prototype.run = function ()
         minSize: 0,
         onDrag: function () { editor.view.resize(); }
     });
+
+    if (mode == IOT_PROGRAMMING_MODE) // IOT_PROGRAMMING
+        $("#scivi_btn_visualize").html("Upload ▶");
 
     editor.view.resize();
 
@@ -106,16 +112,20 @@ SciViEditor.prototype.run = function ()
         viewPortVisible = !viewPortVisible;
         _this.inVisualization = viewPortVisible;
         _this.process();
-        if (!viewPortVisible) {
-            $(".scivi_slide").css({"transform": "translateX(0%)"});
-            $("#scivi_btn_visualize").html("Visualize ▶");
-            $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
-            $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
-        } else {
-            $(".scivi_slide").css({"transform": "translateX(-100%)"});
-            $("#scivi_btn_visualize").html("◀");
-            $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
-            $(".scivi_menu").css({"margin-left": "20px"});
+        if (mode == VISUALIZATION_MODE) { // VISUALIZATION
+            if (!viewPortVisible) {
+                $(".scivi_slide").css({"transform": "translateX(0%)"});
+                $("#scivi_btn_visualize").html("Visualize ▶");
+                $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
+                $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
+            } else {
+                $(".scivi_slide").css({"transform": "translateX(-100%)"});
+                $("#scivi_btn_visualize").html("◀");
+                $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+                $(".scivi_menu").css({"margin-left": "20px"});
+            }
+        } else { // IOT_PROGRAMMING
+            _this.uploadEON();
         }
     });
 
@@ -154,6 +164,14 @@ SciViEditor.prototype.run = function ()
 
     this.editor = editor;
     this.engine = engine;
+}
+
+SciViEditor.prototype.uploadEON = function ()
+{
+    var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
+        return key === "cache" ? undefined : value;
+    });
+    $.post("/gen_eon", content);
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)

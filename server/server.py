@@ -3,7 +3,13 @@
 
 import importlib
 from onto.onto import Onto
+from enum import Enum
+from server.eon import Eon
 
+
+class Mode(Enum):
+    VISUALIZATION = 1
+    IOT_PROGRAMMING = 2
 
 class Localizer:
     ENG = {
@@ -29,7 +35,7 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, onto, context):
+    def __init__(self, onto, context, mode):
         self.onto = onto
         self.loc = "eng"
         self.tree = ""
@@ -38,6 +44,7 @@ class SciViServer:
         self.treeNodes = ""
         self.typeColors = {}
         self.ctx = context
+        self.mode = mode
         self.dependencies = {}
 
         self.gen_tree()
@@ -251,7 +258,7 @@ class SciViServer:
                "editor = new SciViEditor();" +\
                self.treeNodes +\
                self.treeHandlers +\
-               "editor.run();" +\
+               "editor.run(" + str(self.mode.value) + ");" +\
                "}"
 
     def get_editor_dependencies(self, lang):
@@ -287,3 +294,7 @@ class SciViServer:
                 if self.onto.is_node_of_type(resolver, "ServerSideWorker") and self.get_language(resolver) == "Python":
                     return self.execute(worker)
         return None
+
+    def gen_eon(self, dfd):
+        eon = Eon(self.onto)
+        eon.generate(dfd)

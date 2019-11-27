@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request
 
-from server.server import SciViServer
+from server.server import SciViServer, Mode
 from onto.onto import Onto
 
 
@@ -15,13 +15,13 @@ srv = None
 @app.route("/csv")
 def csv_page():
     global srv
-    srv = SciViServer(Onto("kb/csv/csv.merged.ont"), None)
+    srv = SciViServer(Onto.load_from_file("kb/csv/csv.merged.ont"), None, Mode.VISUALIZATION)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/es")
 def es_page():
     global srv
-    srv = SciViServer(Onto("kb/es/es.merged.ont"), None)
+    srv = SciViServer(Onto.load_from_file("kb/es/es.merged.ont"), None, Mode.IOT_PROGRAMMING)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/scivi-editor-main.js")
@@ -63,6 +63,13 @@ def editor_css(filename):
 @app.route("/lib/<path:filename>")
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+@app.route("/gen_eon", methods=['POST'])
+def gen_eon():
+    global srv
+    dfd = request.get_json(force=True)
+    srv.gen_eon(dfd)
+    return "ok"
 
 @app.after_request
 def add_header(response):
