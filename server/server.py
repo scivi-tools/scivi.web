@@ -297,4 +297,5 @@ class SciViServer:
 
     def gen_eon(self, dfd):
         eon = Eon(self.onto)
-        eon.generate(dfd)
+        eonOnto = eon.generate(dfd)
+        eonOnto.write_to_file("test.ont")
