@@ -7,9 +7,76 @@ import io
 import struct
 
 
+class RPN:
+    def __init__(self, operations):
+        self.top = -1
+        self.array = []
+        self.output = []
+        self.operations = operations
+        self.expression = None
+
+    def empty(self):
+        return self.top == -1
+
+    def peek(self):
+        return self.array[-1]
+
+    def pop(self):
+        if not self.empty():
+            self.top -= 1
+            return self.array.pop()
+        else:
+            raise ValueError("Incorrect expression " + str(self.expression))
+
+    def push(self, op):
+        self.top += 1
+        self.array.append(op)
+
+    def operand(self, op):
+        return not (op in self.operations)
+
+    def less_priority(self, op):
+        try:
+            p1 = self.operations[op]["prec"]
+            p2 = self.operations[self.peek()]["prec"]
+            return p1 <= p2
+        except KeyError:
+            return False
+
+    def append(self, op):
+        if (op != "(") and (op != ")"):
+            self.output.append(op)
+
+    def convert(self, expression):
+        self.expression = expression
+        for token in expression:
+            if self.operand(token):
+                self.append(token)
+            elif token == "(":
+                self.push(token)
+            elif token == ")":
+                while (not self.empty()) and (self.peek() != "("):
+                    op = self.pop()
+                    self.append(op)
+                if (not self.empty()) and (self.peek() != "("):
+                    raise ValueError("Incorrect expression " + str(self.expression))
+                else:
+                    self.pop()
+            else:
+                while (not self.empty()) and self.less_priority(token):
+                    self.append(self.pop())
+                self.push(token)
+        while not self.empty():
+            self.append(self.pop())
+        return self.output
+
 class Eon:
     def __init__(self, onto):
         self.onto = onto
+        self.operations = {\
+            "dw":  { "prec": 1, "opcode": 0 }, \
+            "osc": { "prec": 1, "opcode": 1 }, \
+        }
 
     def get_attrs(self, node, data):
         if ("attributes" in node) and ("eval" in node["attributes"]):
@@ -95,31 +162,29 @@ class Eon:
                 result += linked
         return result
 
-    def rpn(self, tokens):
-        return tokens
-
     def dump_attrs(self, node, onto):
         result = io.BytesIO()
         tokens = []
         curToken = ""
         delimeters = [" ", ",", "(", ")"]
-        funcs = { "dw": 0, "osc": 1 }
         for ch in node["attributes"]["eval"]:
             if ch in delimeters:
                 if len(curToken) > 0:
                     tokens.append(curToken)
                     curToken = ""
+                    if (ch == "(") or (ch == ")"):
+                        tokens.append(ch)
                 continue
             curToken += ch
         if len(curToken) > 0:
             tokens.append(curToken)
         linked = self.get_all_linked_nodes(node, onto)
-        tokens = self.rpn(tokens)
+        tokens = RPN(self.operations).convert(tokens)
         for token in tokens:
-            if token in funcs:
+            if token in self.operations:
                 # Function ID is stored like this: 1 0 X X X X X X,
                 # where X are bits of ID number.
-                result.write(bytes([funcs[token] | 0x80]))
+                result.write(bytes([self.operations[token]["opcode"] | 0x80]))
             else:
                 linkedNode = None
                 for ln in linked:
