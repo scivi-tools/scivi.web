@@ -299,4 +299,8 @@ class SciViServer:
         eon = Eon(self.onto)
         eonOnto = eon.get_ont(dfd)
         eonOnto.write_to_file("test.ont")
-        eon.get_eon16(eonOnto)
+        bs = eon.get_eon16(eonOnto)
+        barr = []
+        for b in bs:
+            barr.append(b)
+        return { "ont": eonOnto.data, "eon": barr }

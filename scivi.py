@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory, request, jsonify
 
 from server.server import SciViServer, Mode
 from onto.onto import Onto
@@ -64,12 +64,14 @@ def editor_css(filename):
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
-@app.route("/gen_eon", methods=['POST'])
+@app.route("/gen_eon", methods = ['POST'])
 def gen_eon():
     global srv
-    dfd = request.get_json(force=True)
-    srv.gen_eon(dfd)
-    return "ok"
+    dfd = request.get_json(force = True)
+    res = srv.gen_eon(dfd)
+    resp = jsonify(res)
+    resp.status_code = 200
+    return resp
 
 @app.after_request
 def add_header(response):

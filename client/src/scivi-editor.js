@@ -112,19 +112,18 @@ SciViEditor.prototype.run = function (mode)
         viewPortVisible = !viewPortVisible;
         _this.inVisualization = viewPortVisible;
         _this.process();
-        if (mode == VISUALIZATION_MODE) { // VISUALIZATION
-            if (!viewPortVisible) {
-                $(".scivi_slide").css({"transform": "translateX(0%)"});
-                $("#scivi_btn_visualize").html("Visualize ▶");
-                $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
-                $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
-            } else {
-                $(".scivi_slide").css({"transform": "translateX(-100%)"});
-                $("#scivi_btn_visualize").html("◀");
-                $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
-                $(".scivi_menu").css({"margin-left": "20px"});
-            }
-        } else { // IOT_PROGRAMMING
+        if (!viewPortVisible) {
+            $(".scivi_slide").css({"transform": "translateX(0%)"});
+            $("#scivi_btn_visualize").html("Visualize ▶");
+            $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
+            $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
+        } else {
+            $(".scivi_slide").css({"transform": "translateX(-100%)"});
+            $("#scivi_btn_visualize").html("◀");
+            $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+            $(".scivi_menu").css({"margin-left": "20px"});
+        }
+        if (mode == IOT_PROGRAMMING_MODE) {
             _this.uploadEON();
         }
     });
@@ -171,7 +170,44 @@ SciViEditor.prototype.uploadEON = function ()
     var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
-    $.post("/gen_eon", content);
+    $.post("/gen_eon", content, function (data) {
+        var ont = data["ont"];
+        var eon = data["eon"];
+
+        var upEonDiv = $("<div class='scivi_upload_eon'>");
+        var ontoDiv = $("<div style='display: table-row'>");
+        var ontoLbl = $("<div style='display: table-cell; margin-right: 5px;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
+        var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
+        var eonDiv = $("<div>").html("EON blob: " + eon.length + " bytes");
+        var targetAddressLbl = $("<label>").html("Device address: ");
+        var targetAddressTxt = $("<input class='ui-widget' type='text' value='192.168.4.1:81' style='margin-right: 5px;'>");
+        var uploadBtn = $("<button class='ui-widget scivi_button'>").html("Upload");
+
+        dlOntoBtn.click(function () {
+            var filename = prompt("Enter name of file to save", "task.ont");
+            if (!filename)
+                return;
+            if (!filename.includes("."))
+                filename += ".ont";
+            var element = document.createElement("a");
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(ont)));
+            element.setAttribute("download", filename);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
+
+        ontoDiv.append(ontoLbl);
+        ontoDiv.append(dlOntoBtn);
+        upEonDiv.append(ontoDiv);
+        upEonDiv.append(eonDiv);
+        upEonDiv.append(targetAddressLbl);
+        upEonDiv.append(targetAddressTxt);
+        upEonDiv.append(uploadBtn);
+
+        $("#scivi_viewport").append(upEonDiv);
+    });
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)

@@ -223,7 +223,7 @@ class Eon:
                             if intVal > 65535: # uint32
                                 result.write(struct.pack("!BI", 2 | 0x40, intVal))
                             elif intVal > 255: # uint16
-                                result.write(struct.pack("!BH", 1 | 0x40, invVal))
+                                result.write(struct.pack("!BH", 1 | 0x40, intVal))
                             else: #uint8
                                 result.write(struct.pack("!BB", 0 | 0x40, intVal))
                     except ValueError:
@@ -305,5 +305,6 @@ class Eon:
         print(result.getbuffer().nbytes)
         s = result.getvalue().hex()
         print(' '.join(a+b for a,b in zip(s[::2], s[1::2])))
-        return result
+        
+        return result.getvalue()
 
