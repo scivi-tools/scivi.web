@@ -304,7 +304,11 @@ class Eon:
 
         print(result.getbuffer().nbytes)
         s = result.getvalue().hex()
-        print(' '.join(a+b for a,b in zip(s[::2], s[1::2])))
+        arr = (a+b for a,b in zip(s[::2], s[1::2]))
+        outStr = ""
+        for b in arr:
+            outStr += "0x" + b + ", "
+        print("{%s}" % (outStr))
         
         return result.getvalue()
 
