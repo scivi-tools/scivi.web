@@ -175,13 +175,15 @@ SciViEditor.prototype.uploadEON = function ()
         var eon = data["eon"];
 
         var upEonDiv = $("<div class='scivi_upload_eon'>");
-        var ontoDiv = $("<div style='display: table-row'>");
-        var ontoLbl = $("<div style='display: table-cell; margin-right: 5px;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
+        var ontoDiv = $("<div style='display: table-row;'>");
+        var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
         var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
-        var eonDiv = $("<div>").html("EON blob: " + eon.length + " bytes");
+        var eonDiv = $("<div style='display: table-row;'>").html("EON blob: " + eon.length + " bytes");
+        var uplDiv = $("<div style='display: table-row;'>");
+        var uplAddr = $("<div style='display: table-cell;'>");
         var targetAddressLbl = $("<label>").html("Device address: ");
         var targetAddressTxt = $("<input class='ui-widget' type='text' value='192.168.4.1:81' style='margin-right: 5px;'>");
-        var uploadBtn = $("<button class='ui-widget scivi_button'>").html("Upload");
+        var uploadBtn = $("<button class='ui-widget scivi_button' style='display=table-cell;'>").html("Upload");
 
         dlOntoBtn.click(function () {
             var filename = prompt("Enter name of file to save", "task.ont");
@@ -200,12 +202,18 @@ SciViEditor.prototype.uploadEON = function ()
 
         ontoDiv.append(ontoLbl);
         ontoDiv.append(dlOntoBtn);
+
+        uplAddr.append(targetAddressLbl);
+        uplAddr.append(targetAddressTxt);
+
+        uplDiv.append(uplAddr);
+        uplDiv.append(uploadBtn);
+
         upEonDiv.append(ontoDiv);
         upEonDiv.append(eonDiv);
-        upEonDiv.append(targetAddressLbl);
-        upEonDiv.append(targetAddressTxt);
-        upEonDiv.append(uploadBtn);
+        upEonDiv.append(uplDiv);
 
+        $("#scivi_viewport").empty();
         $("#scivi_viewport").append(upEonDiv);
     });
 }
