@@ -5,6 +5,7 @@ from onto.onto import Onto
 import math
 import io
 import struct
+from sets import Set
 
 
 class RPN:
@@ -82,7 +83,7 @@ class Eon:
         if ("attributes" in node) and ("eval" in node["attributes"]):
             code = node["attributes"]["eval"]
             code = self.resolve_settings(code, data)
-            return { "eval": code }
+            return { "eval": code, "mother": node.id }
         else:
             return None
 
@@ -283,11 +284,23 @@ class Eon:
         result = io.BytesIO()
         # Links chunk
         linksChunk = io.BytesIO()
+        usedNodes = {}
         for link in eonOnto.links():
             if link["name"] == "use_for":
                 # Format 16 bit: 6 (SRC) 4 (LNK) 6 (DST).
                 linksChunk.write(bytes([link["source_node_id"] << 2]))
                 linksChunk.write(bytes([link["destination_node_id"]]))
+                srcNode = eonOnto.get_node_by_id(link["source_node_id"])
+                dstNode = eonOnto.get_node_by_id(link["destination_node_id"])
+                if ("attributes" in srcNode) and ("mother" in srcNode["attributes"]):
+                    usedNodes[link["source_node_id"]] = srcNode["attributes"]["mother"]
+                if ("attributes" in dstNode) and ("mother" in dstNode["attributes"]):
+                    usedNodes[link["destination_node_id"]] = dstNode["attributes"]["mother"]
+        for node in usedNodes:
+            # Format 16 bit: 6 (SRC) 4 (LNK) 6 (DST).
+            linksChunk.write(bytes([node << 2]))
+            linksChunk.write(bytes([link["destination_node_id"]]))
+
         # Attributes chunk
         attrsChunk = io.BytesIO()
         for node in eonOnto.nodes():
