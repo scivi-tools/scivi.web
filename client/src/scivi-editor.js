@@ -200,6 +200,20 @@ SciViEditor.prototype.uploadEON = function ()
             document.body.removeChild(element);
         });
 
+        uploadBtn.click(function () {
+            console.log(targetAddressTxt.val());
+            var webSocket = new WebSocket("ws://" + targetAddressTxt.val());
+            webSocket.onopen = function(evt) {
+                console.log("WebSocket open");
+                console.log(eon);
+                webSocket.send(Uint8Array.from(eon));
+                webSocket.close();
+            };
+            webSocket.onclose = function(evt) { console.log("WebSocket close"); };
+            webSocket.onerror = function(evt) { console.log(evt); };
+            webSocket.onmessage = function(evt) { console.log(evt); };
+        });
+
         ontoDiv.append(ontoLbl);
         ontoDiv.append(dlOntoBtn);
 
