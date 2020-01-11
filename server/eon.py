@@ -77,6 +77,7 @@ class Eon:
             "dw":  { "prec": 1, "opcode": 0 }, \
             "osc": { "prec": 1, "opcode": 1 }, \
         }
+        self.INST_SUFFIX = " Inst"
 
     def get_attrs(self, node, data):
         if ("attributes" in node) and ("eval" in node["attributes"]):
@@ -86,17 +87,30 @@ class Eon:
         else:
             return None
 
+    def instance_of_type(self, node, type, onto):
+        instNode = onto.first(onto.get_nodes_linked_from(node, "instance_of"))
+        return onto.is_node_of_type(instNode, type)
+
+    def instances_of_type(self, node, type, onto):
+        hasNodes = onto.get_nodes_linked_from(node, "has")
+        result = []
+        for hasNode in hasNodes:
+            motherNode = onto.first(onto.get_nodes_linked_from(hasNode, "instance_of"))
+            if motherNode and onto.is_node_of_type(motherNode, type):
+                result.append(hasNode)
+        return result
+
     def get_node_order(self, node, onto):
         if not node:
             return -1
-        if (node["name"] == "Input") or (node["name"] == "Output"):
+        if not node["name"].endswith(self.INST_SUFFIX):
             return onto.last_id()
-        if onto.is_node_of_type(node, "Input"):
+        if self.instance_of_type(node, "Input", onto):
             return self.get_node_order(onto.first(onto.get_nodes_linked_to(node, "use_for")), onto) + 1
-        if onto.is_node_of_type(node, "Output"):
+        if self.instance_of_type(node, "Output", onto):
             return self.get_node_order(onto.first(onto.get_nodes_linked_to(node, "has")), onto) + 1
         result = 0
-        nodeInputs = onto.get_typed_nodes_linked_from(node, "has", "Input")
+        nodeInputs = self.instances_of_type(node, "Input", onto)
         for nodeInput in nodeInputs:
             result = max(result, self.get_node_order(nodeInput, onto) + 1)
         return result
@@ -121,29 +135,38 @@ class Eon:
         h = 30
         prevOrder = -2
         y = 0
-        maxHeight = 0
+        ny = -h * 2
         maxWidth = 0
+        processedNodes = []
         for node in onto.nodes():
+            if not node["name"].endswith(self.INST_SUFFIX):
+                instNode = onto.first(onto.get_nodes_linked_to(node, "instance_of"))
+                if instNode:
+                    node["position_x"] = instNode["position_x"]
+                    node["position_y"] = instNode["position_y"] - h
+                else:
+                    node["position_x"] = maxWidth / 2
+                    node["position_y"] = ny
+                    ny = ny - h
+                continue
             order = self.get_node_order(node, onto)
             if order == prevOrder:
-                y = y + h
-                if order != onto.last_id():
-                    maxHeight = max(maxHeight, y)
+                y = y + h * 2
             else:
                 y = 0
             prevOrder = order
-            if order == onto.last_id():
-                node["position_x"] = maxWidth / 2
-                node["position_y"] = y + maxHeight + h * 3
-            else:
-                node["position_x"] = w * order
-                node["position_y"] = y
-                maxWidth = max(maxWidth, w * order)
+            node["position_x"] = w * order
+            node["position_y"] = y
+            maxWidth = max(maxWidth, w * order)
 
     def link(self, src, srcOutputNumber, dst, dstInputNumber, onto):
         outputs = onto.get_typed_nodes_linked_from(src, "has", "Output")
         inputs = onto.get_typed_nodes_linked_from(dst, "has", "Input")
-        onto.link_nodes(outputs[srcOutputNumber], inputs[dstInputNumber], "use_for")
+        motherOutput = outputs[srcOutputNumber]
+        motherInput = inputs[dstInputNumber]
+        instOutput = onto.first(onto.get_nodes_linked_to(motherOutput, "instance_of"))
+        instInput = onto.first(onto.get_nodes_linked_to(motherInput, "instance_of"))
+        onto.link_nodes(instOutput, instInput, "use_for")
 
     def resolve_settings(self, code, data):
         settings = data["settingsVal"]
@@ -188,7 +211,7 @@ class Eon:
             else:
                 linkedNode = None
                 for ln in linked:
-                    if ln["name"] == token:
+                    if ln["name"] == token + self.INST_SUFFIX:
                         linkedNode = ln
                         break
                 if linkedNode:
@@ -243,26 +266,35 @@ class Eon:
         result = Onto.empty()
         resultI = result.add_node("Input")
         resultO = result.add_node("Output")
+        motherNode = None
         # Add all nodes from DFD.
         for dfdNodeKey in dfdNodes:
             dfdNode = dfdNodes[dfdNodeKey]
             # Add node.
             resultAttrs = {}
             ontoNode = self.onto.first(self.onto.get_nodes_by_name(dfdNode["title"]))
-            resultNode = result.add_node(dfdNode["title"], self.get_attrs(ontoNode, dfdNode["data"]))
-            resultNodesArr[dfdNode["id"]] = resultNode
+            resultNode = result.add_node(dfdNode["title"] + self.INST_SUFFIX, self.get_attrs(ontoNode, dfdNode["data"]))
+            motherNode = result.add_node(dfdNode["title"], { "mother": ontoNode["id"] })
+            result.link_nodes(resultNode, motherNode, "instance_of")
+            resultNodesArr[dfdNode["id"]] = motherNode
             # Add inputs.
             ontoInputs = self.onto.get_typed_nodes_linked_from(ontoNode, "has", "Input")
             for ontoInput in ontoInputs:
-                resultInput = result.add_node(ontoInput["name"], self.get_attrs(ontoInput, dfdNode["data"]))
+                resultInput = result.add_node(ontoInput["name"] + self.INST_SUFFIX, self.get_attrs(ontoInput, dfdNode["data"]))
+                motherInput = result.add_node(ontoInput["name"], { "mother": ontoInput["id"] })
+                result.link_nodes(resultInput, motherInput, "instance_of")
+                result.link_nodes(motherInput, resultI, "is_a")
+                result.link_nodes(motherNode, motherInput, "has")
                 result.link_nodes(resultNode, resultInput, "has")
-                result.link_nodes(resultInput, resultI, "is_a")
             # Add outputs.
             ontoOutputs = self.onto.get_typed_nodes_linked_from(ontoNode, "has", "Output")
             for ontoOutput in ontoOutputs:
-                resultOutput = result.add_node(ontoOutput["name"], self.get_attrs(ontoOutput, dfdNode["data"]))
+                resultOutput = result.add_node(ontoOutput["name"] + self.INST_SUFFIX, self.get_attrs(ontoOutput, dfdNode["data"]))
+                motherOutput = result.add_node(ontoOutput["name"], { "mother": ontoOutput["id"] })
+                result.link_nodes(resultOutput, motherOutput, "instance_of")
+                result.link_nodes(motherOutput, resultO, "is_a")
+                result.link_nodes(motherNode, motherOutput, "has")
                 result.link_nodes(resultNode, resultOutput, "has")
-                result.link_nodes(resultOutput, resultO, "is_a")
         # Add data connection from DFD as use_for links.
         for dfdNodeKey in dfdNodes:
             dfdNode = dfdNodes[dfdNodeKey]
@@ -276,18 +308,30 @@ class Eon:
         self.layout_nodes(result)
         return result
 
-    def get_eon16(self, eonOnto):
+    def get_eon(self, eonOnto):
         if len(eonOnto.nodes()) > 64:
             raise ValueError("Cannot compose EON16 stream: too many nodes in ontology (" + str(len(eonOnto.nodes())) + ")")
 
         result = io.BytesIO()
         # Links chunk
         linksChunk = io.BytesIO()
+        usedNodes = {}
         for link in eonOnto.links():
             if link["name"] == "use_for":
                 # Format 16 bit: 6 (SRC) 4 (LNK) 6 (DST).
                 linksChunk.write(bytes([link["source_node_id"] << 2]))
                 linksChunk.write(bytes([link["destination_node_id"]]))
+                srcNode = eonOnto.get_node_by_id(link["source_node_id"])
+                dstNode = eonOnto.get_node_by_id(link["destination_node_id"])
+                if ("attributes" in srcNode) and ("mother" in srcNode["attributes"]):
+                    usedNodes[link["source_node_id"]] = srcNode["attributes"]["mother"]
+                if ("attributes" in dstNode) and ("mother" in dstNode["attributes"]):
+                    usedNodes[link["destination_node_id"]] = dstNode["attributes"]["mother"]
+        for node in usedNodes:
+            # Format 16 bit: 6 (SRC) 4 (LNK) 6 (DST).
+            linksChunk.write(bytes([node << 2]))
+            linksChunk.write(bytes([link["destination_node_id"]]))
+
         # Attributes chunk
         attrsChunk = io.BytesIO()
         for node in eonOnto.nodes():

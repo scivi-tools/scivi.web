@@ -298,7 +298,7 @@ class SciViServer:
     def gen_eon(self, dfd):
         eon = Eon(self.onto)
         eonOnto = eon.get_ont(dfd)
-        bs = eon.get_eon16(eonOnto)
+        bs = eon.get_eon(eonOnto)
         barr = []
         for b in bs:
             barr.append(b)
