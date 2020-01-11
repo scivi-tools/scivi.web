@@ -115,6 +115,15 @@ class Eon:
             result = max(result, self.get_node_order(nodeInput, onto) + 1)
         return result
 
+    def get_link_order(self, link, onto):
+        srcNode = link["source_node_id"]
+        index = 0
+        for node in onto.nodes():
+            if node["id"] == srcNode:
+                break
+            index += 1
+        return index
+
     def normalize_onto(self, onto):
         transNodes = {}
         index = 1
@@ -130,6 +139,7 @@ class Eon:
 
     def layout_nodes(self, onto):
         onto.data["nodes"] = sorted(onto.nodes(), key = lambda node: self.get_node_order(node, onto))
+        onto.data["relations"] = sorted(onto.links(), key = lambda link: self.get_link_order(link, onto))
         self.normalize_onto(onto)
         w = 100
         h = 30
@@ -317,20 +327,30 @@ class Eon:
         linksChunk = io.BytesIO()
         usedNodes = {}
         for link in eonOnto.links():
+            # Format 16 bit (task onto is limited to 64 nodes)
+            # S - src node ID
+            # D - dst node ID
+            # tID - internal task onto ID
+            # mID - external mother onto ID
+            # use_for:     SSSSSS 0000 DDDDDD          // src and dst are tIDs
+            # instance_of: SSSSSS 10 DDDDDDDD          // src is tID, dst is mID, dst <= 256
+            # instance_of: SSSSSS 11 DDDDDDDD DDDDDDDD // src is tID, dst is mID, 256 < dst <= 65536
             if link["name"] == "use_for":
-                # Format 16 bit: 6 (SRC) 4 (LNK) 6 (DST).
                 linksChunk.write(bytes([link["source_node_id"] << 2]))
                 linksChunk.write(bytes([link["destination_node_id"]]))
+            elif link["name"] == "instance_of":
                 srcNode = eonOnto.get_node_by_id(link["source_node_id"])
                 dstNode = eonOnto.get_node_by_id(link["destination_node_id"])
-                if ("attributes" in srcNode) and ("mother" in srcNode["attributes"]):
-                    usedNodes[link["source_node_id"]] = srcNode["attributes"]["mother"]
-                if ("attributes" in dstNode) and ("mother" in dstNode["attributes"]):
-                    usedNodes[link["destination_node_id"]] = dstNode["attributes"]["mother"]
-        for node in usedNodes:
-            # Format 16 bit: 6 (SRC) 4 (LNK) 6 (DST).
-            linksChunk.write(bytes([node << 2]))
-            linksChunk.write(bytes([link["destination_node_id"]]))
+                if (eonOnto.first(eonOnto.get_nodes_linked_from(srcNode, "use_for")) or \
+                    eonOnto.first(eonOnto.get_nodes_linked_to(srcNode, "use_for"))) and \
+                    ("attributes" in dstNode) and ("mother" in dstNode["attributes"]):
+                    motherID = int(dstNode["attributes"]["mother"])
+                    if motherID <= 256:
+                        linksChunk.write(bytes([link["source_node_id"] << 2 | 0x2]))
+                        linksChunk.write(bytes([motherID]))
+                    elif motherID <= 65536:
+                        linksChunk.write(bytes([link["source_node_id"] << 2 | 0x3]))
+                        linksChunk.write(bytes([motherID >> 8, motherID & 0xFF]))
 
         # Attributes chunk
         attrsChunk = io.BytesIO()
@@ -340,6 +360,7 @@ class Eon:
                 # where X are bits of ID number.
                 attrsChunk.write(bytes([node["id"] | 0xC0]))
                 attrsChunk.write(self.dump_attrs(node, eonOnto))
+
         # Compose stream
         result.write(self.dump_len(linksChunk))
         result.write(linksChunk.getbuffer())
