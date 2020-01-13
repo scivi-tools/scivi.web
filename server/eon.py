@@ -170,13 +170,26 @@ class Eon:
             maxWidth = max(maxWidth, w * order)
 
     def link(self, src, srcOutputNumber, dst, dstInputNumber, onto):
-        outputs = onto.get_typed_nodes_linked_from(src, "has", "Output")
-        inputs = onto.get_typed_nodes_linked_from(dst, "has", "Input")
+        motherSrc = onto.first(onto.get_nodes_linked_from(src, "instance_of"))
+        motherDst = onto.first(onto.get_nodes_linked_from(dst, "instance_of"))
+        outputs = onto.get_typed_nodes_linked_from(motherSrc, "has", "Output")
+        inputs = onto.get_typed_nodes_linked_from(motherDst, "has", "Input")
         motherOutput = outputs[srcOutputNumber]
         motherInput = inputs[dstInputNumber]
-        instOutput = onto.first(onto.get_nodes_linked_to(motherOutput, "instance_of"))
-        instInput = onto.first(onto.get_nodes_linked_to(motherInput, "instance_of"))
-        onto.link_nodes(instOutput, instInput, "use_for")
+        srcComps = onto.get_nodes_linked_from(src, "has")
+        dstComps = onto.get_nodes_linked_from(dst, "has")
+        instOutput = None
+        for c in srcComps:
+            if onto.first(onto.get_nodes_linked_from(c, "instance_of")) == motherOutput:
+                instOutput = c
+                break
+        instInput = None
+        for c in dstComps:
+            if onto.first(onto.get_nodes_linked_from(c, "instance_of")) == motherInput:
+                instInput = c
+                break
+        if instOutput and instInput:
+            onto.link_nodes(instOutput, instInput, "use_for")
 
     def resolve_settings(self, code, data):
         settings = data["settingsVal"]
@@ -270,6 +283,18 @@ class Eon:
     def dump_len(self, chunk):
         return struct.pack("!H", chunk.getbuffer().nbytes)
 
+    def add_mother_node(self, nodeName, motherID, onto):
+        result = None
+        motherNodes = onto.get_nodes_by_name(nodeName)
+        if motherNodes:
+            for m in motherNodes:
+                if ("attributes" in m) and ("mother" in m["attributes"]):
+                    result = m
+                    break
+        if not result:
+            result = onto.add_node(nodeName, { "mother": motherID })
+        return result
+
     def get_ont(self, dfd):
         dfdNodes = dfd["nodes"]
         resultNodesArr = {}
@@ -284,14 +309,14 @@ class Eon:
             resultAttrs = {}
             ontoNode = self.onto.first(self.onto.get_nodes_by_name(dfdNode["title"]))
             resultNode = result.add_node(dfdNode["title"] + self.INST_SUFFIX, self.get_attrs(ontoNode, dfdNode["data"]))
-            motherNode = result.add_node(dfdNode["title"], { "mother": ontoNode["id"] })
+            motherNode = self.add_mother_node(dfdNode["title"], ontoNode["id"], result)
             result.link_nodes(resultNode, motherNode, "instance_of")
-            resultNodesArr[dfdNode["id"]] = motherNode
+            resultNodesArr[dfdNode["id"]] = resultNode
             # Add inputs.
             ontoInputs = self.onto.get_typed_nodes_linked_from(ontoNode, "has", "Input")
             for ontoInput in ontoInputs:
                 resultInput = result.add_node(ontoInput["name"] + self.INST_SUFFIX, self.get_attrs(ontoInput, dfdNode["data"]))
-                motherInput = result.add_node(ontoInput["name"], { "mother": ontoInput["id"] })
+                motherInput = self.add_mother_node(ontoInput["name"], ontoInput["id"], result)
                 result.link_nodes(resultInput, motherInput, "instance_of")
                 result.link_nodes(motherInput, resultI, "is_a")
                 result.link_nodes(motherNode, motherInput, "has")
@@ -300,7 +325,7 @@ class Eon:
             ontoOutputs = self.onto.get_typed_nodes_linked_from(ontoNode, "has", "Output")
             for ontoOutput in ontoOutputs:
                 resultOutput = result.add_node(ontoOutput["name"] + self.INST_SUFFIX, self.get_attrs(ontoOutput, dfdNode["data"]))
-                motherOutput = result.add_node(ontoOutput["name"], { "mother": ontoOutput["id"] })
+                motherOutput = self.add_mother_node(ontoOutput["name"], ontoOutput["id"], result)
                 result.link_nodes(resultOutput, motherOutput, "instance_of")
                 result.link_nodes(motherOutput, resultO, "is_a")
                 result.link_nodes(motherNode, motherOutput, "has")
