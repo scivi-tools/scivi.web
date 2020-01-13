@@ -366,8 +366,11 @@ class Eon:
             elif link["name"] == "instance_of":
                 srcNode = eonOnto.get_node_by_id(link["source_node_id"])
                 dstNode = eonOnto.get_node_by_id(link["destination_node_id"])
+                # Node is not trimmed, if it is a part of use_for link having mother prototype
+                # OR it has an eval action
                 if (eonOnto.first(eonOnto.get_nodes_linked_from(srcNode, "use_for")) or \
-                    eonOnto.first(eonOnto.get_nodes_linked_to(srcNode, "use_for"))) and \
+                    eonOnto.first(eonOnto.get_nodes_linked_to(srcNode, "use_for")) or \
+                    (("attributes" in srcNode) and ("eval" in srcNode["attributes"]))) and \
                     ("attributes" in dstNode) and ("mother" in dstNode["attributes"]):
                     motherID = int(dstNode["attributes"]["mother"])
                     if motherID <= 256:
