@@ -73,9 +73,22 @@ class RPN:
 class Eon:
     def __init__(self, onto):
         self.onto = onto
-        self.operations = {\
-            "dw":  { "prec": 1, "opcode": 0 }, \
-            "osc": { "prec": 1, "opcode": 1 }, \
+        self.operations = { \
+            "+":                  { "prec": 1, "opcode": 0 }, \
+            "-":                  { "prec": 1, "opcode": 1 }, \
+            "*":                  { "prec": 2, "opcode": 2 }, \
+            "/":                  { "prec": 2, "opcode": 3 }, \
+            ">":                  { "prec": 0, "opcode": 4 }, \
+            "<":                  { "prec": 0, "opcode": 5 }, \
+            ">=":                 { "prec": 0, "opcode": 6 }, \
+            "<=":                 { "prec": 0, "opcode": 7 }, \
+            "==":                 { "prec": 0, "opcode": 8 }, \
+            "dw":                 { "prec": 1, "opcode": 9 }, \
+            "osc":                { "prec": 1, "opcode": 10 }, \
+            "wifiAP" :            { "prec": 1, "opcode": 11 }, \
+            "wifiAPClientsCount": { "prec": 1, "opcode": 12 }, \
+            "adc":                { "prec": 1, "opcode": 13 }, \
+            "tone":               { "prec": 1, "opcode": 14 }
         }
         self.INST_SUFFIX = " Inst"
 
@@ -193,8 +206,12 @@ class Eon:
 
     def resolve_settings(self, code, data):
         settings = data["settingsVal"]
+        types = data["settingsType"]
         for s in settings:
-            code = code.replace(s, str(settings[s]))
+            if types[s] == "String":
+                code = code.replace(s, "'" + str(settings[s]) + "'")
+            else:
+                code = code.replace(s, str(settings[s]))
         return code
 
     def get_all_linked_nodes(self, node, onto):
@@ -254,6 +271,7 @@ class Eon:
                     # 4 - int16
                     # 5 - int32
                     # 6 - float32
+                    # 7 - string
                     try:
                         intVal = int(token) # integer?
                         # 8, 16 and 32 bit signed and unsigned integers are supported.
@@ -277,7 +295,13 @@ class Eon:
                             floatVal = float(token) # float?
                             result.write(struct.pack("!Bf", 6 | 0x40, floatVal))
                         except ValueError:
-                            raise ValueError("Undefined token in eval attribute of <" + node["name"] + ">: " + token)
+                            if token.startswith("'") and token.endswith("'"): # String?
+                                # String values are stored as null-terminated byte sequences.
+                                result.write(bytes([7 | 0x40]))
+                                result.write(token[1:-1].encode())
+                                result.write(bytes([0x0]))
+                            else:
+                                raise ValueError("Undefined token in eval attribute of <" + node["name"] + ">: " + token)
         return result.getbuffer()
 
     def dump_len(self, chunk):
