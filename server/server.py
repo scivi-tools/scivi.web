@@ -140,9 +140,17 @@ class SciViServer:
         print("WARNING: malformed domain for <" + s["name"] + ">")
         return ""
 
+    def type_of_node(self, node):
+        protos = self.onto.get_nodes_linked_from(node, "is_a")
+        for p in protos:
+            if self.onto.is_node_of_type(p, "Type"):
+                return p
+        return None
+
     def resolve_containers(self, code, inputs, outputs, settings):
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
+        types = ""
         defs = ""
         doms = ""
         for s in settings:
@@ -157,11 +165,14 @@ class SciViServer:
                 if "domain" in s["attributes"]:
                     dm = s["attributes"]["domain"]
                     doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
+            types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
+            print(types)
         code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
                "if (!node.data.settings) { " +\
                "node.data.settings = {" + doms + "}; " +\
                "node.data.settingsVal = {" + defs + "}; " +\
+               "node.data.settingsType = {" + types + "}; " +\
                "node.data.settingsChanged = {}; " +\
                "} " +\
                "var ADD_VISUAL = function (con) { " +\
