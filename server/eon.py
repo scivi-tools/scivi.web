@@ -47,6 +47,88 @@ class RPN:
         if (op != "(") and (op != ")"):
             self.output.append(op)
 
+    def convertToFloat(self, x):
+        fx = None
+        try:
+            fx = float(x)
+        except ValueError:
+            pass
+        return fx
+
+    def opAdd(self, token):
+        y = self.pop()
+        x = self.pop()
+        fx = self.convertToFloat(x)
+        fy = self.convertToFloat(y)
+        if (fx != None) and (fy != None):
+            self.push(str(fx + fy))
+        elif (fx == None) and (fy == 0.0):
+            self.push(x)
+        elif (fx == 0.0) and (fy == None):
+            self.push(y)
+        else:
+            self.push(x)
+            self.push(y)
+            self.push(token)
+
+    def opSub(self, token):
+        y = self.pop()
+        x = self.pop()
+        fx = self.convertToFloat(x)
+        fy = self.convertToFloat(y)
+        if (fx != None) and (fy != None):
+            self.push(str(fx - fy))
+        elif (fx == None) and (fy == 0.0):
+            self.push(x)
+        else:
+            self.push(x)
+            self.push(y)
+            self.push(token)
+
+    def opMul(self, token):
+        y = self.pop()
+        x = self.pop()
+        fx = self.convertToFloat(x)
+        fy = self.convertToFloat(y)
+        if (fx != None) and (fy != None):
+            self.push(str(fx * fy))
+        elif (fx == 0.0) or (fy == 0.0):
+            self.push("0")
+        else:
+            self.push(x)
+            self.push(y)
+            self.push(token)
+
+    def opDiv(self, token):
+        y = self.pop()
+        x = self.pop()
+        fx = self.convertToFloat(x)
+        fy = self.convertToFloat(y)
+        if (fx != None) and (fy != None):
+            self.push(str(fx / fy))
+        elif fx == 0.0:
+            self.push("0")
+        else:
+            self.push(x)
+            self.push(y)
+            self.push(token)
+
+    def precalc(self):
+        self.top = -1
+        self.array = []
+        ops = { \
+                "+": self.opAdd, \
+                "-": self.opSub, \
+                "*": self.opMul, \
+                "/": self.opDiv
+              }
+        for token in self.output:
+            if token in ops:
+                ops[token](token)
+            else:
+                self.push(token)
+        return self.array
+
     def convert(self, expression):
         self.expression = expression
         for token in expression:
@@ -68,7 +150,7 @@ class RPN:
                 self.push(token)
         while not self.empty():
             self.append(self.pop())
-        return self.output
+        return self.precalc()
 
 class Eon:
     def __init__(self, onto):
