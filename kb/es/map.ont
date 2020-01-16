@@ -47,6 +47,7 @@
         },
         {
             "attributes": {
+                "eval": "FromOut + (Vin - FromIn) / (ToIn - FromIn) * (ToOut - FromOut)"
             },
             "id": "5",
             "name": "Vout",
@@ -94,7 +95,7 @@
             "attributes": {
             },
             "id": "10",
-            "name": "In From",
+            "name": "FromIn",
             "namespace": "http://knova.ru/user/1578768338653",
             "position_x": -206,
             "position_y": -116
@@ -103,7 +104,7 @@
             "attributes": {
             },
             "id": "11",
-            "name": "In To",
+            "name": "ToIn",
             "namespace": "http://knova.ru/user/1578768338653",
             "position_x": -196,
             "position_y": -85
@@ -112,7 +113,7 @@
             "attributes": {
             },
             "id": "12",
-            "name": "Out From",
+            "name": "FromOut",
             "namespace": "http://knova.ru/user/1578768338653",
             "position_x": -212,
             "position_y": -51
@@ -121,7 +122,7 @@
             "attributes": {
             },
             "id": "13",
-            "name": "Out To",
+            "name": "ToOut",
             "namespace": "http://knova.ru/user/1578768338653",
             "position_x": -202,
             "position_y": -9

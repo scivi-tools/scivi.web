@@ -11,6 +11,7 @@
     "nodes": [
         {
             "attributes": {
+                "eval": "tone(PinID, Frequency)"
             },
             "id": "1",
             "name": "Tone",
@@ -42,7 +43,7 @@
                 "domain": "D0, D1, D2, D3, D4, D5, D6, D7, D8"
             },
             "id": "4",
-            "name": "Pin ID",
+            "name": "PinID",
             "namespace": "http://knova.ru/user/1578769283144",
             "position_x": -162,
             "position_y": -20

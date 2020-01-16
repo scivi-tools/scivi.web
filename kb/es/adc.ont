@@ -38,6 +38,7 @@
         },
         {
             "attributes": {
+                "eval": "adc()"
             },
             "id": "6",
             "name": "Value",

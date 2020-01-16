@@ -216,13 +216,20 @@ class Eon:
 
     def get_all_linked_nodes(self, node, onto):
         result = []
-        for link in onto.links():
-            linked = onto.get_nodes_linked_from(node, link["name"])
+        links = []
+        for l in onto.links():
+            if not l["name"] in links:
+                links.append(l["name"])
+        for link in links:
+            linked = onto.get_nodes_linked_from(node, link)
             if linked and len(linked) > 0:
                 result += linked
-            linked = onto.get_nodes_linked_to(node, link["name"])
+            linked = onto.get_nodes_linked_to(node, link)
             if linked and len(linked) > 0:
                 result += linked
+        superNode = onto.first(onto.get_nodes_linked_to(node, "has"))
+        if superNode:
+            result += self.get_all_linked_nodes(superNode, onto)
         return result
 
     def dump_attrs(self, node, onto):

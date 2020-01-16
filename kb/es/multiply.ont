@@ -15,8 +15,8 @@
             "id": "1",
             "name": "Multiply",
             "namespace": "http://knova.ru/user/1578768687074",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -133,
+            "position_y": -44
         },
         {
             "attributes": {
@@ -24,8 +24,8 @@
             "id": "2",
             "name": "Math",
             "namespace": "http://knova.ru/user/1578768687074",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -137,
+            "position_y": -97
         },
         {
             "attributes": {
@@ -33,8 +33,8 @@
             "id": "3",
             "name": "Root",
             "namespace": "http://knova.ru/user/1578768687074",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -95,
+            "position_y": -170
         },
         {
             "attributes": {
@@ -56,12 +56,13 @@
         },
         {
             "attributes": {
+                "eval": "A * B"
             },
             "id": "6",
             "name": "A * B",
             "namespace": "http://knova.ru/user/1578768687074",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -96,
+            "position_y": 1
         },
         {
             "attributes": {
@@ -87,8 +88,8 @@
             "id": "9",
             "name": "Number",
             "namespace": "http://knova.ru/user/1578768687074",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -144,
+            "position_y": 112
         },
         {
             "attributes": {

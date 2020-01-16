@@ -11,12 +11,13 @@
     "nodes": [
         {
             "attributes": {
+                "eval": "wifiAP(SSID, Password)"
             },
             "id": "1",
             "name": "WiFi Access Point",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 323,
+            "position_y": 341
         },
         {
             "attributes": {
@@ -24,8 +25,8 @@
             "id": "2",
             "name": "Comms",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 363,
+            "position_y": 277
         },
         {
             "attributes": {
@@ -33,26 +34,28 @@
             "id": "3",
             "name": "Root",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 386,
+            "position_y": 200
         },
         {
             "attributes": {
+                "default": "SciVi"
             },
             "id": "4",
             "name": "SSID",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": -151,
-            "position_y": 8
+            "position_x": 239,
+            "position_y": 405
         },
         {
             "attributes": {
+                "default": ""
             },
             "id": "5",
             "name": "Password",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": -78,
-            "position_y": 7
+            "position_x": 312,
+            "position_y": 404
         },
         {
             "attributes": {
@@ -60,8 +63,8 @@
             "id": "6",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": -190,
-            "position_y": 69
+            "position_x": 200,
+            "position_y": 466
         },
         {
             "attributes": {
@@ -69,8 +72,8 @@
             "id": "7",
             "name": "String",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": -89,
-            "position_y": 107
+            "position_x": 301,
+            "position_y": 504
         },
         {
             "attributes": {
@@ -78,17 +81,18 @@
             "id": "8",
             "name": "Type",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": -90,
-            "position_y": 160
+            "position_x": 300,
+            "position_y": 557
         },
         {
             "attributes": {
+                "eval": "wifiAPClientsCount()"
             },
             "id": "9",
             "name": "Clients Number",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": 37,
-            "position_y": 5
+            "position_x": 427,
+            "position_y": 402
         },
         {
             "attributes": {
@@ -96,8 +100,8 @@
             "id": "10",
             "name": "Number",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": 15,
-            "position_y": 93
+            "position_x": 405,
+            "position_y": 490
         },
         {
             "attributes": {
@@ -105,8 +109,8 @@
             "id": "11",
             "name": "Output",
             "namespace": "http://knova.ru/user/1578767677095",
-            "position_x": 106,
-            "position_y": 93
+            "position_x": 496,
+            "position_y": 490
         }
     ],
     "relations": [

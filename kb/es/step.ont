@@ -15,8 +15,8 @@
             "id": "1",
             "name": "Step",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": -3,
-            "position_y": -22
+            "position_x": 408,
+            "position_y": 319
         },
         {
             "attributes": {
@@ -24,8 +24,8 @@
             "id": "2",
             "name": "Math",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 409,
+            "position_y": 261
         },
         {
             "attributes": {
@@ -33,8 +33,8 @@
             "id": "3",
             "name": "Root",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": 11,
-            "position_y": -141
+            "position_x": 422,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -42,17 +42,18 @@
             "id": "4",
             "name": "Vin",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": -52,
-            "position_y": 26
+            "position_x": 359,
+            "position_y": 367
         },
         {
             "attributes": {
+                "eval": "Vin > Threshold"
             },
             "id": "5",
             "name": "Vout",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": 36,
-            "position_y": 25
+            "position_x": 447,
+            "position_y": 366
         },
         {
             "attributes": {
@@ -60,8 +61,8 @@
             "id": "6",
             "name": "Input",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 307,
+            "position_y": 402
         },
         {
             "attributes": {
@@ -69,8 +70,8 @@
             "id": "7",
             "name": "Output",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": 63,
-            "position_y": 58
+            "position_x": 474,
+            "position_y": 399
         },
         {
             "attributes": {
@@ -78,8 +79,8 @@
             "id": "8",
             "name": "Number",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": -21,
-            "position_y": 91
+            "position_x": 390,
+            "position_y": 432
         },
         {
             "attributes": {
@@ -87,17 +88,18 @@
             "id": "9",
             "name": "Type",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": -8,
-            "position_y": 130
+            "position_x": 403,
+            "position_y": 471
         },
         {
             "attributes": {
+                "default": 0
             },
             "id": "10",
             "name": "Threshold",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 250,
+            "position_y": 308
         },
         {
             "attributes": {
@@ -105,8 +107,8 @@
             "id": "11",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1578769032506",
-            "position_x": -211,
-            "position_y": 22
+            "position_x": 200,
+            "position_y": 363
         }
     ],
     "relations": [
