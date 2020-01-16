@@ -314,6 +314,24 @@ class Eon:
             result += self.get_all_linked_nodes(superNode, onto)
         return result
 
+    def dump_int(self, intVal, result):
+        # 8, 16 and 32 bit signed and unsigned integers are supported.
+        # Let's guess which one we have and store accordingly.
+        if intVal < 0: # signed
+            if intVal < -32767: # int32
+                result.write(struct.pack("!Bi", 5 | 0x40, intVal))
+            elif intVal < -127: # int16
+                result.write(struct.pack("!Bh", 4 | 0x40, intVal))
+            else: # int8
+                result.write(struct.pack("!Bb", 3 | 0x40, intVal))
+        else: # unsigned
+            if intVal > 65535: # uint32
+                result.write(struct.pack("!BI", 2 | 0x40, intVal))
+            elif intVal > 255: # uint16
+                result.write(struct.pack("!BH", 1 | 0x40, intVal))
+            else: #uint8
+                result.write(struct.pack("!BB", 0 | 0x40, intVal))
+
     def dump_attrs(self, node, onto):
         result = io.BytesIO()
         tokens = []
@@ -363,26 +381,14 @@ class Eon:
                     # 7 - string
                     try:
                         intVal = int(token) # integer?
-                        # 8, 16 and 32 bit signed and unsigned integers are supported.
-                        # Let's guess which one we have and store accordingly.
-                        if intVal < 0: # signed
-                            if intVal < -32767: # int32
-                                result.write(struct.pack("!Bi", 5 | 0x40, intVal))
-                            elif intVal < -127: # int16
-                                result.write(struct.pack("!Bh", 4 | 0x40, intVal))
-                            else: # int8
-                                result.write(struct.pack("!Bb", 3 | 0x40, intVal))
-                        else: # unsigned
-                            if intVal > 65535: # uint32
-                                result.write(struct.pack("!BI", 2 | 0x40, intVal))
-                            elif intVal > 255: # uint16
-                                result.write(struct.pack("!BH", 1 | 0x40, intVal))
-                            else: #uint8
-                                result.write(struct.pack("!BB", 0 | 0x40, intVal))
+                        self.dump_int(intVal, result)
                     except ValueError:
                         try:
                             floatVal = float(token) # float?
-                            result.write(struct.pack("!Bf", 6 | 0x40, floatVal))
+                            if floatVal.is_integer(): # really float?
+                                self.dump_int(int(floatVal), result)
+                            else:
+                                result.write(struct.pack("!Bf", 6 | 0x40, floatVal))
                         except ValueError:
                             if token.startswith("'") and token.endswith("'"): # String?
                                 # String values are stored as null-terminated byte sequences.
