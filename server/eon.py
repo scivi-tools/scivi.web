@@ -33,7 +33,7 @@ class RPN:
         self.array.append(op)
 
     def operand(self, op):
-        return not (op in self.operations)
+        return (not (op in self.operations)) and (op != "(") and (op != ")")
 
     def less_priority(self, op):
         try:
@@ -241,9 +241,9 @@ class Eon:
             if ch in delimeters:
                 if len(curToken) > 0:
                     tokens.append(curToken)
-                    curToken = ""
-                    if (ch == "(") or (ch == ")"):
-                        tokens.append(ch)
+                curToken = ""
+                if (ch == "(") or (ch == ")"):
+                    tokens.append(ch)
                 continue
             curToken += ch
         if len(curToken) > 0:
