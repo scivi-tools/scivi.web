@@ -15,8 +15,8 @@
             "id": "1",
             "name": "Map",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -24,
-            "position_y": -100
+            "position_x": 467,
+            "position_y": 320
         },
         {
             "attributes": {
@@ -24,8 +24,8 @@
             "id": "2",
             "name": "Math",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -16,
-            "position_y": -159
+            "position_x": 475,
+            "position_y": 261
         },
         {
             "attributes": {
@@ -33,27 +33,27 @@
             "id": "3",
             "name": "Root",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -12,
-            "position_y": -220
+            "position_x": 479,
+            "position_y": 200
         },
         {
             "attributes": {
             },
             "id": "4",
-            "name": "Vin",
+            "name": "X",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -75,
-            "position_y": -50
+            "position_x": 416,
+            "position_y": 370
         },
         {
             "attributes": {
-                "eval": "FromOut + (Vin - FromIn) / (ToIn - FromIn) * (ToOut - FromOut)"
+                "eval": "FromOut + (X - FromIn) / (ToIn - FromIn) * (ToOut - FromOut)"
             },
             "id": "5",
-            "name": "Vout",
+            "name": "Mapped X",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": 2,
-            "position_y": -46
+            "position_x": 493,
+            "position_y": 374
         },
         {
             "attributes": {
@@ -61,8 +61,8 @@
             "id": "6",
             "name": "Input",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -119,
-            "position_y": -14
+            "position_x": 372,
+            "position_y": 406
         },
         {
             "attributes": {
@@ -70,8 +70,8 @@
             "id": "7",
             "name": "Output",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": 50,
-            "position_y": -15
+            "position_x": 541,
+            "position_y": 405
         },
         {
             "attributes": {
@@ -79,8 +79,8 @@
             "id": "8",
             "name": "Number",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -43,
-            "position_y": 19
+            "position_x": 448,
+            "position_y": 439
         },
         {
             "attributes": {
@@ -88,8 +88,8 @@
             "id": "9",
             "name": "Type",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -28,
-            "position_y": 70
+            "position_x": 463,
+            "position_y": 490
         },
         {
             "attributes": {
@@ -97,8 +97,8 @@
             "id": "10",
             "name": "FromIn",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -206,
-            "position_y": -116
+            "position_x": 285,
+            "position_y": 304
         },
         {
             "attributes": {
@@ -106,8 +106,8 @@
             "id": "11",
             "name": "ToIn",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -196,
-            "position_y": -85
+            "position_x": 295,
+            "position_y": 335
         },
         {
             "attributes": {
@@ -115,8 +115,8 @@
             "id": "12",
             "name": "FromOut",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -212,
-            "position_y": -51
+            "position_x": 279,
+            "position_y": 369
         },
         {
             "attributes": {
@@ -124,8 +124,8 @@
             "id": "13",
             "name": "ToOut",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -202,
-            "position_y": -9
+            "position_x": 289,
+            "position_y": 411
         },
         {
             "attributes": {
@@ -133,8 +133,8 @@
             "id": "14",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1578768338653",
-            "position_x": -291,
-            "position_y": -61
+            "position_x": 200,
+            "position_y": 359
         }
     ],
     "relations": [
