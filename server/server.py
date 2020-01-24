@@ -166,7 +166,6 @@ class SciViServer:
                     dm = s["attributes"]["domain"]
                     doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
             types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
-            print(types)
         code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
                "if (!node.data.settings) { " +\

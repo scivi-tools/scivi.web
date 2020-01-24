@@ -15,8 +15,8 @@
             "id": "1",
             "name": "ADC",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": -68,
-            "position_y": -40
+            "position_x": 221,
+            "position_y": 331
         },
         {
             "attributes": {
@@ -24,8 +24,8 @@
             "id": "2",
             "name": "Pin",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": -75,
-            "position_y": -113
+            "position_x": 214,
+            "position_y": 258
         },
         {
             "attributes": {
@@ -33,18 +33,18 @@
             "id": "3",
             "name": "Root",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": -28,
-            "position_y": -171
+            "position_x": 261,
+            "position_y": 200
         },
         {
             "attributes": {
                 "eval": "adc()"
             },
             "id": "6",
-            "name": "Value",
+            "name": "Voltage",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": -66,
-            "position_y": 8
+            "position_x": 223,
+            "position_y": 379
         },
         {
             "attributes": {
@@ -52,8 +52,8 @@
             "id": "7",
             "name": "Number",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": -89,
-            "position_y": 60
+            "position_x": 200,
+            "position_y": 431
         },
         {
             "attributes": {
@@ -61,8 +61,8 @@
             "id": "8",
             "name": "Type",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": -81,
-            "position_y": 109
+            "position_x": 208,
+            "position_y": 480
         },
         {
             "attributes": {
@@ -70,8 +70,8 @@
             "id": "9",
             "name": "Output",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": -4,
-            "position_y": 58
+            "position_x": 285,
+            "position_y": 429
         }
     ],
     "relations": [
