@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import re
 import importlib
 from onto.onto import Onto
 from enum import Enum
@@ -166,6 +167,25 @@ class SciViServer:
                     dm = s["attributes"]["domain"]
                     doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
             types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
+        props = re.findall(r"PROPERTY\[\"(.+?)\"\]", code)
+        for p in props:
+            found = False
+            for i, inp in enumerate(ins):
+                if p == inp["name"]:
+                    dv = None
+                    if ("attributes" in inp) and ("default" in inp["attributes"]):
+                        dv = inp["attributes"]["default"]
+                        if isinstance(dv, str):
+                            dv = "\"" + dv + "\""
+                        else:
+                            dv = str(dv).lower()
+                    else:
+                        dv = "null"
+                    code = code.replace("PROPERTY[\"" + p + "\"]", "(inputs[" + str(i) + "].length > 0 ? inputs[" + str(i) + "][0] : " + dv + ")")
+                    found = True
+                    break
+            if not found:
+                code = code.replace("PROPERTY[\"" + p + "\"]", "node.data.settingsVal[\"" + p + "\"]")
         code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
                "if (!node.data.settings) { " +\
