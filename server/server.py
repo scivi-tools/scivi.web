@@ -180,7 +180,7 @@ class SciViServer:
                         else:
                             dv = str(dv).lower()
                     else:
-                        dv = "null"
+                        dv = "undefined"
                     code = code.replace("PROPERTY[\"" + p + "\"]", "(inputs[" + str(i) + "].length > 0 ? inputs[" + str(i) + "][0] : " + dv + ")")
                     found = True
                     break
