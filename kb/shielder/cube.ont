@@ -38,6 +38,12 @@
         },
         {
             "attributes": {
+                "default": [
+                    0,
+                    0,
+                    0,
+                    1
+                ]
             },
             "id": "4",
             "name": "Rotation",
@@ -101,6 +107,7 @@
         },
         {
             "attributes": {
+                "default": "#00BAE3"
             },
             "id": "21",
             "name": "Surface Color",
