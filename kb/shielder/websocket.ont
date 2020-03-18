@@ -1,5 +1,5 @@
 {
-    "last_id": "41",
+    "last_id": "43",
     "namespaces": {
         "default": "http://knova.ru/user/1584085244995",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -76,7 +76,7 @@
             "attributes": {
             },
             "id": "14",
-            "name": "Orientaton",
+            "name": "Orientation",
             "namespace": "http://knova.ru/user/1584085244995",
             "position_x": 326,
             "position_y": 460
@@ -137,12 +137,13 @@
         },
         {
             "attributes": {
+                "path": "lib/shielder/websocket.js"
             },
             "id": "38",
             "name": "WebSocketWorker",
             "namespace": "http://knova.ru/user/1584085244995",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 696,
+            "position_y": 330
         },
         {
             "attributes": {
@@ -159,8 +160,8 @@
             "id": "40",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1584085244995",
-            "position_x": 869,
-            "position_y": 331
+            "position_x": 834,
+            "position_y": 413
         }
     ],
     "relations": [
@@ -377,6 +378,24 @@
             "destination_node_id": "39",
             "id": "41",
             "name": "is_a",
+            "namespace": "http://knova.ru/user/1584085244995",
+            "source_node_id": "38"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "42",
+            "name": "instance_of",
+            "namespace": "http://knova.ru/user/1584085244995",
+            "source_node_id": "38"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "40",
+            "id": "43",
+            "name": "language",
             "namespace": "http://knova.ru/user/1584085244995",
             "source_node_id": "38"
         }

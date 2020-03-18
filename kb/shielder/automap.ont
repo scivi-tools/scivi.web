@@ -135,14 +135,14 @@
             "id": "29",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1584114533347",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 54,
+            "position_y": -132
         },
         {
             "attributes": {
             },
             "id": "30",
-            "name": "JavaScrupt",
+            "name": "JavaScript",
             "namespace": "http://knova.ru/user/1584114533347",
             "position_x": 190,
             "position_y": -90
