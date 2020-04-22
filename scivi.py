@@ -30,6 +30,12 @@ def shielder_page():
     srv = SciViServer(Onto.load_from_file("kb/shielder/shielder.merged.ont"), None, Mode.VISUALIZATION)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route("/glove")
+def glove_page():
+    global srv
+    srv = SciViServer(Onto.load_from_file("kb/glove/glove.merged.ont"), None, Mode.VISUALIZATION)
+    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
+
 @app.route("/scivi-editor-main.js")
 def editor_main():
     global srv
