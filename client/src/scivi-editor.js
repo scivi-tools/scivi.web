@@ -26,6 +26,9 @@ require("jquery-contextmenu");
 var Split = require("split.js");
 var D3NE = require("d3-node-editor");
 
+const VISUALIZATION_MODE = 1;
+const IOT_PROGRAMMING_MODE = 2;
+
 module.exports = SciViEditor;
 
 function SciViEditor()
@@ -36,7 +39,7 @@ function SciViEditor()
     SciViEditor.prototype.inVisualization = false;
 }
 
-SciViEditor.prototype.run = function ()
+SciViEditor.prototype.run = function (mode)
 {
     var _this = this;
     var container = $("#scivi_node_editor")[0];
@@ -61,6 +64,9 @@ SciViEditor.prototype.run = function ()
         minSize: 0,
         onDrag: function () { editor.view.resize(); }
     });
+
+    if (mode == IOT_PROGRAMMING_MODE) // IOT_PROGRAMMING
+        $("#scivi_btn_visualize").html("Upload ▶");
 
     editor.view.resize();
 
@@ -117,6 +123,9 @@ SciViEditor.prototype.run = function ()
             $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "20px"});
         }
+        if (mode == IOT_PROGRAMMING_MODE) {
+            _this.uploadEON();
+        }
     });
 
     $("#scivi_btn_save").click(function() {
@@ -154,6 +163,73 @@ SciViEditor.prototype.run = function ()
 
     this.editor = editor;
     this.engine = engine;
+}
+
+SciViEditor.prototype.uploadEON = function ()
+{
+    var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
+        return key === "cache" ? undefined : value;
+    });
+    $.post("/gen_eon", content, function (data) {
+        var ont = data["ont"];
+        var eon = data["eon"];
+
+        var upEonDiv = $("<div class='scivi_upload_eon'>");
+        var ontoDiv = $("<div style='display: table-row;'>");
+        var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
+        var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
+        var eonDiv = $("<div style='display: table-row;'>").html("EON blob: " + eon.length + " bytes");
+        var uplDiv = $("<div style='display: table-row;'>");
+        var uplAddr = $("<div style='display: table-cell;'>");
+        var targetAddressLbl = $("<label>").html("Device address: ");
+        var targetAddressTxt = $("<input class='ui-widget' type='text' value='192.168.4.1:81' style='margin-right: 5px;'>");
+        var uploadBtn = $("<button class='ui-widget scivi_button' style='display=table-cell;'>").html("Upload");
+
+        dlOntoBtn.click(function () {
+            var filename = prompt("Enter name of file to save", "task.ont");
+            if (!filename)
+                return;
+            if (!filename.includes("."))
+                filename += ".ont";
+            var element = document.createElement("a");
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(ont)));
+            element.setAttribute("download", filename);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
+
+        uploadBtn.click(function () {
+            console.log(targetAddressTxt.val());
+            var webSocket = new WebSocket("ws://" + targetAddressTxt.val());
+            webSocket.onopen = function(evt) {
+                console.log("WebSocket open");
+                console.log(eon);
+                webSocket.send(Uint8Array.from(eon));
+                webSocket.close();
+            };
+            webSocket.onclose = function(evt) { console.log("WebSocket close"); };
+            webSocket.onerror = function(evt) { console.log(evt); };
+            webSocket.onmessage = function(evt) { console.log(evt); };
+        });
+
+        ontoDiv.append(ontoLbl);
+        ontoDiv.append(dlOntoBtn);
+
+        uplAddr.append(targetAddressLbl);
+        uplAddr.append(targetAddressTxt);
+
+        uplDiv.append(uplAddr);
+        uplDiv.append(uploadBtn);
+
+        upEonDiv.append(ontoDiv);
+        upEonDiv.append(eonDiv);
+        upEonDiv.append(uplDiv);
+
+        $("#scivi_viewport").empty();
+        $("#scivi_viewport").append(upEonDiv);
+    });
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)

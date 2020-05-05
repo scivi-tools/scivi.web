@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import re
 import importlib
 from onto.onto import Onto
+from enum import Enum
+from server.eon import Eon
 
+
+class Mode(Enum):
+    VISUALIZATION = 1
+    IOT_PROGRAMMING = 2
 
 class Localizer:
     ENG = {
@@ -29,7 +36,7 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, onto, context):
+    def __init__(self, onto, context, mode):
         self.onto = onto
         self.loc = "eng"
         self.tree = ""
@@ -38,6 +45,7 @@ class SciViServer:
         self.treeNodes = ""
         self.typeColors = {}
         self.ctx = context
+        self.mode = mode
         self.dependencies = {}
 
         self.gen_tree()
@@ -57,6 +65,8 @@ class SciViServer:
             t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "base_type", "Type"))
             if not t:
                 t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
+            if not t:
+                print("WARNING: Ignoring socket with no type <" + s["name"] + ">")
             if ("attributes" in t) and ("color" in t["attributes"]):
                 self.typeColors[t["name"]] = t["attributes"]["color"]
             else:
@@ -121,23 +131,67 @@ class SciViServer:
                 code = code.replace("%<" + mask["name"] + ">", res)
         return code
 
+    def resolve_domain(self, dom, s):
+        if "," in dom:
+            vals = dom.split(",")
+            result = ""
+            for v in vals:
+                result = result + "\"" + v.strip() + "\","
+            return "[" + result + "]"
+        print("WARNING: malformed domain for <" + s["name"] + ">")
+        return ""
+
+    def type_of_node(self, node):
+        protos = self.onto.get_nodes_linked_from(node, "is_a")
+        for p in protos:
+            if self.onto.is_node_of_type(p, "Type"):
+                return p
+        return None
+
     def resolve_containers(self, code, inputs, outputs, settings):
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
+        types = ""
         defs = ""
+        doms = ""
         for s in settings:
-            if ("attributes" in s) and ("default" in s["attributes"]):
-                dv = s["attributes"]["default"]
-                if isinstance(dv, str):
-                    dv = "\"" + dv + "\""
-                else:
-                    dv = str(dv).lower()
-                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
+            if "attributes" in s:
+                if "default" in s["attributes"]:
+                    dv = s["attributes"]["default"]
+                    if isinstance(dv, str):
+                        dv = "\"" + dv + "\""
+                    else:
+                        dv = str(dv).lower()
+                    defs = defs + "\"" + s["name"] + "\": " + dv + ", "
+                if "domain" in s["attributes"]:
+                    dm = s["attributes"]["domain"]
+                    doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
+            types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
+        props = re.findall(r"PROPERTY\[\"(.+?)\"\]", code)
+        for p in props:
+            found = False
+            for i, inp in enumerate(ins):
+                if p == inp["name"]:
+                    dv = None
+                    if ("attributes" in inp) and ("default" in inp["attributes"]):
+                        dv = inp["attributes"]["default"]
+                        if isinstance(dv, str):
+                            dv = "\"" + dv + "\""
+                        else:
+                            dv = str(dv).lower()
+                    else:
+                        dv = "undefined"
+                    code = code.replace("PROPERTY[\"" + p + "\"]", "(inputs[" + str(i) + "].length > 0 ? (inputs[" + str(i) + "][0] !== null ? inputs[" + str(i) + "][0] : " + dv + ") : " + dv + ")")
+                    found = True
+                    break
+            if not found:
+                code = code.replace("PROPERTY[\"" + p + "\"]", "node.data.settingsVal[\"" + p + "\"]")
         code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
                "if (!node.data.settings) { " +\
-               "node.data.settings = {}; " +\
+               "node.data.settings = {" + doms + "}; " +\
                "node.data.settingsVal = {" + defs + "}; " +\
+               "node.data.settingsType = {" + types + "}; " +\
                "node.data.settingsChanged = {}; " +\
                "} " +\
                "var ADD_VISUAL = function (con) { " +\
@@ -162,12 +216,12 @@ class SciViServer:
 
     def gen_worker(self, workers, inputs, outputs, settings):
         w = self.onto.first(workers)
+        code = ""
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
-            code = self.get_code(w)
+            code = self.process_code(self.get_code(w), masks)
             self.add_dependencies(w)
-            return "function (node, inputs, outputs) { " + self.resolve_containers(self.process_code(code, masks), inputs, outputs, settings) + " }"
-        return "function (node, inputs, outputs){}"
+        return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
 
     def gen_settings(self, settings):
         if len(settings) > 0:
@@ -220,20 +274,12 @@ class SciViServer:
     def gen_tree(self):
         self.tree = "<ul>"
 
-        rootNode = self.onto.first(self.onto.get_nodes_by_name("DataSource"))
-        if rootNode:
-            leafs = self.onto.get_nodes_linked_to(rootNode, "is_a")
-            self.add_tree_level(Localizer.localize("Data Sources", self.loc), leafs)
+        rootNode = self.onto.first(self.onto.get_nodes_by_name("Root"))
+        categories = self.onto.get_nodes_linked_to(rootNode, "is_a")
+        for category in categories:
+            leafs = self.onto.get_nodes_linked_to(category, "is_a")
+            self.add_tree_level(category["name"], leafs)
 
-        rootNode = self.onto.first(self.onto.get_nodes_by_name("Filter"))
-        if rootNode:
-            leafs = self.onto.get_nodes_linked_to(rootNode, "is_a")
-            self.add_tree_level(Localizer.localize("Filters", self.loc), leafs)
-
-        rootNode = self.onto.first(self.onto.get_nodes_by_name("VisualObject"))
-        if rootNode:
-            leafs = self.onto.get_nodes_linked_to(rootNode, "is_a")
-            self.add_tree_level(Localizer.localize("Visual Objects", self.loc), leafs)
         self.tree = self.tree + "</ul>"
 
     def get_editor_js(self):
@@ -242,7 +288,7 @@ class SciViServer:
                "editor = new SciViEditor();" +\
                self.treeNodes +\
                self.treeHandlers +\
-               "editor.run();" +\
+               "editor.run(" + str(self.mode.value) + ");" +\
                "}"
 
     def get_editor_dependencies(self, lang):
@@ -278,3 +324,12 @@ class SciViServer:
                 if self.onto.is_node_of_type(resolver, "ServerSideWorker") and self.get_language(resolver) == "Python":
                     return self.execute(worker)
         return None
+
+    def gen_eon(self, dfd):
+        eon = Eon(self.onto)
+        eonOnto = eon.get_ont(dfd)
+        bs = eon.get_eon(eonOnto)
+        barr = []
+        for b in bs:
+            barr.append(b)
+        return { "ont": eonOnto.data, "eon": barr }

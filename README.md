@@ -70,6 +70,10 @@ For the plugin code, following macros are supported:
 
 * `SETTINGS_CHANGED` -- dict of boolean flags, notifying that the user changed the value of corresponding setting (and probably your node should recalculate its state). It's up to you to set `false` here, when the changes are accepted.
 
+* `PROPERTY` -- dict of node's properties. It incapsulates inputs and settings within a single entity for a unified handling. This means, using this dict, you don't have to bother, what is the named entity kind of. What it actually is, will be determined in runtime according to the ontology. It is recommended to use this dict, and not `INPUT` or `SETTINGS_VAL` unless you don't want to have deep control over the content. Using `PROPERTY`, you don't have to check wether you have data or not. If no value is inferred from the DFD, the default mantioned in the ontology (if any) is substituted, or `undefined`, if there is absolutely nothing.
+
+* `HAS_INPUT` -- dict of bools to check if the given input is connected. Normally you should use `PROPERTY` to access input and settings information in a unified way, so you don't have to check individual inputs. Howvere if required, you can.
+
 * `UPDATE_WIDGETS` -- function to force the settings widgets to update reflecting settings changes.
 
 * `DATA` -- dict for arbitrary data of your node. You can use it in a way you want, it is actually the memory of the node. This memory persists between processing calls. The content of this dict is serialized by saving the settings.

@@ -35,8 +35,8 @@ if len(sys.argv) != 4:
     print("Usage: merge.py onto1.ont onto2.ont result.ont")
     exit(0)
 
-onto1 = Onto(sys.argv[1])
-onto2 = Onto(sys.argv[2])
+onto1 = Onto.load_from_file(sys.argv[1])
+onto2 = Onto.load_from_file(sys.argv[2])
 
 lastID = int(onto1.last_id())
 for node in onto2.nodes():
