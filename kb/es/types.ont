@@ -1,5 +1,5 @@
 {
-    "last_id": "55",
+    "last_id": "59",
     "namespaces": {
         "default": "http://knova.ru/user/1532855052471",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -161,6 +161,26 @@
             "namespace": "http://knova.ru/user/1532855052471",
             "position_x": 697,
             "position_y": 200
+        },
+        {
+            "attributes": {
+                "color": "#ff8800"
+            },
+            "id": "56",
+            "name": "Vector3",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "position_x": 239,
+            "position_y": 221
+        },
+        {
+            "attributes": {
+                "color": "#FF9CF0"
+            },
+            "id": "57",
+            "name": "Quaternion",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "position_x": 162,
+            "position_y": 303
         }
     ],
     "relations": [
@@ -370,6 +390,24 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "52"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "58",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "57"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "59",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "56"
         }
     ],
     "visualize_ont_path": ""
