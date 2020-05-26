@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import urllib
 import importlib
 from onto.onto import Onto
 from enum import Enum
@@ -81,6 +82,13 @@ class SciViServer:
         with open(path, "r") as f:
             return f.read()
 
+    def download_file(self, url):
+        try:
+            return urllib.request.urlopen(url).read().decode("utf-8")
+        except:
+            print("Error by loading url: " + url)
+            return ""
+
     def get_language(self, node):
         result = self.onto.first(self.onto.get_nodes_linked_from(node, "language"))
         if result:
@@ -93,6 +101,8 @@ class SciViServer:
             return node["attributes"]["inline"]
         elif "path" in node["attributes"]:
             return self.read_file(node["attributes"]["path"])
+        elif "url" in node["attributes"]:
+            return self.download_file(node["attributes"]["url"])
         else:
             return ""
 
