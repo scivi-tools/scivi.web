@@ -171,7 +171,13 @@ class Eon:
             "wifiAP" :            { "prec": 1, "opcode": 11 }, \
             "wifiAPClientsCount": { "prec": 1, "opcode": 12 }, \
             "adc":                { "prec": 1, "opcode": 13 }, \
-            "tone":               { "prec": 1, "opcode": 14 }
+            "tone":               { "prec": 1, "opcode": 14 }, \
+            "mpu6050Gyro":        { "prec": 1, "opcode": 15 }, \
+            "mpu6050Accel":       { "prec": 1, "opcode": 16 }, \
+            "madjwick":           { "prec": 1, "opcode": 17 }, \
+            "quat2json":          { "prec": 1, "opcode": 18 }, \
+            "wifi":               { "prec": 1, "opcode": 19 }, \
+            "wsBroadcast":        { "prec": 1, "opcode": 20 },
         }
         self.INST_SUFFIX = " Inst"
 

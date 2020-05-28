@@ -332,6 +332,7 @@ SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
     var value = el.is(":checkbox") ? el.is(":checked") : el.val();
     var node = this.getNodeByID(nodeID);
     node.data.settingsVal[settingName] = value;
+    node.data.settingsChanged[settingName] = true;
 }
 
 SciViEditor.prototype.getHumanReadableSize = function (size)
