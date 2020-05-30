@@ -1,5 +1,5 @@
 {
-    "last_id": "28",
+    "last_id": "32",
     "namespaces": {
         "default": "http://knova.ru/user/1589642910334",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -11,13 +11,13 @@
     "nodes": [
         {
             "attributes": {
-                "eval": "wifi(SSID, Password, AccessPoint), wsBroadcast(JSON)"
+                "eval": "wifi(SSID, Password, mDNS, AccessPoint), wsBroadcast(JSON)"
             },
             "id": "1",
             "name": "WebSocket",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -70,
-            "position_y": -19
+            "position_x": 290,
+            "position_y": 302
         },
         {
             "attributes": {
@@ -25,8 +25,8 @@
             "id": "2",
             "name": "Comms",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -65,
-            "position_y": -63
+            "position_x": 295,
+            "position_y": 258
         },
         {
             "attributes": {
@@ -34,8 +34,8 @@
             "id": "3",
             "name": "Root",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -48,
-            "position_y": -121
+            "position_x": 312,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -43,8 +43,8 @@
             "id": "4",
             "name": "JSON",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -125,
-            "position_y": 39
+            "position_x": 235,
+            "position_y": 360
         },
         {
             "attributes": {
@@ -52,8 +52,8 @@
             "id": "5",
             "name": "String",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -105,
-            "position_y": 95
+            "position_x": 255,
+            "position_y": 416
         },
         {
             "attributes": {
@@ -61,8 +61,8 @@
             "id": "6",
             "name": "Type",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -98,
-            "position_y": 155
+            "position_x": 262,
+            "position_y": 476
         },
         {
             "attributes": {
@@ -70,8 +70,8 @@
             "id": "7",
             "name": "Input",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -160,
-            "position_y": -17
+            "position_x": 200,
+            "position_y": 304
         },
         {
             "attributes": {
@@ -79,17 +79,18 @@
             "id": "8",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": 59,
-            "position_y": -20
+            "position_x": 419,
+            "position_y": 301
         },
         {
             "attributes": {
+                "default": "SciVi"
             },
             "id": "9",
             "name": "SSID",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": -16,
-            "position_y": 33
+            "position_x": 344,
+            "position_y": 354
         },
         {
             "attributes": {
@@ -97,17 +98,18 @@
             "id": "10",
             "name": "Password",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": 49,
-            "position_y": 33
+            "position_x": 409,
+            "position_y": 354
         },
         {
             "attributes": {
+                "default": true
             },
             "id": "11",
             "name": "AccessPoint",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": 130,
-            "position_y": 34
+            "position_x": 490,
+            "position_y": 355
         },
         {
             "attributes": {
@@ -115,8 +117,18 @@
             "id": "12",
             "name": "Bool",
             "namespace": "http://knova.ru/user/1589642910334",
-            "position_x": 135,
-            "position_y": 99
+            "position_x": 495,
+            "position_y": 420
+        },
+        {
+            "attributes": {
+                "default": "scivi.local"
+            },
+            "id": "29",
+            "name": "mDNS",
+            "namespace": "http://knova.ru/user/1589642910334",
+            "position_x": 595,
+            "position_y": 350
         }
     ],
     "relations": [
@@ -260,6 +272,33 @@
             },
             "destination_node_id": "11",
             "id": "28",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1589642910334",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "8",
+            "id": "30",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1589642910334",
+            "source_node_id": "29"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "5",
+            "id": "31",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1589642910334",
+            "source_node_id": "29"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "29",
+            "id": "32",
             "name": "has",
             "namespace": "http://knova.ru/user/1589642910334",
             "source_node_id": "1"

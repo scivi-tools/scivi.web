@@ -158,6 +158,15 @@ class SciViServer:
                 return p
         return None
 
+    def resolve_default(self, node):
+        t = self.onto.first(self.onto.get_typed_nodes_linked_from(node, "is_a", "Type"))
+        if not t:
+            return 0
+        if t["name"] == "String":
+            return ""
+        else:
+            return 0
+
     def resolve_containers(self, code, inputs, outputs, settings):
         ins = sorted(inputs, key = lambda inp: int(inp["id"]))
         outs = sorted(outputs, key = lambda outp: int(outp["id"]))
@@ -166,13 +175,16 @@ class SciViServer:
         doms = ""
         for s in settings:
             if "attributes" in s:
+                dv = None
                 if "default" in s["attributes"]:
                     dv = s["attributes"]["default"]
-                    if isinstance(dv, str):
-                        dv = "\"" + dv + "\""
-                    else:
-                        dv = str(dv).lower()
-                    defs = defs + "\"" + s["name"] + "\": " + dv + ", "
+                else:
+                    dv = self.resolve_default(s)
+                if isinstance(dv, str):
+                    dv = "\"" + dv + "\""
+                else:
+                    dv = str(dv).lower()
+                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
                 if "domain" in s["attributes"]:
                     dm = s["attributes"]["domain"]
                     doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "

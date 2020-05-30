@@ -307,6 +307,11 @@ class Eon:
         for s in settings:
             if types[s] == "String":
                 code = code.replace(s, "'" + str(settings[s]) + "'")
+            elif types[s] == "Bool":
+                if settings[s]:
+                    code = code.replace(s, "1")
+                else:
+                    code = code.replace(s, "0")
             else:
                 code = code.replace(s, str(settings[s]))
         return code
