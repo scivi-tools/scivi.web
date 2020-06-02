@@ -216,10 +216,7 @@ class SciViServer:
                "node.data.settingsType = {" + types + "}; " +\
                "node.data.settingsChanged = {}; " +\
                "} " +\
-               "var ADD_VISUAL = function (con) { " +\
-               "while (editor.viewportContainer().firstChild) editor.viewportContainer().removeChild(editor.viewportContainer().firstChild); " +\
-               "editor.viewportContainer().appendChild(con); " +\
-               "}; " +\
+               "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con); }; " +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
         for i, inp in enumerate(ins):
