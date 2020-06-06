@@ -373,6 +373,7 @@ SciViEditor.prototype.addVisualToViewport = function (el)
         for (var i = 0, n = this.visuals.length; i < n; ++i)
             visualContainers[i].appendChild(this.visuals[i]);
     }
+    window.dispatchEvent(new Event("resize"));
 }
 
 SciViEditor.prototype.clearViewport = function ()
