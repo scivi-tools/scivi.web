@@ -131,6 +131,7 @@ ul
     margin-left: -15px;
     text-align: center;
     margin-top: 8px;
+    word-wrap: break-word;
 }
 
 .ui-slider .ui-slider-handle
