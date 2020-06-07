@@ -111,6 +111,7 @@ SciViEditor.prototype.run = function (mode)
     $("#scivi_btn_visualize").click(function () {
         viewPortVisible = !viewPortVisible;
         _this.inVisualization = viewPortVisible;
+        _this.clearViewport();
         _this.process();
         if (!viewPortVisible) {
             $(".scivi_slide").css({"transform": "translateX(0%)"});
@@ -163,6 +164,8 @@ SciViEditor.prototype.run = function (mode)
 
     this.editor = editor;
     this.engine = engine;
+
+    this.visuals = [];
 }
 
 SciViEditor.prototype.uploadEON = function ()
@@ -319,6 +322,66 @@ SciViEditor.prototype.process = function ()
 SciViEditor.prototype.viewportContainer = function ()
 {
     return document.getElementById("scivi_viewport");
+}
+
+SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootContainer, visualContainers, conID)
+{
+    var d1, d2;
+    var id1 = "_" + conID + "_1";
+    var id2 = "_" + conID + "_2";
+    conID[0]++;
+    if (currentDepth % 2 === 0) {
+        d1 = $("<div class='split split-vertical' id='" + id1 + "'>");
+        d2 = $("<div class='split split-vertical' id='" + id2 + "'>");
+    } else {
+        d1 = $("<div class='split split-horizontal' id='" + id1 + "'>");
+        d2 = $("<div class='split split-horizontal' id='" + id2 + "'>");
+    }
+
+    rootContainer.appendChild(d1[0]);
+    rootContainer.appendChild(d2[0]);
+
+    Split(["#" + id1, "#" + id2], {
+        gutterSize: 8,
+        sizes: [50, 50],
+        minSize: 0,
+        direction: currentDepth % 2 === 0 ? "vertical" : "horizontal",
+        onDrag: function () { window.dispatchEvent(new Event("resize")); }
+    });
+
+    if (desiredDepth == currentDepth) {
+        visualContainers.push(d1[0]);
+        visualContainers.push(d2[0]);
+    } else {
+        this.placeVisual(desiredDepth, currentDepth + 1, d1[0], visualContainers, conID);
+        this.placeVisual(desiredDepth, currentDepth + 1, d2[0], visualContainers, conID);
+    }
+}
+
+SciViEditor.prototype.addVisualToViewport = function (el)
+{
+    var vp = this.viewportContainer();
+    while (vp.firstChild)
+        vp.removeChild(vp.firstChild);
+    this.visuals.push(el);
+    if (this.visuals.length == 1)
+        vp.appendChild(el);
+    else
+    {
+        var visualContainers = [];
+        this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0]);
+        for (var i = 0, n = this.visuals.length; i < n; ++i)
+            visualContainers[i].appendChild(this.visuals[i]);
+    }
+    window.dispatchEvent(new Event("resize"));
+}
+
+SciViEditor.prototype.clearViewport = function ()
+{
+    var vp = this.viewportContainer();
+    while (vp.firstChild)
+        vp.removeChild(vp.firstChild);
+    this.visuals = [];
 }
 
 SciViEditor.prototype.getNodeByID = function (nodeID)

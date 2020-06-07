@@ -1,0 +1,5 @@
+
+.leaflet-tile-pane {
+  -webkit-filter: opacity(70%);
+  filter: opacity(70%);
+}
