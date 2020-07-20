@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+
+  scivi:
+    image: docker.semograph.com/semograph/scivi/app:${CI_COMMIT_REF_NAME}
+    build:
+      context: .
+    ports:
+      - ${PROD_SCIVI_PORT}:5000
+    environment:
+      - FLASK_ENV=production
