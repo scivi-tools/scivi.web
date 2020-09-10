@@ -167,7 +167,7 @@ class Eon:
             "<=":                 { "prec": 0, "opcode": 7 }, \
             "==":                 { "prec": 0, "opcode": 8 }, \
             "dw":                 { "prec": 1, "opcode": 9 }, \
-            "osc":                { "prec": 1, "opcode": 10 }, \
+            "meander":            { "prec": 1, "opcode": 10 }, \
             "wifiAP" :            { "prec": 1, "opcode": 11 }, \
             "wifiAPClientsCount": { "prec": 1, "opcode": 12 }, \
             "adc":                { "prec": 1, "opcode": 13 }, \
