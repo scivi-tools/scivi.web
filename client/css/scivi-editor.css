@@ -326,8 +326,9 @@ input[type="file"]
 .scivi_upload_eon
 {
     font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
-    margin-left: 20px;
+    margin-left: 70px;
     margin-right: 20px;
+    margin-top: 20px;
     padding: 20px;
     border-radius: 10px;
     border-width: 1px;

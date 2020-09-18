@@ -115,7 +115,10 @@ SciViEditor.prototype.run = function (mode)
         _this.process();
         if (!viewPortVisible) {
             $(".scivi_slide").css({"transform": "translateX(0%)"});
-            $("#scivi_btn_visualize").html("Visualize ▶");
+            if (mode == IOT_PROGRAMMING_MODE)
+                $("#scivi_btn_visualize").html("Upload ▶");
+            else
+                $("#scivi_btn_visualize").html("Visualize ▶");
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
         } else {
