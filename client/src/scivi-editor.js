@@ -423,6 +423,21 @@ SciViEditor.prototype.uploadFile = function (settingName, settingID, nodeID)
     this.process();
 }
 
+SciViEditor.prototype.uploadFiles = function (settingName, settingID, nodeID)
+{
+    var sid = settingID + "_" + nodeID;
+    var f = $("#f_" + sid)[0].files;
+    var node = this.getNodeByID(nodeID);
+    var meta = "</br>";
+    for (var i = 0, n = f.length; i < n; ++i)
+        meta += f[i].name + " (" + this.getHumanReadableSize(f[i].size) + ")</br>";
+    $("#" + sid).html(meta);
+    node.data.settingsVal[settingName] = f;
+    node.data.settingsVal[settingName + "_meta"] = meta;
+    node.data.settingsChanged[settingName] = true;
+    this.process();
+}
+
 SciViEditor.prototype.updateWidgets = function (node)
 {
     if (this.selectedNode && node.id === this.selectedNode.id)
