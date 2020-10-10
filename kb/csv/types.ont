@@ -1,5 +1,5 @@
 {
-    "last_id": "66",
+    "last_id": "68",
     "namespaces": {
         "default": "http://knova.ru/user/1532855052471",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -56,7 +56,7 @@
             "name": "GraphNode",
             "namespace": "http://knova.ru/user/1532855052471",
             "position_x": 469,
-            "position_y": 420
+            "position_y": 400
         },
         {
             "attributes": {
@@ -65,8 +65,8 @@
             "id": "6",
             "name": "GraphEdge",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 541,
-            "position_y": 452
+            "position_x": 536,
+            "position_y": 427
         },
         {
             "attributes": {
@@ -123,8 +123,8 @@
             "id": "22",
             "name": "Grid",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 605,
-            "position_y": 478
+            "position_x": 594,
+            "position_y": 458
         },
         {
             "attributes": {
@@ -285,6 +285,16 @@
             "namespace": "http://knova.ru/user/1532855052471",
             "position_x": 724,
             "position_y": 911
+        },
+        {
+            "attributes": {
+                "color": "#FF644E"
+            },
+            "id": "67",
+            "name": "JSON",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "position_x": 607,
+            "position_y": 487
         }
     ],
     "relations": [
@@ -602,6 +612,15 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "63"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "68",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "67"
         }
     ],
     "visualize_ont_path": ""
