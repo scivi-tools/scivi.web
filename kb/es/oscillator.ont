@@ -15,7 +15,7 @@
             "id": "1",
             "name": "Oscillator",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 479,
+            "position_x": 214,
             "position_y": 321
         },
         {
@@ -24,17 +24,17 @@
             "id": "2",
             "name": "Generator",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 490,
+            "position_x": 225,
             "position_y": 257
         },
         {
             "attributes": {
-                "eval": "osc(Period, Phase)"
+                "eval": "meander(Period, Phase)"
             },
             "id": "4",
             "name": "Meander",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 615,
+            "position_x": 350,
             "position_y": 317
         },
         {
@@ -43,7 +43,7 @@
             "id": "5",
             "name": "Output",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 654,
+            "position_x": 389,
             "position_y": 259
         },
         {
@@ -53,7 +53,7 @@
             "id": "7",
             "name": "Period",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 465,
+            "position_x": 200,
             "position_y": 400
         },
         {
@@ -63,7 +63,7 @@
             "id": "8",
             "name": "Phase",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 558,
+            "position_x": 293,
             "position_y": 382
         },
         {
@@ -72,7 +72,7 @@
             "id": "9",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 520,
+            "position_x": 255,
             "position_y": 458
         },
         {
@@ -81,7 +81,7 @@
             "id": "10",
             "name": "Number",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 637,
+            "position_x": 372,
             "position_y": 450
         },
         {
@@ -90,7 +90,7 @@
             "id": "11",
             "name": "Type",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 702,
+            "position_x": 437,
             "position_y": 497
         },
         {
@@ -99,7 +99,7 @@
             "id": "36",
             "name": "Root",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 504,
+            "position_x": 239,
             "position_y": 200
         },
         {
@@ -108,7 +108,7 @@
             "id": "40",
             "name": "Bool",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 682,
+            "position_x": 417,
             "position_y": 381
         }
     ],
