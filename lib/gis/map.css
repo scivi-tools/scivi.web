@@ -9,3 +9,16 @@
 {
     right: auto;
 }
+
+.scivi_map_tooltip
+{
+    font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
+    position: absolute;
+    background: #fefeff;
+    opacity: 0.9;
+    border-radius: 5px;
+    border: 1px solid #333333;
+    padding: 3px;
+    pointer-events: none;
+    z-index: 10000;
+}
