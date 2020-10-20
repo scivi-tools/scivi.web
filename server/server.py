@@ -168,8 +168,6 @@ class SciViServer:
             return 0
 
     def resolve_containers(self, code, inputs, outputs, settings):
-        ins = sorted(inputs, key = lambda inp: int(inp["id"]))
-        outs = sorted(outputs, key = lambda outp: int(outp["id"]))
         types = ""
         defs = ""
         doms = ""
@@ -192,7 +190,7 @@ class SciViServer:
         props = re.findall(r"PROPERTY\[\"(.+?)\"\]", code)
         for p in props:
             found = False
-            for i, inp in enumerate(ins):
+            for i, inp in enumerate(inputs):
                 if p == inp["name"]:
                     dv = None
                     if ("attributes" in inp) and ("default" in inp["attributes"]):
@@ -219,10 +217,10 @@ class SciViServer:
                "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con); }; " +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
-        for i, inp in enumerate(ins):
+        for i, inp in enumerate(inputs):
             code = code.replace("HAS_INPUT[\"" + inp["name"] + "\"]", "(inputs[" + str(i) + "].length > 0)")
             code = code.replace("INPUT[\"" + inp["name"] + "\"]", "inputs[" + str(i) + "][0]")
-        for i, outp in enumerate(outs):
+        for i, outp in enumerate(outputs):
             code = code.replace("OUTPUT[\"" + outp["name"] + "\"]", "outputs[" + str(i) + "]")
         code = code.replace("DATA", "node.data")
         code = code.replace("CACHE", "node.data.cache")
@@ -270,8 +268,10 @@ class SciViServer:
     def add_leaf(self, leaf):
         self.tree = self.tree + "<li><span id='i" + str(self.treeID) + "'>" + leaf["name"] + "</span></li>"
         inputNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Input")
+        inputNodes = sorted(inputNodes, key = lambda inp: int(inp["id"]))
         inputs = self.gen_sockets(inputNodes)
         outputNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Output")
+        outputNodes = sorted(outputNodes, key = lambda outp: int(outp["id"]))
         outputs = self.gen_sockets(outputNodes)
         settingNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Setting")
         worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
