@@ -10,6 +10,12 @@
     right: auto;
 }
 
+.leaflet-control-zoom
+{
+    margin-left: 20px !important;
+    margin-bottom: 25px !important;
+}
+
 .scivi_map_tooltip
 {
     font: 12px Helvetica Neue, Helvetica, Arial, sans-serif;
