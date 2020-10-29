@@ -10,8 +10,10 @@ from server.eon import Eon
 
 
 class Mode(Enum):
+    UNDEFINED = 0
     VISUALIZATION = 1
     IOT_PROGRAMMING = 2
+    MIXED = 3
 
 class Localizer:
     ENG = {
@@ -37,7 +39,7 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, onto, context, mode):
+    def __init__(self, onto, context):
         self.onto = onto
         self.loc = "eng"
         self.tree = ""
@@ -46,7 +48,7 @@ class SciViServer:
         self.treeNodes = ""
         self.typeColors = {}
         self.ctx = context
-        self.mode = mode
+        self.mode = Mode.UNDEFINED
         self.dependencies = {}
 
         self.gen_tree()
@@ -264,6 +266,19 @@ class SciViServer:
             return f
         return "function (node){}"
 
+    def check_mode(self, leaf):
+        if self.mode != Mode.MIXED:
+            curMode = Mode.UNDEFINED
+            if self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ServerSideWorker")):
+                curMode = Mode.MIXED
+            elif self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "EdgeSideWorker")):
+                curMode = Mode.IOT_PROGRAMMING
+            elif self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ClientSideWorker")):
+                curMode = Mode.VISUALIZATION
+            if self.mode == Mode.UNDEFINED:
+                self.mode = curMode
+            elif self.mode != curMode:
+                self.mode = Mode.MIXED
 
     def add_leaf(self, leaf):
         self.tree = self.tree + "<li><span id='i" + str(self.treeID) + "'>" + leaf["name"] + "</span></li>"
@@ -282,6 +297,7 @@ class SciViServer:
                             "$('#i" + str(self.treeID) +\
                             "').click(function (e){editor.createNode('" + leaf["name"] + "');});"
         self.treeID = self.treeID + 1
+        self.check_mode(leaf)
 
     def add_tree_level(self, root, leafs):
         self.add_node(root)

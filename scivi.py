@@ -15,31 +15,31 @@ srv = None
 @app.route("/csv")
 def csv_page():
     global srv
-    srv = SciViServer(OntoMerger("kb/csv").onto, None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/csv").onto, None)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/es")
 def es_page():
     global srv
-    srv = SciViServer(OntoMerger("kb/es").onto, None, Mode.IOT_PROGRAMMING)
+    srv = SciViServer(OntoMerger("kb/es").onto, None)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/shielder")
 def shielder_page():
     global srv
-    srv = SciViServer(OntoMerger("kb/shielder").onto, None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/shielder").onto, None)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/glove")
 def glove_page():
     global srv
-    srv = SciViServer(OntoMerger("kb/glove").onto, None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/glove").onto, None)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/soc")
 def soc_page():
     global srv
-    srv = SciViServer(OntoMerger("kb/soc").onto, None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/soc").onto, None)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/scivi-editor-main.js")
