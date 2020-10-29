@@ -4,7 +4,7 @@
 from flask import Flask, send_from_directory, request, jsonify
 
 from server.server import SciViServer, Mode
-from onto.onto import Onto
+from onto.merge import OntoMerger
 
 
 app = Flask(__name__, static_url_path="")
@@ -15,31 +15,31 @@ srv = None
 @app.route("/csv")
 def csv_page():
     global srv
-    srv = SciViServer(Onto.load_from_file("kb/csv/csv.merged.ont"), None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/csv").onto, None, Mode.VISUALIZATION)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/es")
 def es_page():
     global srv
-    srv = SciViServer(Onto.load_from_file("kb/es/es.merged.ont"), None, Mode.IOT_PROGRAMMING)
+    srv = SciViServer(OntoMerger("kb/es").onto, None, Mode.IOT_PROGRAMMING)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/shielder")
 def shielder_page():
     global srv
-    srv = SciViServer(Onto.load_from_file("kb/shielder/shielder.merged.ont"), None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/shielder").onto, None, Mode.VISUALIZATION)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/glove")
 def glove_page():
     global srv
-    srv = SciViServer(Onto.load_from_file("kb/glove/glove.merged.ont"), None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/glove").onto, None, Mode.VISUALIZATION)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/soc")
 def soc_page():
     global srv
-    srv = SciViServer(Onto.load_from_file("kb/soc/soc.merged.ont"), None, Mode.VISUALIZATION)
+    srv = SciViServer(OntoMerger("kb/soc").onto, None, Mode.VISUALIZATION)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/scivi-editor-main.js")
@@ -81,6 +81,14 @@ def editor_css(filename):
 @app.route("/lib/<path:filename>")
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+@app.route("/exec/<nodeID>")
+def srv_exec(nodeID):
+    # nodeID = request.args.get("nodeID")
+    # instanceID = request.args.get("instanceID")
+    # print(str(nodeID) + " " + str(instanceID))
+    print(nodeID)
+    return "OK"
 
 @app.route("/gen_eon", methods = ['POST'])
 def gen_eon():
