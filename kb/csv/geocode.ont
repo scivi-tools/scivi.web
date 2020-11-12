@@ -377,7 +377,7 @@
             },
             "destination_node_id": "1",
             "id": "40",
-            "name": "instance_of",
+            "name": "is_instsance",
             "namespace": "http://knova.ru/user/1589729043725",
             "source_node_id": "38"
         },

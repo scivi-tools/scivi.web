@@ -42,7 +42,7 @@ Plugins in JavaScript should be described in ontology.
 
 Plugins may be data sources (YourPlugin -is_a-> DataSource), filters (YourPlugin -is_a-> Filter) and visual objects (YourPlugin -is_a-> VisualObject). "DataSource", "Filter" and "VisualObject" are conventional top-level SciVi ontology concepts you should use describing your plugin.
 
-The JavaScript-implementation of the plugin should be described like the following: YourPlugin <-instance_of- YourPluginImpl -is_a-> ClientSideWorker; YourPluginImpl -language-> JavaScript. The actual implementation should be linked via the attribute.
+The JavaScript-implementation of the plugin should be described like the following: YourPlugin <-is_instsance- YourPluginImpl -is_a-> ClientSideWorker; YourPluginImpl -language-> JavaScript. The actual implementation should be linked via the attribute.
 
 If the plugin is super-simple and its implementation is just a single line, the attribute called `inline` should be used as follows:
 ```

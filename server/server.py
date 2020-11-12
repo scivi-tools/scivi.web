@@ -279,11 +279,11 @@ class SciViServer:
     def check_mode(self, leaf):
         if self.mode != Mode.MIXED:
             curMode = Mode.UNDEFINED
-            if self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ServerSideWorker")):
+            if self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "is_instsance", "ServerSideWorker")):
                 curMode = Mode.MIXED
-            elif self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "EdgeSideWorker")):
+            elif self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "is_instsance", "EdgeSideWorker")):
                 curMode = Mode.IOT_PROGRAMMING
-            elif self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ClientSideWorker")):
+            elif self.onto.first(self.onto.get_typed_nodes_linked_to(leaf, "is_instsance", "ClientSideWorker")):
                 curMode = Mode.VISUALIZATION
             if self.mode == Mode.UNDEFINED:
                 self.mode = curMode
@@ -299,7 +299,7 @@ class SciViServer:
         outputNodes = sorted(outputNodes, key = lambda outp: int(outp["id"]))
         outputs = self.gen_sockets(outputNodes)
         settingNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Setting")
-        worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "instance_of", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
+        worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "is_instsance", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
         sett = self.gen_settings(settingNodes)
         self.treeNodes = self.treeNodes +\
                          "editor.registerNode('" + leaf["name"] + "', " + inputs + ", " + outputs + ", " + worker + ", " + sett + ");"
