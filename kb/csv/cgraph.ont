@@ -1,5 +1,5 @@
 {
-    "last_id": "82",
+    "last_id": "86",
     "namespaces": {
         "default": "http://knova.ru/user/1551554527520",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -271,6 +271,16 @@
             "namespace": "http://knova.ru/user/1551554527520",
             "position_x": 675,
             "position_y": 440
+        },
+        {
+            "attributes": {
+                "default": false
+            },
+            "id": "83",
+            "name": "Is Directed",
+            "namespace": "http://knova.ru/user/1551554527520",
+            "position_x": 0,
+            "position_y": 0
         }
     ],
     "relations": [
@@ -723,6 +733,33 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1551554527520",
             "source_node_id": "79"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "83",
+            "id": "84",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551554527520",
+            "source_node_id": "2"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "85",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551554527520",
+            "source_node_id": "83"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "69",
+            "id": "86",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551554527520",
+            "source_node_id": "83"
         }
     ],
     "visualize_ont_path": ""
