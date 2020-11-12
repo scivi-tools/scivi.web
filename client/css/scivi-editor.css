@@ -36,7 +36,7 @@ ul
 
 [data-ui-css-component="treeview"] ul
 {
-    padding: 0 0 0 40px;
+    padding: 0 0 0 20px;
     display: none;
     list-style: none;
 }
@@ -53,7 +53,7 @@ ul
 
 [data-ui-css-component="treeview"] li span
 {
-    margin: 2px 0;
+    margin: 2px 0px 2px 20px;
     display: list-item;
     list-style: square;
     cursor: pointer;
@@ -64,7 +64,7 @@ ul
     display: inline-block;
     transition: 0.2s;
     padding-right: 10px;
-    margin: 5px 0;
+    margin: 2px 0;
     height: 20px;
     line-height: 20px;
     cursor: pointer;

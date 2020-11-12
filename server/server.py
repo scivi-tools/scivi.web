@@ -309,11 +309,15 @@ class SciViServer:
         self.treeID = self.treeID + 1
         self.check_mode(leaf)
 
-    def add_tree_level(self, root, leafs):
+    def add_tree_level(self, root, children):
         self.add_node(root)
         self.tree = self.tree + "<ul>"
-        for l in leafs:
-            self.add_leaf(l)
+        for c in children:
+            subChildren = self.onto.get_nodes_linked_to(c, "is_a")
+            if len(subChildren) > 0:
+                self.add_tree_level(c["name"], subChildren)
+            else:
+                self.add_leaf(c)
         self.tree = self.tree + "</ul>"
 
     def gen_tree(self):
@@ -322,8 +326,7 @@ class SciViServer:
         rootNode = self.onto.first(self.onto.get_nodes_by_name("Root"))
         categories = self.onto.get_nodes_linked_to(rootNode, "is_a")
         for category in categories:
-            leafs = self.onto.get_nodes_linked_to(category, "is_a")
-            self.add_tree_level(category["name"], leafs)
+            self.add_tree_level(category["name"], self.onto.get_nodes_linked_to(category, "is_a"))
 
         self.tree = self.tree + "</ul>"
 
