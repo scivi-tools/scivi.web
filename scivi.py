@@ -99,6 +99,15 @@ def gen_eon():
     resp.status_code = 200
     return resp
 
+@app.route("/gen_mixed", methods = ['POST'])
+def gen_mixed():
+    global srv
+    dfd = request.get_json(force = True)
+    res = srv.gen_mixed(dfd)
+    resp = jsonify(res)
+    resp.status_code = 200
+    return resp
+
 @app.after_request
 def add_header(response):
     response.cache_control.max_age = 0

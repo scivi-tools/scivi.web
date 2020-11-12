@@ -28,6 +28,7 @@ var D3NE = require("d3-node-editor");
 
 const VISUALIZATION_MODE = 1;
 const IOT_PROGRAMMING_MODE = 2;
+const MIXED_MODE = 3;
 
 module.exports = SciViEditor;
 
@@ -65,8 +66,7 @@ SciViEditor.prototype.run = function (mode)
         onDrag: function () { editor.view.resize(); }
     });
 
-    if (mode == IOT_PROGRAMMING_MODE) // IOT_PROGRAMMING
-        $("#scivi_btn_visualize").html("Upload ▶");
+    $("#scivi_btn_visualize").html(runButtonName(mode));
 
     editor.view.resize();
 
@@ -115,10 +115,7 @@ SciViEditor.prototype.run = function (mode)
         _this.process();
         if (!viewPortVisible) {
             $(".scivi_slide").css({"transform": "translateX(0%)"});
-            if (mode == IOT_PROGRAMMING_MODE)
-                $("#scivi_btn_visualize").html("Upload ▶");
-            else
-                $("#scivi_btn_visualize").html("Visualize ▶");
+            $("#scivi_btn_visualize").html(runButtonName(mode));
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
         } else {
@@ -236,6 +233,17 @@ SciViEditor.prototype.uploadEON = function ()
         $("#scivi_viewport").empty();
         $("#scivi_viewport").append(upEonDiv);
     });
+}
+
+SciViEditor.prototype.runMixed = function ()
+{
+    var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
+        return key === "cache" ? undefined : value;
+    });
+    $.post("/gen_mixed", content, function (data) {
+        //var ont = data["ont"];
+        //var eon = data["eon"];
+    }
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
@@ -442,4 +450,19 @@ SciViEditor.prototype.updateWidgets = function (node)
 {
     if (this.selectedNode && node.id === this.selectedNode.id)
         this.selectNode(this.selectedNode);
+}
+
+SciViEditor.prototype.runButtonName = function (mode)
+{
+    switch (mode) {
+        case VISUALIZATION_MODE:
+            return "Visualize ▶";
+
+        case IOT_PROGRAMMING_MODE:
+            return "Upload ▶";
+
+        case MIXED_MODE:
+            return "Run ▶";
+    }
+    return "Visualize ▶";
 }

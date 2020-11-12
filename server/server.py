@@ -10,6 +10,16 @@ from server.eon import Eon
 
 
 class Mode(Enum):
+    '''
+    The Mode enum provides basic functioning modes of SciVi.
+    UNDEFINED       means no mode assigned whereby it shoudl be determined in runtime based on the domain ontology supplied.
+    VISUALIZATION   means pure client-side DFD execution for the sake of in-browser visualization (and analytics).
+                    Each node is executed within browser.
+    IOT_PROGRAMMING means pure edge-side DFD execution for the sake of IoT programming (solving tasks decribed by DFD on the MCUs).
+                    Each node is executed within Edge device.
+    MIXED           means the DFD should be split up into pices each one executed on its own side: server-, client- or edge-.
+                    Each node is classified by server and executed either on the server, or within browser, or within Edge device.
+    '''
     UNDEFINED = 0
     VISUALIZATION = 1
     IOT_PROGRAMMING = 2
@@ -368,3 +378,6 @@ class SciViServer:
         for b in bs:
             barr.append(b)
         return { "ont": eonOnto.data, "eon": barr }
+
+    def gen_mixed(self, dfd):
+        pass
