@@ -1,5 +1,5 @@
 {
-    "last_id": "42",
+    "last_id": "46",
     "namespaces": {
         "default": "http://knova.ru/user/1574191177667",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -15,7 +15,7 @@
             "id": "1",
             "name": "Oscillator",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 214,
+            "position_x": 383,
             "position_y": 321
         },
         {
@@ -24,7 +24,7 @@
             "id": "2",
             "name": "Generator",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 225,
+            "position_x": 394,
             "position_y": 257
         },
         {
@@ -34,7 +34,7 @@
             "id": "4",
             "name": "Meander",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 350,
+            "position_x": 519,
             "position_y": 317
         },
         {
@@ -43,7 +43,7 @@
             "id": "5",
             "name": "Output",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 389,
+            "position_x": 558,
             "position_y": 259
         },
         {
@@ -53,7 +53,7 @@
             "id": "7",
             "name": "Period",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 200,
+            "position_x": 369,
             "position_y": 400
         },
         {
@@ -63,7 +63,7 @@
             "id": "8",
             "name": "Phase",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 293,
+            "position_x": 462,
             "position_y": 382
         },
         {
@@ -72,7 +72,7 @@
             "id": "9",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 255,
+            "position_x": 424,
             "position_y": 458
         },
         {
@@ -81,7 +81,7 @@
             "id": "10",
             "name": "Number",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 372,
+            "position_x": 541,
             "position_y": 450
         },
         {
@@ -90,7 +90,7 @@
             "id": "11",
             "name": "Type",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 437,
+            "position_x": 606,
             "position_y": 497
         },
         {
@@ -99,7 +99,7 @@
             "id": "36",
             "name": "Root",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 239,
+            "position_x": 408,
             "position_y": 200
         },
         {
@@ -108,8 +108,26 @@
             "id": "40",
             "name": "Bool",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 417,
+            "position_x": 586,
             "position_y": 381
+        },
+        {
+            "attributes": {
+            },
+            "id": "43",
+            "name": "Oscillator Worker",
+            "namespace": "http://knova.ru/user/1574191177667",
+            "position_x": 211,
+            "position_y": 284
+        },
+        {
+            "attributes": {
+            },
+            "id": "44",
+            "name": "EdgeSideWorker",
+            "namespace": "http://knova.ru/user/1574191177667",
+            "position_x": 200,
+            "position_y": 233
         }
     ],
     "relations": [
@@ -247,6 +265,24 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1574191177667",
             "source_node_id": "40"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "44",
+            "id": "45",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1574191177667",
+            "source_node_id": "43"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "46",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1574191177667",
+            "source_node_id": "43"
         }
     ],
     "visualize_ont_path": ""
