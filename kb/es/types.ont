@@ -252,7 +252,7 @@
             },
             "destination_node_id": "28",
             "id": "33",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "29"
         },
@@ -288,7 +288,7 @@
             },
             "destination_node_id": "26",
             "id": "39",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "36"
         },
@@ -306,7 +306,7 @@
             },
             "destination_node_id": "9",
             "id": "43",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "42"
         },
@@ -351,7 +351,7 @@
             },
             "destination_node_id": "46",
             "id": "50",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "48"
         },
@@ -369,7 +369,7 @@
             },
             "destination_node_id": "7",
             "id": "53",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "52"
         },

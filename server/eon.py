@@ -222,7 +222,7 @@ class Eon:
         if instNmb == 0:
             return onto.last_id()
         if self.instance_of_type(node, "Input", onto):
-            return self.get_node_order(onto.first(onto.get_nodes_linked_to(node, "use_for")), onto) + 1
+            return self.get_node_order(onto.first(onto.get_nodes_linked_to(node, "is_used")), onto) + 1
         motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
         if self.instance_of_type(node, "Output", onto):
             motherSuperNode = onto.first(onto.get_nodes_linked_to(motherNode, "has"))
@@ -299,7 +299,7 @@ class Eon:
         instOutput = self.get_corresponding_instance_io(src, "Output", srcOutputNumber, onto)
         instInput = self.get_corresponding_instance_io(dst, "Input", dstInputNumber, onto)
         if instOutput and instInput:
-            onto.link_nodes(instOutput, instInput, "use_for")
+            onto.link_nodes(instOutput, instInput, "is_used")
 
     def resolve_settings(self, code, data):
         settings = data["settingsVal"]
@@ -469,7 +469,7 @@ class Eon:
                 result.link_nodes(resultOutput, motherOutput, "is_instance")
                 result.link_nodes(motherOutput, resultO, "is_a")
                 result.link_nodes(motherNode, motherOutput, "has")
-        # Add data connection from DFD as use_for links.
+        # Add data connection from DFD as is_used links.
         for dfdNodeKey in dfdNodes:
             dfdNode = dfdNodes[dfdNodeKey]
             for dfdOutputNumber in range(0, len(dfdNode["outputs"])):
@@ -496,19 +496,19 @@ class Eon:
             # D - dst node ID
             # tID - internal task onto ID
             # mID - external mother onto ID
-            # use_for:     SSSSSS 0000 DDDDDD          // src and dst are tIDs
+            # is_used:     SSSSSS 0000 DDDDDD          // src and dst are tIDs
             # is_instance: SSSSSS 10 DDDDDDDD          // src is tID, dst is mID, dst <= 256
             # is_instance: SSSSSS 11 DDDDDDDD DDDDDDDD // src is tID, dst is mID, 256 < dst <= 65536
-            if link["name"] == "use_for":
+            if link["name"] == "is_used":
                 linksChunk.write(bytes([link["source_node_id"] << 2]))
                 linksChunk.write(bytes([link["destination_node_id"]]))
             elif link["name"] == "is_instance":
                 srcNode = eonOnto.get_node_by_id(link["source_node_id"])
                 dstNode = eonOnto.get_node_by_id(link["destination_node_id"])
-                # Node is not trimmed, if it is a part of use_for link having mother prototype
+                # Node is not trimmed, if it is a part of is_used link having mother prototype
                 # OR it has an eval action
-                if (eonOnto.first(eonOnto.get_nodes_linked_from(srcNode, "use_for")) or \
-                    eonOnto.first(eonOnto.get_nodes_linked_to(srcNode, "use_for")) or \
+                if (eonOnto.first(eonOnto.get_nodes_linked_from(srcNode, "is_used")) or \
+                    eonOnto.first(eonOnto.get_nodes_linked_to(srcNode, "is_used")) or \
                     (("attributes" in srcNode) and ("eval" in srcNode["attributes"]))) and \
                     ("attributes" in dstNode) and ("mother" in dstNode["attributes"]):
                     motherID = int(dstNode["attributes"]["mother"])

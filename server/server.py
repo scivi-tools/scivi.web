@@ -139,7 +139,7 @@ class SciViServer:
             return ""
 
     def resolve_mask(self, mask):
-        resolvers = self.onto.get_nodes_linked_to(mask, "use_for")
+        resolvers = self.onto.get_nodes_linked_to(mask, "is_used")
         if resolvers:
             for resolver in resolvers:
                 if self.onto.is_node_of_type(resolver, "ServerSideWorker") and self.get_language(resolver) == "Python":
@@ -257,7 +257,7 @@ class SciViServer:
             f = "function (node){ if (node.data) node.data.settingsCtrl = \"\"; if (!node.data || !node.data.settings) return; var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; "
             for s in settings:
                 t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
-                widgets = self.onto.get_typed_nodes_linked_to(t, "use_for", "Widget")
+                widgets = self.onto.get_typed_nodes_linked_to(t, "is_used", "Widget")
                 widget = None
                 for w in widgets:
                     if self.get_language(w) == "JavaScript":
@@ -366,7 +366,7 @@ class SciViServer:
         node = self.onto.get_node_by_id(nodeID)
         if not node:
             return None
-        workers = self.onto.get_nodes_linked_to(mask, "use_for")
+        workers = self.onto.get_nodes_linked_to(mask, "is_used")
         if workers:
             for worker in workers:
                 if self.onto.is_node_of_type(resolver, "ServerSideWorker") and self.get_language(resolver) == "Python":

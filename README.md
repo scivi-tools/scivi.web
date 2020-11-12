@@ -88,7 +88,7 @@ For the plugin code, following macros are supported:
 
 ## Writing widgets ##
 
-Widgets are almost like plugins, but they are used for interactive change of nodes' parameters, and not directly for data processing or visualization. Widgets are associated with data types allowing the user to input or modify corresponding data. They have the following ontological description: Widget <-is_a- YourWidget -use_for-> YourType -is_a-> Type. "Widget" and "Type" are conventional top-level SciVi ontology concepts. "YourWidget" should also have attribute `inline` or `path` and may have dependencies, just like plugin.
+Widgets are almost like plugins, but they are used for interactive change of nodes' parameters, and not directly for data processing or visualization. Widgets are associated with data types allowing the user to input or modify corresponding data. They have the following ontological description: Widget <-is_a- YourWidget -is_used-> YourType -is_a-> Type. "Widget" and "Type" are conventional top-level SciVi ontology concepts. "YourWidget" should also have attribute `inline` or `path` and may have dependencies, just like plugin.
 
 When writing widgets code, you may use the following macros:
 

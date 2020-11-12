@@ -207,7 +207,7 @@
             },
             "destination_node_id": "4",
             "id": "17",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1551540440580",
             "source_node_id": "13"
         },

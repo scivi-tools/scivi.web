@@ -269,7 +269,7 @@
             },
             "destination_node_id": "32",
             "id": "38",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "35"
         },
@@ -287,7 +287,7 @@
             },
             "destination_node_id": "7",
             "id": "42",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "41"
         },
@@ -332,7 +332,7 @@
             },
             "destination_node_id": "8",
             "id": "48",
-            "name": "use_for",
+            "name": "is_used",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "45"
         }
