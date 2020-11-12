@@ -205,11 +205,11 @@ class Eon:
             return 0
 
     def instance_of_type(self, node, type, onto):
-        instNode = onto.first(onto.get_nodes_linked_from(node, "is_instsance"))
+        instNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
         return onto.is_node_of_type(instNode, type)
 
     def get_corresponding_instance(self, instNmb, motherNode, onto):
-        instances = onto.get_nodes_linked_to(motherNode, "is_instsance")
+        instances = onto.get_nodes_linked_to(motherNode, "is_instance")
         for inst in instances:
             if self.get_instance_number(inst) == instNmb:
                 return inst
@@ -223,7 +223,7 @@ class Eon:
             return onto.last_id()
         if self.instance_of_type(node, "Input", onto):
             return self.get_node_order(onto.first(onto.get_nodes_linked_to(node, "use_for")), onto) + 1
-        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instsance"))
+        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
         if self.instance_of_type(node, "Output", onto):
             motherSuperNode = onto.first(onto.get_nodes_linked_to(motherNode, "has"))
             superNode = self.get_corresponding_instance(instNmb, motherSuperNode, onto)
@@ -270,7 +270,7 @@ class Eon:
         processedNodes = []
         for node in onto.nodes():
             if self.get_instance_number(node) == 0:
-                instNode = onto.first(onto.get_nodes_linked_to(node, "is_instsance"))
+                instNode = onto.first(onto.get_nodes_linked_to(node, "is_instance"))
                 if instNode:
                     node["position_x"] = instNode["position_x"]
                     node["position_y"] = instNode["position_y"] - h
@@ -290,7 +290,7 @@ class Eon:
             maxWidth = max(maxWidth, w * order)
 
     def get_corresponding_instance_io(self, node, type, nmb, onto):
-        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instsance"))
+        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
         motherIOs = onto.get_typed_nodes_linked_from(motherNode, "has", type)
         instNmb = self.get_instance_number(node)
         return self.get_corresponding_instance(instNmb, motherIOs[nmb], onto)
@@ -317,7 +317,7 @@ class Eon:
         return code
 
     def get_related_nodes(self, node, onto):
-        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instsance"))
+        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
         result = onto.get_nodes_linked_from(motherNode, "has")
         motherSuperNode = onto.first(onto.get_nodes_linked_to(motherNode, "has"))
         if motherSuperNode:
@@ -449,7 +449,7 @@ class Eon:
             resultNode = result.add_node(self.get_instance_name(dfdNode["title"], instNmb), \
                                          self.get_attrs(ontoNode, dfdNode["data"]))
             motherNode = self.add_mother_node(dfdNode["title"], ontoNode["id"], result)
-            result.link_nodes(resultNode, motherNode, "is_instsance")
+            result.link_nodes(resultNode, motherNode, "is_instance")
             resultNodesArr[dfdNode["id"]] = resultNode
             # Add inputs.
             ontoInputs = self.onto.get_typed_nodes_linked_from(ontoNode, "has", "Input")
@@ -457,7 +457,7 @@ class Eon:
                 resultInput = result.add_node(self.get_instance_name(ontoInput["name"], instNmb), \
                                               self.get_attrs(ontoInput, dfdNode["data"]))
                 motherInput = self.add_mother_node(ontoInput["name"], ontoInput["id"], result)
-                result.link_nodes(resultInput, motherInput, "is_instsance")
+                result.link_nodes(resultInput, motherInput, "is_instance")
                 result.link_nodes(motherInput, resultI, "is_a")
                 result.link_nodes(motherNode, motherInput, "has")
             # Add outputs.
@@ -466,7 +466,7 @@ class Eon:
                 resultOutput = result.add_node(self.get_instance_name(ontoOutput["name"], instNmb), \
                                                self.get_attrs(ontoOutput, dfdNode["data"]))
                 motherOutput = self.add_mother_node(ontoOutput["name"], ontoOutput["id"], result)
-                result.link_nodes(resultOutput, motherOutput, "is_instsance")
+                result.link_nodes(resultOutput, motherOutput, "is_instance")
                 result.link_nodes(motherOutput, resultO, "is_a")
                 result.link_nodes(motherNode, motherOutput, "has")
         # Add data connection from DFD as use_for links.
@@ -497,12 +497,12 @@ class Eon:
             # tID - internal task onto ID
             # mID - external mother onto ID
             # use_for:     SSSSSS 0000 DDDDDD          // src and dst are tIDs
-            # is_instsance: SSSSSS 10 DDDDDDDD          // src is tID, dst is mID, dst <= 256
-            # is_instsance: SSSSSS 11 DDDDDDDD DDDDDDDD // src is tID, dst is mID, 256 < dst <= 65536
+            # is_instance: SSSSSS 10 DDDDDDDD          // src is tID, dst is mID, dst <= 256
+            # is_instance: SSSSSS 11 DDDDDDDD DDDDDDDD // src is tID, dst is mID, 256 < dst <= 65536
             if link["name"] == "use_for":
                 linksChunk.write(bytes([link["source_node_id"] << 2]))
                 linksChunk.write(bytes([link["destination_node_id"]]))
-            elif link["name"] == "is_instsance":
+            elif link["name"] == "is_instance":
                 srcNode = eonOnto.get_node_by_id(link["source_node_id"])
                 dstNode = eonOnto.get_node_by_id(link["destination_node_id"])
                 # Node is not trimmed, if it is a part of use_for link having mother prototype
