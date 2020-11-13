@@ -8,16 +8,17 @@ from onto.merge import OntoMerger
 
 
 app = Flask(__name__, static_url_path="")
-srv = None
+# srv = None
+srv = SciViServer(OntoMerger("kb/csv").onto, None)
 
 @app.route("/")
 @app.route("/index.html")
 @app.route("/csv")
 def csv_page():
-    global srv
-    srv = SciViServer(OntoMerger("kb/csv").onto, None)
+    #global srv
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+'''
 @app.route("/es")
 def es_page():
     global srv
@@ -41,6 +42,7 @@ def soc_page():
     global srv
     srv = SciViServer(OntoMerger("kb/soc").onto, None)
     return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
+'''
 
 @app.route("/scivi-editor-main.js")
 def editor_main():
