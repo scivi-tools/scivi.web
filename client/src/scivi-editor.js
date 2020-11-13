@@ -115,7 +115,7 @@ SciViEditor.prototype.run = function (mode)
         _this.process();
         if (!viewPortVisible) {
             $(".scivi_slide").css({"transform": "translateX(0%)"});
-            $("#scivi_btn_visualize").html(this.runButtonName(mode));
+            $("#scivi_btn_visualize").html(_this.runButtonName(mode));
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
         } else {
