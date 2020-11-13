@@ -237,13 +237,13 @@ SciViEditor.prototype.uploadEON = function ()
 
 SciViEditor.prototype.runMixed = function ()
 {
-    var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
+    /*var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
     $.post("/gen_mixed", content, function (data) {
         //var ont = data["ont"];
         //var eon = data["eon"];
-    }
+    }*/
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
