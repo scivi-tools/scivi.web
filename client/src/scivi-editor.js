@@ -66,7 +66,7 @@ SciViEditor.prototype.run = function (mode)
         onDrag: function () { editor.view.resize(); }
     });
 
-    $("#scivi_btn_visualize").html(runButtonName(mode));
+    $("#scivi_btn_visualize").html(this.runButtonName(mode));
 
     editor.view.resize();
 
