@@ -80,12 +80,13 @@
         },
         {
             "attributes": {
+                "color": "#FF42A1"
             },
             "id": "8",
             "name": "Color",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 430,
-            "position_y": 681
+            "position_x": 418,
+            "position_y": 727
         },
         {
             "attributes": {

@@ -13,7 +13,7 @@
             "attributes": {
             },
             "id": "1",
-            "name": "Incidence Matrix To Graph Data",
+            "name": "Adj Matrix To Graph Data",
             "namespace": "http://knova.ru/user/1605210329633",
             "position_x": 50,
             "position_y": -94
@@ -40,10 +40,10 @@
             "attributes": {
             },
             "id": "4",
-            "name": "Incidence Matrix",
+            "name": "Adj Matrix",
             "namespace": "http://knova.ru/user/1605210329633",
-            "position_x": 11,
-            "position_y": 7
+            "position_x": 41,
+            "position_y": 0
         },
         {
             "attributes": {
@@ -101,13 +101,13 @@
         },
         {
             "attributes": {
-                "path": "lib/csvGetters/incMatrix2GraphData.js"
+                "path": "lib/csvGetters/adjMatrix2GraphData.js"
             },
             "id": "21",
-            "name": "IncMatrix2GraphData Worker",
+            "name": "AdjMatrix2GraphData Worker",
             "namespace": "http://knova.ru/user/1605210329633",
-            "position_x": 359,
-            "position_y": -181
+            "position_x": 355,
+            "position_y": -180
         },
         {
             "attributes": {
@@ -115,8 +115,8 @@
             "id": "22",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1605210329633",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 406,
+            "position_y": -246
         },
         {
             "attributes": {
@@ -124,8 +124,8 @@
             "id": "23",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1605210329633",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 451,
+            "position_y": -130
         },
         {
             "attributes": {
@@ -133,8 +133,8 @@
             "id": "27",
             "name": "Name",
             "namespace": "http://knova.ru/user/1605210329633",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -127,
+            "position_y": -95
         },
         {
             "attributes": {
@@ -142,8 +142,8 @@
             "id": "28",
             "name": "String",
             "namespace": "http://knova.ru/user/1605210329633",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -180,
+            "position_y": -14
         },
         {
             "attributes": {
@@ -151,8 +151,8 @@
             "id": "29",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1605210329633",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -157,
+            "position_y": -176
         }
     ],
     "relations": [
