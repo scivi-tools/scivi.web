@@ -7,74 +7,60 @@ from server.server import SciViServer, Mode
 from onto.merge import OntoMerger
 
 
-app = Flask(__name__, static_url_path="")
-# srv = None
-srv = SciViServer(OntoMerger("kb/csv").onto, None)
+app = Flask(__name__, static_url_path = "")
+srvDict = {}
+
+def getEditor(name):
+    res = send_from_directory("client", "editor.html")
+    res.set_cookie("srv", value = name)
+    return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/")
 @app.route("/index.html")
 @app.route("/csv")
 def csv_page():
-    #global srv
-    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
+    return getEditor("csv")
 
-'''
 @app.route("/es")
 def es_page():
-    global srv
-    srv = SciViServer(OntoMerger("kb/es").onto, None)
-    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
+    return getEditor("es")
 
 @app.route("/shielder")
 def shielder_page():
-    global srv
-    srv = SciViServer(OntoMerger("kb/shielder").onto, None)
-    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
+    return getEditor("shielder")
 
 @app.route("/glove")
 def glove_page():
-    global srv
-    srv = SciViServer(OntoMerger("kb/glove").onto, None)
-    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
+    return getEditor("glove")
 
 @app.route("/soc")
 def soc_page():
-    global srv
-    srv = SciViServer(OntoMerger("kb/soc").onto, None)
-    return send_from_directory("client", "editor.html"), 200, {'Content-Type': 'text/html; charset=utf-8'}
-'''
+    return getEditor("soc")
+
+def getSrv():
+    global srvDict
+    srvKey = request.cookies.get("srv")
+    if not srvKey:
+        raise "Server task not running, visit root page first"
+    if not (srvKey in srvDict):
+        srvDict[srvKey] = SciViServer(OntoMerger("kb/" + srvKey).onto, None)
+    return srvDict[srvKey]
 
 @app.route("/scivi-editor-main.js")
 def editor_main():
-    global srv
-    if not srv:
-        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
-    else:
-        return srv.get_editor_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+    return getSrv().get_editor_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 @app.route("/scivi-editor-dependencies.js")
 def editor_deps():
-    global srv
-    if not srv:
-        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
-    else:
-        return srv.get_editor_dependencies_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+    return getSrv().get_editor_dependencies_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 @app.route("/css/scivi-editor-dependencies.css")
 def editor_deps_css():
-    global srv
-    if not srv:
-        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
-    else:
-        return srv.get_editor_dependencies_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
+    return getSrv().get_editor_dependencies_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/scivi-sockets.css")
 def editor_sockets_css():
-    global srv
-    if not srv:
-        return "Server task not running, visit <a href='/csv'>root</a> page first", 500
-    else:
-        return srv.get_editor_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
+    return getSrv().get_editor_css(), 200, {'Content-Type': 'text/css; charset=utf-8'}
 
 @app.route("/css/<path:filename>")
 def editor_css(filename):
@@ -94,9 +80,8 @@ def srv_exec(nodeID):
 
 @app.route("/gen_eon", methods = ['POST'])
 def gen_eon():
-    global srv
     dfd = request.get_json(force = True)
-    res = srv.gen_eon(dfd)
+    res = getSrv().gen_eon(dfd)
     resp = jsonify(res)
     resp.status_code = 200
     return resp
