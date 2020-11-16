@@ -11,6 +11,8 @@ app = Flask(__name__, static_url_path = "")
 srvDict = {}
 
 def getEditor(name):
+    if name in srvDict:
+        del srvDict[name]
     res = send_from_directory("client", "editor.html")
     res.set_cookie("srv", value = name)
     return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
