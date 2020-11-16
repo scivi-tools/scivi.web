@@ -7,6 +7,7 @@ import importlib
 from onto.onto import Onto
 from enum import Enum
 from server.eon import Eon
+from server.dfd2onto import DFD2Onto
 
 
 class Mode(Enum):
@@ -374,8 +375,9 @@ class SciViServer:
         return None
 
     def gen_eon(self, dfd):
+        dfd2onto = DFD2Onto(self.onto)
+        eonOnto = dfd2onto.get_onto(dfd)
         eon = Eon(self.onto)
-        eonOnto = eon.get_ont(dfd)
         bs = eon.get_eon(eonOnto)
         barr = []
         for b in bs:
