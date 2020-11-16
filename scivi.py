@@ -83,7 +83,11 @@ def srv_exec(nodeID):
 @app.route("/gen_eon", methods = ['POST'])
 def gen_eon():
     dfd = request.get_json(force = True)
-    res = getSrv().gen_eon(dfd)
+    res = None
+    try:
+        res = getSrv().gen_eon(dfd)
+    except ValueError as err:
+        res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
     return resp

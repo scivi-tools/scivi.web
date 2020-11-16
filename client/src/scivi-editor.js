@@ -173,7 +173,13 @@ SciViEditor.prototype.uploadEON = function ()
     var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
+    var _this = this;
     $.post("/gen_eon", content, function (data) {
+        if (data["error"]) {
+            _this.showError(data["error"]);
+            return;
+        }
+
         var ont = data["ont"];
         var eon = data["eon"];
 
@@ -248,6 +254,7 @@ SciViEditor.prototype.runMixed = function ()
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
 {
+    var _this = this;
     var sockets = this.sockets;
     var node = new D3NE.Component(name,
     {
@@ -269,21 +276,7 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                 workerFunc(node, inputs, outputs);
                 settingsFunc(node);
             } catch(err) {
-                console.log(err);
-                $("#scivi_error_text").html(err);
-                var dlg = $("#scivi_error").dialog({
-                    modal: true,
-                    buttons: {
-                        Ok: function() {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-                var dp = dlg.parent();
-                dp.css("background", "#FBDAC9").css("border", "1px solid #3F3F3F");
-                dp.find(".ui-dialog-buttonpane").css("background", "#FBDAC9").css("border-top", "1px solid #3F3F3F");
-                dp.find(".ui-dialog-titlebar").css("background", "#FF4D00").css("color", "#FFFFFF");
-                dp.find(".ui-button").css("border", "1px solid #3F3F3F");
+                _this.showError(err);
             }
         }
     });
@@ -465,4 +458,29 @@ SciViEditor.prototype.runButtonName = function (mode)
             return "Run ▶";
     }
     return "Visualize ▶";
+}
+
+SciViEditor.prototype.escapeHTML = function (text)
+{
+    var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+SciViEditor.prototype.showError = function (err)
+{
+    console.log(err);
+    $("#scivi_error_text").html(this.escapeHTML(err));
+    var dlg = $("#scivi_error").dialog({
+        modal: true,
+        buttons: {
+            Ok: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    var dp = dlg.parent();
+    dp.css("background", "#FBDAC9").css("border", "1px solid #3F3F3F");
+    dp.find(".ui-dialog-buttonpane").css("background", "#FBDAC9").css("border-top", "1px solid #3F3F3F");
+    dp.find(".ui-dialog-titlebar").css("background", "#FF4D00").css("color", "#FFFFFF");
+    dp.find(".ui-button").css("border", "1px solid #3F3F3F");
 }
