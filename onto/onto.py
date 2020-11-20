@@ -265,3 +265,14 @@ class Onto:
         }
         self.links().append(link)
         return link
+
+    def remove_node(self, node):
+        '''
+        Remove node from the ontology. All the incident links are removed as well.
+        @param node - node to remove.
+        '''
+        links = self.links().copy()
+        for link in links:
+            if (link["source_node_id"] == node["id"]) or (link["destination_node_id"] == node["id"]):
+                self.links().remove(link)
+        self.nodes().remove(node)
