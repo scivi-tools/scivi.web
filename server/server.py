@@ -378,11 +378,13 @@ class SciViServer:
         dfd2onto = DFD2Onto(self.onto)
         eonOnto = dfd2onto.get_onto(dfd)
         eon = Eon(self.onto)
-        bs = eon.get_eon(eonOnto)
+        bs, eonOnto = eon.get_eon(eonOnto)
         barr = []
         for b in bs:
             barr.append(b)
         return { "ont": eonOnto.data, "eon": barr }
 
     def gen_mixed(self, dfd):
+        dfd2onto = DFD2Onto(self.onto)
+        mixedOnto = dfd2onto.get_onto(dfd)
         pass

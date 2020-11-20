@@ -94,9 +94,12 @@ def gen_eon():
 
 @app.route("/gen_mixed", methods = ['POST'])
 def gen_mixed():
-    global srv
     dfd = request.get_json(force = True)
-    res = srv.gen_mixed(dfd)
+    res = None
+    try:
+        res = getSrv().gen_mixed(dfd)
+    except ValueError as err:
+        res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
     return resp
