@@ -70,6 +70,10 @@ def editor_css(filename):
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
+@app.route("/preset/<path:filename>")
+def editor_preset(filename):
+    return send_from_directory("client/preset", filename), 200, {'Content-Type': 'application/json; charset=utf-8'}
+
 @app.route("/exec/<nodeID>")
 def srv_exec(nodeID):
     # nodeID = request.args.get("nodeID")
