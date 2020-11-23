@@ -169,10 +169,10 @@ SciViEditor.prototype.run = function (mode)
 
     var urlParams = new URLSearchParams(window.location.search);
     var preset = urlParams.get("preset");
-    console.log(window.location.search);
-    console.log(preset);
     if (preset) {
+        $(".loader").show();
         $.getJSON("preset/" + preset, async function (data) {
+            $(".loader").hide();
             await editor.fromJSON(data);
         });
     }

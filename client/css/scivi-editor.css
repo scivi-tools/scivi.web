@@ -366,3 +366,29 @@ input[type="file"]
     background: #007bff;
     color: #fff;
 }
+
+/***************************/
+/*       Loader stuff      */
+/***************************/
+
+.loader
+{
+    border: 8px solid #b8b8b9;
+    border-top: 8px solid #333745;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    margin-top: -30px;
+    margin-left: -30px;
+    display: hidden;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin
+{
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
