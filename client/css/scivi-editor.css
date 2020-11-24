@@ -383,7 +383,7 @@ input[type="file"]
     top: 50%;
     margin-top: -30px;
     margin-left: -30px;
-    display: hidden;
+    display: none;
     animation: spin 2s linear infinite;
 }
 
