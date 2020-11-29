@@ -249,7 +249,7 @@ class DFD2Onto:
                 if dfdOnto.is_node_of_type(b, "Input"):
                     connectedOutputs = dfdOnto.get_nodes_linked_to(ib, "is_used")
                     for co in connectedOutputs:
-                        if self.io_has_worker(dfdOnto, co, "EdgeSideWorker"):
+                        if self.io_has_worker(dfdOnto, co, workerName):
                             txInstance = self.instanciate_node(tx, txNmb, \
                                                                { "settingsVal": { "Input Address": ib["id"] }, \
                                                                  "settingsType": { "Input Address": "Integer" } }, \
@@ -260,7 +260,7 @@ class DFD2Onto:
                 elif dfdOnto.is_node_of_type(b, "Output"):
                     connectedInputs = dfdOnto.get_nodes_linked_from(ib, "is_used")
                     for ci in connectedInputs:
-                        if self.io_has_worker(dfdOnto, ci, "EdgeSideWorker"):
+                        if self.io_has_worker(dfdOnto, ci, workerName):
                             rxInstance = self.instanciate_node(rx, rxNmb, \
                                                                { "settingsVal": { "Input Address": ib["id"] }, \
                                                                  "settingsType": { "Input Address": "Integer" } }, \
