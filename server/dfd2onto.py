@@ -140,10 +140,18 @@ class DFD2Onto:
             result = dfdOnto.add_node(motherNode["name"], { "mother": motherNode["id"] })
         return result
 
-    def instanciate_node(self, motherNode, instNmb, instAttrs, dfdOnto, dfdI, dfdO):
+    def add_affinity_node(self, affinityNode, dfdOnto):
+        result = dfdOnto.first(dfdOnto.get_nodes_by_name(affinityNode["name"]))
+        if not result:
+            result = dfdOnto.add_node(affinityNode["name"])
+        return result
+
+    def instanciate_node(self, motherNode, affinityNode, instNmb, instAttrs, dfdOnto, dfdI, dfdO):
         instanceNode = dfdOnto.add_node(self.get_instance_name(motherNode["name"], instNmb), instAttrs)
         protoNode = self.add_proto_node(motherNode, dfdOnto)
+        hostNode = self.add_affinity_node(affinityNode, dfdOnto)
         dfdOnto.link_nodes(instanceNode, protoNode, "is_instance")
+        dfdOnto.link_nodes(instanceNode, hostNode, "is_hosted")
         # Add inputs.
         motherInputs = self.onto.get_typed_nodes_linked_from(motherNode, "has", "Input")
         for motherInput in motherInputs:
@@ -169,6 +177,26 @@ class DFD2Onto:
             return dfdNode["data"][key]
         return {}
 
+    def get_affinity(self, node):
+        # TODO: this should be changed when we'll be able to choose affinity in the GUI for ambigous cases.
+        # Ambigues case is when there are multiple workers of given node,
+        # or there are multiple computing resurses linked to corresponding worker.
+        workers = self.onto.get_nodes_linked_to(node, "is_instance")
+        n = len(workers)
+        if n == 0:
+            raise ValueError("No worker for <" + node["name"] + ">")
+        elif n > 1:
+            raise ValueError("Ambigous worker for <" + node["name"] + ">")
+        workerType = self.onto.first(self.onto.get_nodes_linked_from(workers[0], "is_a"))
+        affinity = self.onto.get_nodes_linked_from(workerType, "is_used")
+        return self.onto.first(affinity)
+        # n = len(affinity)
+        # if n == 0:
+        #     raise ValueError("No computing resource can handle <" + node["name"] + ">")
+        # elif n > 1:
+        #     raise ValueError("Ambigous computing resource for <" + node["name"] + ">")
+        # return affinity[0]
+
     def get_onto(self, dfd):
         dfdNodes = dfd["nodes"]
         resultNodesArr = {}
@@ -182,6 +210,7 @@ class DFD2Onto:
             # Add node.
             resultAttrs = {}
             motherNode = self.onto.first(self.onto.get_nodes_by_name(dfdNode["title"]))
+            affinityNode = self.get_affinity(motherNode)
             instNmb = 1
             if dfdNode["title"] in resultInstances:
                 instNmb = resultInstances[dfdNode["title"]]
@@ -189,8 +218,7 @@ class DFD2Onto:
                 resultInstances[dfdNode["title"]] = instNmb
             else:
                 resultInstances[dfdNode["title"]] = instNmb
-            instanceNode = self.instanciate_node(motherNode, \
-                                                 instNmb, \
+            instanceNode = self.instanciate_node(motherNode, affinityNode, instNmb, \
                                                  { "settingsVal": self.get_dfd_data(dfdNode, "settingsVal"), \
                                                    "settingsType": self.get_dfd_data(dfdNode, "settingsType"), \
                                                    "dfd": dfdNode["id"] }, \

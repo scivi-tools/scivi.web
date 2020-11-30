@@ -126,6 +126,8 @@ SciViEditor.prototype.run = function (mode)
         }
         if (mode == IOT_PROGRAMMING_MODE) {
             _this.uploadEON();
+        } else if (mode = MIXED_MODE) {
+            _this.runMixed();
         }
     });
 
@@ -243,6 +245,7 @@ SciViEditor.prototype.uploadEON = function ()
 
 SciViEditor.prototype.runMixed = function ()
 {
+    this.uploadEON();
     /*var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
