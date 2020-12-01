@@ -126,7 +126,7 @@ SciViEditor.prototype.run = function (mode)
         }
         if (mode == IOT_PROGRAMMING_MODE) {
             _this.uploadEON();
-        } else if (mode = MIXED_MODE) {
+        } else if (mode == MIXED_MODE) {
             _this.runMixed();
         }
     });
@@ -245,14 +245,75 @@ SciViEditor.prototype.uploadEON = function ()
 
 SciViEditor.prototype.runMixed = function ()
 {
-    this.uploadEON();
-    /*var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
+    var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
+    var _this = this;
     $.post("/gen_mixed", content, function (data) {
-        //var ont = data["ont"];
-        //var eon = data["eon"];
-    }*/
+        if (data["error"]) {
+            _this.showError(data["error"]);
+            return;
+        }
+
+        var ont = data["ont"];
+        // var eon = data["eon"];
+
+        var upEonDiv = $("<div class='scivi_upload_eon'>");
+        var ontoDiv = $("<div style='display: table-row;'>");
+        var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
+        var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
+        // var eonDiv = $("<div style='display: table-row;'>").html("EON blob: " + eon.length + " bytes");
+        var uplDiv = $("<div style='display: table-row;'>");
+        var uplAddr = $("<div style='display: table-cell;'>");
+        var targetAddressLbl = $("<label>").html("Device address: ");
+        var targetAddressTxt = $("<input class='ui-widget' type='text' value='192.168.4.1:81' style='margin-right: 5px;'>");
+        var uploadBtn = $("<button class='ui-widget scivi_button' style='display=table-cell;'>").html("Upload");
+
+        dlOntoBtn.click(function () {
+            var filename = prompt("Enter name of file to save", "task.ont");
+            if (!filename)
+                return;
+            if (!filename.includes("."))
+                filename += ".ont";
+            var element = document.createElement("a");
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(ont)));
+            element.setAttribute("download", filename);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
+
+        // uploadBtn.click(function () {
+        //     console.log(targetAddressTxt.val());
+        //     var webSocket = new WebSocket("ws://" + targetAddressTxt.val());
+        //     webSocket.onopen = function(evt) {
+        //         console.log("WebSocket open");
+        //         console.log(eon);
+        //         webSocket.send(Uint8Array.from(eon));
+        //         webSocket.close();
+        //     };
+        //     webSocket.onclose = function(evt) { console.log("WebSocket close"); };
+        //     webSocket.onerror = function(evt) { console.log(evt); };
+        //     webSocket.onmessage = function(evt) { console.log(evt); };
+        // });
+
+        ontoDiv.append(ontoLbl);
+        ontoDiv.append(dlOntoBtn);
+
+        uplAddr.append(targetAddressLbl);
+        uplAddr.append(targetAddressTxt);
+
+        uplDiv.append(uplAddr);
+        uplDiv.append(uploadBtn);
+
+        upEonDiv.append(ontoDiv);
+        // upEonDiv.append(eonDiv);
+        upEonDiv.append(uplDiv);
+
+        $("#scivi_viewport").empty();
+        $("#scivi_viewport").append(upEonDiv);
+    });
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)

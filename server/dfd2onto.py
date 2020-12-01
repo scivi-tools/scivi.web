@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from onto.onto import Onto
+import copy
 
 
 class DFD2Onto:
@@ -140,18 +141,11 @@ class DFD2Onto:
             result = dfdOnto.add_node(motherNode["name"], { "mother": motherNode["id"] })
         return result
 
-    def add_affinity_node(self, affinityNode, dfdOnto):
-        result = dfdOnto.first(dfdOnto.get_nodes_by_name(affinityNode["name"]))
-        if not result:
-            result = dfdOnto.add_node(affinityNode["name"])
-        return result
-
     def instanciate_node(self, motherNode, affinityNode, instNmb, instAttrs, dfdOnto, dfdI, dfdO):
         instanceNode = dfdOnto.add_node(self.get_instance_name(motherNode["name"], instNmb), instAttrs)
         protoNode = self.add_proto_node(motherNode, dfdOnto)
-        hostNode = self.add_affinity_node(affinityNode, dfdOnto)
         dfdOnto.link_nodes(instanceNode, protoNode, "is_instance")
-        dfdOnto.link_nodes(instanceNode, hostNode, "is_hosted")
+        dfdOnto.link_nodes(instanceNode, affinityNode, "is_hosted")
         # Add inputs.
         motherInputs = self.onto.get_typed_nodes_linked_from(motherNode, "has", "Input")
         for motherInput in motherInputs:
@@ -177,7 +171,7 @@ class DFD2Onto:
             return dfdNode["data"][key]
         return {}
 
-    def get_affinity(self, node):
+    def get_affinity(self, node, dfdOnto):
         # TODO: this should be changed when we'll be able to choose affinity in the GUI for ambigous cases.
         # Ambigues case is when there are multiple workers of given node,
         # or there are multiple computing resurses linked to corresponding worker.
@@ -188,14 +182,38 @@ class DFD2Onto:
         elif n > 1:
             raise ValueError("Ambigous worker for <" + node["name"] + ">")
         workerType = self.onto.first(self.onto.get_nodes_linked_from(workers[0], "is_a"))
-        affinity = self.onto.get_nodes_linked_from(workerType, "is_used")
-        return self.onto.first(affinity)
-        # n = len(affinity)
+        resources = self.onto.get_nodes_linked_from(workerType, "is_used")
+        # n = len(resources)
         # if n == 0:
         #     raise ValueError("No computing resource can handle <" + node["name"] + ">")
         # elif n > 1:
         #     raise ValueError("Ambigous computing resource for <" + node["name"] + ">")
-        # return affinity[0]
+        res = self.onto.first(resources)
+        resProto = dfdOnto.first(dfdOnto.get_nodes_by_name(res["name"]))
+        affinity = dfdOnto.first(dfdOnto.get_nodes_linked_to(resProto, "is_instance"))
+        return affinity
+
+    def get_res_address(self, resName):
+        # TODO: this should be derived from GUI.
+        if resName == "ESP8266":
+            return "192.168.1.4:81"
+        elif resName == "SciVi Web Server":
+            return "127.0.0.1:81"
+        return ""
+
+    def traverse_computing_resources(self, res, dfdOnto):
+        ch = self.onto.get_nodes_linked_to(res, "is_a")
+        if len(ch) == 0:
+            resInst = dfdOnto.add_node(res["name"] + self.INST_SUFFIX, { "address": self.get_res_address(res["name"]) })
+            resProto = dfdOnto.add_node(res["name"])
+            dfdOnto.link_nodes(resInst, resProto, "is_instance")
+        else:
+            for c in ch:
+                self.traverse_computing_resources(c, dfdOnto)
+
+    def instanciate_computing_resources(self, dfdOnto):
+        # TODO: do it according to the info from GUI.
+        self.traverse_computing_resources(self.onto.first(self.onto.get_nodes_by_name("ComputingResource")), dfdOnto)
 
     def get_onto(self, dfd):
         dfdNodes = dfd["nodes"]
@@ -204,13 +222,14 @@ class DFD2Onto:
         resultI = result.add_node("Input")
         resultO = result.add_node("Output")
         resultInstances = {}
+        self.instanciate_computing_resources(result)
         # Add all nodes from DFD.
         for dfdNodeKey in dfdNodes:
             dfdNode = dfdNodes[dfdNodeKey]
             # Add node.
             resultAttrs = {}
             motherNode = self.onto.first(self.onto.get_nodes_by_name(dfdNode["title"]))
-            affinityNode = self.get_affinity(motherNode)
+            affinityNode = self.get_affinity(motherNode, result)
             instNmb = 1
             if dfdNode["title"] in resultInstances:
                 instNmb = resultInstances[dfdNode["title"]]
@@ -237,72 +256,138 @@ class DFD2Onto:
         self.layout_onto(result)
         return result
 
-    def io_has_worker(self, dfdOnto, ioNode, workerName):
-        hostNode = dfdOnto.first(dfdOnto.get_nodes_linked_to(ioNode, "has"))
-        protoNode = dfdOnto.first(dfdOnto.get_nodes_linked_from(hostNode, "is_instance"))
-        if ("attributes" in protoNode) and ("mother" in protoNode["attributes"]):
-            motherNode = self.onto.get_node_by_id(protoNode["attributes"]["mother"])
-            return self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", workerName))
-        return False
+    def io_has_affinity(self, dfdOnto, ioNode, affinityNode):
+        opNode = dfdOnto.first(dfdOnto.get_nodes_linked_to(ioNode, "has"))
+        result = dfdOnto.first(dfdOnto.get_nodes_linked_from(opNode, "is_hosted"))
+        return affinityNode == result
 
-    def replace_io(self, dfdOnto, node, rx, tx, workerName, rxNmb, txNmb, dfdI, dfdO):
+    def find_rxtx(self, dfdOnto, srcAffinity, dstAffinity):
         '''
-        Replace a part of DFD by given receiver and/or transmitter.
+        Find a way to pass data between two given computing resources.
+        @param srcAffinity - source computation resource.
+        @param dstAffinity - destinaton computation resource.
+        @return operator node for the 'srcAffinity' computing resource that corrsponds to the data receiver/transmitter
+                for the desired communication protocol.
+        '''
+        srcRes = dfdOnto.first(dfdOnto.get_nodes_linked_from(srcAffinity, "is_instance"))
+        dstRes = dfdOnto.first(dfdOnto.get_nodes_linked_from(dstAffinity, "is_instance"))
+        src = self.onto.first(self.onto.get_nodes_by_name(srcRes["name"]))
+        dst = self.onto.first(self.onto.get_nodes_by_name(dstRes["name"]))
+        srcProtocols = self.onto.get_typed_nodes_linked_to(src, "is_used", "Protocol")
+        dstProtocols = self.onto.get_typed_nodes_linked_to(dst, "is_used", "Protocol")
+        commonProtocols = [p for p in srcProtocols if p in dstProtocols]
+        if len(commonProtocols) == 0:
+            #TODO: create proxy
+            raise ValueError("Common protocol not found for <" + srcAffinity["name"] + "> and <" + dstAffinity["name"] + ">")
+        else:
+            return commonProtocols[0]
+
+    def remove_node(self, dfdOnto, node):
+        node["attributes"] = {}
+        dfdOnto.remove_node(node)
+
+    def replace_io(self, dfdOnto, node, affinityNode, rxNmb, txNmb, dfdI, dfdO):
+        '''
+        Replace a part of DFD by corresponding receiver and/or transmitter.
         This enables converting DFD of mixed session into the set of smaller DFDs for individual computation parts.
         Mixed session is a session involving multiple computation resources simultaneously, for example, server, client and edge device.
-        The DFD of a mixed session contains different kinds workers: ClientSideWorker, ServerSideWorker, EdgeSideWorker.
-        This method helps to split up this DFD into the parts, each one containing just one kind of workers.
+        Key point of mixed session is operator affinity. This is a description of the hosting link of the operator. If some operator,
+        described by the node N in the ontology, is connected to the resource R by 'is_hosted' link: N -is_hosted-> R, this means, N should be
+        executed on R. Whereby R -is_instance-> ResClass -is_a-> ComputingResource.
+        For example:
+        Log2 Inst -is_hosted-> SciVi Web Client Inst -is_instance-> SciVi Web Client -is_a-> ComputingResource
+        means that the instance of Log2 operator should be executed on the particular SciVi Web Client (called SciVi Web Client Inst).
+        Here 'SciVi Web Client Inst' is particular computing resource, and 'SciVi Web Client' is class of computing resources.
+        Note, that there can be multiple different resources of the same class, and they do not necessary have shared memory, so they need to use
+        receivers/transmitters as well.
+        This method helps to split up this DFD into the parts, each one containing uniform affinity (all the operators have the same affinity,
+        whereby they can communicate directly, without receivers/transmitters in between).
+        In other words, this method helps to create task ontology for particular computing resource.
         The border between the parts is replaced by data receivers and transmitters to ensure the seamless data flow.
         @param dfdOnto - DFD which is to be modified. It will be changed by this method, so make sure to pass here a deep copy of an original DFD.
         @param node - node that does not belong to the computation resource dfdOnto stands for.
-                      This node, all its instances (nodes linked to it by "is_instance"), all its belongings (nodes linked from it by "has"),
-                      and all instances of its belongings (nodes linked to its belongings by "is_instance") will be removed from dfdOnto with
+                      This node and all its belongings (nodes linked from it by "has") will be removed from dfdOnto with
                       all the incident links.
-        @param rx - receiver (the node with a single output) that instances should replace all the outputs of <node>, which are connected
-                    with the nodes of computation resource dfdOnto stands for.
-        @param tx - transmitter (the node with a single input) that instances should replace all the inputs of <node>, which are connected
-                    with the nodes of computation resource dfdOnto stands for.
-        @param workerName - name of the worker indicating the computation resource.
+        @param affinityNode - node representing desired affinity (the actual computing resource we create task ontology for).
         @param rxNmb - number of rx instances already added to dfdOnto.
         @param txNmb - number of tx instances already added to dfdOnto.
         @param dfdI - root input node of dfdOnto.
         @param dfdO - root output node of dfdOnto.
         @return tuple with updated rxNmb and txNmb.
         '''
-        instancesToRemove = dfdOnto.get_nodes_linked_to(node, "is_instance")
         belongingsToRemove = dfdOnto.get_nodes_linked_from(node, "has")
+        targetAffinity = dfdOnto.first(dfdOnto.get_nodes_linked_from(node, "is_hosted"))
         for b in belongingsToRemove:
-            instancesOfBelongings = dfdOnto.get_nodes_linked_to(b, "is_instance")
-            for ib in instancesOfBelongings: # inctances of inputs and outputs of node
-                if dfdOnto.is_node_of_type(b, "Input"):
-                    connectedOutputs = dfdOnto.get_nodes_linked_to(ib, "is_used")
-                    for co in connectedOutputs:
-                        if self.io_has_worker(dfdOnto, co, workerName):
-                            txInstance = self.instanciate_node(tx, txNmb, \
-                                                               { "settingsVal": { "Input Address": ib["id"] }, \
-                                                                 "settingsType": { "Input Address": "Integer" } }, \
-                                                               dfdOnto, dfdI, dfdO)
-                            txInstanceInput = dfdOnto.first(dfdOnto.get_nodes_linked_from(txInstance, "has"))
-                            dfdOnto.link_nodes(co, txInstanceInput, "is_used")
-                            txNmb += 1
-                elif dfdOnto.is_node_of_type(b, "Output"):
-                    connectedInputs = dfdOnto.get_nodes_linked_from(ib, "is_used")
-                    for ci in connectedInputs:
-                        if self.io_has_worker(dfdOnto, ci, workerName):
-                            rxInstance = self.instanciate_node(rx, rxNmb, \
-                                                               { "settingsVal": { "Input Address": ib["id"] }, \
-                                                                 "settingsType": { "Input Address": "Integer" } }, \
-                                                               dfdOnto, dfdI, dfdO)
-                            rxInstanceOutput = dfdOnto.first(dfdOnto.get_nodes_linked_from(rxInstance, "has"))
-                            dfdOnto.link_nodes(rxInstanceOutput, ci, "is_used")
-                            rxNmb += 1
-                dfdOnto.remove_node(ib)
-                ib["attributes"] = {}
-            dfdOnto.remove_node(b)
-            b["attributes"] = {}
-        for i in instancesToRemove:
-            dfdOnto.remove_node(i)
-            i["attributes"] = {}
-        dfdOnto.remove_node(node)
-        node["attributes"] = {}
+            if dfdOnto.is_node_of_type(b, "Input"):
+                connectedOutputs = dfdOnto.get_nodes_linked_to(b, "is_used")
+                for co in connectedOutputs:
+                    if self.io_has_affinity(dfdOnto, co, affinityNode):
+                        tx = self.find_rxtx(dfdOnto, affinityNode, targetAffinity)
+                        txInstance = self.instanciate_node(tx, txNmb, \
+                                                           { "settingsVal": { "Input Address": ib["id"], \
+                                                                              "Address": targetAffinity["attributes"]["address"] }, \
+                                                             "settingsType": { "Input Address": "Integer", \
+                                                                               "Address": "String" }, }, \
+                                                           dfdOnto, dfdI, dfdO)
+                        txInstanceInput = dfdOnto.first(dfdOnto.get_typed_nodes_linked_from(txInstance, "has", "Input"))
+                        dfdOnto.link_nodes(co, txInstanceInput, "is_used")
+                        txNmb += 1
+            elif dfdOnto.is_node_of_type(b, "Output"):
+                connectedInputs = dfdOnto.get_nodes_linked_from(b, "is_used")
+                for ci in connectedInputs:
+                    if self.io_has_affinity(dfdOnto, ci, affinityNode):
+                        rx = self.find_rxtx(dfdOnto, affinityNode, targetAffinity)
+                        rxInstance = self.instanciate_node(rx, rxNmb, \
+                                                           { "settingsVal": { "Output Address": ib["id"],
+                                                                              "Address": targetAffinity["attributes"]["address"] }, \
+                                                             "settingsType": { "Output Address": "Integer", \
+                                                                               "Address": "String" } }, \
+                                                           dfdOnto, dfdI, dfdO)
+                        rxInstanceOutput = dfdOnto.first(dfdOnto.get_typed_nodes_linked_from(rxInstance, "has", "Output"))
+                        dfdOnto.link_nodes(rxInstanceOutput, ci, "is_used")
+                        rxNmb += 1
+            self.remove_node(dfdOnto, b)
+        self.remove_node(dfdOnto, node)
         return rxNmb, txNmb
+
+    def split_onto(self, dfdOnto, affinityNode):
+        result = copy.deepcopy(dfdOnto)
+        rxNmb = 1
+        txNmb = 1
+        dfdI = result.first(result.get_nodes_by_name("Input"))
+        dfdO = result.first(result.get_nodes_by_name("Output"))
+        needsRelayout = False
+
+        # Replace I/O.
+        dfdNodes = result.nodes().copy()
+        for node in dfdNodes:
+            aff = result.first(result.get_nodes_linked_from(node, "is_hosted"))
+            if aff and (aff != affinityNode):
+                rxNmb, txNmb = self.replace_io(result, node, affinityNode, rxNmb, txNmb, dfdI, dfdO)
+                needsRelayout = True
+
+        # Cleanup unusedd operators.
+        dfdNodes = result.nodes().copy()
+        for node in dfdNodes:
+            if ("attributes" in node) and ("mother" in node["attributes"]) and \
+               (len(result.get_nodes_linked_to(node, "is_instance")) == 0):
+               self.remove_node(result, node)
+               needsRelayout = True
+
+        # Cleanup unused computing resources.
+        dfdNodes = result.nodes().copy()
+        for node in dfdNodes:
+            if ("attributes" in node) and ("address" in node["attributes"]):
+                if node != affinityNode:
+                    resProto = result.get_nodes_linked_from(node, "is_instance")
+                    for rp in resProto:
+                        self.remove_node(result, rp)
+                self.remove_node(result, node)
+                needsRelayout = True
+
+        # Update layout.
+        if (needsRelayout):
+            self.drop_layout_onto(result)
+            self.layout_onto(result)
+
+        return result

@@ -14,7 +14,7 @@ def getEditor(name):
     if name in srvDict:
         del srvDict[name]
     res = send_from_directory("client", "editor.html")
-    res.set_cookie("srv", value = name)
+    res.set_cookie("srv", value = name, samesite = "Lax")
     return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/")
@@ -38,6 +38,10 @@ def glove_page():
 @app.route("/soc")
 def soc_page():
     return getEditor("soc")
+
+@app.route("/mxd")
+def mxd_page():
+    return getEditor("mxd")
 
 def getSrv():
     global srvDict

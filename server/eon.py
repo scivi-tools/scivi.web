@@ -7,7 +7,6 @@ import math
 import io
 import struct
 import re
-import copy
 
 
 class RPN:
@@ -308,31 +307,9 @@ class Eon:
         return struct.pack("!H", chunk.getbuffer().nbytes)
 
     def process_onto(self, dfdOnto):
-        result = copy.deepcopy(dfdOnto)
-        dfdNodes = result.nodes().copy()
         dfd2onto = DFD2Onto(self.onto)
-        rx = self.onto.first(self.onto.get_nodes_by_name("Seamless Receiver"))
-        tx = self.onto.first(self.onto.get_nodes_by_name("Seamless Transmitter"))
-        rxNmb = 1
-        txNmb = 1
-        dfdI = result.first(result.get_nodes_by_name("Input"))
-        dfdO = result.first(result.get_nodes_by_name("Output"))
-        needsRelayout = False
-
-        for node in dfdNodes:
-            if ("attributes" in node) and ("mother" in node["attributes"]) and \
-               (not result.is_node_of_type(node, "Input")) and \
-               (not result.is_node_of_type(node, "Output")):
-                motherNode = self.onto.get_node_by_id(node["attributes"]["mother"])
-                ontoWorker = self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "EdgeSideWorker"))
-                if not ontoWorker:
-                    rxNmb, txNmb = dfd2onto.replace_io(result, node, rx, tx, "EdgeSideWorker", rxNmb, txNmb, dfdI, dfdO)
-                    needsRelayout = True
-
-        if (needsRelayout):
-            dfd2onto.drop_layout_onto(result)
-            dfd2onto.layout_onto(result)
-
+        affinity = dfdOnto.first(dfdOnto.get_nodes_by_name("ESP8266"))
+        result = dfd2onto.split_onto(dfdOnto, affinity)
         dfdNodes = result.nodes()
         for node in dfdNodes:
             if ("attributes" in node) and ("mother" in node["attributes"]) and \

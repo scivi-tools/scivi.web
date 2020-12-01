@@ -387,4 +387,7 @@ class SciViServer:
     def gen_mixed(self, dfd):
         dfd2onto = DFD2Onto(self.onto)
         mixedOnto = dfd2onto.get_onto(dfd)
-        pass
+        srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
+        affinity = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
+        serverOnto = dfd2onto.split_onto(mixedOnto, affinity)
+        return { "ont": serverOnto.data }
