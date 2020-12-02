@@ -28,6 +28,9 @@ class DFD2Onto:
     def is_prototype(self, node, onto):
         return onto.first(onto.get_nodes_linked_from(node, "is_instance")) == None
 
+    def is_resource(self, node, onto):
+        return onto.first(onto.get_nodes_linked_to(node, "is_hosted")) != None
+
     def instance_of_type(self, node, type, onto):
         instNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
         return onto.is_node_of_type(instNode, type)
@@ -37,7 +40,7 @@ class DFD2Onto:
             return -1
         if ("attributes" in node) and ("order" in node["attributes"]):
             return node["attributes"]["order"]
-        if self.is_prototype(node, onto):
+        if self.is_prototype(node, onto) or self.is_resource(node, onto):
             return onto.last_id()
         if self.instance_of_type(node, "Input", onto):
             return self.get_node_order(onto.first(onto.get_nodes_linked_to(node, "is_used")), onto) + 1
@@ -88,7 +91,7 @@ class DFD2Onto:
         maxWidth = 0
         processedNodes = []
         for node in onto.nodes():
-            if self.is_prototype(node, onto):
+            if self.is_prototype(node, onto) or self.is_resource(node, onto):
                 instNode = onto.first(onto.get_nodes_linked_to(node, "is_instance"))
                 if instNode:
                     node["position_x"] = instNode["position_x"]
