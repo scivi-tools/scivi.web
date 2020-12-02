@@ -286,7 +286,7 @@ class DFD2Onto:
         node["attributes"] = {}
         dfdOnto.remove_node(node)
 
-    def replace_io(self, dfdOnto, node, affinityNode, rxNmb, txNmb, dfdI, dfdO):
+    def replace_io(self, dfdOnto, node, affinityNode, rxtxNmb, dfdI, dfdO):
         '''
         Replace a part of DFD by corresponding receiver and/or transmitter.
         This enables converting DFD of mixed session into the set of smaller DFDs for individual computation parts.
@@ -309,51 +309,48 @@ class DFD2Onto:
                       This node and all its belongings (nodes linked from it by "has") will be removed from dfdOnto with
                       all the incident links.
         @param affinityNode - node representing desired affinity (the actual computing resource we create task ontology for).
-        @param rxNmb - number of rx instances already added to dfdOnto.
-        @param txNmb - number of tx instances already added to dfdOnto.
+        @param rxtxNmb - number of rx/tx instances already added to dfdOnto.
         @param dfdI - root input node of dfdOnto.
         @param dfdO - root output node of dfdOnto.
-        @return tuple with updated rxNmb and txNmb.
+        @return updated rxtxNmb.
         '''
         belongingsToRemove = dfdOnto.get_nodes_linked_from(node, "has")
         targetAffinity = dfdOnto.first(dfdOnto.get_nodes_linked_from(node, "is_hosted"))
         for b in belongingsToRemove:
-            if dfdOnto.is_node_of_type(b, "Input"):
-                connectedOutputs = dfdOnto.get_nodes_linked_to(b, "is_used")
-                for co in connectedOutputs:
-                    if self.io_has_affinity(dfdOnto, co, affinityNode):
-                        tx = self.find_rxtx(dfdOnto, affinityNode, targetAffinity)
-                        txInstance = self.instanciate_node(tx, txNmb, \
-                                                           { "settingsVal": { "Input Address": ib["id"], \
-                                                                              "Address": targetAffinity["attributes"]["address"] }, \
-                                                             "settingsType": { "Input Address": "Integer", \
-                                                                               "Address": "String" }, }, \
-                                                           dfdOnto, dfdI, dfdO)
-                        txInstanceInput = dfdOnto.first(dfdOnto.get_typed_nodes_linked_from(txInstance, "has", "Input"))
-                        dfdOnto.link_nodes(co, txInstanceInput, "is_used")
-                        txNmb += 1
-            elif dfdOnto.is_node_of_type(b, "Output"):
-                connectedInputs = dfdOnto.get_nodes_linked_from(b, "is_used")
-                for ci in connectedInputs:
-                    if self.io_has_affinity(dfdOnto, ci, affinityNode):
-                        rx = self.find_rxtx(dfdOnto, affinityNode, targetAffinity)
-                        rxInstance = self.instanciate_node(rx, rxNmb, \
-                                                           { "settingsVal": { "Output Address": ib["id"],
-                                                                              "Address": targetAffinity["attributes"]["address"] }, \
-                                                             "settingsType": { "Output Address": "Integer", \
-                                                                               "Address": "String" } }, \
-                                                           dfdOnto, dfdI, dfdO)
-                        rxInstanceOutput = dfdOnto.first(dfdOnto.get_typed_nodes_linked_from(rxInstance, "has", "Output"))
-                        dfdOnto.link_nodes(rxInstanceOutput, ci, "is_used")
-                        rxNmb += 1
+            isInput = self.instance_of_type(b, "Input", dfdOnto)
+            connected = dfdOnto.get_nodes_linked_to(b, "is_used")
+            for c in connected:
+                if self.io_has_affinity(dfdOnto, c, affinityNode):
+                    rxtx = self.find_rxtx(dfdOnto, affinityNode, targetAffinity)
+                    rxtxInst = self.instanciate_node(rxtx, affinityNode, rxtxNmb, \
+                                                     { "settingsVal": { "Input Address": b["id"], \
+                                                                        "Address": targetAffinity["attributes"]["address"] }, \
+                                                       "settingsType": { "Input Address": "Integer", \
+                                                                         "Address": "String" }, }, \
+                                                     dfdOnto, dfdI, dfdO)
+                    rxtxSocketName = None
+                    if isInput:
+                        rxtxSocketName = "Input"
+                    else:
+                        rxtxSocketName = "Output"
+                    rxtxSocket = None
+                    rxtxInstBelongings = dfdOnto.get_nodes_linked_from(rxtxInst, "has")
+                    for rxtxB in rxtxInstBelongings:
+                        if self.instance_of_type(rxtxB, rxtxSocketName, dfdOnto):
+                            rxtxSocket = rxtxB
+                            break
+                    if isInput:
+                        dfdOnto.link_nodes(c, rxtxSocket, "is_used")
+                    else:
+                        dfdOnto.link_nodes(rxtxSocket, c, "is_used")
+                    rxtxNmb += 1
             self.remove_node(dfdOnto, b)
         self.remove_node(dfdOnto, node)
-        return rxNmb, txNmb
+        return rxtxNmb
 
     def split_onto(self, dfdOnto, affinityNode):
         result = copy.deepcopy(dfdOnto)
-        rxNmb = 1
-        txNmb = 1
+        rxtxNmb = 1
         dfdI = result.first(result.get_nodes_by_name("Input"))
         dfdO = result.first(result.get_nodes_by_name("Output"))
         needsRelayout = False
@@ -363,7 +360,7 @@ class DFD2Onto:
         for node in dfdNodes:
             aff = result.first(result.get_nodes_linked_from(node, "is_hosted"))
             if aff and (aff != affinityNode):
-                rxNmb, txNmb = self.replace_io(result, node, affinityNode, rxNmb, txNmb, dfdI, dfdO)
+                rxtxNmb = self.replace_io(result, node, affinityNode, rxtxNmb, dfdI, dfdO)
                 needsRelayout = True
 
         # Cleanup unusedd operators.
@@ -382,8 +379,8 @@ class DFD2Onto:
                     resProto = result.get_nodes_linked_from(node, "is_instance")
                     for rp in resProto:
                         self.remove_node(result, rp)
-                self.remove_node(result, node)
-                needsRelayout = True
+                    self.remove_node(result, node)
+                    needsRelayout = True
 
         # Update layout.
         if (needsRelayout):
