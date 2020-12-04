@@ -280,13 +280,13 @@ class Onto:
 
     def __sorted_dict_str(self, data):
         if type(data) == dict:
-            return { k: sorted_dict_str(data[k]) for k in sorted(data.keys()) }
+            return { k: self.__sorted_dict_str(data[k]) for k in sorted(data.keys()) }
         elif type(data) == list:
-            return [ sorted_dict_str(val) for val in data ]
+            return [ self.__sorted_dict_str(val) for val in data ]
         else:
             return str(data)
 
-    def calc_hash(self):
+    def calc_hash(self, hasher = hashlib.sha256):
         '''
         Calculate hash of the ontology.
         @return hash as string.
