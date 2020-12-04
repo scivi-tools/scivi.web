@@ -1,5 +1,5 @@
 {
-    "last_id": "76",
+    "last_id": "78",
     "namespaces": {
         "default": "http://knova.ru/user/1606281684525",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -164,6 +164,7 @@
         },
         {
             "attributes": {
+                "path": "lib/comms/websocket.py"
             },
             "id": "52",
             "name": "ServerSide WebSocket",
@@ -242,6 +243,15 @@
             "namespace": "http://knova.ru/user/1606281684525",
             "position_x": 353,
             "position_y": 531
+        },
+        {
+            "attributes": {
+            },
+            "id": "77",
+            "name": "Python",
+            "namespace": "http://knova.ru/user/1606281684525",
+            "position_x": 163,
+            "position_y": 190
         }
     ],
     "relations": [
@@ -613,6 +623,15 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1606281684525",
             "source_node_id": "70"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "77",
+            "id": "78",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1606281684525",
+            "source_node_id": "52"
         }
     ],
     "visualize_ont_path": ""

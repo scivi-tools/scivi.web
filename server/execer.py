@@ -12,6 +12,7 @@ class Execer(Thread):
         self.mutex = Lock()
         self.active = True
         self.keepGoing = True
+        self.glob = {}
         Thread.__init__(self)
 
     def run(self):
@@ -48,7 +49,7 @@ class Execer(Thread):
             inputInst = self.get_belonging_instance(instNode, inputNode)
             outputInst = self.taskOnto.first(self.taskOnto.get_nodes_linked_to(inputInst, "is_used"))
             if outputInst and (outputInst["id"] in self.buffer):
-                inputs[inputNode["name"]] = self.buffer[ouputInst["id"]]
+                inputs[inputNode["name"]] = self.buffer[outputInst["id"]]
         return inputs
 
     def store_outputs(self, instNode, protoNode, outputs):
@@ -59,7 +60,8 @@ class Execer(Thread):
                 self.buffer[outputInst["id"]] = outputs[outputNode["name"]]
 
     def execute_code(self, workerNode, inputs, outputs, settings):
-        context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, "PROCESS": self.process }
+        context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
+                    "PROCESS": self.process, "GLOB": self.glob }
         if "inline" in workerNode["attributes"]:
             exec(workerNode["attributes"]["inline"], context)
         elif "path" in workerNode["attributes"]:
