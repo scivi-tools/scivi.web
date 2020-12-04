@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import hashlib
 
 
 class Onto:
@@ -276,3 +277,18 @@ class Onto:
             if (link["source_node_id"] == node["id"]) or (link["destination_node_id"] == node["id"]):
                 self.links().remove(link)
         self.nodes().remove(node)
+
+    def __sorted_dict_str(self, data):
+        if type(data) == dict:
+            return { k: sorted_dict_str(data[k]) for k in sorted(data.keys()) }
+        elif type(data) == list:
+            return [ sorted_dict_str(val) for val in data ]
+        else:
+            return str(data)
+
+    def calc_hash(self):
+        '''
+        Calculate hash of the ontology.
+        @return hash as string.
+        '''
+        return hasher(bytes(repr(self.__sorted_dict_str(self.data)), 'UTF-8')).hexdigest()
