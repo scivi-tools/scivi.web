@@ -8,6 +8,7 @@ from onto.onto import Onto
 from enum import Enum
 from server.eon import Eon
 from server.dfd2onto import DFD2Onto
+from server.execer import Execer
 
 
 class Mode(Enum):
@@ -61,6 +62,7 @@ class SciViServer:
         self.ctx = context
         self.mode = Mode.UNDEFINED
         self.dependencies = {}
+        self.execers = {}
 
         self.gen_tree()
 
@@ -374,6 +376,12 @@ class SciViServer:
                     return self.execute(worker)
         return None
 
+    def task_onto_has_operations(self, taskOnto):
+        for link in taskOnto.links():
+            if link["name"] == "is_used":
+                return True
+        return False
+
     def gen_eon(self, dfd):
         dfd2onto = DFD2Onto(self.onto)
         eonOnto = dfd2onto.get_onto(dfd)
@@ -390,4 +398,8 @@ class SciViServer:
         srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
         affinity = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
         serverOnto = dfd2onto.split_onto(mixedOnto, affinity)
+        if self.task_onto_has_operations(serverOnto):
+            execer = Execer(self.onto, serverOnto)
+            self.execers[serverOnto.calc_hash()] = execer
+            execer.start()
         return { "ont": serverOnto.data }
