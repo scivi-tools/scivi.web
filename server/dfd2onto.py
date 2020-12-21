@@ -326,8 +326,8 @@ class DFD2Onto:
                 if self.io_has_affinity(dfdOnto, c, affinityNode):
                     rxtx = self.find_rxtx(dfdOnto, affinityNode, targetAffinity)
                     rxtxInst = self.instanciate_node(rxtx, affinityNode, rxtxNmb, \
-                                                     { "settingsVal": { "Input Address": b["id"], \
-                                                                        "Address": targetAffinity["attributes"]["address"] }, \
+                                                     { "settingsVal": { "Node Address": b["id"], \
+                                                                        "Target Address": targetAffinity["attributes"]["address"] }, \
                                                        "settingsType": { "Input Address": "Integer", \
                                                                          "Address": "String" }, }, \
                                                      dfdOnto, dfdI, dfdO)

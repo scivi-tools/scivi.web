@@ -99,13 +99,16 @@ def gen_eon():
 @app.route("/gen_mixed", methods = ['POST'])
 def gen_mixed():
     dfd = request.get_json(force = True)
-    res = None
+    oldExeKey = request.cookies.get("exe")
     try:
-        res = getSrv().gen_mixed(dfd)
+        srv = getSrv()
+        srv.stop_execer(oldExeKey)
+        res, exeKey = srv.gen_mixed(dfd)
     except ValueError as err:
         res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
+    resp.set_cookie("exe", value = exeKey, samesite = "Lax")
     return resp
 
 @app.after_request

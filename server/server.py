@@ -400,6 +400,13 @@ class SciViServer:
         serverOnto = dfd2onto.split_onto(mixedOnto, affinity)
         if self.task_onto_has_operations(serverOnto):
             execer = Execer(self.onto, serverOnto)
-            self.execers[serverOnto.calc_hash()] = execer
+            serverOntoHash = serverOnto.calc_hash()
+            self.execers[serverOntoHash] = execer
             execer.start()
-        return { "ont": serverOnto.data }
+        else:
+            serverOntoHash = None
+        return { "ont": serverOnto.data }, serverOntoHash
+
+    def stop_execer(self, serverOntoHash):
+        if serverOntoHash and serverOntoHash in self.execers:
+            self.execers[serverOntoHash].stop()

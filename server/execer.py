@@ -5,6 +5,11 @@ from threading import Thread, Lock
 import time
 
 
+class CoRoutine:
+    def __init__(self, runner, cancelCallback):
+        self.runner = runner
+        self.cancel = cancelCallback
+
 class Execer(Thread):
     def __init__(self, onto, taskOnto):
         self.onto = onto
@@ -12,6 +17,7 @@ class Execer(Thread):
         self.mutex = Lock()
         self.active = True
         self.keepGoing = True
+        self.coRoutines = []
         self.glob = {}
         Thread.__init__(self)
 
@@ -20,6 +26,8 @@ class Execer(Thread):
             self.keepGoing = False
             self.turn()
             time.sleep(0)
+        for cor in self.coRoutines:
+            th.cancel()
 
     def is_active(self):
         self.mutex.acquire()
@@ -34,6 +42,9 @@ class Execer(Thread):
 
     def process(self):
         self.keepGoing = True
+
+    def register_coroutine(self, runner, cancelCallback):
+        self.coRoutines.append(CoRoutine(runner, cancelCallback))
 
     def get_belonging_instance(self, instNode, protoOfBelonging):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
@@ -61,7 +72,8 @@ class Execer(Thread):
 
     def execute_code(self, workerNode, inputs, outputs, settings):
         context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
-                    "PROCESS": self.process, "GLOB": self.glob }
+                    "GLOB": self.glob, \
+                    "PROCESS": self.process, "REGISTER_COROUTINE": self.register_coroutine }
         if "inline" in workerNode["attributes"]:
             exec(workerNode["attributes"]["inline"], context)
         elif "path" in workerNode["attributes"]:
