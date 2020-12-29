@@ -15,8 +15,8 @@
             "id": "1",
             "name": "ComputingResource",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -105,
-            "position_y": -328
+            "position_x": 373,
+            "position_y": 316
         },
         {
             "attributes": {
@@ -24,17 +24,17 @@
             "id": "2",
             "name": "SciVi Server",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -174,
-            "position_y": -264
+            "position_x": 304,
+            "position_y": 380
         },
         {
             "attributes": {
             },
             "id": "3",
-            "name": "SciVi Client",
+            "name": "ESP8266",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -16,
-            "position_y": -264
+            "position_x": 462,
+            "position_y": 380
         },
         {
             "attributes": {
@@ -42,17 +42,17 @@
             "id": "4",
             "name": "Server WS",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -256,
-            "position_y": -219
+            "position_x": 222,
+            "position_y": 425
         },
         {
             "attributes": {
             },
             "id": "5",
-            "name": "Client WS",
+            "name": "ESP8266 WS",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": 48,
-            "position_y": -223
+            "position_x": 526,
+            "position_y": 421
         },
         {
             "attributes": {
@@ -60,17 +60,17 @@
             "id": "6",
             "name": "My SciVi Server",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -171,
-            "position_y": -185
+            "position_x": 307,
+            "position_y": 459
         },
         {
             "attributes": {
             },
             "id": "7",
-            "name": "My SciVi Client",
+            "name": "Pager of Things",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -34,
-            "position_y": -185
+            "position_x": 444,
+            "position_y": 459
         },
         {
             "attributes": {
@@ -78,17 +78,17 @@
             "id": "8",
             "name": "My Server WS",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -278,
-            "position_y": -150
+            "position_x": 200,
+            "position_y": 494
         },
         {
             "attributes": {
             },
             "id": "9",
-            "name": "My Client WS",
+            "name": "Pager of Things WS",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": 89,
-            "position_y": -156
+            "position_x": 563,
+            "position_y": 497
         },
         {
             "attributes": {
@@ -96,8 +96,8 @@
             "id": "10",
             "name": "My Network",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -101,
-            "position_y": -112
+            "position_x": 377,
+            "position_y": 532
         },
         {
             "attributes": {
@@ -105,8 +105,8 @@
             "id": "24",
             "name": "WebSocket",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -95,
-            "position_y": -400
+            "position_x": 383,
+            "position_y": 244
         },
         {
             "attributes": {
@@ -114,8 +114,8 @@
             "id": "25",
             "name": "Protocol",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -86,
-            "position_y": -444
+            "position_x": 392,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -123,8 +123,8 @@
             "id": "26",
             "name": "RX",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -25,
-            "position_y": -358
+            "position_x": 453,
+            "position_y": 286
         },
         {
             "attributes": {
@@ -132,8 +132,8 @@
             "id": "27",
             "name": "TX",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -107,
-            "position_y": -357
+            "position_x": 371,
+            "position_y": 287
         },
         {
             "attributes": {
@@ -141,8 +141,8 @@
             "id": "28",
             "name": "Input",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": -155,
-            "position_y": -393
+            "position_x": 323,
+            "position_y": 251
         },
         {
             "attributes": {
@@ -150,8 +150,8 @@
             "id": "29",
             "name": "Output",
             "namespace": "http://knova.ru/user/1608541546289",
-            "position_x": 6,
-            "position_y": -393
+            "position_x": 484,
+            "position_y": 251
         }
     ],
     "relations": [
