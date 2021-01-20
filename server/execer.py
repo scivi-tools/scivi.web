@@ -27,7 +27,7 @@ class Execer(Thread):
             self.turn()
             time.sleep(0)
         for cor in self.coRoutines:
-            th.cancel()
+            cor.cancel()
 
     def is_active(self):
         self.mutex.acquire()
