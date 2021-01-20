@@ -13,6 +13,9 @@ srvDict = {}
 def getEditor(name):
     res = send_from_directory("client", "editor.html")
     res.set_cookie("srv", value = name)
+    global srvDict
+    if name in srvDict:
+        del srvDict[name]
     return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/")
