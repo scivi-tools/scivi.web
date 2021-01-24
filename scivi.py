@@ -11,11 +11,11 @@ app = Flask(__name__, static_url_path = "")
 srvDict = {}
 
 def getEditor(name):
+    global srvDict
     if name in srvDict:
         del srvDict[name]
     res = send_from_directory("client", "editor.html")
     res.set_cookie("srv", value = name, samesite = "Lax")
-    global srvDict
     if name in srvDict:
         del srvDict[name]
     return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
