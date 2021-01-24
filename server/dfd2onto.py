@@ -126,6 +126,16 @@ class DFD2Onto:
                 index += 1
         return None
 
+    def get_number_of_io(self, node, type, io, onto):
+        ioNodes = onto.get_nodes_linked_from(node, "has")
+        index = 0
+        for ioNode in ioNodes:
+            if self.instance_of_type(ioNode, type, onto):
+                if ioNode == io:
+                    return index
+                index += 1
+        return None
+
     def link(self, src, srcOutputNumber, dst, dstInputNumber, onto):
         instOutput = self.get_io_of_number(src, "Output", srcOutputNumber, onto)
         instInput = self.get_io_of_number(dst, "Input", dstInputNumber, onto)
@@ -289,7 +299,7 @@ class DFD2Onto:
         node["attributes"] = {}
         dfdOnto.remove_node(node)
 
-    def replace_io(self, dfdOnto, node, hostNode, rxtxNmb, dfdI, dfdO):
+    def replace_io(self, dfdOnto, node, hostNode, rxtxNmb, dfdI, dfdO, addrCorrespondence):
         '''
         Replace a part of DFD by corresponding receiver and/or transmitter.
         This enables converting DFD of mixed session into the set of smaller DFDs for individual computation parts.
@@ -315,6 +325,14 @@ class DFD2Onto:
         @param rxtxNmb - number of rx/tx instances already added to dfdOnto.
         @param dfdI - root input node of dfdOnto.
         @param dfdO - root output node of dfdOnto.
+        @param addrCorrespondence - array where to append pairs {'address':['dfdNodeID', 'isInput', 'socketNumber']}, where
+                                    address - node address receiver/transmitter will use by data marshalling,
+                                    dfdNodeID - ID of operator instance in DFD, which has to receive/transmit the data
+                                                (this is not the operator which corresponds to address, this is the one who has connected
+                                                to the addressed node),
+                                    isInput - flag, determining if the socket is input (True) or output (False),
+                                    socketNumber - number of socket in corresponding DFD operator.
+                                    This array will help client (which has just a DFD, no onto) to handle marshalling.
         @return updated rxtxNmb.
         '''
         belongingsToRemove = dfdOnto.get_nodes_linked_from(node, "has")
@@ -331,11 +349,21 @@ class DFD2Onto:
                                                        "settingsType": { "Input Address": "Integer", \
                                                                          "Address": "String" }, }, \
                                                      dfdOnto, dfdI, dfdO)
-                    rxtxSocketName = None
                     if isInput:
                         rxtxSocketName = "Input"
+                        operatorSocketType = "Output"
                     else:
                         rxtxSocketName = "Output"
+                        operatorSocketType = "Input"
+                    operatorNode = dfdOnto.first(dfdOnto.get_nodes_linked_to(c, "has"))
+                    if b["id"] in addrCorrespondence:
+                        cor = addrCorrespondence[b["id"]]
+                    else:
+                        cor = []
+                        addrCorrespondence[b["id"]] = cor
+                    cor.append([ operatorNode["attributes"]["dfd"], \
+                                 not isInput, \
+                                 self.get_number_of_io(operatorNode, operatorSocketType, c, dfdOnto)])
                     rxtxSocket = None
                     rxtxInstBelongings = dfdOnto.get_nodes_linked_from(rxtxInst, "has")
                     for rxtxB in rxtxInstBelongings:
@@ -357,13 +385,14 @@ class DFD2Onto:
         dfdI = result.first(result.get_nodes_by_name("Input"))
         dfdO = result.first(result.get_nodes_by_name("Output"))
         needsRelayout = False
+        corTable = {}
 
         # Replace I/O.
         dfdNodes = result.nodes().copy()
         for node in dfdNodes:
             aff = result.first(result.get_nodes_linked_from(node, "is_hosted"))
             if aff and (aff != hostNode):
-                rxtxNmb = self.replace_io(result, node, hostNode, rxtxNmb, dfdI, dfdO)
+                rxtxNmb = self.replace_io(result, node, hostNode, rxtxNmb, dfdI, dfdO, corTable)
                 needsRelayout = True
 
         # Cleanup unusedd operators.
@@ -390,4 +419,4 @@ class DFD2Onto:
             self.drop_layout_onto(result)
             self.layout_onto(result)
 
-        return result
+        return result, corTable

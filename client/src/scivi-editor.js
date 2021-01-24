@@ -37,7 +37,11 @@ function SciViEditor()
     SciViEditor.prototype.components = {};
     SciViEditor.prototype.sockets = {};
     SciViEditor.prototype.editor = null;
+    SciViEditor.prototype.engine = null;
     SciViEditor.prototype.inVisualization = false;
+    SciViEditor.prototype.visuals = null;
+    SciViEditor.prototype.comms = {};
+    SciViEditor.prototype.commsReconnects = {};
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -118,16 +122,19 @@ SciViEditor.prototype.run = function (mode)
             $("#scivi_btn_visualize").html(_this.runButtonName(mode));
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
+            if (mode == MIXED_MODE) {
+                _this.cleanupComms();
+            }
         } else {
             $(".scivi_slide").css({"transform": "translateX(-100%)"});
             $("#scivi_btn_visualize").html("◀");
             $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "20px"});
-        }
-        if (mode == IOT_PROGRAMMING_MODE) {
-            _this.uploadEON();
-        } else if (mode == MIXED_MODE) {
-            _this.runMixed();
+            if (mode == IOT_PROGRAMMING_MODE) {
+                _this.uploadEON();
+            } else if (mode == MIXED_MODE) {
+                _this.runMixed();
+            }
         }
     });
 
@@ -256,6 +263,7 @@ SciViEditor.prototype.runMixed = function ()
         }
 
         var ont = data["ont"];
+        var cor = data["cor"];
         // var eon = data["eon"];
 
         var upEonDiv = $("<div class='scivi_upload_eon'>");
@@ -313,6 +321,8 @@ SciViEditor.prototype.runMixed = function ()
 
         $("#scivi_viewport").empty();
         $("#scivi_viewport").append(upEonDiv);
+
+        _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
     });
 }
 
@@ -547,4 +557,67 @@ SciViEditor.prototype.showError = function (err)
     dp.find(".ui-dialog-buttonpane").css("background", "#FBDAC9").css("border-top", "1px solid #3F3F3F");
     dp.find(".ui-dialog-titlebar").css("background", "#FF4D00").css("color", "#FFFFFF");
     dp.find(".ui-button").css("border", "1px solid #3F3F3F");
+}
+
+SciViEditor.prototype.startComm = function (address, addressCorrespondences)
+{
+    var ws = new WebSocket(address);
+    var _this = this;
+    this.comms[address] = ws;
+    if (this.commsReconnects[address] === undefined)
+        this.commsReconnects[address] = 10;
+    ws.onopen = function(evt) {
+        console.log("WebSocket open on " + address);
+    };
+    ws.onclose = function(evt) {
+        console.log("WebSocket close on " + address);
+        delete _this.comms[address];
+    };
+    ws.onerror = function(evt) {
+        console.log(evt);
+        var rc = _this.commsReconnects[address];
+        if (rc > 0) {
+            --rc;
+            _this.commsReconnects[address] = rc;
+            setTimeout(function () { _this.startComm(address, addressCorrespondences); }, 100);
+        }
+    };
+    ws.onmessage = function(evt) {
+        // console.log(evt);
+        var msg = JSON.parse(evt.data);
+        for (var i = 0, n = msg.length; i < n; ++i) {
+            Object.keys(msg[i]).forEach(function (key) {
+                var cor = addressCorrespondences[key];
+                for (var j = 0, n = cor.length; j < n; ++j) {
+                    var dfdNodeID = cor[j][0];
+                    var isInput = cor[j][1];
+                    var socketNmb = cor[j][2];
+                    var dfdNode = _this.getNodeByID(dfdNodeID);
+                    if (isInput) {
+                        if (!dfdNode.data.inputDataPool)
+                            dfdNode.data.inputDataPool = [];
+                        for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
+                            dfdNode.data.inputDataPool.push(null);
+                        dfdNode.data.inputDataPool[socketNmb] = msg[key];
+                    } else {
+                        if (!dfdNode.data.outputDataPool)
+                            dfdNode.data.outputDataPool = [];
+                        for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
+                            dfdNode.data.outputDataPool.push(null);
+                        dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+                    }
+                }
+            });
+        }
+        _this.process();
+    };
+}
+
+SciViEditor.prototype.cleanupComms = function ()
+{
+    Object.keys(this.comms).forEach(function (key) {
+        this.comms[key].stop();
+    });
+    this.comms = {};
+    this.commsReconnects = {};
 }

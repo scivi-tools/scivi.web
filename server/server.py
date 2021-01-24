@@ -248,12 +248,18 @@ class SciViServer:
 
     def gen_worker(self, workers, inputs, outputs, settings):
         w = self.onto.first(workers)
-        code = ""
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
             code = self.process_code(self.get_code(w), masks)
             self.add_dependencies(w)
-        return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
+            return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
+        else:
+            return "function (node, inputs, outputs) { " +\
+                        "if (node.data.outputDataPool) { " +\
+                            "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
+                                "outputs[i] = node.data.outputDataPool[i]; " +\
+                        "} " +\
+                   "}"
 
     def gen_settings(self, settings):
         if len(settings) > 0:
@@ -397,7 +403,7 @@ class SciViServer:
         mixedOnto = dfd2onto.get_onto(dfd)
         srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
         affinity = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
-        serverOnto = dfd2onto.split_onto(mixedOnto, affinity)
+        serverOnto, corTable = dfd2onto.split_onto(mixedOnto, affinity)
         if self.task_onto_has_operations(serverOnto):
             execer = Execer(self.onto, serverOnto)
             serverOntoHash = serverOnto.calc_hash()
@@ -405,7 +411,7 @@ class SciViServer:
             execer.start()
         else:
             serverOntoHash = None
-        return { "ont": serverOnto.data }, serverOntoHash
+        return { "ont": serverOnto.data, "cor": corTable }, serverOntoHash
 
     def stop_execer(self, serverOntoHash):
         if serverOntoHash and serverOntoHash in self.execers:
