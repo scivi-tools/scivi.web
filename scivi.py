@@ -15,6 +15,9 @@ def getEditor(name):
         del srvDict[name]
     res = send_from_directory("client", "editor.html")
     res.set_cookie("srv", value = name, samesite = "Lax")
+    global srvDict
+    if name in srvDict:
+        del srvDict[name]
     return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/")
@@ -75,6 +78,10 @@ def editor_css(filename):
 @app.route("/lib/<path:filename>")
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+@app.route("/preset/<path:filename>")
+def editor_preset(filename):
+    return send_from_directory("client/preset", filename), 200, {'Content-Type': 'application/json; charset=utf-8'}
 
 @app.route("/exec/<nodeID>")
 def srv_exec(nodeID):

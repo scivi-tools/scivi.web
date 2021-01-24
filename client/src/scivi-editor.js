@@ -175,6 +175,16 @@ SciViEditor.prototype.run = function (mode)
     this.engine = engine;
 
     this.visuals = [];
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var preset = urlParams.get("preset");
+    if (preset) {
+        $(".loader").show();
+        $.getJSON("preset/" + preset, async function (data) {
+            $(".loader").hide();
+            await editor.fromJSON(data);
+        });
+    }
 }
 
 SciViEditor.prototype.uploadEON = function ()
