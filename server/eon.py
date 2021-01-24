@@ -308,8 +308,9 @@ class Eon:
 
     def process_onto(self, dfdOnto):
         dfd2onto = DFD2Onto(self.onto)
-        affinity = dfdOnto.first(dfdOnto.get_nodes_by_name("ESP8266"))
-        result = dfd2onto.split_onto(dfdOnto, affinity)
+        edgeRes = dfdOnto.first(dfdOnto.get_nodes_by_name("ESP8266"))
+        hosting = dfdOnto.first(dfdOnto.get_nodes_linked_to(edgeRes, "is_instance"))
+        result, corTable = dfd2onto.split_onto(dfdOnto, hosting)
         dfdNodes = result.nodes()
         for node in dfdNodes:
             if ("attributes" in node) and ("mother" in node["attributes"]) and \

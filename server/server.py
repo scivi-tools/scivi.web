@@ -404,8 +404,8 @@ class SciViServer:
         dfd2onto = DFD2Onto(self.onto)
         mixedOnto = dfd2onto.get_onto(dfd)
         srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
-        affinity = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
-        serverOnto, corTable = dfd2onto.split_onto(mixedOnto, affinity)
+        hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
+        serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
         if self.task_onto_has_operations(serverOnto):
             execer = Execer(self.onto, serverOnto)
             serverOntoHash = serverOnto.calc_hash()
