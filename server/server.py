@@ -254,7 +254,9 @@ class SciViServer:
             self.add_dependencies(w)
             return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
         else:
+            code = ""
             return "function (node, inputs, outputs) { " +\
+                        self.resolve_containers(code, inputs, outputs, settings) +\
                         "if (node.data.outputDataPool) { " +\
                             "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
                                 "outputs[i] = node.data.outputDataPool[i]; " +\
