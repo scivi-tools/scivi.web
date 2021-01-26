@@ -7,6 +7,9 @@ import random
 OUTPUT["EEG"] = [[random.random(), random.random(), random.random(), random.random()], \
                  [random.random(), random.random(), random.random(), random.random()], \
                  [random.random(), random.random(), random.random(), random.random()], \
+                 [random.random(), random.random(), random.random(), random.random()],
+                 [random.random(), random.random(), random.random(), random.random()],
+                 [random.random(), random.random(), random.random(), random.random()],
                  [random.random(), random.random(), random.random(), random.random()]]
 PROCESS()
 time.sleep(0.1)
