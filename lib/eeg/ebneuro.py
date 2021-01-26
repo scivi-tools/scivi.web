@@ -9,4 +9,4 @@ OUTPUT["EEG"] = [[random.random(), random.random(), random.random(), random.rand
                  [random.random(), random.random(), random.random(), random.random()], \
                  [random.random(), random.random(), random.random(), random.random()]]
 PROCESS()
-time.sleep(0.5)
+time.sleep(0.1)

@@ -102,13 +102,13 @@
         },
         {
             "attributes": {
-                "path": "lib/chartjs/moment.min.js"
+                "path": "lib/chartjs/Chart.min.js"
             },
             "id": "21",
             "name": "ChartJS",
             "namespace": "http://knova.ru/user/1611500337650",
-            "position_x": 525,
-            "position_y": 521
+            "position_x": 621,
+            "position_y": 264
         },
         {
             "attributes": {
@@ -126,8 +126,8 @@
             "id": "26",
             "name": "ChartJS CSS",
             "namespace": "http://knova.ru/user/1611500337650",
-            "position_x": 823,
-            "position_y": 302
+            "position_x": 780,
+            "position_y": 298
         },
         {
             "attributes": {
@@ -137,26 +137,6 @@
             "namespace": "http://knova.ru/user/1611500337650",
             "position_x": 881,
             "position_y": 361
-        },
-        {
-            "attributes": {
-                "path": "lib/chartjs/Chart.min.js"
-            },
-            "id": "31",
-            "name": "ChartJS Streaming",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "position_x": 580,
-            "position_y": 276
-        },
-        {
-            "attributes": {
-                "path": "lib/chartjs/chartjs-plugin-streaming.min.js"
-            },
-            "id": "35",
-            "name": "MomentJS",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "position_x": 711,
-            "position_y": 447
         }
     ],
     "relations": [
@@ -294,60 +274,6 @@
             "name": "language",
             "namespace": "http://knova.ru/user/1611500337650",
             "source_node_id": "26"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "31",
-            "id": "32",
-            "name": "has",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "source_node_id": "7"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "9",
-            "id": "33",
-            "name": "language",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "source_node_id": "31"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "22",
-            "id": "34",
-            "name": "is_a",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "source_node_id": "31"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "35",
-            "id": "36",
-            "name": "has",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "source_node_id": "7"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "22",
-            "id": "37",
-            "name": "is_a",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "source_node_id": "35"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "9",
-            "id": "38",
-            "name": "language",
-            "namespace": "http://knova.ru/user/1611500337650",
-            "source_node_id": "35"
         }
     ],
     "visualize_ont_path": ""
