@@ -353,6 +353,7 @@ SciViEditor.prototype.registerNode = function (nodeID, name, inputs, outputs, wo
                     sockets[item["type"]] = new D3NE.Socket(item["type"], item["type"], "");
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
+            node.addControl(new D3NE.Control("<input type='text'>", function (element, control) { }));
             return node;
         },
         worker(node, inputs, outputs) {
