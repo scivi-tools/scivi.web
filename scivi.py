@@ -46,6 +46,10 @@ def soc_page():
 def mxd_page():
     return getEditor("mxd")
 
+@app.route("/mmaps")
+def mmaps_page():
+    return getEditor("mmaps")
+
 def getSrv():
     global srvDict
     srvKey = request.cookies.get("srv")

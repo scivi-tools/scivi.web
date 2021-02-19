@@ -336,7 +336,7 @@ SciViEditor.prototype.runMixed = function ()
     });
 }
 
-SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
+SciViEditor.prototype.registerNode = function (nodeID, name, inputs, outputs, workerFunc, settingsFunc)
 {
     var _this = this;
     var sockets = this.sockets;
@@ -365,12 +365,12 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
         }
     });
     node.syncSettings = settingsFunc;
-    this.components[name] = node;
+    this.components[nodeID] = node;
 }
 
-SciViEditor.prototype.createNode = function (name)
+SciViEditor.prototype.createNode = function (nodeID)
 {
-    var nodeProto = this.components[name];
+    var nodeProto = this.components[nodeID];
     var node = nodeProto.builder(nodeProto.newNode());
     var container = $("#scivi_node_editor")[0];
     node.position = [(container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k,
