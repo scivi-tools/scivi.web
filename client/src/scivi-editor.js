@@ -164,6 +164,7 @@ SciViEditor.prototype.run = function (mode)
             var reader = new FileReader();
             reader.onload = async function (e) {
                 await editor.fromJSON(JSON.parse(e.target.result));
+                _this.extendNodes();
                 processingAllowed = true;
             };
             reader.readAsText(element.files[0]);
@@ -183,6 +184,7 @@ SciViEditor.prototype.run = function (mode)
         $.getJSON("preset/" + preset, async function (data) {
             $(".loader").hide();
             await editor.fromJSON(data);
+            _this.extendNodes();
         });
     }
 }
@@ -336,6 +338,18 @@ SciViEditor.prototype.runMixed = function ()
     });
 }
 
+SciViEditor.prototype.changeSubTitle = function (nodeID)
+{
+    var el = $("#t" + nodeID);
+    var node = this.getNodeByID(nodeID);
+    node.data.subTitle = el.val();
+}
+
+SciViEditor.prototype.createControl = function (node)
+{
+    return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");'>";
+}
+
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
 {
     var _this = this;
@@ -353,7 +367,7 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                     sockets[item["type"]] = new D3NE.Socket(item["type"], item["type"], "");
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
-            node.addControl(new D3NE.Control("<input type='text'>", function (element, control) { }));
+            node.addControl(new D3NE.Control(_this.createControl(node), function (element, control) { }));
             return node;
         },
         worker(node, inputs, outputs) {
@@ -384,10 +398,6 @@ SciViEditor.prototype.createNode = function (name)
 SciViEditor.prototype.selectNode = function (node)
 {
     if (node) {
-        if (!node.syncSettings) {
-            var nodeProto = this.components[node.title];
-            node.syncSettings = nodeProto.syncSettings;
-        }
         $("#scivi_settings_title").html(node.title);
         $("#scivi_settings_title").show();
         $("#scivi_btn_rmnode").show();
@@ -401,6 +411,19 @@ SciViEditor.prototype.selectNode = function (node)
         $("#scivi_btn_rmnode").hide();
         $("#scivi_settings_content").html("");
     }
+}
+
+SciViEditor.prototype.extendNodes = function ()
+{
+    var _this = this;
+    this.editor.nodes.forEach(function (node) {
+        if (!node.syncSettings) {
+            var nodeProto = _this.components[node.title];
+            node.syncSettings = nodeProto.syncSettings;
+        }
+        if (node.data.subTitle)
+            $("#t" + node.id).val(node.data.subTitle);
+    });
 }
 
 SciViEditor.prototype.process = function ()
