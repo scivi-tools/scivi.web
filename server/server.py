@@ -313,10 +313,10 @@ class SciViServer:
         worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
         sett = self.gen_settings(settingNodes)
         self.treeNodes = self.treeNodes +\
-                         "editor.registerNode('" + leaf["id"] + "', '" + leaf["name"] + "', " + inputs + ", " + outputs + ", " + worker + ", " + sett + ");"
+                         "editor.registerNode('" + leaf["name"] + "', " + inputs + ", " + outputs + ", " + worker + ", " + sett + ");"
         self.treeHandlers = self.treeHandlers +\
                             "$('#i" + str(self.treeID) +\
-                            "').click(function (e){editor.createNode('" + leaf["id"] + "');});"
+                            "').click(function (e){editor.createNode('" + leaf["name"] + "');});"
         self.treeID = self.treeID + 1
         self.check_mode(leaf)
 
