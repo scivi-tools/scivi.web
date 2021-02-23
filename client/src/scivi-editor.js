@@ -347,7 +347,7 @@ SciViEditor.prototype.changeSubTitle = function (nodeID)
 
 SciViEditor.prototype.createControl = function (node)
 {
-    return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");'>";
+    return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
@@ -421,8 +421,10 @@ SciViEditor.prototype.extendNodes = function ()
             var nodeProto = _this.components[node.title];
             node.syncSettings = nodeProto.syncSettings;
         }
-        if (node.data.subTitle)
+        if (node.data.subTitle) {
             $("#t" + node.id).val(node.data.subTitle);
+            $("#t" + node.id).show();
+        }
     });
 }
 
