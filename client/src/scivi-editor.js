@@ -377,7 +377,6 @@ SciViEditor.prototype.createNode = function (nodeID)
     node.position = [(container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k,
                      (container.clientHeight / 2 - this.editor.view.transform.y) / this.editor.view.transform.k];
     node.syncSettings = nodeProto.syncSettings;
-    node.data.nodeID = nodeID;
     this.editor.addNode(node);
     this.editor.view.update();
 }
@@ -386,7 +385,7 @@ SciViEditor.prototype.selectNode = function (node)
 {
     if (node) {
         if (!node.syncSettings) {
-            var nodeProto = this.components[node.data.nodeID];
+            var nodeProto = this.components[node.title];
             node.syncSettings = nodeProto.syncSettings;
         }
         $("#scivi_settings_title").html(node.title);
@@ -481,7 +480,7 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
 
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
 {
-    var el = $("#" + settingID.toString());
+    var el = $("#" + settingID.toString())
     var value = el.is(":checkbox") ? el.is(":checked") : el.val();
     var node = this.getNodeByID(nodeID);
     node.data.settingsVal[settingName] = value;
