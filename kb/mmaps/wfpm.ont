@@ -110,13 +110,12 @@
         },
         {
             "attributes": {
-                "color": "#00C900"
             },
             "id": "25",
-            "name": "WeightDict",
+            "name": "Grid",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 435,
-            "position_y": 464
+            "position_x": 430,
+            "position_y": 470
         },
         {
             "attributes": {
