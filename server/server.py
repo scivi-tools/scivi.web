@@ -7,6 +7,8 @@ import importlib
 from onto.onto import Onto
 from enum import Enum
 from server.eon import Eon
+from server.dfd2onto import DFD2Onto
+from server.execer import Execer
 
 
 class Mode(Enum):
@@ -60,6 +62,7 @@ class SciViServer:
         self.ctx = context
         self.mode = Mode.UNDEFINED
         self.dependencies = {}
+        self.execers = {}
 
         self.gen_tree()
 
@@ -245,12 +248,20 @@ class SciViServer:
 
     def gen_worker(self, workers, inputs, outputs, settings):
         w = self.onto.first(workers)
-        code = ""
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
             code = self.process_code(self.get_code(w), masks)
             self.add_dependencies(w)
-        return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
+            return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
+        else:
+            code = ""
+            return "function (node, inputs, outputs) { " +\
+                        self.resolve_containers(code, inputs, outputs, settings) +\
+                        "if (node.data.outputDataPool) { " +\
+                            "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
+                                "outputs[i] = node.data.outputDataPool[i]; " +\
+                        "} " +\
+                   "}"
 
     def gen_settings(self, settings):
         if len(settings) > 0:
@@ -373,14 +384,37 @@ class SciViServer:
                     return self.execute(worker)
         return None
 
+    def task_onto_has_operations(self, taskOnto):
+        for link in taskOnto.links():
+            if link["name"] == "is_used":
+                return True
+        return False
+
     def gen_eon(self, dfd):
+        dfd2onto = DFD2Onto(self.onto)
+        eonOnto = dfd2onto.get_onto(dfd)
         eon = Eon(self.onto)
-        eonOnto = eon.get_ont(dfd)
-        bs = eon.get_eon(eonOnto)
+        bs, eonOnto = eon.get_eon(eonOnto)
         barr = []
         for b in bs:
             barr.append(b)
         return { "ont": eonOnto.data, "eon": barr }
 
     def gen_mixed(self, dfd):
-        pass
+        dfd2onto = DFD2Onto(self.onto)
+        mixedOnto = dfd2onto.get_onto(dfd)
+        srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
+        hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
+        serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+        if self.task_onto_has_operations(serverOnto):
+            execer = Execer(self.onto, serverOnto)
+            serverOntoHash = serverOnto.calc_hash()
+            self.execers[serverOntoHash] = execer
+            execer.start()
+        else:
+            serverOntoHash = None
+        return { "ont": serverOnto.data, "cor": corTable }, serverOntoHash
+
+    def stop_execer(self, serverOntoHash):
+        if serverOntoHash and serverOntoHash in self.execers:
+            self.execers[serverOntoHash].stop()

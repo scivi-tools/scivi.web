@@ -29,7 +29,6 @@
         },
         {
             "attributes": {
-                "eval": "meander(Period, Phase)"
             },
             "id": "4",
             "name": "Meander",
@@ -53,8 +52,8 @@
             "id": "7",
             "name": "Period",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 369,
-            "position_y": 400
+            "position_x": 218,
+            "position_y": 449
         },
         {
             "attributes": {
@@ -63,8 +62,8 @@
             "id": "8",
             "name": "Phase",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 462,
-            "position_y": 382
+            "position_x": 403,
+            "position_y": 457
         },
         {
             "attributes": {
@@ -72,8 +71,8 @@
             "id": "9",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 424,
-            "position_y": 458
+            "position_x": 321,
+            "position_y": 419
         },
         {
             "attributes": {
@@ -81,8 +80,8 @@
             "id": "10",
             "name": "Number",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 541,
-            "position_y": 450
+            "position_x": 341,
+            "position_y": 545
         },
         {
             "attributes": {
@@ -90,8 +89,8 @@
             "id": "11",
             "name": "Type",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 606,
-            "position_y": 497
+            "position_x": 518,
+            "position_y": 500
         },
         {
             "attributes": {
@@ -108,11 +107,12 @@
             "id": "40",
             "name": "Bool",
             "namespace": "http://knova.ru/user/1574191177667",
-            "position_x": 586,
-            "position_y": 381
+            "position_x": 528,
+            "position_y": 437
         },
         {
             "attributes": {
+                "eval": "Meander = meander(Period, Phase)"
             },
             "id": "43",
             "name": "Oscillator Worker",
@@ -229,24 +229,6 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1574191177667",
             "source_node_id": "2"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "4",
-            "id": "38",
-            "name": "is_used",
-            "namespace": "http://knova.ru/user/1574191177667",
-            "source_node_id": "7"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "4",
-            "id": "39",
-            "name": "is_used",
-            "namespace": "http://knova.ru/user/1574191177667",
-            "source_node_id": "8"
         },
         {
             "attributes": {

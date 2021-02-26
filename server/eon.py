@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from onto.onto import Onto
+from server.dfd2onto import DFD2Onto
 import math
 import io
 import struct
@@ -179,149 +180,41 @@ class Eon:
             "wifi":               { "prec": 1, "opcode": 19 }, \
             "wsBroadcast":        { "prec": 1, "opcode": 20 },
         }
-        self.INST_SUFFIX = " Inst"
 
-    def get_attrs(self, node, data):
-        if ("attributes" in node) and ("eval" in node["attributes"]):
-            code = node["attributes"]["eval"]
-            code = self.resolve_settings(code, data)
-            return { "eval": code }
+    def extract_assignment(self, evalCode, targetName):
+        g = re.search(targetName + " *?=(.*?)(?:;|$)", evalCode)
+        if g:
+            return g.group(1).strip()
         else:
             return None
 
-    def get_instance_name(self, name, nmb):
-        if nmb > 1:
-            return name + self.INST_SUFFIX + "_" + str(nmb)
+    def get_code(self, worker, targetName, settings, types):
+        if ("attributes" in worker) and ("eval" in worker["attributes"]):
+            code = self.extract_assignment(worker["attributes"]["eval"], targetName)
+            code = self.resolve_settings(code, settings, types)
+            return code
         else:
-            return name + self.INST_SUFFIX
+            return None
 
-    def get_instance_number(self, node):
-        m = re.match(".+" + self.INST_SUFFIX + "_(\d+)", node["name"])
-        if m and len(m.groups()) > 0:
-            return int(m.groups()[0])
-        elif node["name"].endswith(self.INST_SUFFIX):
-            return 1
-        else:
-            return 0
-
-    def instance_of_type(self, node, type, onto):
-        instNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
-        return onto.is_node_of_type(instNode, type)
-
-    def get_corresponding_instance(self, instNmb, motherNode, onto):
-        instances = onto.get_nodes_linked_to(motherNode, "is_instance")
-        for inst in instances:
-            if self.get_instance_number(inst) == instNmb:
-                return inst
-        return None
-
-    def get_node_order(self, node, onto):
-        if not node:
-            return -1
-        instNmb = self.get_instance_number(node)
-        if instNmb == 0:
-            return onto.last_id()
-        if self.instance_of_type(node, "Input", onto):
-            return self.get_node_order(onto.first(onto.get_nodes_linked_to(node, "is_used")), onto) + 1
-        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
-        if self.instance_of_type(node, "Output", onto):
-            motherSuperNode = onto.first(onto.get_nodes_linked_to(motherNode, "has"))
-            superNode = self.get_corresponding_instance(instNmb, motherSuperNode, onto)
-            return self.get_node_order(superNode, onto) + 1
-        result = 0
-        motherInputs = onto.get_typed_nodes_linked_from(motherNode, "has", "Input")
-        for motherInput in motherInputs:
-            nodeInput = self.get_corresponding_instance(instNmb, motherInput, onto)
-            result = max(result, self.get_node_order(nodeInput, onto) + 1)            
-        return result
-
-    def get_link_order(self, link, onto):
-        srcNode = link["source_node_id"]
-        index = 0
-        for node in onto.nodes():
-            if node["id"] == srcNode:
-                break
-            index += 1
-        return index
-
-    def normalize_onto(self, onto):
-        transNodes = {}
-        index = 1
-        for node in onto.nodes():
-            transNodes[node["id"]] = index
-            node["id"] = index
-            index += 1
-        for link in onto.links():
-            link["id"] = index
-            link["source_node_id"] = transNodes[link["source_node_id"]]
-            link["destination_node_id"] = transNodes[link["destination_node_id"]]
-            index += 1
-
-    def layout_nodes(self, onto):
-        onto.data["nodes"] = sorted(onto.nodes(), key = lambda node: self.get_node_order(node, onto))
-        onto.data["relations"] = sorted(onto.links(), key = lambda link: self.get_link_order(link, onto))
-        self.normalize_onto(onto)
-        w = 100
-        h = 30
-        prevOrder = -2
-        y = 0
-        ny = -h * 2
-        maxWidth = 0
-        processedNodes = []
-        for node in onto.nodes():
-            if self.get_instance_number(node) == 0:
-                instNode = onto.first(onto.get_nodes_linked_to(node, "is_instance"))
-                if instNode:
-                    node["position_x"] = instNode["position_x"]
-                    node["position_y"] = instNode["position_y"] - h
+    def resolve_settings(self, code, settings, types):
+        if code and settings and types:
+            for s in settings:
+                if types[s] == "String":
+                    code = code.replace(s, "'" + str(settings[s]) + "'")
+                elif types[s] == "Bool":
+                    if settings[s]:
+                        code = code.replace(s, "1")
+                    else:
+                        code = code.replace(s, "0")
                 else:
-                    node["position_x"] = maxWidth / 2
-                    node["position_y"] = ny
-                    ny = ny - h
-                continue
-            order = self.get_node_order(node, onto)
-            if order == prevOrder:
-                y = y + h * 2
-            else:
-                y = 0
-            prevOrder = order
-            node["position_x"] = w * order
-            node["position_y"] = y
-            maxWidth = max(maxWidth, w * order)
-
-    def get_corresponding_instance_io(self, node, type, nmb, onto):
-        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
-        motherIOs = onto.get_typed_nodes_linked_from(motherNode, "has", type)
-        instNmb = self.get_instance_number(node)
-        return self.get_corresponding_instance(instNmb, motherIOs[nmb], onto)
-
-    def link(self, src, srcOutputNumber, dst, dstInputNumber, onto):
-        instOutput = self.get_corresponding_instance_io(src, "Output", srcOutputNumber, onto)
-        instInput = self.get_corresponding_instance_io(dst, "Input", dstInputNumber, onto)
-        if instOutput and instInput:
-            onto.link_nodes(instOutput, instInput, "is_used")
-
-    def resolve_settings(self, code, data):
-        settings = data["settingsVal"]
-        types = data["settingsType"]
-        for s in settings:
-            if types[s] == "String":
-                code = code.replace(s, "'" + str(settings[s]) + "'")
-            elif types[s] == "Bool":
-                if settings[s]:
-                    code = code.replace(s, "1")
-                else:
-                    code = code.replace(s, "0")
-            else:
-                code = code.replace(s, str(settings[s]))
+                    code = code.replace(s, str(settings[s]))
         return code
 
     def get_related_nodes(self, node, onto):
-        motherNode = onto.first(onto.get_nodes_linked_from(node, "is_instance"))
-        result = onto.get_nodes_linked_from(motherNode, "has")
-        motherSuperNode = onto.first(onto.get_nodes_linked_to(motherNode, "has"))
-        if motherSuperNode:
-            result += onto.get_nodes_linked_from(motherSuperNode, "has")
+        result = onto.get_nodes_linked_from(node, "has")
+        superNode = onto.first(onto.get_nodes_linked_to(node, "has"))
+        if superNode:
+            result += onto.get_nodes_linked_from(superNode, "has")
         return result
 
     def dump_int(self, intVal, result):
@@ -360,7 +253,6 @@ class Eon:
             tokens.append(curToken)
         related = self.get_related_nodes(node, onto)
         tokens = RPN(self.operations).convert(tokens)
-        instNmb = self.get_instance_number(node)
         for token in tokens:
             if token in self.operations:
                 # Function ID is stored like this: 1 0 X X X X X X,
@@ -369,8 +261,9 @@ class Eon:
             else:
                 relatedNode = None
                 for ln in related:
-                    if ln["name"] == token:
-                        relatedNode = self.get_corresponding_instance(instNmb, ln, onto)
+                    lnMother = onto.first(onto.get_nodes_linked_from(ln, "is_instance"))
+                    if lnMother["name"] == token:
+                        relatedNode = ln
                         break
                 if relatedNode:
                     # Node address is stored like this: 0 0 X X X X X X,
@@ -413,76 +306,41 @@ class Eon:
     def dump_len(self, chunk):
         return struct.pack("!H", chunk.getbuffer().nbytes)
 
-    def add_mother_node(self, nodeName, motherID, onto):
-        result = None
-        motherNodes = onto.get_nodes_by_name(nodeName)
-        if motherNodes:
-            for m in motherNodes:
-                if ("attributes" in m) and ("mother" in m["attributes"]) and (m["attributes"]["mother"] == motherID):
-                    result = m
-                    break
-        if not result:
-            result = onto.add_node(nodeName, { "mother": motherID })
+    def process_onto(self, dfdOnto):
+        dfd2onto = DFD2Onto(self.onto)
+        edgeRes = dfdOnto.first(dfdOnto.get_nodes_by_name("ESP8266"))
+        hosting = dfdOnto.first(dfdOnto.get_nodes_linked_to(edgeRes, "is_instance"))
+        result, corTable = dfd2onto.split_onto(dfdOnto, hosting)
+        dfdNodes = result.nodes()
+        for node in dfdNodes:
+            if ("attributes" in node) and ("mother" in node["attributes"]) and \
+               (not result.is_node_of_type(node, "Input")) and \
+               (not result.is_node_of_type(node, "Output")):
+                motherNode = self.onto.get_node_by_id(node["attributes"]["mother"])
+                ontoWorker = self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "EdgeSideWorker"))
+                insNodes = result.get_nodes_linked_to(node, "is_instance")
+                for insNode in insNodes:
+                    settings = None
+                    if ("attributes" in insNode) and ("settingsVal" in insNode["attributes"]):
+                        settings = insNode["attributes"]["settingsVal"]
+                    types = None
+                    if ("attributes" in insNode) and ("settingsType" in insNode["attributes"]):
+                        types = insNode["attributes"]["settingsType"]
+                    code = self.get_code(ontoWorker, node["name"], settings, types)
+                    if code:
+                        insNode["attributes"]["eval"] = code
+                    ioNodes = result.get_nodes_linked_from(insNode, "has")
+                    for ioNode in ioNodes:
+                        ioProto = result.first(result.get_nodes_linked_from(ioNode, "is_instance"))
+                        code = self.get_code(ontoWorker, ioProto["name"], settings, types)
+                        if code:
+                            ioNode["attributes"]["eval"] = code
+
         return result
 
-    def get_ont(self, dfd):
-        dfdNodes = dfd["nodes"]
-        resultNodesArr = {}
-        result = Onto.empty()
-        resultI = result.add_node("Input")
-        resultO = result.add_node("Output")
-        resultInstances = {}
-        motherNode = None
-        # Add all nodes from DFD.
-        for dfdNodeKey in dfdNodes:
-            dfdNode = dfdNodes[dfdNodeKey]
-            # Add node.
-            resultAttrs = {}
-            ontoNode = self.onto.first(self.onto.get_nodes_by_name(dfdNode["title"]))
-            instNmb = 1
-            if dfdNode["title"] in resultInstances:
-                instNmb = resultInstances[dfdNode["title"]]
-                instNmb += 1
-                resultInstances[dfdNode["title"]] = instNmb
-            else:
-                resultInstances[dfdNode["title"]] = instNmb
-            resultNode = result.add_node(self.get_instance_name(dfdNode["title"], instNmb), \
-                                         self.get_attrs(ontoNode, dfdNode["data"]))
-            motherNode = self.add_mother_node(dfdNode["title"], ontoNode["id"], result)
-            result.link_nodes(resultNode, motherNode, "is_instance")
-            resultNodesArr[dfdNode["id"]] = resultNode
-            # Add inputs.
-            ontoInputs = self.onto.get_typed_nodes_linked_from(ontoNode, "has", "Input")
-            for ontoInput in ontoInputs:
-                resultInput = result.add_node(self.get_instance_name(ontoInput["name"], instNmb), \
-                                              self.get_attrs(ontoInput, dfdNode["data"]))
-                motherInput = self.add_mother_node(ontoInput["name"], ontoInput["id"], result)
-                result.link_nodes(resultInput, motherInput, "is_instance")
-                result.link_nodes(motherInput, resultI, "is_a")
-                result.link_nodes(motherNode, motherInput, "has")
-            # Add outputs.
-            ontoOutputs = self.onto.get_typed_nodes_linked_from(ontoNode, "has", "Output")
-            for ontoOutput in ontoOutputs:
-                resultOutput = result.add_node(self.get_instance_name(ontoOutput["name"], instNmb), \
-                                               self.get_attrs(ontoOutput, dfdNode["data"]))
-                motherOutput = self.add_mother_node(ontoOutput["name"], ontoOutput["id"], result)
-                result.link_nodes(resultOutput, motherOutput, "is_instance")
-                result.link_nodes(motherOutput, resultO, "is_a")
-                result.link_nodes(motherNode, motherOutput, "has")
-        # Add data connection from DFD as is_used links.
-        for dfdNodeKey in dfdNodes:
-            dfdNode = dfdNodes[dfdNodeKey]
-            for dfdOutputNumber in range(0, len(dfdNode["outputs"])):
-                dfdOutput = dfdNode["outputs"][dfdOutputNumber]
-                for dfdConnection in dfdOutput["connections"]:
-                    self.link(resultNodesArr[dfdNode["id"]], dfdOutputNumber, \
-                              resultNodesArr[dfdConnection["node"]], dfdConnection["input"], \
-                              result)
-        # Layout onto.
-        self.layout_nodes(result)
-        return result
+    def get_eon(self, dfdOnto):
+        eonOnto = self.process_onto(dfdOnto)
 
-    def get_eon(self, eonOnto):
         if len(eonOnto.nodes()) > 64:
             raise ValueError("Cannot compose EON16 stream: too many nodes in ontology (" + str(len(eonOnto.nodes())) + ")")
 
@@ -542,5 +400,5 @@ class Eon:
             outStr += "0x" + b + ", "
         print("{%s}" % (outStr))
         
-        return result.getvalue()
+        return result.getvalue(), eonOnto
 

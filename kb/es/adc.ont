@@ -1,5 +1,5 @@
 {
-    "last_id": "15",
+    "last_id": "19",
     "namespaces": {
         "default": "http://knova.ru/user/1578768181452",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -38,13 +38,12 @@
         },
         {
             "attributes": {
-                "eval": "adc()"
             },
             "id": "6",
             "name": "Voltage",
             "namespace": "http://knova.ru/user/1578768181452",
-            "position_x": 223,
-            "position_y": 379
+            "position_x": 202,
+            "position_y": 377
         },
         {
             "attributes": {
@@ -72,6 +71,25 @@
             "namespace": "http://knova.ru/user/1578768181452",
             "position_x": 285,
             "position_y": 429
+        },
+        {
+            "attributes": {
+                "eval": "Voltage = adc()"
+            },
+            "id": "16",
+            "name": "ADC Worker",
+            "namespace": "http://knova.ru/user/1578768181452",
+            "position_x": 347,
+            "position_y": 311
+        },
+        {
+            "attributes": {
+            },
+            "id": "17",
+            "name": "EdgeSideWorker",
+            "namespace": "http://knova.ru/user/1578768181452",
+            "position_x": 403,
+            "position_y": 224
         }
     ],
     "relations": [
@@ -128,6 +146,24 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1578768181452",
             "source_node_id": "6"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "18",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1578768181452",
+            "source_node_id": "16"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "17",
+            "id": "19",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1578768181452",
+            "source_node_id": "16"
         }
     ],
     "visualize_ont_path": ""
