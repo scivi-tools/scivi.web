@@ -15,17 +15,17 @@
             "id": "1",
             "name": "Root",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 374,
-            "position_y": 200
+            "position_x": 458,
+            "position_y": 290
         },
         {
             "attributes": {
             },
             "id": "2",
-            "name": "Mental Maps",
+            "name": "Fuzzy Classification",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 358,
-            "position_y": 235
+            "position_x": 442,
+            "position_y": 325
         },
         {
             "attributes": {
@@ -33,8 +33,8 @@
             "id": "3",
             "name": "WFPM",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 366,
-            "position_y": 278
+            "position_x": 450,
+            "position_y": 368
         },
         {
             "attributes": {
@@ -42,8 +42,8 @@
             "id": "4",
             "name": "Pattern Maps",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 216,
-            "position_y": 351
+            "position_x": 300,
+            "position_y": 441
         },
         {
             "attributes": {
@@ -51,8 +51,8 @@
             "id": "5",
             "name": "Test Maps",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 325,
-            "position_y": 341
+            "position_x": 409,
+            "position_y": 431
         },
         {
             "attributes": {
@@ -60,8 +60,8 @@
             "id": "6",
             "name": "Input",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 200,
-            "position_y": 295
+            "position_x": 284,
+            "position_y": 385
         },
         {
             "attributes": {
@@ -69,8 +69,8 @@
             "id": "11",
             "name": "MapArrayDict",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 297,
-            "position_y": 449
+            "position_x": 381,
+            "position_y": 539
         },
         {
             "attributes": {
@@ -78,8 +78,8 @@
             "id": "12",
             "name": "Type",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 388,
-            "position_y": 515
+            "position_x": 472,
+            "position_y": 605
         },
         {
             "attributes": {
@@ -87,8 +87,8 @@
             "id": "18",
             "name": "Weights",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 450,
-            "position_y": 406
+            "position_x": 534,
+            "position_y": 496
         },
         {
             "attributes": {
@@ -96,8 +96,8 @@
             "id": "19",
             "name": "Output",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 360,
-            "position_y": 386
+            "position_x": 444,
+            "position_y": 476
         },
         {
             "attributes": {
@@ -105,8 +105,8 @@
             "id": "20",
             "name": "Number",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 532,
-            "position_y": 489
+            "position_x": 616,
+            "position_y": 579
         },
         {
             "attributes": {
@@ -114,8 +114,8 @@
             "id": "25",
             "name": "Grid",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 430,
-            "position_y": 470
+            "position_x": 514,
+            "position_y": 560
         },
         {
             "attributes": {
@@ -124,8 +124,8 @@
             "id": "28",
             "name": "X Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 610,
-            "position_y": 137
+            "position_x": 694,
+            "position_y": 227
         },
         {
             "attributes": {
@@ -134,8 +134,8 @@
             "id": "29",
             "name": "Y Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 611,
-            "position_y": 169
+            "position_x": 695,
+            "position_y": 259
         },
         {
             "attributes": {
@@ -144,8 +144,8 @@
             "id": "30",
             "name": "Size Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 609,
-            "position_y": 199
+            "position_x": 693,
+            "position_y": 289
         },
         {
             "attributes": {
@@ -154,8 +154,8 @@
             "id": "31",
             "name": "ColorR Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 603,
-            "position_y": 231
+            "position_x": 687,
+            "position_y": 321
         },
         {
             "attributes": {
@@ -164,8 +164,8 @@
             "id": "32",
             "name": "ColorG Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 607,
-            "position_y": 258
+            "position_x": 691,
+            "position_y": 348
         },
         {
             "attributes": {
@@ -174,8 +174,8 @@
             "id": "33",
             "name": "ColorB Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 610,
-            "position_y": 283
+            "position_x": 694,
+            "position_y": 373
         },
         {
             "attributes": {
@@ -184,8 +184,8 @@
             "id": "34",
             "name": "FontColorR Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 596,
-            "position_y": 314
+            "position_x": 680,
+            "position_y": 404
         },
         {
             "attributes": {
@@ -194,8 +194,8 @@
             "id": "35",
             "name": "FontColorG Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 600,
-            "position_y": 341
+            "position_x": 684,
+            "position_y": 431
         },
         {
             "attributes": {
@@ -204,8 +204,8 @@
             "id": "36",
             "name": "FontColorB Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 602,
-            "position_y": 368
+            "position_x": 686,
+            "position_y": 458
         },
         {
             "attributes": {
@@ -214,8 +214,8 @@
             "id": "37",
             "name": "Transpareny Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 604,
-            "position_y": 426
+            "position_x": 688,
+            "position_y": 516
         },
         {
             "attributes": {
@@ -224,8 +224,8 @@
             "id": "38",
             "name": "Drawing Order Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 613,
-            "position_y": 458
+            "position_x": 697,
+            "position_y": 548
         },
         {
             "attributes": {
@@ -233,8 +233,8 @@
             "id": "39",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 817,
-            "position_y": 231
+            "position_x": 901,
+            "position_y": 321
         },
         {
             "attributes": {
@@ -243,8 +243,8 @@
             "id": "73",
             "name": "WFPM Worker",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 143,
-            "position_y": 183
+            "position_x": 227,
+            "position_y": 273
         },
         {
             "attributes": {
@@ -252,8 +252,8 @@
             "id": "74",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 166,
-            "position_y": 110
+            "position_x": 250,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -261,8 +261,8 @@
             "id": "75",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 116,
-            "position_y": 235
+            "position_x": 200,
+            "position_y": 325
         },
         {
             "attributes": {
@@ -271,8 +271,8 @@
             "id": "79",
             "name": "FontSize Weight",
             "namespace": "http://knova.ru/user/1613721738809",
-            "position_x": 604,
-            "position_y": 399
+            "position_x": 688,
+            "position_y": 489
         }
     ],
     "relations": [
