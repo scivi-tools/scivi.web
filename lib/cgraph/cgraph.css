@@ -254,7 +254,7 @@ ul
 
 .scivi_dropdown
 {
-    position: inline-block;
+    position: relative;
     display: inline-block;
     width: 200px;
     margin: 0px 5px 0px 5px;
