@@ -651,8 +651,9 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences)
 
 SciViEditor.prototype.cleanupComms = function ()
 {
+    var _this = this;
     Object.keys(this.comms).forEach(function (key) {
-        this.comms[key].stop();
+        _this.comms[key].close();
     });
     this.comms = {};
     this.commsReconnects = {};
