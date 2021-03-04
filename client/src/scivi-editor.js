@@ -123,7 +123,7 @@ SciViEditor.prototype.run = function (mode)
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
             if (mode == MIXED_MODE) {
-                _this.cleanupComms();
+                _this.stopMixed();
             }
         } else {
             $(".scivi_slide").css({"transform": "translateX(-100%)"});
@@ -278,7 +278,7 @@ SciViEditor.prototype.runMixed = function ()
         var cor = data["cor"];
         // var eon = data["eon"];
 
-        var upEonDiv = $("<div class='scivi_upload_eon'>");
+        /*var upEonDiv = $("<div class='scivi_upload_eon'>");
         var ontoDiv = $("<div style='display: table-row;'>");
         var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
         var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
@@ -332,9 +332,19 @@ SciViEditor.prototype.runMixed = function ()
         upEonDiv.append(uplDiv);
 
         $("#scivi_viewport").empty();
-        $("#scivi_viewport").append(upEonDiv);
+        $("#scivi_viewport").append(upEonDiv);*/
 
         _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
+    });
+}
+
+SciViEditor.prototype.stopMixed = function ()
+{
+    var _this = this;
+    this.cleanupComms();
+    $.post("/stop_execer", {}, function (data) {
+        if (data["error"])
+            _this.showError(data["error"]);
     });
 }
 

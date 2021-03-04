@@ -122,6 +122,20 @@ def gen_mixed():
     resp.set_cookie("exe", value = exeKey, samesite = "Lax")
     return resp
 
+@app.route("/stop_execer", methods = ['POST'])
+def stop_execer():
+    oldExeKey = request.cookies.get("exe")
+    try:
+        srv = getSrv()
+        srv.stop_execer(oldExeKey)
+        res = {}
+    except ValueError as err:
+        res = { "error": str(err) }
+    resp = jsonify(res)
+    resp.status_code = 200
+    resp.set_cookie("exe", value = "", samesite = "Lax")
+    return resp
+
 @app.after_request
 def add_header(response):
     response.cache_control.max_age = 0
