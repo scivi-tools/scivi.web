@@ -77,7 +77,9 @@ class Execer(Thread):
         if "inline" in workerNode["attributes"]:
             exec(workerNode["attributes"]["inline"], context)
         elif "path" in workerNode["attributes"]:
-            exec(open(workerNode["attributes"]["path"]).read(), context)
+            p = workerNode["attributes"]["path"]
+            context["__name__"] = p.replace("/", ".").strip(".py")
+            exec(open(p).read(), context)
 
     def execute_worker(self, instNode, protoNode):
         motherNode = self.onto.get_node_by_id(protoNode["attributes"]["mother"])
