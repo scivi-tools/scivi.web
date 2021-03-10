@@ -42,9 +42,9 @@ def glove_page():
 def soc_page():
     return getEditor("soc")
 
-@app.route("/mxd")
+@app.route("/eeg")
 def mxd_page():
-    return getEditor("mxd")
+    return getEditor("eeg")
 
 @app.route("/mmaps")
 def mmaps_page():
