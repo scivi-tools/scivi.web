@@ -1,5 +1,5 @@
 {
-    "last_id": "26",
+    "last_id": "30",
     "namespaces": {
         "default": "http://knova.ru/user/1615325175122",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -125,8 +125,27 @@
             "id": "22",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1615325175122",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 60,
+            "position_y": -350
+        },
+        {
+            "attributes": {
+            },
+            "id": "27",
+            "name": "Dependency",
+            "namespace": "http://knova.ru/user/1615325175122",
+            "position_x": 330,
+            "position_y": -433
+        },
+        {
+            "attributes": {
+                "path": "lib/eeg/21_electrodes_of_International_10-20_system_for_EEG.svg"
+            },
+            "id": "28",
+            "name": "21_10-20.svg",
+            "namespace": "http://knova.ru/user/1615325175122",
+            "position_x": 326,
+            "position_y": -385
         }
     ],
     "relations": [
@@ -246,6 +265,24 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1615325175122",
             "source_node_id": "21"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "28",
+            "id": "29",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1615325175122",
+            "source_node_id": "12"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "27",
+            "id": "30",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1615325175122",
+            "source_node_id": "28"
         }
     ],
     "visualize_ont_path": ""
