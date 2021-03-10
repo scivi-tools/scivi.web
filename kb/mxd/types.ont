@@ -1,5 +1,5 @@
 {
-    "last_id": "72",
+    "last_id": "76",
     "namespaces": {
         "default": "http://knova.ru/user/1532855052471",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -75,7 +75,7 @@
             "id": "7",
             "name": "Number",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 340,
+            "position_x": 339,
             "position_y": 622
         },
         {
@@ -306,6 +306,16 @@
             "namespace": "http://knova.ru/user/1532855052471",
             "position_x": 514,
             "position_y": 848
+        },
+        {
+            "attributes": {
+                "path": "lib/widgets/number.js"
+            },
+            "id": "73",
+            "name": "NumberWidget",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "position_x": 282,
+            "position_y": 780
         }
     ],
     "relations": [
@@ -659,6 +669,33 @@
             "name": "language",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "69"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "74",
+            "name": "is_used",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "73"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "31",
+            "id": "75",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "73"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "30",
+            "id": "76",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "73"
         }
     ],
     "visualize_ont_path": ""
