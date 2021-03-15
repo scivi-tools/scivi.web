@@ -276,6 +276,7 @@ SciViEditor.prototype.runMixed = function ()
 
         var ont = data["ont"];
         var cor = data["cor"];
+
         // var eon = data["eon"];
 
         /*var upEonDiv = $("<div class='scivi_upload_eon'>");
@@ -334,7 +335,8 @@ SciViEditor.prototype.runMixed = function ()
         $("#scivi_viewport").empty();
         $("#scivi_viewport").append(upEonDiv);*/
 
-        _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
+        if (Object.keys(cor).length > 0)
+            _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
     });
 }
 
