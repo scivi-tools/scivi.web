@@ -19,6 +19,7 @@ class Execer(Thread):
         self.keepGoing = True
         self.subThreads = []
         self.glob = {}
+        self.cache = {}
         Thread.__init__(self)
 
     def run(self):
@@ -70,9 +71,9 @@ class Execer(Thread):
                 outputInst = self.get_belonging_instance(instNode, outputNode)
                 self.buffer[outputInst["id"]] = outputs[outputNode["name"]]
 
-    def execute_code(self, workerNode, inputs, outputs, settings):
+    def execute_code(self, workerNode, inputs, outputs, settings, cache):
         context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
-                    "GLOB": self.glob, \
+                    "CACHE": cache, "GLOB": self.glob, \
                     "PROCESS": self.process, "REGISTER_SUBTHREAD": self.register_subthread }
         if "inline" in workerNode["attributes"]:
             exec(workerNode["attributes"]["inline"], context)
@@ -86,7 +87,9 @@ class Execer(Thread):
         workerNode = self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
         inputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
-        self.execute_code(workerNode, inputs, outputs, instNode["attributes"]["settingsVal"])
+        if not workerNode["id"] in self.cache:
+            self.cache[workerNode["id"]] = {}
+        self.execute_code(workerNode, inputs, outputs, instNode["attributes"]["settingsVal"], self.cache[workerNode["id"]])
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode):

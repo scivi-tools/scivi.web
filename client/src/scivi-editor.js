@@ -695,4 +695,8 @@ SciViEditor.prototype.cleanupComms = function ()
     });
     this.comms = {};
     this.commsReconnects = {};
+    this.editor.nodes.forEach(function (node) {
+        node.data.inputDataPool = [];
+        node.data.outputDataPool = [];
+    });
 }

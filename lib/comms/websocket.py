@@ -79,7 +79,8 @@ else:
     REGISTER_SUBTHREAD(wsThread, wsThread.stop)
     wsThread.start()
 
-tx = INPUT["TX"]
-if tx:
+# tx = INPUT["TX"]
+# if tx:
     # TODO: do not append to queue if ws is dead
-    wsThread.put_message({ SETTINGS_VAL["Node Address"]: tx })
+    # wsThread.put_message({ SETTINGS_VAL["Node Address"]: tx })
+wsThread.put_message({ SETTINGS_VAL["Node Address"]: INPUT["TX"] })

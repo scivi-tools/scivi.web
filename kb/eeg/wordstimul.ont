@@ -1,5 +1,5 @@
 {
-    "last_id": "48",
+    "last_id": "54",
     "namespaces": {
         "default": "http://knova.ru/user/1615732831003",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -164,6 +164,34 @@
             "namespace": "http://knova.ru/user/1615732831003",
             "position_x": -375,
             "position_y": -119
+        },
+        {
+            "attributes": {
+                "path": "lib/eeg/wordstimul.py"
+            },
+            "id": "49",
+            "name": "Word Stimul Srv Worker",
+            "namespace": "http://knova.ru/user/1615732831003",
+            "position_x": 99,
+            "position_y": -351
+        },
+        {
+            "attributes": {
+            },
+            "id": "50",
+            "name": "ServerSideWorker",
+            "namespace": "http://knova.ru/user/1615732831003",
+            "position_x": 112,
+            "position_y": -406
+        },
+        {
+            "attributes": {
+            },
+            "id": "51",
+            "name": "Python",
+            "namespace": "http://knova.ru/user/1615732831003",
+            "position_x": 186,
+            "position_y": -311
         }
     ],
     "relations": [
@@ -247,15 +275,6 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1615732831003",
             "source_node_id": "20"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "1",
-            "id": "25",
-            "name": "is_instance",
-            "namespace": "http://knova.ru/user/1615732831003",
-            "source_node_id": "19"
         },
         {
             "attributes": {
@@ -373,6 +392,33 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1615732831003",
             "source_node_id": "45"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "51",
+            "id": "52",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1615732831003",
+            "source_node_id": "49"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "50",
+            "id": "53",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1615732831003",
+            "source_node_id": "49"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "54",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1615732831003",
+            "source_node_id": "49"
         }
     ],
     "visualize_ont_path": ""
