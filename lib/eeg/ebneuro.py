@@ -45,9 +45,19 @@ if GLOB[current_EEG_mode_KEY] != settings_mode:
     GLOB[current_EEG_mode_KEY] = settings_mode
 
 if settings_mode == MODE_SAMPLING:
-    n = 16
-    frame = client.get_shorts(n)[0:21,:]
-    OUTPUT["EEG"] = frame.reshape( (len(frame), n) ).tolist()
+    frames_count = 16
+    frames = client.get_shorts(frames_count)
+    transformed = client.transform_frame_by_montage(frames, "cap21")
+
+    names = transformed[0]
+    data = transformed[1]
+
+    OUTPUT["EEG"] = [
+        names,
+        data.tolist()
+    ]
+
+    #OUTPUT["EEG"] = frame.reshape( (len(frame), n) ).tolist()
     # OUTPUT["EEG"] = [[random.random(), random.random(), random.random(), random.random()], \
     #                  [random.random(), random.random(), random.random(), random.random()], \
     #                  [random.random(), random.random(), random.random(), random.random()], \
