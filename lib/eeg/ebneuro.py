@@ -10,15 +10,16 @@ from .EBLite_python.EBLite import EBLiteClient
 current_EEG_mode_KEY = "current_EEG_mode"
 EEG_KEY = "EEG"
 
-# Different mode constanst
-MODE_IDLE = '0'
-MODE_OHM_METER = '1'
-MODE_CALIBRATION = '2'
-MODE_SAMPLING = '3'
+# Different mode constants
+MODE_IDLE        = 0
+MODE_OHM_METER   = 1
+MODE_CALIBRATION = 2
+MODE_SAMPLING    = 3
 
 # If EEG is yet to be initialized, do so
 if EEG_KEY not in GLOB:
     client = EBLiteClient("192.168.171.81", 64)
+    #client = EBLiteClient("127.0.0.1", 64)
     GLOB[EEG_KEY] = client
     client.connect()
     REGISTER_SUBTHREAD(client, client.disconnect)
@@ -28,7 +29,7 @@ if current_EEG_mode_KEY not in GLOB:
 
 client = GLOB[EEG_KEY]
 
-settings_mode = SETTINGS_VAL["Mode"] # this is ID of mode: [Idle, Ohmmeter, Calibration, Data]
+settings_mode = int(SETTINGS_VAL["Mode"]) # this is ID of mode: [Idle, Ohmmeter, Calibration, Data]
 
 # Logic to handle mode switching
 if GLOB[current_EEG_mode_KEY] != settings_mode:
@@ -44,9 +45,19 @@ if GLOB[current_EEG_mode_KEY] != settings_mode:
     GLOB[current_EEG_mode_KEY] = settings_mode
 
 if settings_mode == MODE_SAMPLING:
-    n = 16
-    frame = client.get_shorts(n)[0:21,:]
-    OUTPUT["EEG"] = frame.reshape( (len(frame), n) ).tolist()
+    frames_count = 16
+    frames = client.get_shorts(frames_count)
+    transformed = client.transform_frame_by_montage(frames, "cap21")
+
+    names = transformed[0]
+    data = transformed[1]
+
+    OUTPUT["EEG"] = [
+        names,
+        data.tolist()
+    ]
+
+    #OUTPUT["EEG"] = frame.reshape( (len(frame), n) ).tolist()
     # OUTPUT["EEG"] = [[random.random(), random.random(), random.random(), random.random()], \
     #                  [random.random(), random.random(), random.random(), random.random()], \
     #                  [random.random(), random.random(), random.random(), random.random()], \
