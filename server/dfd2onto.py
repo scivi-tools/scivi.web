@@ -118,6 +118,7 @@ class DFD2Onto:
 
     def get_io_of_number(self, node, type, nmb, onto):
         ioNodes = onto.get_nodes_linked_from(node, "has")
+        ioNodes = sorted(ioNodes, key = lambda inp: int(inp["id"]))
         index = 0
         for ioNode in ioNodes:
             if self.instance_of_type(ioNode, type, onto):
@@ -161,6 +162,7 @@ class DFD2Onto:
         dfdOnto.link_nodes(instanceNode, hostNode, "is_hosted")
         # Add inputs.
         motherInputs = self.onto.get_typed_nodes_linked_from(motherNode, "has", "Input")
+        motherInputs = sorted(motherInputs, key = lambda inp: int(inp["id"]))
         for motherInput in motherInputs:
             instanceInput = dfdOnto.add_node(self.get_instance_name(motherInput["name"], instNmb))
             protoInput = self.add_proto_node(motherInput, dfdOnto)
@@ -170,6 +172,7 @@ class DFD2Onto:
             dfdOnto.link_nodes(instanceNode, instanceInput, "has")
         # Add outputs.
         motherOutputs = self.onto.get_typed_nodes_linked_from(motherNode, "has", "Output")
+        motherOutputs = sorted(motherOutputs, key = lambda inp: int(inp["id"]))
         for motherOutput in motherOutputs:
             instanceOutput = dfdOnto.add_node(self.get_instance_name(motherOutput["name"], instNmb))
             protoOutput = self.add_proto_node(motherOutput, dfdOnto)
