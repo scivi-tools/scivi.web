@@ -172,6 +172,32 @@ SciViEditor.prototype.run = function (mode)
         element.click();
     });
 
+    $("#scivi_btn_fs").click(function() {
+        if (document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement) {
+            if (document.exitFullscreen)
+                document.exitFullscreen();
+            else if (document.mozCancelFullScreen)
+                document.mozCancelFullScreen();
+            else if (document.webkitExitFullscreen)
+                document.webkitExitFullscreen();
+            else if (document.msExitFullscreen)
+                document.msExitFullscreen();
+        } else {
+            var element = document.getElementById("embrace");
+            if (element.requestFullscreen)
+                element.requestFullscreen();
+            else if (element.mozRequestFullScreen)
+                element.mozRequestFullScreen();
+            else if (element.webkitRequestFullscreen)
+                element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            else if (element.msRequestFullscreen)
+                element.msRequestFullscreen();
+        }
+    });
+
     this.editor = editor;
     this.engine = engine;
 
