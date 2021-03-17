@@ -94,4 +94,3 @@ elif settings_mode == MODE_OHM_METER:
     #]
 
 PROCESS()
-time.sleep(0.1)
