@@ -8,7 +8,7 @@ import math
 
 if not "Words" in CACHE:
     sh = SETTINGS_VAL["Words"].split("\n")
-    random.shuffle(sh)
+    #random.shuffle(sh)
     CACHE["Words"] = sh
     CACHE["Index"] = 0;
     CACHE["Word"] = None
