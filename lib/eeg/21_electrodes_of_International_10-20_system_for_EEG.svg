@@ -103,14 +103,14 @@
     </text>
   </g>
   <g>
-    <ellipse id="Fp1" style="fill: #ffffff" cx="111.152" cy="36.786" rx="14.7774" ry="14.7774"/>
+    <ellipse id="FP1" style="fill: #ffffff" cx="111.152" cy="36.786" rx="14.7774" ry="14.7774"/>
     <ellipse style="fill: none; fill-opacity:0; stroke-width: 1.6; stroke: #000000" cx="111.152" cy="36.786" rx="14.7774" ry="14.7774"/>
     <text style="fill: #000000;text-anchor:middle;font-size:13.5467;font-family:sanserif;font-style:normal;font-weight:normal" x="111.152" y="41.8694">
       <tspan x="111.152" y="41.8694">Fp1</tspan>
     </text>
   </g>
   <g>
-    <ellipse id="Fp2" style="fill: #ffffff" cx="189.152" cy="36.786" rx="14.7774" ry="14.7774"/>
+    <ellipse id="FP2" style="fill: #ffffff" cx="189.152" cy="36.786" rx="14.7774" ry="14.7774"/>
     <ellipse style="fill: none; fill-opacity:0; stroke-width: 1.6; stroke: #000000" cx="189.152" cy="36.786" rx="14.7774" ry="14.7774"/>
     <text style="fill: #000000;text-anchor:middle;font-size:13.5467;font-family:sanserif;font-style:normal;font-weight:normal" x="189.152" y="41.8694">
       <tspan x="189.152" y="41.8694">Fp2</tspan>
