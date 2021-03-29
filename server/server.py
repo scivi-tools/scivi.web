@@ -409,7 +409,7 @@ class SciViServer:
 
     def task_onto_has_operations(self, taskOnto):
         for link in taskOnto.links():
-            if link["name"] == "is_used":
+            if link["name"] == "is_hosted":
                 return True
         return False
 
