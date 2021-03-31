@@ -63,7 +63,7 @@ class WordThread(Thread):
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         clock = pygame.time.Clock()
         screenSize = screen.get_size()
-        font = pygame.font.Font("/home/linguolab/scivi.web/lib/eeg/PermianSansTypeface-Bold.otf", 150)
+        font = pygame.font.Font("lib/eeg/PermianSansTypeface-Bold.otf", 150)
         text = None
         elapsed = 0
         self.renderRunning = True
