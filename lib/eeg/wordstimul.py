@@ -1,52 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# import time
-# import random
-# import math
-
-
-# if not "Words" in CACHE:
-#     sh = SETTINGS_VAL["Words"].split("\n")
-#     random.shuffle(sh)
-#     CACHE["Words"] = sh
-#     CACHE["Index"] = 0;
-#     CACHE["Word"] = None
-#     CACHE["Iteration"] = 1;
-
-# if CACHE["Iteration"] > 0:
-#     now = time.time()
-#     if "lastCall" in CACHE:
-#         elapsed = now - CACHE["lastCall"]
-#     else:
-#         elapsed = 0
-#         CACHE["lastCall"] = now
-
-#     if int(elapsed * 1000) > int(SETTINGS_VAL["Timeout"]):
-#         CACHE["lastCall"] = now
-#         words = CACHE["Words"];
-#         idx = CACHE["Index"];
-#         if idx % 2:
-#             CACHE["Word"] = words[math.floor(idx / 2)];
-#         else:
-#             CACHE["Word"] = None;
-#         idx += 1;
-#         CACHE["Index"] = idx;
-#         if idx > len(words) * 2:
-#             iterat = CACHE["Iteration"]
-#             iterat += 1;
-#             if iterat <= int(SETTINGS_VAL["Iterations Count"]):
-#                 CACHE["Iteration"] = iterat;
-#                 CACHE["Index"] = 0;
-#             else:
-#                 CACHE["Iteration"] = 0;
-
-# OUTPUT["Word"] = CACHE["Word"];
-# OUTPUT["Iteration"] = CACHE["Iteration"];
-
 from threading import Thread, Lock
 import pygame
-# import RPi.GPIO as GPIO
+from pyGPIO.gpio import gpio, port
 
 
 class WordThread(Thread):
@@ -54,7 +11,6 @@ class WordThread(Thread):
         
         self.TEXT_COLOR = (230, 231, 225)
         self.BACKGROUND_COLOR = (39, 40, 34)
-        self.CHANNEL = 18
 
         self.words = words
         self.iterCnt = iterCnt
@@ -112,8 +68,8 @@ class WordThread(Thread):
         elapsed = 0
         self.renderRunning = True
         self.curIter = 0
-        # GPIO.setmode(GPIO.BCM)
-        # GPIO.setup(self.CHANNEL, GPIO.OUT, initial = GPIO.LOW)
+        gpio.init()
+        gpio.setcfg(port.GPIO4, 1)
         while self.is_running():
             if elapsed > self.timeOut:
                 elapsed = 0
@@ -134,13 +90,12 @@ class WordThread(Thread):
             if text:
                 txtSize = text.get_size()
                 screen.blit(text, ((screenSize[0] - txtSize[0]) // 2, (screenSize[1] - txtSize[1]) // 2))
-                # GPIO.output(self.CHANNEL, GPIO.HIGH)
+                gpio.output(port.GPIO4, 1)
             else:
-                # GPIO.output(self.CHANNEL, GPIO.LOW)
+                gpio.output(port.GPIO4, 0)
                 pass
             pygame.display.flip()
             elapsed += clock.tick(60)
-        # GPIO.cleanup(self.CHANNEL)
         pygame.quit()
 
 
