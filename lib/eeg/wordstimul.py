@@ -107,9 +107,11 @@ class WordThread(Thread):
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         clock = pygame.time.Clock()
         screenSize = screen.get_size()
-        font = pygame.font.Font("PermianSansTypeface-Bold.otf", 150)
+        font = pygame.font.Font("/home/linguolab/scivi.web/lib/eeg/PermianSansTypeface-Bold.otf", 150)
         text = None
         elapsed = 0
+        self.renderRunning = True
+        self.curIter = 0
         # GPIO.setmode(GPIO.BCM)
         # GPIO.setup(self.CHANNEL, GPIO.OUT, initial = GPIO.LOW)
         while self.is_running():
@@ -118,20 +120,20 @@ class WordThread(Thread):
                 if text:
                     text = None
                 else:
-                    self.mutex.aquire()
+                    self.mutex.acquire()
                     self.curIndex += 1
                     if self.curIndex == len(self.words):
                         self.curIndex = 0
                         self.curIter += 1
-                        if self.curIndex == self.iterCnt:
+                        if self.curIter == self.iterCnt:
                             self.renderRunning = False
                     if self.renderRunning:
                         text = self.create_text(self.words[self.curIndex], font)
                     self.mutex.release()
             screen.fill(self.BACKGROUND_COLOR)
-            if self.text:
-                txtSize = self.text.get_size()
-                screen.blit(self.text, ((screenSize[0] - txtSize[0]) // 2, (screenSize[1] - txtSize[1]) // 2))
+            if text:
+                txtSize = text.get_size()
+                screen.blit(text, ((screenSize[0] - txtSize[0]) // 2, (screenSize[1] - txtSize[1]) // 2))
                 # GPIO.output(self.CHANNEL, GPIO.HIGH)
             else:
                 # GPIO.output(self.CHANNEL, GPIO.LOW)
