@@ -71,6 +71,11 @@ class WordThread(Thread):
         gpio.init()
         gpio.setcfg(port.GPIO4, 1)
         while self.is_running():
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    self.mutex.acquire()
+                    self.renderRunning = False
+                    self.mutex.release()
             if elapsed > self.timeOut:
                 elapsed = 0
                 if text:
