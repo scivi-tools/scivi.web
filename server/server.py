@@ -4,6 +4,7 @@
 import re
 import urllib
 import importlib
+import datetime
 from onto.onto import Onto
 from enum import Enum
 from server.eon import Eon
@@ -202,6 +203,8 @@ class SciViServer:
             return 0
         if t["name"] == "String":
             return ""
+        elif t["name"] == "Date" or t["name"] == "Time":
+            return int(datetime.datetime.now().timestamp() * 1000)
         else:
             return 0
 
