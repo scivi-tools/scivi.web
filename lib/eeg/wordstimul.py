@@ -17,6 +17,7 @@ class WordThread(Thread):
         self.timeOut = timeOut
         self.mutex = Lock()
         self.renderRunning = False
+        self.locked = False
         self.curIndex = -1
         self.curIter = -1
         Thread.__init__(self)
@@ -49,6 +50,17 @@ class WordThread(Thread):
         self.mutex.release()
         return result
 
+    def is_locked(self):
+        self.mutex.acquire()
+        result = self.locked
+        self.mutex.release()
+        return result
+
+    def set_locked(self, l):
+        self.mutex.acquire()
+        self.locked = l
+        self.mutex.release()
+
     def create_text(self, msg, font):
         textRect = font.render(msg.strip(), True, self.TEXT_COLOR)
         w = textRect.get_width()
@@ -76,7 +88,7 @@ class WordThread(Thread):
                     self.mutex.acquire()
                     self.renderRunning = False
                     self.mutex.release()
-            if elapsed > self.timeOut:
+            if elapsed > self.timeOut and not self.is_locked():
                 elapsed = 0
                 if text:
                     text = None
@@ -107,10 +119,14 @@ class WordThread(Thread):
 if "wordThread" in GLOB:
     wordThread = GLOB["wordThread"]
 else:
-    wordThread = WordThread(SETTINGS_VAL["Words"].split("\n"), int(SETTINGS_VAL["Iterations Count"]), int(SETTINGS_VAL["Timeout"]))
-    GLOB["wordThread"] = wordThread
-    REGISTER_SUBTHREAD(wordThread, wordThread.stop)
-    wordThread.start()
+    words = SETTINGS_VAL["Words"]
+    if words:
+        wordThread = WordThread(words.split("\n"), int(SETTINGS_VAL["Iterations Count"]), int(SETTINGS_VAL["Timeout"]))
+        GLOB["wordThread"] = wordThread
+        REGISTER_SUBTHREAD(wordThread, wordThread.stop)
+        wordThread.start()
+
+wordThread.set_locked(INPUT["Lock"])
 
 OUTPUT["Word"] = wordThread.cur_word()
 OUTPUT["Iteration"] = wordThread.cur_iteration()
