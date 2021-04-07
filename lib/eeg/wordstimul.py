@@ -126,8 +126,7 @@ else:
         REGISTER_SUBTHREAD(wordThread, wordThread.stop)
         wordThread.start()
 
-if "Enabled" in INPUT:
-    wordThread.set_locked(INPUT["Enabled"])
+wordThread.set_locked(INPUT.get("Disabled", False))
 
 OUTPUT["Word"] = wordThread.cur_word()
 OUTPUT["Iteration"] = wordThread.cur_iteration()

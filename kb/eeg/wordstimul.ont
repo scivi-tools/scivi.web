@@ -197,10 +197,10 @@
             "attributes": {
             },
             "id": "55",
-            "name": "Enabled",
+            "name": "Disabled",
             "namespace": "http://knova.ru/user/1615732831003",
-            "position_x": 845,
-            "position_y": 794
+            "position_x": 875,
+            "position_y": 819
         },
         {
             "attributes": {
