@@ -88,7 +88,7 @@ class WordThread(Thread):
                     self.mutex.acquire()
                     self.renderRunning = False
                     self.mutex.release()
-            if elapsed > self.timeOut and not self.is_locked():
+            if (elapsed > self.timeOut) and (text or (not self.is_locked())):
                 elapsed = 0
                 if text:
                     text = None
