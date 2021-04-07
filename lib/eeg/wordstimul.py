@@ -82,6 +82,7 @@ class WordThread(Thread):
         self.curIter = 0
         gpio.init()
         gpio.setcfg(port.GPIO4, 1)
+        gpio.output(port.GPIO4, 0)
         while self.is_running():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
@@ -126,7 +127,7 @@ else:
         REGISTER_SUBTHREAD(wordThread, wordThread.stop)
         wordThread.start()
 
-wordThread.set_locked(INPUT.get("Disabled", False))
+wordThread.set_locked(INPUT.get("Locked", False))
 
 OUTPUT["Word"] = wordThread.cur_word()
 OUTPUT["Iteration"] = wordThread.cur_iteration()
