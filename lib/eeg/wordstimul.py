@@ -122,7 +122,7 @@ if "wordThread" in GLOB:
 else:
     words = SETTINGS_VAL["Words"]
     if words:
-        wordThread = WordThread(words.split("\n"), int(SETTINGS_VAL["Iterations Count"]), int(SETTINGS_VAL["Timeout"]))
+        wordThread = WordThread(list(map(lambda w: w.strip(), words.split("\n"))), int(SETTINGS_VAL["Iterations Count"]), int(SETTINGS_VAL["Timeout"]))
         GLOB["wordThread"] = wordThread
         REGISTER_SUBTHREAD(wordThread, wordThread.stop)
         wordThread.start()
