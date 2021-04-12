@@ -75,9 +75,11 @@ class WordThread(Thread):
         screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         clock = pygame.time.Clock()
         screenSize = screen.get_size()
+        pygame.mouse.set_visible(False)
         font = pygame.font.Font("lib/eeg/PermianSansTypeface-Bold.otf", 150)
         text = None
         elapsed = 0
+        silence = 30000
         self.renderRunning = True
         self.curIter = 0
         gpio.init()
@@ -89,8 +91,9 @@ class WordThread(Thread):
                     self.mutex.acquire()
                     self.renderRunning = False
                     self.mutex.release()
-            if (elapsed > self.timeOut) and (text or (not self.is_locked())):
+            if ((silence > 0) and (elapsed > silence)) or ((silence == 0) and (elapsed > self.timeOut) and (text or (not self.is_locked())):
                 elapsed = 0
+                silence = 0
                 if text:
                     text = None
                 else:
@@ -114,6 +117,7 @@ class WordThread(Thread):
                 pass
             pygame.display.flip()
             elapsed += clock.tick(60)
+        pygame.mouse.set_visible(True)
         pygame.quit()
 
 
