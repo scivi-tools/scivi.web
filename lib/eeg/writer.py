@@ -7,7 +7,7 @@ from .EegWriter import EegWriter
 
 # INPUT["something"]
 # OUTPUT["something"]
-# GLOB["something"]
+# CACHE["something"]
 # SETTINGS_VAL["something"]
 
 MODULE_PREFIX = "EegWriter_bU3nDCYS0Q"
@@ -48,7 +48,7 @@ current_time = datetime.fromtimestamp((float(current_time) + float(current_date)
 
 # Get current writer
     
-writer = GLOB.get(p(WRITER_KEY))
+writer = CACHE.get(p(WRITER_KEY))
 
 if current_filename:
     # If there's none or if it's different from what we need, create a new one
@@ -58,19 +58,19 @@ if current_filename:
         else:
             # First time we launch this module; ensure cleanup
             def cleanup():
-                writer = GLOB.get(p(WRITER_KEY))
+                writer = CACHE.get(p(WRITER_KEY))
                 if writer:
                     writer.close()
             REGISTER_SUBTHREAD(None, cleanup)
 
         writer = EegWriter(current_filename, current_iteration, current_time, current_informant)
 
-        GLOB[p(WRITER_KEY)] = writer
+        CACHE[p(WRITER_KEY)] = writer
     
     writer.write(INPUT[EEG_DATA_KEY])
 else:
     if writer:
         writer.close()
-    GLOB[p(WRITER_KEY)] = None
+    CACHE[p(WRITER_KEY)] = None
 
 PROCESS()
