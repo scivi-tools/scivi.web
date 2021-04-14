@@ -80,6 +80,7 @@ class WordThread(Thread):
         text = None
         elapsed = 0
         silence = 30000
+        #silence = 1000
         self.renderRunning = True
         self.curIter = 0
         gpio.init()
@@ -91,7 +92,7 @@ class WordThread(Thread):
                     self.mutex.acquire()
                     self.renderRunning = False
                     self.mutex.release()
-            if ((silence > 0) and (elapsed > silence)) or ((silence == 0) and (elapsed > self.timeOut) and (text or (not self.is_locked())):
+            if ((silence > 0) and (elapsed > silence)) or ((silence == 0) and (elapsed > self.timeOut) and (text or (not self.is_locked()))):
                 elapsed = 0
                 silence = 0
                 if text:
