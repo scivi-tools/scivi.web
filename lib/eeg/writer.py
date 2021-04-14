@@ -51,15 +51,15 @@ current_time = datetime.fromtimestamp(float(current_time) / 1000.0)
 
 # Get current writer
     
-writer = CACHE.get(p(WRITER_KEY))
+writer = GLOB.get(p(WRITER_KEY))
 #start = time()
 
 if is_write:
-    stored_filename = CACHE.get(p(FILENAME_KEY))
+    stored_filename = GLOB.get(p(FILENAME_KEY))
     #print (current_filename)
     #print (stored_filename)
     if stored_filename is not None:
-        CACHE[p(FILENAME_KEY)] = current_filename
+        GLOB[p(FILENAME_KEY)] = current_filename
     if current_filename is None:
         current_filename = stored_filename
 
@@ -73,21 +73,21 @@ if is_write:
             else:
                 # First time we launch this module; ensure cleanup
                 def cleanup():
-                    writer = CACHE.get(p(WRITER_KEY))
+                    writer = GLOB.get(p(WRITER_KEY))
                     if writer:
                         writer.close()
                 REGISTER_SUBTHREAD(None, cleanup)
     
             writer = EegWriter(current_filename, current_iteration, current_time, current_informant)
     
-            CACHE[p(WRITER_KEY)] = writer
+            GLOB[p(WRITER_KEY)] = writer
         
         writer.write(INPUT[EEG_DATA_KEY])
 else:
     if writer:
         writer.close()
-    CACHE[p(WRITER_KEY)] = None
-    CACHE[p(FILENAME_KEY)] = None
+    GLOB[p(WRITER_KEY)] = None
+    GLOB[p(FILENAME_KEY)] = None
 
 #print(time() - start)
 
