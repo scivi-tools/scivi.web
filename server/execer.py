@@ -87,9 +87,9 @@ class Execer(Thread):
         workerNode = self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
         inputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
-        if not workerNode["id"] in self.cache:
-            self.cache[workerNode["id"]] = {}
-        self.execute_code(workerNode, inputs, outputs, instNode["attributes"]["settingsVal"], self.cache[workerNode["id"]])
+        if not instNode["id"] in self.cache:
+            self.cache[instNode["id"]] = {}
+        self.execute_code(workerNode, inputs, outputs, instNode["attributes"]["settingsVal"], self.cache[instNode["id"]])
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode):
