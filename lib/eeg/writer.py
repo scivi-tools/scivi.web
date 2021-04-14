@@ -52,7 +52,6 @@ current_time = datetime.fromtimestamp(float(current_time) / 1000.0)
 # Get current writer
     
 writer = CACHE.get(p(WRITER_KEY))
-
 #start = time()
 
 if is_write:
