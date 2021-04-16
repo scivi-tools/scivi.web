@@ -81,8 +81,10 @@ class WordThread(Thread):
         elapsed = 0
         silence = 30000
         #silence = 1000
+        self.mutex.acquire()
         self.renderRunning = True
         self.curIter = 0
+        self.mutex.release()
         gpio.init()
         gpio.setcfg(port.GPIO4, 1)
         gpio.output(port.GPIO4, 0)
