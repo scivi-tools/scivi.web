@@ -123,7 +123,7 @@ SciViEditor.prototype.run = function (mode)
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
             if (mode == MIXED_MODE) {
-                _this.cleanupComms();
+                _this.stopMixed();
             }
         } else {
             $(".scivi_slide").css({"transform": "translateX(-100%)"});
@@ -170,6 +170,32 @@ SciViEditor.prototype.run = function (mode)
             reader.readAsText(element.files[0]);
         }, false);
         element.click();
+    });
+
+    $("#scivi_btn_fs").click(function() {
+        if (document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement) {
+            if (document.exitFullscreen)
+                document.exitFullscreen();
+            else if (document.mozCancelFullScreen)
+                document.mozCancelFullScreen();
+            else if (document.webkitExitFullscreen)
+                document.webkitExitFullscreen();
+            else if (document.msExitFullscreen)
+                document.msExitFullscreen();
+        } else {
+            var element = document.getElementById("embrace");
+            if (element.requestFullscreen)
+                element.requestFullscreen();
+            else if (element.mozRequestFullScreen)
+                element.mozRequestFullScreen();
+            else if (element.webkitRequestFullscreen)
+                element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            else if (element.msRequestFullscreen)
+                element.msRequestFullscreen();
+        }
     });
 
     this.editor = editor;
@@ -276,9 +302,10 @@ SciViEditor.prototype.runMixed = function ()
 
         var ont = data["ont"];
         var cor = data["cor"];
+
         // var eon = data["eon"];
 
-        var upEonDiv = $("<div class='scivi_upload_eon'>");
+        /*var upEonDiv = $("<div class='scivi_upload_eon'>");
         var ontoDiv = $("<div style='display: table-row;'>");
         var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
         var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
@@ -332,9 +359,20 @@ SciViEditor.prototype.runMixed = function ()
         upEonDiv.append(uplDiv);
 
         $("#scivi_viewport").empty();
-        $("#scivi_viewport").append(upEonDiv);
+        $("#scivi_viewport").append(upEonDiv);*/
 
-        _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
+        if (Object.keys(cor).length > 0)
+            _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
+    });
+}
+
+SciViEditor.prototype.stopMixed = function ()
+{
+    var _this = this;
+    this.cleanupComms();
+    $.post("/stop_execer", {}, function (data) {
+        if (data["error"])
+            _this.showError(data["error"]);
     });
 }
 
@@ -506,7 +544,14 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
 {
     var el = $("#" + settingID.toString())
-    var value = el.is(":checkbox") ? el.is(":checked") : el.val();
+    var value = 0;
+    if (el.is(":checkbox"))
+        value = el.is(":checked");
+    else {
+         value = el.get(0).valueAsNumber;
+         if (isNaN(value))
+            value = el.val();
+    }
     var node = this.getNodeByID(nodeID);
     node.data.settingsVal[settingName] = value;
     node.data.settingsChanged[settingName] = true;
@@ -651,9 +696,14 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences)
 
 SciViEditor.prototype.cleanupComms = function ()
 {
+    var _this = this;
     Object.keys(this.comms).forEach(function (key) {
-        this.comms[key].stop();
+        _this.comms[key].close();
     });
     this.comms = {};
     this.commsReconnects = {};
+    this.editor.nodes.forEach(function (node) {
+        node.data.inputDataPool = [];
+        node.data.outputDataPool = [];
+    });
 }

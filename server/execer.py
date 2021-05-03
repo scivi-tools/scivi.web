@@ -5,7 +5,7 @@ from threading import Thread, Lock
 import time
 
 
-class CoRoutine:
+class SubThread:
     def __init__(self, runner, cancelCallback):
         self.runner = runner
         self.cancel = cancelCallback
@@ -17,8 +17,9 @@ class Execer(Thread):
         self.mutex = Lock()
         self.active = True
         self.keepGoing = True
-        self.coRoutines = []
+        self.subThreads = []
         self.glob = {}
+        self.cache = {}
         Thread.__init__(self)
 
     def run(self):
@@ -26,8 +27,8 @@ class Execer(Thread):
             self.keepGoing = False
             self.turn()
             time.sleep(0)
-        for cor in self.coRoutines:
-            cor.cancel()
+        for st in self.subThreads:
+            st.cancel()
 
     def is_active(self):
         self.mutex.acquire()
@@ -43,8 +44,8 @@ class Execer(Thread):
     def process(self):
         self.keepGoing = True
 
-    def register_coroutine(self, runner, cancelCallback):
-        self.coRoutines.append(CoRoutine(runner, cancelCallback))
+    def register_subthread(self, runner, cancelCallback):
+        self.subThreads.append(SubThread(runner, cancelCallback))
 
     def get_belonging_instance(self, instNode, protoOfBelonging):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
@@ -70,21 +71,25 @@ class Execer(Thread):
                 outputInst = self.get_belonging_instance(instNode, outputNode)
                 self.buffer[outputInst["id"]] = outputs[outputNode["name"]]
 
-    def execute_code(self, workerNode, inputs, outputs, settings):
+    def execute_code(self, workerNode, inputs, outputs, settings, cache):
         context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
-                    "GLOB": self.glob, \
-                    "PROCESS": self.process, "REGISTER_COROUTINE": self.register_coroutine }
+                    "CACHE": cache, "GLOB": self.glob, \
+                    "PROCESS": self.process, "REGISTER_SUBTHREAD": self.register_subthread }
         if "inline" in workerNode["attributes"]:
             exec(workerNode["attributes"]["inline"], context)
         elif "path" in workerNode["attributes"]:
-            exec(open(workerNode["attributes"]["path"]).read(), context)
+            p = workerNode["attributes"]["path"]
+            context["__name__"] = p.replace("/", ".").strip(".py")
+            exec(open(p).read(), context)
 
     def execute_worker(self, instNode, protoNode):
         motherNode = self.onto.get_node_by_id(protoNode["attributes"]["mother"])
         workerNode = self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
         inputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
-        self.execute_code(workerNode, inputs, outputs, instNode["attributes"]["settingsVal"])
+        if not instNode["id"] in self.cache:
+            self.cache[instNode["id"]] = {}
+        self.execute_code(workerNode, inputs, outputs, instNode["attributes"]["settingsVal"], self.cache[instNode["id"]])
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode):

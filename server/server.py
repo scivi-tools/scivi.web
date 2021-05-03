@@ -4,6 +4,7 @@
 import re
 import urllib
 import importlib
+import datetime
 from onto.onto import Onto
 from enum import Enum
 from server.eon import Eon
@@ -62,6 +63,7 @@ class SciViServer:
         self.ctx = context
         self.mode = Mode.UNDEFINED
         self.dependencies = {}
+        self.files = {}
         self.execers = {}
 
         self.gen_tree()
@@ -121,15 +123,37 @@ class SciViServer:
         else:
             return ""
 
+    def get_file(self, node):
+        if ("attributes" in node) and ("path" in node["attributes"]):
+            with open(node["attributes"]["path"]) as f:
+                return f.read()
+        return None
+
+    def guess_mime(self, filename):
+        if filename.endswith(".svg"):
+            return "image/svg+xml; charset=utf-8"
+        return None
+
+    def get_mime(self, node):
+        if "attributes" in node:
+            if "mime" in node["attributes"]:
+                return node["attributes"]["mime"]
+            elif "path" in node["attributes"]:
+                return self.guess_mime(node["attributes"]["path"])
+        return None
+
     def add_dependencies(self, node):
         deps = self.onto.get_typed_nodes_linked_from(node, "has", "Dependency")
         if deps:
             for d in deps:
                 lang = self.get_language(d)
-                if not (lang in self.dependencies):
-                    self.dependencies[lang] = {}
-                self.dependencies[lang][d["id"]] = self.get_code(d)
-                self.add_dependencies(d)
+                if lang:
+                    if not (lang in self.dependencies):
+                        self.dependencies[lang] = {}
+                    self.dependencies[lang][d["id"]] = self.get_code(d)
+                    self.add_dependencies(d)
+                else:
+                    self.files[d["name"]] = { "content": self.get_file(d), "mime": self.get_mime(d) }
 
     def execute(self, node):
         if "inline" in node["attributes"]:
@@ -179,6 +203,8 @@ class SciViServer:
             return 0
         if t["name"] == "String":
             return ""
+        elif t["name"] == "Date" or t["name"] == "Time":
+            return int(datetime.datetime.now().timestamp() * 1000)
         else:
             return 0
 
@@ -386,7 +412,7 @@ class SciViServer:
 
     def task_onto_has_operations(self, taskOnto):
         for link in taskOnto.links():
-            if link["name"] == "is_used":
+            if link["name"] == "is_hosted":
                 return True
         return False
 
@@ -418,3 +444,6 @@ class SciViServer:
     def stop_execer(self, serverOntoHash):
         if serverOntoHash and serverOntoHash in self.execers:
             self.execers[serverOntoHash].stop()
+
+    def get_file_from_storage(self, filename):
+        return self.files[filename]

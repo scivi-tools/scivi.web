@@ -42,13 +42,17 @@ def glove_page():
 def soc_page():
     return getEditor("soc")
 
-@app.route("/mxd")
+@app.route("/eeg")
 def mxd_page():
-    return getEditor("mxd")
+    return getEditor("eeg")
 
 @app.route("/mmaps")
 def mmaps_page():
     return getEditor("mmaps")
+
+@app.route("/eye")
+def eye_page():
+    return getEditor("eye")
 
 def getSrv():
     global srvDict
@@ -82,6 +86,14 @@ def editor_css(filename):
 @app.route("/lib/<path:filename>")
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+@app.route("/storage/<path:filename>")
+def editor_storage(filename):
+    f = getSrv().get_file_from_storage(filename)
+    if f:
+        return f["content"], 200, {'Content-Type': f["mime"]}
+    else:
+        return "Not found", 404
 
 @app.route("/preset/<path:filename>")
 def editor_preset(filename):
@@ -119,7 +131,22 @@ def gen_mixed():
         res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
-    resp.set_cookie("exe", value = exeKey, samesite = "Lax")
+    if exeKey:
+        resp.set_cookie("exe", value = exeKey, samesite = "Lax")
+    return resp
+
+@app.route("/stop_execer", methods = ['POST'])
+def stop_execer():
+    oldExeKey = request.cookies.get("exe")
+    try:
+        srv = getSrv()
+        srv.stop_execer(oldExeKey)
+        res = {}
+    except ValueError as err:
+        res = { "error": str(err) }
+    resp = jsonify(res)
+    resp.status_code = 200
+    resp.set_cookie("exe", value = "", samesite = "Lax")
     return resp
 
 @app.after_request
