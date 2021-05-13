@@ -10,8 +10,9 @@ Used relations:
 3. *has* -- "A -has-> B" means A possesses B; it is OK when A possesses only one thing, so if B is alone connected to A by "has"
 4. *base_type* -- "A -base_type-> B" means that B is base type of A; for example if A is an array, B is type of its elements
 5. *is_instance* -- "A -is_instance-> B" means A is implementation of B; for example A may denote a code of concept B is about
-6. *is_used* -- "A -is_used-> B" means A is used to determine B; for example, if A denotes parameter and B denotes code, this means A is a parameter inside B; if A denotes code and B denotes parameter, this means A calculates out B; if A denotes code and B denotes code mask, this means A should be inserted instead of B
+6. *is_used* -- "A -is_used-> B" means A is used to determine B; for example, if A denotes parameter and B denotes code, this means A is a parameter inside B; if A denotes code and B denotes parameter, this means A calculates out B; if A denotes code and B denotes code mask, this means A should be inserted instead of B; if A is output and B is input, this means A should be substituted as B (in other words, B := A); if A is a worker and B is a computing resource, this means A is a program executed on B; if A is a protocol and B is a computing resource, this means A is supported by B
 7. *language* -- "A -language-> B" means A is written in B; this is used to link code with language
+8. *is_hosted* -- "A -is_hosted-> B" means A should be executed on B
 
 Please, do not add any other relations.
 

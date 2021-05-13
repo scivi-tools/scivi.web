@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import hashlib
 
 
 class Onto:
@@ -265,3 +266,29 @@ class Onto:
         }
         self.links().append(link)
         return link
+
+    def remove_node(self, node):
+        '''
+        Remove node from the ontology. All the incident links are removed as well.
+        @param node - node to remove.
+        '''
+        links = self.links().copy()
+        for link in links:
+            if (link["source_node_id"] == node["id"]) or (link["destination_node_id"] == node["id"]):
+                self.links().remove(link)
+        self.nodes().remove(node)
+
+    def __sorted_dict_str(self, data):
+        if type(data) == dict:
+            return { k: self.__sorted_dict_str(data[k]) for k in sorted(data.keys()) }
+        elif type(data) == list:
+            return [ self.__sorted_dict_str(val) for val in data ]
+        else:
+            return str(data)
+
+    def calc_hash(self, hasher = hashlib.sha256):
+        '''
+        Calculate hash of the ontology.
+        @return hash as string.
+        '''
+        return hasher(bytes(repr(self.__sorted_dict_str(self.data)), 'UTF-8')).hexdigest()

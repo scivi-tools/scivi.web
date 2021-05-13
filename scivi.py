@@ -11,9 +11,11 @@ app = Flask(__name__, static_url_path = "")
 srvDict = {}
 
 def getEditor(name):
-    res = send_from_directory("client", "editor.html")
-    res.set_cookie("srv", value = name)
     global srvDict
+    if name in srvDict:
+        del srvDict[name]
+    res = send_from_directory("client", "editor.html")
+    res.set_cookie("srv", value = name, samesite = "Lax")
     if name in srvDict:
         del srvDict[name]
     return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
@@ -39,6 +41,18 @@ def glove_page():
 @app.route("/soc")
 def soc_page():
     return getEditor("soc")
+
+@app.route("/eeg")
+def mxd_page():
+    return getEditor("eeg")
+
+@app.route("/mmaps")
+def mmaps_page():
+    return getEditor("mmaps")
+
+@app.route("/eye")
+def eye_page():
+    return getEditor("eye")
 
 def getSrv():
     global srvDict
@@ -73,6 +87,14 @@ def editor_css(filename):
 def editor_lib(filename):
     return send_from_directory("client/lib", filename), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
+@app.route("/storage/<path:filename>")
+def editor_storage(filename):
+    f = getSrv().get_file_from_storage(filename)
+    if f:
+        return f["content"], 200, {'Content-Type': f["mime"]}
+    else:
+        return "Not found", 404
+
 @app.route("/preset/<path:filename>")
 def editor_preset(filename):
     return send_from_directory("client/preset", filename), 200, {'Content-Type': 'application/json; charset=utf-8'}
@@ -88,18 +110,43 @@ def srv_exec(nodeID):
 @app.route("/gen_eon", methods = ['POST'])
 def gen_eon():
     dfd = request.get_json(force = True)
-    res = getSrv().gen_eon(dfd)
+    res = None
+    try:
+        res = getSrv().gen_eon(dfd)
+    except ValueError as err:
+        res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
     return resp
 
 @app.route("/gen_mixed", methods = ['POST'])
 def gen_mixed():
-    global srv
     dfd = request.get_json(force = True)
-    res = srv.gen_mixed(dfd)
+    oldExeKey = request.cookies.get("exe")
+    try:
+        srv = getSrv()
+        srv.stop_execer(oldExeKey)
+        res, exeKey = srv.gen_mixed(dfd)
+    except ValueError as err:
+        res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
+    if exeKey:
+        resp.set_cookie("exe", value = exeKey, samesite = "Lax")
+    return resp
+
+@app.route("/stop_execer", methods = ['POST'])
+def stop_execer():
+    oldExeKey = request.cookies.get("exe")
+    try:
+        srv = getSrv()
+        srv.stop_execer(oldExeKey)
+        res = {}
+    except ValueError as err:
+        res = { "error": str(err) }
+    resp = jsonify(res)
+    resp.status_code = 200
+    resp.set_cookie("exe", value = "", samesite = "Lax")
     return resp
 
 @app.after_request

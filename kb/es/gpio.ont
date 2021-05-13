@@ -1,5 +1,5 @@
 {
-    "last_id": "24",
+    "last_id": "28",
     "namespaces": {
         "default": "http://knova.ru/user/1574247184154",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -11,7 +11,6 @@
     "nodes": [
         {
             "attributes": {
-                "eval": "dw(ID, Signal)"
             },
             "id": "1",
             "name": "Output Pin",
@@ -44,7 +43,7 @@
             "name": "Signal",
             "namespace": "http://knova.ru/user/1574247184154",
             "position_x": 274,
-            "position_y": 375
+            "position_y": 376
         },
         {
             "attributes": {
@@ -119,6 +118,25 @@
             "namespace": "http://knova.ru/user/1574247184154",
             "position_x": 493,
             "position_y": 323
+        },
+        {
+            "attributes": {
+                "eval": "Output Pin = dw(ID, Signal)"
+            },
+            "id": "25",
+            "name": "Output Pin Worker",
+            "namespace": "http://knova.ru/user/1574247184154",
+            "position_x": 586,
+            "position_y": 270
+        },
+        {
+            "attributes": {
+            },
+            "id": "26",
+            "name": "EdgeSideWorker",
+            "namespace": "http://knova.ru/user/1574247184154",
+            "position_x": 0,
+            "position_y": 0
         }
     ],
     "relations": [
@@ -229,6 +247,24 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1574247184154",
             "source_node_id": "17"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "27",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1574247184154",
+            "source_node_id": "25"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "26",
+            "id": "28",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1574247184154",
+            "source_node_id": "25"
         }
     ],
     "visualize_ont_path": ""

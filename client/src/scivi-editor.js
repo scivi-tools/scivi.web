@@ -37,7 +37,11 @@ function SciViEditor()
     SciViEditor.prototype.components = {};
     SciViEditor.prototype.sockets = {};
     SciViEditor.prototype.editor = null;
+    SciViEditor.prototype.engine = null;
     SciViEditor.prototype.inVisualization = false;
+    SciViEditor.prototype.visuals = null;
+    SciViEditor.prototype.comms = {};
+    SciViEditor.prototype.commsReconnects = {};
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -118,14 +122,19 @@ SciViEditor.prototype.run = function (mode)
             $("#scivi_btn_visualize").html(_this.runButtonName(mode));
             $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
+            if (mode == MIXED_MODE) {
+                _this.stopMixed();
+            }
         } else {
             $(".scivi_slide").css({"transform": "translateX(-100%)"});
             $("#scivi_btn_visualize").html("◀");
             $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
             $(".scivi_menu").css({"margin-left": "20px"});
-        }
-        if (mode == IOT_PROGRAMMING_MODE) {
-            _this.uploadEON();
+            if (mode == IOT_PROGRAMMING_MODE) {
+                _this.uploadEON();
+            } else if (mode == MIXED_MODE) {
+                _this.runMixed();
+            }
         }
     });
 
@@ -155,11 +164,38 @@ SciViEditor.prototype.run = function (mode)
             var reader = new FileReader();
             reader.onload = async function (e) {
                 await editor.fromJSON(JSON.parse(e.target.result));
+                _this.extendNodes();
                 processingAllowed = true;
             };
             reader.readAsText(element.files[0]);
         }, false);
         element.click();
+    });
+
+    $("#scivi_btn_fs").click(function() {
+        if (document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement) {
+            if (document.exitFullscreen)
+                document.exitFullscreen();
+            else if (document.mozCancelFullScreen)
+                document.mozCancelFullScreen();
+            else if (document.webkitExitFullscreen)
+                document.webkitExitFullscreen();
+            else if (document.msExitFullscreen)
+                document.msExitFullscreen();
+        } else {
+            var element = document.getElementById("embrace");
+            if (element.requestFullscreen)
+                element.requestFullscreen();
+            else if (element.mozRequestFullScreen)
+                element.mozRequestFullScreen();
+            else if (element.webkitRequestFullscreen)
+                element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            else if (element.msRequestFullscreen)
+                element.msRequestFullscreen();
+        }
     });
 
     this.editor = editor;
@@ -174,6 +210,7 @@ SciViEditor.prototype.run = function (mode)
         $.getJSON("preset/" + preset, async function (data) {
             $(".loader").hide();
             await editor.fromJSON(data);
+            _this.extendNodes();
         });
     }
 }
@@ -183,7 +220,13 @@ SciViEditor.prototype.uploadEON = function ()
     var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
+    var _this = this;
     $.post("/gen_eon", content, function (data) {
+        if (data["error"]) {
+            _this.showError(data["error"]);
+            return;
+        }
+
         var ont = data["ont"];
         var eon = data["eon"];
 
@@ -247,17 +290,107 @@ SciViEditor.prototype.uploadEON = function ()
 
 SciViEditor.prototype.runMixed = function ()
 {
-    /*var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
+    var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
+    var _this = this;
     $.post("/gen_mixed", content, function (data) {
-        //var ont = data["ont"];
-        //var eon = data["eon"];
-    }*/
+        if (data["error"]) {
+            _this.showError(data["error"]);
+            return;
+        }
+
+        var ont = data["ont"];
+        var cor = data["cor"];
+
+        // var eon = data["eon"];
+
+        /*var upEonDiv = $("<div class='scivi_upload_eon'>");
+        var ontoDiv = $("<div style='display: table-row;'>");
+        var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
+        var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
+        // var eonDiv = $("<div style='display: table-row;'>").html("EON blob: " + eon.length + " bytes");
+        var uplDiv = $("<div style='display: table-row;'>");
+        var uplAddr = $("<div style='display: table-cell;'>");
+        var targetAddressLbl = $("<label>").html("Device address: ");
+        var targetAddressTxt = $("<input class='ui-widget' type='text' value='192.168.4.1:81' style='margin-right: 5px;'>");
+        var uploadBtn = $("<button class='ui-widget scivi_button' style='display=table-cell;'>").html("Upload");
+
+        dlOntoBtn.click(function () {
+            var filename = prompt("Enter name of file to save", "task.ont");
+            if (!filename)
+                return;
+            if (!filename.includes("."))
+                filename += ".ont";
+            var element = document.createElement("a");
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(ont)));
+            element.setAttribute("download", filename);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
+
+        // uploadBtn.click(function () {
+        //     console.log(targetAddressTxt.val());
+        //     var webSocket = new WebSocket("ws://" + targetAddressTxt.val());
+        //     webSocket.onopen = function(evt) {
+        //         console.log("WebSocket open");
+        //         console.log(eon);
+        //         webSocket.send(Uint8Array.from(eon));
+        //         webSocket.close();
+        //     };
+        //     webSocket.onclose = function(evt) { console.log("WebSocket close"); };
+        //     webSocket.onerror = function(evt) { console.log(evt); };
+        //     webSocket.onmessage = function(evt) { console.log(evt); };
+        // });
+
+        ontoDiv.append(ontoLbl);
+        ontoDiv.append(dlOntoBtn);
+
+        uplAddr.append(targetAddressLbl);
+        uplAddr.append(targetAddressTxt);
+
+        uplDiv.append(uplAddr);
+        uplDiv.append(uploadBtn);
+
+        upEonDiv.append(ontoDiv);
+        // upEonDiv.append(eonDiv);
+        upEonDiv.append(uplDiv);
+
+        $("#scivi_viewport").empty();
+        $("#scivi_viewport").append(upEonDiv);*/
+
+        if (Object.keys(cor).length > 0)
+            _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
+    });
+}
+
+SciViEditor.prototype.stopMixed = function ()
+{
+    var _this = this;
+    this.cleanupComms();
+    $.post("/stop_execer", {}, function (data) {
+        if (data["error"])
+            _this.showError(data["error"]);
+    });
+}
+
+SciViEditor.prototype.changeSubTitle = function (nodeID)
+{
+    var el = $("#t" + nodeID);
+    var node = this.getNodeByID(nodeID);
+    node.data.subTitle = el.val();
+}
+
+SciViEditor.prototype.createControl = function (node)
+{
+    return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
 {
+    var _this = this;
     var sockets = this.sockets;
     var node = new D3NE.Component(name,
     {
@@ -272,6 +405,7 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                     sockets[item["type"]] = new D3NE.Socket(item["type"], item["type"], "");
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
+            node.addControl(new D3NE.Control(_this.createControl(node), function (element, control) { }));
             return node;
         },
         worker(node, inputs, outputs) {
@@ -279,21 +413,7 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                 workerFunc(node, inputs, outputs);
                 settingsFunc(node);
             } catch(err) {
-                console.log(err);
-                $("#scivi_error_text").html(err);
-                var dlg = $("#scivi_error").dialog({
-                    modal: true,
-                    buttons: {
-                        Ok: function() {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-                var dp = dlg.parent();
-                dp.css("background", "#FBDAC9").css("border", "1px solid #3F3F3F");
-                dp.find(".ui-dialog-buttonpane").css("background", "#FBDAC9").css("border-top", "1px solid #3F3F3F");
-                dp.find(".ui-dialog-titlebar").css("background", "#FF4D00").css("color", "#FFFFFF");
-                dp.find(".ui-button").css("border", "1px solid #3F3F3F");
+                _this.showError(err);
             }
         }
     });
@@ -316,10 +436,6 @@ SciViEditor.prototype.createNode = function (name)
 SciViEditor.prototype.selectNode = function (node)
 {
     if (node) {
-        if (!node.syncSettings) {
-            var nodeProto = this.components[node.title];
-            node.syncSettings = nodeProto.syncSettings;
-        }
         $("#scivi_settings_title").html(node.title);
         $("#scivi_settings_title").show();
         $("#scivi_btn_rmnode").show();
@@ -333,6 +449,21 @@ SciViEditor.prototype.selectNode = function (node)
         $("#scivi_btn_rmnode").hide();
         $("#scivi_settings_content").html("");
     }
+}
+
+SciViEditor.prototype.extendNodes = function ()
+{
+    var _this = this;
+    this.editor.nodes.forEach(function (node) {
+        if (!node.syncSettings) {
+            var nodeProto = _this.components[node.title];
+            node.syncSettings = nodeProto.syncSettings;
+        }
+        if (node.data.subTitle) {
+            $("#t" + node.id).val(node.data.subTitle);
+            $("#t" + node.id).show();
+        }
+    });
 }
 
 SciViEditor.prototype.process = function ()
@@ -413,7 +544,14 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
 {
     var el = $("#" + settingID.toString())
-    var value = el.is(":checkbox") ? el.is(":checked") : el.val();
+    var value = 0;
+    if (el.is(":checkbox"))
+        value = el.is(":checked");
+    else {
+         value = el.get(0).valueAsNumber;
+         if (isNaN(value))
+            value = el.val();
+    }
     var node = this.getNodeByID(nodeID);
     node.data.settingsVal[settingName] = value;
     node.data.settingsChanged[settingName] = true;
@@ -475,4 +613,97 @@ SciViEditor.prototype.runButtonName = function (mode)
             return "Run ▶";
     }
     return "Visualize ▶";
+}
+
+SciViEditor.prototype.escapeHTML = function (text)
+{
+    var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+SciViEditor.prototype.showError = function (err)
+{
+    console.log(err);
+    $("#scivi_error_text").html(this.escapeHTML(err));
+    var dlg = $("#scivi_error").dialog({
+        modal: true,
+        buttons: {
+            Ok: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    var dp = dlg.parent();
+    dp.css("background", "#FBDAC9").css("border", "1px solid #3F3F3F");
+    dp.find(".ui-dialog-buttonpane").css("background", "#FBDAC9").css("border-top", "1px solid #3F3F3F");
+    dp.find(".ui-dialog-titlebar").css("background", "#FF4D00").css("color", "#FFFFFF");
+    dp.find(".ui-button").css("border", "1px solid #3F3F3F");
+}
+
+SciViEditor.prototype.startComm = function (address, addressCorrespondences)
+{
+    var ws = new WebSocket(address);
+    var _this = this;
+    this.comms[address] = ws;
+    if (this.commsReconnects[address] === undefined)
+        this.commsReconnects[address] = 10;
+    ws.onopen = function(evt) {
+        console.log("WebSocket open on " + address);
+    };
+    ws.onclose = function(evt) {
+        console.log("WebSocket close on " + address);
+        delete _this.comms[address];
+    };
+    ws.onerror = function(evt) {
+        console.log(evt);
+        var rc = _this.commsReconnects[address];
+        if (rc > 0) {
+            --rc;
+            _this.commsReconnects[address] = rc;
+            setTimeout(function () { _this.startComm(address, addressCorrespondences); }, 100);
+        }
+    };
+    ws.onmessage = function(evt) {
+        // console.log(evt);
+        var msg = JSON.parse(evt.data);
+        for (var i = 0, n = msg.length; i < n; ++i) {
+            Object.keys(msg[i]).forEach(function (key) {
+                var cor = addressCorrespondences[key];
+                for (var j = 0, n = cor.length; j < n; ++j) {
+                    var dfdNodeID = cor[j][0];
+                    var isInput = cor[j][1];
+                    var socketNmb = cor[j][2];
+                    var dfdNode = _this.getNodeByID(dfdNodeID);
+                    if (isInput) {
+                        if (!dfdNode.data.inputDataPool)
+                            dfdNode.data.inputDataPool = [];
+                        for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
+                            dfdNode.data.inputDataPool.push(null);
+                        dfdNode.data.inputDataPool[socketNmb] = msg[key];
+                    } else {
+                        if (!dfdNode.data.outputDataPool)
+                            dfdNode.data.outputDataPool = [];
+                        for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
+                            dfdNode.data.outputDataPool.push(null);
+                        dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+                    }
+                }
+            });
+        }
+        _this.process();
+    };
+}
+
+SciViEditor.prototype.cleanupComms = function ()
+{
+    var _this = this;
+    Object.keys(this.comms).forEach(function (key) {
+        _this.comms[key].close();
+    });
+    this.comms = {};
+    this.commsReconnects = {};
+    this.editor.nodes.forEach(function (node) {
+        node.data.inputDataPool = [];
+        node.data.outputDataPool = [];
+    });
 }

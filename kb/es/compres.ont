@@ -1,0 +1,79 @@
+{
+    "last_id": "10",
+    "namespaces": {
+        "default": "http://knova.ru/user/1611515555289",
+        "ontolis-avis": "http://knova.ru/ontolis-avis",
+        "owl": "http://www.w3.org/2002/07/owl",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "nodes": [
+        {
+            "attributes": {
+            },
+            "id": "2",
+            "name": "ESP8266",
+            "namespace": "http://knova.ru/user/1611515555289",
+            "position_x": -88,
+            "position_y": 21
+        },
+        {
+            "attributes": {
+            },
+            "id": "3",
+            "name": "ComputingResource",
+            "namespace": "http://knova.ru/user/1611515555289",
+            "position_x": -123,
+            "position_y": -122
+        },
+        {
+            "attributes": {
+            },
+            "id": "4",
+            "name": "Worker",
+            "namespace": "http://knova.ru/user/1611515555289",
+            "position_x": 127,
+            "position_y": -124
+        },
+        {
+            "attributes": {
+            },
+            "id": "5",
+            "name": "EdgeSideWorker",
+            "namespace": "http://knova.ru/user/1611515555289",
+            "position_x": 121,
+            "position_y": -57
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {
+            },
+            "destination_node_id": "2",
+            "id": "8",
+            "name": "is_used",
+            "namespace": "http://knova.ru/user/1611515555289",
+            "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "4",
+            "id": "9",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1611515555289",
+            "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "3",
+            "id": "10",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1611515555289",
+            "source_node_id": "2"
+        }
+    ],
+    "visualize_ont_path": ""
+}
