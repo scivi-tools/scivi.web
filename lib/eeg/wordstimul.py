@@ -4,6 +4,7 @@
 from threading import Thread, Lock
 import pygame
 from pyGPIO.gpio import gpio, port
+from time import sleep
 
 
 class WordThread(Thread):
@@ -80,11 +81,12 @@ class WordThread(Thread):
         text = None
         elapsed = 0
         silence = 30000
-        #silence = 1000
+        #silence = 2000
         self.renderRunning = True
         self.curIter = 0
         gpio.init()
         gpio.setcfg(port.GPIO4, 1)
+        sleep(10)
         gpio.output(port.GPIO4, 0)
         while self.is_running():
             for event in pygame.event.get():
