@@ -1,5 +1,5 @@
 {
-    "last_id": "25",
+    "last_id": "29",
     "namespaces": {
         "default": "http://knova.ru/user/1624423531336",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -87,7 +87,7 @@
             "id": "9",
             "name": "Grid",
             "namespace": "http://knova.ru/user/1624423531336",
-            "position_x": -51,
+            "position_x": -52,
             "position_y": -21
         },
         {
@@ -117,6 +117,15 @@
             "namespace": "http://knova.ru/user/1624423531336",
             "position_x": 127,
             "position_y": -119
+        },
+        {
+            "attributes": {
+            },
+            "id": "26",
+            "name": "AOIs",
+            "namespace": "http://knova.ru/user/1624423531336",
+            "position_x": 50,
+            "position_y": -90
         }
     ],
     "relations": [
@@ -236,6 +245,33 @@
             "name": "language",
             "namespace": "http://knova.ru/user/1624423531336",
             "source_node_id": "20"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "26",
+            "id": "27",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1624423531336",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "9",
+            "id": "28",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1624423531336",
+            "source_node_id": "26"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "29",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1624423531336",
+            "source_node_id": "26"
         }
     ],
     "visualize_ont_path": ""
