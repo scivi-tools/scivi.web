@@ -163,6 +163,10 @@ SciViEditor.prototype.run = function (mode)
         element.addEventListener("change", function () {
             var reader = new FileReader();
             reader.onload = async function (e) {
+                if (_this.selectedNode) {
+                    _this.selectedNode = null;
+                    _this.selectNode(null);
+                }
                 await editor.fromJSON(JSON.parse(e.target.result));
                 _this.extendNodes();
                 processingAllowed = true;
