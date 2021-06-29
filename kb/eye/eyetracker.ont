@@ -111,6 +111,7 @@
         },
         {
             "attributes": {
+                "default": "192.168.171.72"
             },
             "id": "24",
             "name": "VR Server IP",
