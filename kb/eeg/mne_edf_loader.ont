@@ -1,0 +1,225 @@
+{
+    "last_id": "30",
+    "namespaces": {
+        "default": "http://knova.ru/user/1608539508915",
+        "ontolis-avis": "http://knova.ru/ontolis-avis",
+        "owl": "http://www.w3.org/2002/07/owl",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "nodes": [
+        {
+            "attributes": {
+            },
+            "id": "1",
+            "name": "DataSource",
+            "position_x": 361,
+            "position_y": 86
+        },
+        {
+            "attributes": {
+            },
+            "id": "2",
+            "name": "Root",
+            "position_x": 216,
+            "position_y": -14
+        },
+        {
+            "attributes": {
+            },
+            "id": "3",
+            "name": "MNE EDF Loader",
+            "position_x": 299,
+            "position_y": 177
+        },
+        {
+            "attributes": {
+            },
+            "id": "4",
+            "name": "RAW EEG",
+            "position_x": 185,
+            "position_y": 269
+        },
+        {
+            "attributes": {
+            },
+            "id": "6",
+            "name": "Grid",
+            "position_x": 54,
+            "position_y": 346
+        },
+        {
+            "attributes": {
+            },
+            "id": "7",
+            "name": "Type",
+            "position_x": 136,
+            "position_y": 452
+        },
+        {
+            "attributes": {
+            },
+            "id": "8",
+            "name": "Output",
+            "position_x": 0,
+            "position_y": 225
+        },
+        {
+            "attributes": {
+                "path": "lib/eeg/mne_edf_loader.py"
+            },
+            "id": "17",
+            "name": "MNE EDF Loader Worker",
+            "position_x": 620,
+            "position_y": 310
+        },
+        {
+            "attributes": {
+            },
+            "id": "18",
+            "name": "ServerSideWorker",
+            "position_x": 599,
+            "position_y": 148
+        },
+        {
+            "attributes": {
+            },
+            "id": "22",
+            "name": "Python",
+            "position_x": 587,
+            "position_y": 397
+        },
+        {
+            "attributes": {
+            },
+            "id": "24",
+            "name": "File List",
+            "position_x": 365,
+            "position_y": 415
+        },
+        {
+            "attributes": {
+            },
+            "id": "25",
+            "name": "Setting",
+            "position_x": 420,
+            "position_y": 356
+        },
+        {
+            "attributes": {
+            },
+            "id": "26",
+            "name": "Text",
+            "position_x": 299,
+            "position_y": 479
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {
+            },
+            "destination_node_id": "2",
+            "id": "9",
+            "name": "is_a",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "10",
+            "name": "is_a",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "4",
+            "id": "11",
+            "name": "has",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "8",
+            "id": "12",
+            "name": "is_a",
+            "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "16",
+            "name": "is_a",
+            "source_node_id": "6"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "18",
+            "id": "19",
+            "name": "is_a",
+            "source_node_id": "17"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "3",
+            "id": "20",
+            "name": "is_instance",
+            "source_node_id": "17"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "21",
+            "name": "is_a",
+            "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "22",
+            "id": "23",
+            "name": "language",
+            "source_node_id": "17"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "24",
+            "id": "27",
+            "name": "has",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "25",
+            "id": "28",
+            "name": "is_a",
+            "source_node_id": "24"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "26",
+            "id": "29",
+            "name": "is_a",
+            "source_node_id": "24"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "30",
+            "name": "is_a",
+            "source_node_id": "26"
+        }
+    ],
+    "visualize_ont_path": ""
+}
