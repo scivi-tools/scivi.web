@@ -21,7 +21,8 @@ mode = int(SETTINGS_VAL[CSP_SETTING_MODE])
 
 csp = GLOB.get(p(CSP_KEY))
 if not csp:
-    n_components = int(SETTING_VAL[CSP_SETTING_COMPONENTS])
+    from mne.decoding import CSP
+    n_components = int(SETTINGS_VAL[CSP_SETTING_COMPONENTS])
     csp = CSP(n_components=n_components, reg=None, log=True, norm_trace=False)
     GLOB[p(CSP_KEY)] = csp
 

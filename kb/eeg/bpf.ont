@@ -117,7 +117,7 @@
         },
         {
             "attributes": {
-                "path": "lib/eeg/bpf_filter.py"
+                "path": "lib/eeg/bpf_worker.py"
             },
             "id": "31",
             "name": "BPF Worker",
