@@ -1,5 +1,5 @@
 {
-    "last_id": "36",
+    "last_id": "38",
     "namespaces": {
         "default": "http://knova.ru/user/1610424641160",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -14,80 +14,80 @@
             },
             "id": "1",
             "name": "BPF",
-            "position_x": 542,
-            "position_y": 550
+            "position_x": 742,
+            "position_y": 750
         },
         {
             "attributes": {
             },
             "id": "2",
             "name": "Filter",
-            "position_x": 534,
-            "position_y": 471
+            "position_x": 734,
+            "position_y": 671
         },
         {
             "attributes": {
             },
             "id": "3",
             "name": "Root",
-            "position_x": 557,
-            "position_y": 400
+            "position_x": 757,
+            "position_y": 600
         },
         {
             "attributes": {
             },
             "id": "4",
             "name": "Signal",
-            "position_x": 416,
-            "position_y": 495
+            "position_x": 616,
+            "position_y": 695
         },
         {
             "attributes": {
             },
             "id": "5",
             "name": "Signal Band",
-            "position_x": 542,
-            "position_y": 717
+            "position_x": 742,
+            "position_y": 917
         },
         {
             "attributes": {
             },
             "id": "6",
             "name": "Array",
-            "position_x": 338,
-            "position_y": 683
+            "position_x": 538,
+            "position_y": 883
         },
         {
             "attributes": {
             },
             "id": "7",
             "name": "Number",
-            "position_x": 200,
-            "position_y": 361
+            "position_x": 322,
+            "position_y": 724
         },
         {
             "attributes": {
             },
             "id": "8",
             "name": "Input",
-            "position_x": 391,
-            "position_y": 386
+            "position_x": 505,
+            "position_y": 652
         },
         {
             "attributes": {
             },
             "id": "9",
             "name": "Output",
-            "position_x": 709,
-            "position_y": 524
+            "position_x": 909,
+            "position_y": 724
         },
         {
             "attributes": {
             },
             "id": "20",
             "name": "Type",
-            "position_x": 270,
-            "position_y": 776
+            "position_x": 470,
+            "position_y": 976
         },
         {
             "attributes": {
@@ -95,8 +95,8 @@
             },
             "id": "23",
             "name": "High cut-off",
-            "position_x": 281,
-            "position_y": 275
+            "position_x": 336,
+            "position_y": 455
         },
         {
             "attributes": {
@@ -104,16 +104,16 @@
             },
             "id": "24",
             "name": "Low cut-off",
-            "position_x": 528,
-            "position_y": 261
+            "position_x": 647,
+            "position_y": 459
         },
         {
             "attributes": {
             },
             "id": "27",
             "name": "Setting",
-            "position_x": 226,
-            "position_y": 200
+            "position_x": 480,
+            "position_y": 330
         },
         {
             "attributes": {
@@ -121,24 +121,24 @@
             },
             "id": "31",
             "name": "BPF Worker",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 1145,
+            "position_y": 404
         },
         {
             "attributes": {
             },
             "id": "32",
             "name": "Python",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 798,
+            "position_y": 403
         },
         {
             "attributes": {
             },
             "id": "33",
             "name": "ServerSideWorker",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 915,
+            "position_y": 160
         }
     ],
     "relations": [
@@ -293,6 +293,22 @@
             "id": "36",
             "name": "is_instance",
             "source_node_id": "31"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "24",
+            "id": "37",
+            "name": "has",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "23",
+            "id": "38",
+            "name": "has",
+            "source_node_id": "1"
         }
     ],
     "visualize_ont_path": ""
