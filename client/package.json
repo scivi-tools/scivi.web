@@ -5,15 +5,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "build.sh debug",
-    "release": "build.sh release"
+    "release": "build.sh release",
+    "postinstall": "patch-package"
   },
   "author": "Konstantin Ryabinin",
   "license": "",
   "dependencies": {
-    "d3-node-editor": "0.7.4",
+    "d3-node-editor": "^0.7.4",
     "jquery": "^3.5.0",
     "jquery-contextmenu": "^2.8.1",
     "jquery-ui": "github:jquery/jquery-ui#1.12.0",
+    "patch-package": "^6.4.7",
     "split.js": "^1.5.11"
   },
   "devDependencies": {
