@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+# For serialization
+import joblib
+
 CSP_MODE_TRAIN = 0
 CSP_MODE_EVAL = 1
 
 CSP_SETTING_COMPONENTS = 'Components'
 CSP_SETTING_MODE = 'Mode'
+CSP_SETTING_MODEL = 'Model File'
 
 CSP_INPUT_SIGNAL = 'Signal'
 CSP_INPUT_LABELS = 'Labels'
@@ -19,6 +23,7 @@ def p(x):
     return "{}_{}".format(MODULE_PREFIX, x)
 
 mode = int(SETTINGS_VAL[CSP_SETTING_MODE])
+model_file = SETTINGS_VAL[CSP_SETTING_MODEL]
 
 csp = GLOB.get(p(CSP_KEY))
 if not csp:
@@ -47,7 +52,9 @@ if mode == CSP_MODE_TRAIN:
     info.set_montage('standard_1005')
     csp.plot_patterns(info, ch_type='eeg', units='Patterns (AU)', size=1.5, show=False)
     plt.savefig('test.png')
+    joblib.dump(csp, model_file)
 elif mode == CSP_MODE_EVAL:
+    csp = joblib.load(model_file)
     OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.transform(raw)
 else:
     raise ValueError
