@@ -129,7 +129,7 @@
         },
         {
             "attributes": {
-                "default": 1,
+                "default": 0,
                 "domain": "Annotations, DC-A"
             },
             "id": "33",
@@ -160,7 +160,7 @@
             "attributes": {
             },
             "id": "50",
-            "name": "Label",
+            "name": "Labels",
             "namespace": "https://github.com/AlexProfanov/ontolis",
             "position_x": 960,
             "position_y": 485

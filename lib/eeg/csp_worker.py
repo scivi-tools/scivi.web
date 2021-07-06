@@ -7,6 +7,7 @@ CSP_SETTING_COMPONENTS = 'Components'
 CSP_SETTING_MODE = 'Mode'
 
 CSP_INPUT_SIGNAL = 'Signal'
+CSP_INPUT_LABELS = 'Labels'
 
 CSP_OUTPUT_SIGNAL_COMPONENTS = 'Signal Components'
 
@@ -27,9 +28,25 @@ if not csp:
     GLOB[p(CSP_KEY)] = csp
 
 raw = INPUT[CSP_INPUT_SIGNAL]
+labels = INPUT[CSP_INPUT_LABELS]
 
 if mode == CSP_MODE_TRAIN:
-    OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.fit_transform(raw, None) # TODO: y labels!
+    OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.fit_transform(raw, labels)
+    # TODO: just for visual stuff!
+    import matplotlib.pyplot as plt
+    from mne import create_info
+    channels = [
+        'FC5', 'FC3',  'FC1',  'FCz',  'FC2',  'FC4',  'FC6',  'C5',  'C3',  'C1',  'Cz',  'C2',  
+        'C4',  'C6',  'CP5',  'CP3',  'CP1',  'CPz',  'CP2',  'CP4',  'CP6',  'Fp1',  'Fpz',  'Fp2',  
+        'AF7',  'AF3',  'AFz',  'AF4',  'AF8',  'F7',  'F5',  'F3',  'F1',  'Fz',  'F2',  'F4',  
+        'F6',  'F8',  'FT7',  'FT8',  'T7',  'T8',  'T9',  'T10',  'TP7',  'TP8',  'P7',  'P5',  
+        'P3',  'P1',  'Pz',  'P2',  'P4',  'P6',  'P8',  'PO7',  'PO3',  'POz',  'PO4',  'PO8',  
+        'O1',  'Oz',  'O2',  'Iz'
+    ]
+    info = create_info(channels, 160, 'eeg')
+    info.set_montage('standard_1005')
+    csp.plot_patterns(info, ch_type='eeg', units='Patterns (AU)', size=1.5, show=False)
+    plt.savefig('test.png')
 elif mode == CSP_MODE_EVAL:
     OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.transform(raw)
 else:
