@@ -33,9 +33,9 @@ if not csp:
     GLOB[p(CSP_KEY)] = csp
 
 raw = INPUT[CSP_INPUT_SIGNAL]
-labels = INPUT[CSP_INPUT_LABELS]
 
 if mode == CSP_MODE_TRAIN:
+    labels = INPUT[CSP_INPUT_LABELS]
     OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.fit_transform(raw, labels)
     # TODO: just for visual stuff!
     import matplotlib.pyplot as plt

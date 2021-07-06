@@ -22,7 +22,6 @@ def p(x):
     return "{}_{}".format(MODULE_PREFIX, x)
 
 raw = INPUT[LDA_INPUT_SIGNAL]
-labels = INPUT[LDA_INPUT_LABELS]
 
 mode = int(SETTINGS_VAL[LDA_SETTING_MODE])
 model_file = SETTINGS_VAL[LDA_SETTING_MODEL]
@@ -34,6 +33,7 @@ if not lda:
     GLOB[p(LDA_KEY)] = lda
 
 if mode == LDA_MODE_TRAIN:
+    labels = INPUT[LDA_INPUT_LABELS]
     lda.fit(raw, labels)
     joblib.dump(lda, model_file)
 elif mode == LDA_MODE_EVAL:
