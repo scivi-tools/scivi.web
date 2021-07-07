@@ -31,7 +31,7 @@
             "attributes": {
             },
             "id": "3",
-            "name": "Build Scanpath",
+            "name": "Scanpath Builder",
             "namespace": "http://knova.ru/user/1619954759051",
             "position_x": 380,
             "position_y": 297

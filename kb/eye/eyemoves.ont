@@ -15,7 +15,7 @@
             "id": "1",
             "name": "Root",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 357,
+            "position_x": 366,
             "position_y": 200
         },
         {
@@ -24,17 +24,17 @@
             "id": "2",
             "name": "Filter",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 350,
+            "position_x": 359,
             "position_y": 253
         },
         {
             "attributes": {
             },
             "id": "3",
-            "name": "Detect Eye Movements",
+            "name": "Eye Movements Detector",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 301,
-            "position_y": 308
+            "position_x": 317,
+            "position_y": 326
         },
         {
             "attributes": {
@@ -42,7 +42,7 @@
             "id": "4",
             "name": "Gaze",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 191,
+            "position_x": 200,
             "position_y": 424
         },
         {
@@ -51,7 +51,7 @@
             "id": "6",
             "name": "Saccades",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 424,
+            "position_x": 433,
             "position_y": 377
         },
         {
@@ -60,7 +60,7 @@
             "id": "7",
             "name": "Fixations",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 432,
+            "position_x": 441,
             "position_y": 419
         },
         {
@@ -69,7 +69,7 @@
             "id": "8",
             "name": "Input",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 200,
+            "position_x": 209,
             "position_y": 331
         },
         {
@@ -78,7 +78,7 @@
             "id": "9",
             "name": "Output",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 508,
+            "position_x": 517,
             "position_y": 326
         },
         {
@@ -87,7 +87,7 @@
             "id": "10",
             "name": "Grid",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 326,
+            "position_x": 335,
             "position_y": 489
         },
         {
@@ -96,7 +96,7 @@
             "id": "11",
             "name": "Type",
             "namespace": "http://knova.ru/user/1619954574305",
-            "position_x": 371,
+            "position_x": 380,
             "position_y": 534
         }
     ],
