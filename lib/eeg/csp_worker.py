@@ -36,6 +36,7 @@ raw = INPUT[CSP_INPUT_SIGNAL]
 
 if mode == CSP_MODE_TRAIN:
     labels = INPUT[CSP_INPUT_LABELS]
+    print(raw.shape)
     OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.fit_transform(raw, labels)
     # TODO: just for visual stuff!
     import matplotlib.pyplot as plt
@@ -48,6 +49,7 @@ if mode == CSP_MODE_TRAIN:
         'P3',  'P1',  'Pz',  'P2',  'P4',  'P6',  'P8',  'PO7',  'PO3',  'POz',  'PO4',  'PO8',  
         'O1',  'Oz',  'O2',  'Iz'
     ]
+    channels = channels[:raw.shape[1]] # TODO: dirty hack
     info = create_info(channels, 160, 'eeg')
     info.set_montage('standard_1005')
     csp.plot_patterns(info, ch_type='eeg', units='Patterns (AU)', size=1.5, show=False)
