@@ -49,8 +49,10 @@ if mode == CSP_MODE_TRAIN:
         'P3',  'P1',  'Pz',  'P2',  'P4',  'P6',  'P8',  'PO7',  'PO3',  'POz',  'PO4',  'PO8',  
         'O1',  'Oz',  'O2',  'Iz'
     ]
-    channels = channels[:raw.shape[1]] # TODO: dirty hack
-    info = create_info(channels, 160, 'eeg')
+    #channels = channels[:raw.shape[1]] # TODO: dirty hack
+    channels = ['C3', 'C4', 'Cz', 'F3', 'F4', 'F7', 'F8', 'Fp1', 'Fp2', 'Fz', 'O1', 'O2', 'P3', 'P4', 'Pz', 'T3', 'T4', 'T5', 'T6']
+    #info = create_info(channels, 160, 'eeg')
+    info = create_info(channels, 512, 'eeg')
     info.set_montage('standard_1005')
     csp.plot_patterns(info, ch_type='eeg', units='Patterns (AU)', size=1.5, show=False)
     plt.savefig('test.png')
