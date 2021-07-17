@@ -66,7 +66,7 @@ elif mode == CONVERTER_MODE_DC_A:
             print ("WARN: skipping file {}".format(raw.filenames[0]))
             continue
 
-        r_data = raw.get_data()[:, idx[0]:idx[1]]
+        r_data = raw.get_data(picks=['eeg'])[:, idx[0]:idx[1]]
         # TODO: for some reason EDF loader doesn't pick up the aux data
         r_label = raw.filenames[0].split('_')[-2]
         print (d, idx, r_data.shape, r_label)
