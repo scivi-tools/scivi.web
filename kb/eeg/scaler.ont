@@ -139,7 +139,7 @@
         {
             "attributes": {
                 "default": 1,
-                "domain": "None, Mean, Median"
+                "domain": "Signal-inferred, Mean, Median"
             },
             "id": "33",
             "name": "Mode",
