@@ -52,7 +52,7 @@ elif mode == CONVERTER_MODE_DC_A:
         # A bit of hack here: we cut a first chunk of a signal that's above / below the mean
         # If it's a silence, mean will be closer towards 0, e.g. 0.142343
         # If it's a signal, mean will be closer towards 1, e.g. 0.722345
-        mask = sc < np.median(sc) #sc < 0.5 #sc.mean() # TODO: hardcoded value
+        mask = sc < 0.5 #np.median(sc) #sc < 0.5 #sc.mean() # TODO: hardcoded value
     
         # Now mask is a boolean array; find transitions from False to True and vice versa in it
         d = np.diff(mask)
