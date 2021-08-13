@@ -2,6 +2,7 @@
 
 CONVERTER_INPUT_MNE_EEG = 'MNE-EEG'
 CONVERTER_SETTING_MODE = 'Mode'
+CONVERTER_SETTING_PATTERN = 'Filename Label Pattern'
 
 CONVERTER_OUTPUT_LABELS = 'Labels'
 CONVERTER_OUTPUT_DATA = 'Signal'
@@ -11,6 +12,7 @@ CONVERTER_MODE_DC_A = 1
 
 raws = INPUT[CONVERTER_INPUT_MNE_EEG]
 mode = int(SETTINGS_VAL[CONVERTER_SETTING_MODE])
+pattern = SETTINGS_VAL[CONVERTER_SETTING_PATTERN]
 
 data = None
 labels = None
@@ -75,7 +77,7 @@ elif mode == CONVERTER_MODE_DC_A:
         labels.append(r_label)
     min_len = np.min([d.shape[1] for d in data])
     data = np.array([d[:, :min_len] for d in data])
-    labels = [int("3" in x) for x in labels] # TODO: dirty hack!
+    labels = [int(pattern in x) for x in labels]
 else:
     raise ValueError()
 
