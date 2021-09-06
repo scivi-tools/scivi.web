@@ -1,0 +1,189 @@
+{
+    "last_id": "19",
+    "namespaces": {
+        "default": "http://knova.ru/user/1630595522978",
+        "ontolis-avis": "http://knova.ru/ontolis-avis",
+        "owl": "http://www.w3.org/2002/07/owl",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "nodes": [
+        {
+            "attributes": {
+            },
+            "id": "1",
+            "name": "Root",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": -151,
+            "position_y": -269
+        },
+        {
+            "attributes": {
+            },
+            "id": "2",
+            "name": "VisualObject",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": -155,
+            "position_y": -238
+        },
+        {
+            "attributes": {
+            },
+            "id": "3",
+            "name": "TeleType",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": -161,
+            "position_y": -193
+        },
+        {
+            "attributes": {
+            },
+            "id": "4",
+            "name": "ClientSideWorker",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": 0,
+            "position_y": 0
+        },
+        {
+            "attributes": {
+                "path": "lib/ttype/ttype.js"
+            },
+            "id": "5",
+            "name": "TeleTypeWorker",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": -10,
+            "position_y": -199
+        },
+        {
+            "attributes": {
+            },
+            "id": "10",
+            "name": "JavaScript",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": 0,
+            "position_y": 0
+        },
+        {
+            "attributes": {
+            },
+            "id": "12",
+            "name": "Setting",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": -264,
+            "position_y": -187
+        },
+        {
+            "attributes": {
+                "default": "Hi! My name is Konstantin Ryabinin, I am from Perm State University, and on behalf of my colleagues Konstantin Belousov and Roman Chumakov I would like to present a work devoted to the Ontology-Driven Data Mining Platform for Fuzzy Classification of Mental Maps. Let's talk about mental maps. Each person has some spatial experience, mental representation of a region, country, and entire world. This representation is called mental map. When we ask that person to draw this representation, we will get something called sketch map that reflects the mental map. If we then digitize the sketch map, we will get the digital map and can perform data mining and visual analytics on top of it to extract the valuable knowledge about the region. The idea is to ask a group of people from certain region to draw sketch maps, and then analyze these maps to reveal common features of how those people perceive the environment around them. This is very important for sociology and Digital Humanities research, because it allows to estimate public mood, public opinions about politics and economy in the region and so on. This sounds very promising, but there are severe issues around that. The first one is digitization. For sure, we can scan the sketch maps and obtain the raster images, but it won't help too much, since we need to parse these images somehow to extract individual objects and descriptions, and this task is very non-trivial. But even if we manage to somehow encode the sketch map into the digital one, we will have one more problem. It is the question about data mining methodology. The problem here is that the mental maps are fuzzy by their nature, and classical data mining appears to be almost useless. We need to invent some fuzzy classification approaches to handle the mental maps properly. In this work we address both challenges at once. First of all, we propose using Creative Maps Studio. This is a vector graphics editor developed in our university that allows to draw the sketch maps directly in the digital form. So, the sketch maps require no more digitation, since they are already digital sets of vector-based objects. Moreover, Creative Maps Studio stores the entire history of map drawing, which opens up the interesting horizons for subsequent data mining. Creative Maps Studio is a web application, which backend is written in Python and frontend is implemented using React and Redux. For the data mining, we propose to use SciVi visual analytics platform that is being developed in our university as well. This platform is driven by ontologies – formal modes of application domains consisting form the thesaurus of application domain concepts, set of relations between concepts and set of related axioms. This means, all that happens in the platform is governed by ontologies. It enables to change the platform content and behavior just by changing the underlying ontologies, without touching the source code of the platform's core. SciVi provides integration module to communicated with external data sources, enables a wide range of data filtering and visualization features, and contains high-level graphical user interface to visually define actual data mining pipelines. Actually, SciVi provides even more functions including firmware and middleware generation for IoT devices, but these functions are now outside of our scope. Why do we use ontologies? According to Dou et al., Ontologies bridge 'semantic gaps between the data, applications, Data Mining algorithms, and Data Mining results' and provide 'a formal way for representing the Data Mining flow'. This is exactly how we use ontologies in our work, approaching so called semantic data mining – data mining driven by ontologies. In our case, ontologies are used to describe available data types, input formats, data filters, visual objects and visualization algorithms, as well as the data mining process itself. So, the changing of ontologies changes the platform's behavior with no source code modifications. This enables high flexibility and extensibility, allowing to introduce new functionality very fast. In this work, we integrated Creative Maps Studio and SciVi on the principles of ontology-driven REST API. First, Creative Maps Studio requests the data extraction operators form SciVi, and SciVi responds with the ontology describing these operators. This is very important because it allows to make the new features of SciVi instantly visible in the Creative Maps Studio, changing neither the code of Studio nor the communication protocol. Next, the analyst selects the map array to be analyzed and chooses appropriate data extraction operators to configure export of maps form Creative Maps Studio to SciVi. The Creative Maps Studio asks SciVi to create the instances of chosen operators. Then the analyst switches to SciVi and defines the actual data mining workflow. Whenever this workflow is started, SciVi requests the actual map data and Creative Maps Studio sends them. in fact, this is a lazy load. The mentioned integration approach enables not only to conduct Digital Humanities research, but also to easily evaluate new data mining strategies and fuzzy classification methods, because it is very easy to include new data mining and fuzzy classification algorithms in that platform. In fact, we created an integrated platform for drawing and mining the mental maps, which enables to examine both the maps themselves and the methods of their mining. Let's look to the SciVi side. Here we have special graphical user interface to define data mining workflows. This interface uses data flow paradigm to enable composing the pipelines like the one on the slide here. The boxes represent data transforming operators, and the arcs depict data flow. For example, these operators are responsible for data import. They are created upon the request form the Creative Maps Studio. And those ones are created by the analyst to perform the actual data mining. Each operator has its own ontological description that determines what is it, what is that for, which inputs, outputs, and settings it has, which software is to be called when the operator is executed, and so on. This means, SciVI can be easily integrated with third-party software, or extended by self-written plugins. For example, here we have this WFPM, that stands for weighted fuzzy pattern matching. It has two typed inputs, one output, several settings, and it is implemented in JavaScript as an individual plugin located in lib/fuzzy/wfpm.js. It is a so-called client-side worker, which means it is executed in browser, not on the server-side. In the same way we can add any other data transformation algorithm, including data mining and fuzzy classification ones. But to start with, we adopted weighted fuzzy pattern matching algorithm originally proposed by Dubois. We changed this algorithm to make it suitable for fuzzy classification of mental maps. The main formula is on the slide. This is a function that takes three parameters. The first one is an array of pattern maps. These are maps drawn by the people with known residence region, for example, living in Perm, or Orenburg, or any other city. The second argument is a set of test maps. These maps are drawn by the people with unknown region of residence. And the third argument is an array of weights for maps properties like objects' position, color, size, etc. The weights determine the importance of handled properties. This is why the pattern matching algorithm is called weighted. This formula relies on the fuzzy belonging function that takes a pattern element and a test map property and determines the continuous fuzzy value of similarity property value to the given pattern. This function is based on the pattern frequency distribution and a couple of helper functions clamping the property value to the nearest pattern value and obtaining the pattern value followed by the clamped one in the discrete scale. The elaborate information about the related calculations can be found in the paper. The results of fuzzy belonging function are joined across all the pattern maps and test maps properties to get the fuzzy closeness of test maps to the pattern maps. Let's see how it works live in SciVi. Moving to the results. In this work we created an integrated platform to draw and analyze mental maps, which allows us to evaluate different fuzzy classification and Data Mining methods, as well as to conduct digital humanities research. To get started, we adopted Weighted Fuzzy Pattern Matching for the needs of mental maps Data Mining. Also, we conducted a preliminary digital humanities research. We can conclude, that Weighted Fuzzy Pattern Matching gives us reasonable results and can be used for upcoming analysis. Next, we plan to check more data mining and fuzzy classification algorithms to find more ways for handling mental maps. This work was supported by Russian Science Foundation. Thank you for attention!"
+            },
+            "id": "13",
+            "name": "Typed Text",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": -216,
+            "position_y": -151
+        },
+        {
+            "attributes": {
+            },
+            "id": "14",
+            "name": "Text",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": 0,
+            "position_y": 0
+        },
+        {
+            "attributes": {
+            },
+            "id": "15",
+            "name": "Type",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "position_x": 0,
+            "position_y": 0
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {
+            },
+            "destination_node_id": "2",
+            "id": "6",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "7",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "2"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "4",
+            "id": "8",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "3",
+            "id": "9",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "10",
+            "id": "11",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "16",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "12",
+            "id": "17",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "14",
+            "id": "18",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "15",
+            "id": "19",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1630595522978",
+            "source_node_id": "14"
+        }
+    ],
+    "visualize_ont_path": ""
+}
