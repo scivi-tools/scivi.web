@@ -208,7 +208,7 @@ class SciViServer:
         else:
             return 0
 
-    def resolve_containers(self, code, inputs, outputs, settings):
+    def resolve_containers(self, code, inputs, outputs, settings, viewType):
         types = ""
         defs = ""
         doms = ""
@@ -247,6 +247,10 @@ class SciViServer:
                     break
             if not found:
                 code = code.replace("PROPERTY[\"" + p + "\"]", "node.data.settingsVal[\"" + p + "\"]")
+        if viewType:
+            addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position, '" + viewType["attributes"]["split"] + "'); }; "
+        else:
+            addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position); }; "
         code = "if (!node.data.cache) " +\
                "node.data.cache = {}; " +\
                "if (!node.data.settings) { " +\
@@ -255,7 +259,7 @@ class SciViServer:
                "node.data.settingsType = {" + types + "}; " +\
                "node.data.settingsChanged = {}; " +\
                "} " +\
-               "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con); }; " +\
+               addVisualCall +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
         for i, inp in enumerate(inputs):
@@ -277,12 +281,14 @@ class SciViServer:
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
             code = self.process_code(self.get_code(w), masks)
+            proto = self.onto.first(self.onto.get_nodes_linked_from(w, "is_instance"))
+            viewType = self.onto.first(self.onto.get_typed_nodes_linked_from(proto, "is_a", "View"))
             self.add_dependencies(w)
-            return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
+            return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings, viewType) + " }"
         else:
             code = ""
             return "function (node, inputs, outputs) { " +\
-                        self.resolve_containers(code, inputs, outputs, settings) +\
+                        self.resolve_containers(code, inputs, outputs, settings, viewType) +\
                         "if (node.data.outputDataPool) { " +\
                             "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
                                 "outputs[i] = node.data.outputDataPool[i]; " +\

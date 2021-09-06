@@ -480,7 +480,7 @@ SciViEditor.prototype.viewportContainer = function ()
     return document.getElementById("scivi_viewport");
 }
 
-SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootContainer, visualContainers, conID)
+SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootContainer, visualContainers, conID, forceDir)
 {
     var d1, d2;
     var id1 = "_" + conID + "_1";
@@ -501,7 +501,7 @@ SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootCo
         gutterSize: 8,
         sizes: [50, 50],
         minSize: 0,
-        direction: currentDepth % 2 === 0 ? "vertical" : "horizontal",
+        direction: forceDir === undefined ? (currentDepth % 2 === 0 ? "vertical" : "horizontal") : forceDir,
         onDrag: function () { window.dispatchEvent(new Event("resize")); }
     });
 
@@ -509,23 +509,25 @@ SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootCo
         visualContainers.push(d1[0]);
         visualContainers.push(d2[0]);
     } else {
-        this.placeVisual(desiredDepth, currentDepth + 1, d1[0], visualContainers, conID);
-        this.placeVisual(desiredDepth, currentDepth + 1, d2[0], visualContainers, conID);
+        this.placeVisual(desiredDepth, currentDepth + 1, d1[0], visualContainers, conID, forceDir);
+        this.placeVisual(desiredDepth, currentDepth + 1, d2[0], visualContainers, conID, forceDir);
     }
 }
 
-SciViEditor.prototype.addVisualToViewport = function (el)
+SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
 {
     var vp = this.viewportContainer();
     while (vp.firstChild)
         vp.removeChild(vp.firstChild);
+    el.splitIndex = pos[1];
     this.visuals.push(el);
+    this.visuals.sort(function (e1, e2) { return e1.splitIndex > e2.splitIndex ? 1 : -1; });
     if (this.visuals.length == 1)
         vp.appendChild(el);
     else
     {
         var visualContainers = [];
-        this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0]);
+        this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0], forceDir);
         for (var i = 0, n = this.visuals.length; i < n; ++i)
             visualContainers[i].appendChild(this.visuals[i]);
     }
