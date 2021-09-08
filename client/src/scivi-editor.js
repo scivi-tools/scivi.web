@@ -482,17 +482,13 @@ SciViEditor.prototype.viewportContainer = function ()
 
 SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootContainer, visualContainers, conID, forceDir)
 {
+    var dir = forceDir === undefined ? (currentDepth % 2 === 0 ? "vertical" : "horizontal") : forceDir;
     var d1, d2;
     var id1 = "_" + conID + "_1";
     var id2 = "_" + conID + "_2";
     conID[0]++;
-    if (currentDepth % 2 === 0) {
-        d1 = $("<div class='split split-vertical' id='" + id1 + "'>");
-        d2 = $("<div class='split split-vertical' id='" + id2 + "'>");
-    } else {
-        d1 = $("<div class='split split-horizontal' id='" + id1 + "'>");
-        d2 = $("<div class='split split-horizontal' id='" + id2 + "'>");
-    }
+    d1 = $("<div class='split split-" + dir + "' id='" + id1 + "'>");
+    d2 = $("<div class='split split-" + dir + "' id='" + id2 + "'>");
 
     rootContainer.appendChild(d1[0]);
     rootContainer.appendChild(d2[0]);
@@ -501,7 +497,7 @@ SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootCo
         gutterSize: 8,
         sizes: [50, 50],
         minSize: 0,
-        direction: forceDir === undefined ? (currentDepth % 2 === 0 ? "vertical" : "horizontal") : forceDir,
+        direction: dir,
         onDrag: function () { window.dispatchEvent(new Event("resize")); }
     });
 
