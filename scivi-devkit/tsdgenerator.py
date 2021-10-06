@@ -13,13 +13,26 @@ def onto_type_to_typescript_type(onto, t):
         return 'string'
     if typeName == "Bool":
         return "boolean"
-    if typeName == "Array": # TODO: Generate typed array from ontology
-        return "Array<any>"
     if typeName == "Quaternion":
         return "Quaternion";
     if typeName == "Grid":
-        return "Grid";
+        return "Grid"
+    if typeName == "Color":
+        return "number"
     return "any"
+
+def onto_node_to_typescript_type(onto, node):
+    t = onto.first(onto.get_typed_nodes_linked_from(node, "is_a", "Type"))
+    typeName = t["name"]
+    if typeName == "Array":
+        baseType = onto.first(onto.get_typed_nodes_linked_from(node, "base_type", "Type"))
+        if baseType:
+            tsType = onto_type_to_typescript_type(onto, baseType)
+            return "Array<" + tsType + ">"
+        else:
+            return "Array<any>"
+    else:
+        return onto_type_to_typescript_type(onto, t)
 
 def generate_field_name(name, is_read_only=False):
     result = '["' + name + '"]'
@@ -33,8 +46,7 @@ def generate_field(name_desc, type_name):
 def generate_fields(onto, nodes, is_read_only):
     result = ''
     for n in nodes:
-        t = onto.first(onto.get_typed_nodes_linked_from(n, "is_a", "Type"))
-        result += generate_field(generate_field_name(n["name"], is_read_only), onto_type_to_typescript_type(onto, t)) + ';\n'
+        result += generate_field(generate_field_name(n["name"], is_read_only), onto_node_to_typescript_type(onto, n)) + ';\n'
     return result
 
 def generate_typings(onto, leaf):
@@ -68,7 +80,6 @@ def generate_typings(onto, leaf):
 
     result += 'declare type SettingsChanged = {\n'
     for s in settingNodes:
-        t = onto.first(onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
         result += generate_field(generate_field_name(s["name"], False), 'boolean') + ';\n'
     result += '};\n\n'
 

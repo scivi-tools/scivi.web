@@ -24,5 +24,5 @@ fi
 echo 'Generate typings'
 python3 $D/tsdgenerator.py "$1" "$2" $(dirname "$3")
 echo 'Check typings'
-npx tsc $3 $(dirname "$3")/index.d.ts --allowJs --checkJs --noEmit --strict --noImplicitAny true --skipLibCheck
+npx tsc $3 $(dirname "$3")/index.d.ts --allowJs --checkJs --noEmit --strict --noImplicitAny true --skipLibCheck | grep TS7053
 
