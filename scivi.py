@@ -54,6 +54,10 @@ def mmaps_page():
 def eye_page():
     return getEditor("eye")
 
+@app.route("/ttype")
+def ttype_page():
+    return getEditor("ttype")
+
 def getSrv():
     global srvDict
     srvKey = request.cookies.get("srv")
