@@ -112,28 +112,43 @@ SciViEditor.prototype.run = function (mode)
             editor.removeNode(nodes[0]);
     });
 
-    $("#scivi_btn_visualize").click(function () {
-        viewPortVisible = !viewPortVisible;
-        _this.inVisualization = viewPortVisible;
-        _this.clearViewport();
-        _this.process();
-        if (!viewPortVisible) {
-            $(".scivi_slide").css({"transform": "translateX(0%)"});
-            $("#scivi_btn_visualize").html(_this.runButtonName(mode));
-            $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
-            $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
-            if (mode == MIXED_MODE) {
-                _this.stopMixed();
-            }
+    $("#scivi_btn_visualize").click(function (e) {
+        if (viewPortVisible && e.shiftKey) {
+            var filename = prompt("Enter name of file to save", "task.ont");
+            if (!filename)
+                return;
+            if (!filename.includes("."))
+                filename += ".ont";
+            var element = document.createElement("a");
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(_this.taskOnto)));
+            element.setAttribute("download", filename);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
         } else {
-            $(".scivi_slide").css({"transform": "translateX(-100%)"});
-            $("#scivi_btn_visualize").html("◀");
-            $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
-            $(".scivi_menu").css({"margin-left": "20px"});
-            if (mode == IOT_PROGRAMMING_MODE) {
-                _this.uploadEON();
-            } else if (mode == MIXED_MODE) {
-                _this.runMixed();
+            viewPortVisible = !viewPortVisible;
+            _this.inVisualization = viewPortVisible;
+            _this.clearViewport();
+            _this.process();
+            if (!viewPortVisible) {
+                $(".scivi_slide").css({"transform": "translateX(0%)"});
+                $("#scivi_btn_visualize").html(_this.runButtonName(mode));
+                $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
+                $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
+                if (mode == MIXED_MODE) {
+                    _this.stopMixed();
+                }
+            } else {
+                $(".scivi_slide").css({"transform": "translateX(-100%)"});
+                $("#scivi_btn_visualize").html("◀");
+                $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+                $(".scivi_menu").css({"margin-left": "20px"});
+                if (mode == IOT_PROGRAMMING_MODE) {
+                    _this.uploadEON();
+                } else if (mode == MIXED_MODE) {
+                    _this.runMixed();
+                }
             }
         }
     });
@@ -306,6 +321,8 @@ SciViEditor.prototype.runMixed = function ()
 
         var ont = data["ont"];
         var cor = data["cor"];
+
+        _this.taskOnto = ont;
 
         // var eon = data["eon"];
 
