@@ -199,11 +199,11 @@ class DFD2Onto:
             raise ValueError("Ambigous worker for <" + node["name"] + ">")
         workerType = self.onto.first(self.onto.get_nodes_linked_from(workers[0], "is_a"))
         resources = self.onto.get_nodes_linked_from(workerType, "is_used")
-        # n = len(resources)
-        # if n == 0:
-        #     raise ValueError("No computing resource can handle <" + node["name"] + ">")
-        # elif n > 1:
-        #     raise ValueError("Ambigous computing resource for <" + node["name"] + ">")
+        n = len(resources)
+        if n == 0:
+            raise ValueError("No computing resource can handle <" + node["name"] + ">")
+        elif n > 1:
+            raise ValueError("Ambigous computing resource for <" + node["name"] + ">")
         res = self.onto.first(resources)
         resProto = dfdOnto.first(dfdOnto.get_nodes_by_name(res["name"]))
         hosting = dfdOnto.first(dfdOnto.get_nodes_linked_to(resProto, "is_instance"))
