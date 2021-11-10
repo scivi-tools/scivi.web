@@ -1,5 +1,5 @@
 {
-    "last_id": "28",
+    "last_id": "34",
     "namespaces": {
         "default": "http://knova.ru/user/1600059725795",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -114,8 +114,36 @@
             "id": "27",
             "name": "Root",
             "namespace": "http://knova.ru/user/1600059725795",
-            "position_x": 379,
-            "position_y": 345
+            "position_x": 335,
+            "position_y": 137
+        },
+        {
+            "attributes": {
+                "path": "lib/3d/morph.js"
+            },
+            "id": "29",
+            "name": "Morph Worker",
+            "namespace": "http://knova.ru/user/1600059725795",
+            "position_x": 530,
+            "position_y": 194
+        },
+        {
+            "attributes": {
+            },
+            "id": "30",
+            "name": "ClientSideWorker",
+            "namespace": "http://knova.ru/user/1600059725795",
+            "position_x": 533,
+            "position_y": 154
+        },
+        {
+            "attributes": {
+            },
+            "id": "31",
+            "name": "JavaScript",
+            "namespace": "http://knova.ru/user/1600059725795",
+            "position_x": 611,
+            "position_y": 246
         }
     ],
     "relations": [
@@ -262,6 +290,33 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1600059725795",
             "source_node_id": "2"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "32",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1600059725795",
+            "source_node_id": "29"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "30",
+            "id": "33",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1600059725795",
+            "source_node_id": "29"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "31",
+            "id": "34",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1600059725795",
+            "source_node_id": "29"
         }
     ],
     "visualize_ont_path": ""

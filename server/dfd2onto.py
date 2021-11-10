@@ -289,9 +289,24 @@ class DFD2Onto:
         dstRes = dfdOnto.first(dfdOnto.get_nodes_linked_from(dstHost, "is_instance"))
         src = self.onto.first(self.onto.get_nodes_by_name(srcRes["name"]))
         dst = self.onto.first(self.onto.get_nodes_by_name(dstRes["name"]))
-        srcProtocols = self.onto.get_typed_nodes_linked_to(src, "is_used", "Protocol")
-        dstProtocols = self.onto.get_typed_nodes_linked_to(dst, "is_used", "Protocol")
-        commonProtocols = [p for p in srcProtocols if p in dstProtocols]
+        srcWorkers = self.onto.get_nodes_linked_to(src, "is_used")
+        dstWorkers = self.onto.get_nodes_linked_to(dst, "is_used")
+        protocol = self.onto.first(self.onto.get_nodes_by_name("Protocol"))
+        protocols = self.onto.get_nodes_linked_to(protocol, "is_a")
+        commonProtocols = []
+        for p in protocols:
+            pImpls = self.onto.get_nodes_linked_to(p, "is_instance")
+            hasSrcImpl = False
+            hasDstImpl = False
+            for pImpl in pImpls:
+                pWorker = self.onto.first(self.onto.get_nodes_linked_from(pImpl, "is_a"))
+                if pWorker in srcWorkers:
+                    hasSrcImpl = True
+                elif pWorker in dstWorkers:
+                    hasDstImpl = True
+                if hasSrcImpl and hasDstImpl:
+                    commonProtocols.append(p)
+                    break
         if len(commonProtocols) == 0:
             #TODO: create proxy
             raise ValueError("Common protocol not found for <" + srcHost["name"] + "> and <" + dstHost["name"] + ">")
