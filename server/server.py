@@ -297,7 +297,11 @@ class SciViServer:
 
     def gen_settings(self, settings):
         if len(settings) > 0:
-            f = "function (node){ if (node.data) node.data.settingsCtrl = \"\"; if (!node.data || !node.data.settings) return; var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; "
+            f = "function (node){ " +\
+                "if (node.data) { node.data.settingsCtrl = \"\"; node.data.inlineSettingsCtrl = \"\"; } " +\
+                "if (!node.data || !node.data.settings) return; " +\
+                "var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; " +\
+                "var INLINE_WIDGET = function (code) { node.data.inlineSettingsCtrl += code; }; "
             for s in settings:
                 t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
                 widgets = self.onto.get_typed_nodes_linked_to(t, "is_used", "Widget")
@@ -308,6 +312,8 @@ class SciViServer:
                         break
                 if widget:
                     code = self.get_code(widget)
+                    if ("inline" in s["attributes"]) and s["attributes"]["inline"]:
+                        code = code.replace("ADD_WIDGET", "INLINE_WIDGET")
                     code = code.replace("SETTINGS_VAL", "node.data.settingsVal")
                     code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged")
                     code = code.replace("SETTINGS", "node.data.settings")

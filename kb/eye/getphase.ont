@@ -15,8 +15,8 @@
             "id": "1",
             "name": "Get Phase",
             "namespace": "http://knova.ru/user/1636436489809",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -51,
+            "position_y": -6
         },
         {
             "attributes": {
@@ -42,8 +42,8 @@
             "id": "4",
             "name": "Gaze Data",
             "namespace": "http://knova.ru/user/1636436489809",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": -93,
+            "position_y": 67
         },
         {
             "attributes": {
@@ -101,7 +101,8 @@
         },
         {
             "attributes": {
-                "default": 1
+                "default": 1,
+                "inline": true
             },
             "id": "11",
             "name": "Phase Number",
@@ -125,8 +126,8 @@
             "id": "25",
             "name": "Get Phase Worker",
             "namespace": "http://knova.ru/user/1636436489809",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 197,
+            "position_y": -121
         },
         {
             "attributes": {
@@ -134,8 +135,8 @@
             "id": "26",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1636436489809",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 299,
+            "position_y": -178
         },
         {
             "attributes": {

@@ -170,6 +170,12 @@ ul
     max-width: 150px;
 }
 
+.node-editor .control
+{
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
 /***************************/
 /*           UI            */
 /***************************/

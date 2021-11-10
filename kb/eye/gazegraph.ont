@@ -165,6 +165,7 @@
         },
         {
             "attributes": {
+                "inline": true
             },
             "id": "40",
             "name": "Name",
