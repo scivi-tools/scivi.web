@@ -364,8 +364,9 @@ class DFD2Onto:
                     rxtxInst = self.instanciate_node(rxtx, hostNode, rxtxNmb, \
                                                      { "settingsVal": { "Node Address": b["id"], \
                                                                         "Target Address": targetHost["attributes"]["address"] }, \
-                                                       "settingsType": { "Input Address": "Integer", \
-                                                                         "Address": "String" }, }, \
+                                                       "settingsType": { "Node Address": "Integer", \
+                                                                         "Target Address": "String" }, \
+                                                       "dfd": node["attributes"]["dfd"] }, \
                                                      dfdOnto, dfdI, dfdO)
                     if isInput:
                         rxtxSocketName = "Input"

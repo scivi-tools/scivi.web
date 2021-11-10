@@ -451,10 +451,16 @@ class SciViServer:
                 serverOntoData = serverOnto.data
         # Edge
         edgeRes = mixedOnto.first(mixedOnto.get_nodes_by_name("ESP8266"))
+        eonBytes = []
         if edgeRes:
             hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(edgeRes, "is_instance"))
             edgeOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
-        return { "ont": edgeOnto.data, "cor": corTable }, serverOntoHash
+            eon = Eon(self.onto)
+            bs, eonOnto = eon.get_eon(edgeOnto)
+            eonBytes = []
+            for b in bs:
+                eonBytes.append(b)
+        return { "ont": edgeOnto.data, "cor": corTable, "eon": eonBytes }, serverOntoHash
 
     def stop_execer(self, serverOntoHash):
         if serverOntoHash and serverOntoHash in self.execers:

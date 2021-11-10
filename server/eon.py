@@ -78,7 +78,7 @@ class Eon:
                 else:
                     return EonType.FLOAT32, floatVal
             except ValueError:
-                if value.startswith("'") and value.endswith("'"):
+                if (len(value) == 0) or (value.startswith("'") and value.endswith("'")):
                     return EonType.STRING, value
                 else:
                     raise ValueError("Cannot guess type of value <" + value + ">")
@@ -100,8 +100,9 @@ class Eon:
             buffer.write(struct.pack("!f", value))
         elif type == EonType.STRING:
             # String values are stored as null-terminated byte sequences.
-            result.write(value[1:-1].encode())
-            result.write(bytes([0x0]))
+            if len(value) > 0:
+                buffer.write(value[1:-1].encode())
+            buffer.write(bytes([0x0]))
         else:
             raise ValueError("Cannot dump value <" + value + "> of unknown type <" + type + ">")
 
