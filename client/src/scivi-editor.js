@@ -406,7 +406,10 @@ SciViEditor.prototype.changeSubTitle = function (nodeID)
 
 SciViEditor.prototype.createControl = function (node)
 {
-    return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
+    if (node.data.inlineSettingsCtrl !== undefined)
+        return node.data.inlineSettingsCtrl;
+    else // FIXME: subtitles are deprecated, remove them.
+        return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
@@ -426,6 +429,8 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                     sockets[item["type"]] = new D3NE.Socket(item["type"], item["type"], "");
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
+            workerFunc(node, inputs, outputs);
+            settingsFunc(node);
             node.addControl(new D3NE.Control(_this.createControl(node), function (element, control) { }));
             return node;
         },
