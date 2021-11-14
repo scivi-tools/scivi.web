@@ -15,8 +15,8 @@
             "id": "1",
             "name": "DataSource",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -112,
-            "position_y": -202
+            "position_x": 413,
+            "position_y": 264
         },
         {
             "attributes": {
@@ -24,17 +24,18 @@
             "id": "2",
             "name": "Root",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -87,
-            "position_y": -266
+            "position_x": 438,
+            "position_y": 200
         },
         {
             "attributes": {
+                "UID": 2
             },
             "id": "3",
             "name": "Distance",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -96,
-            "position_y": -146
+            "position_x": 429,
+            "position_y": 320
         },
         {
             "attributes": {
@@ -42,8 +43,8 @@
             "id": "4",
             "name": "Value",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -73,
-            "position_y": -96
+            "position_x": 452,
+            "position_y": 370
         },
         {
             "attributes": {
@@ -51,8 +52,8 @@
             "id": "5",
             "name": "Number",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -68,
-            "position_y": -44
+            "position_x": 457,
+            "position_y": 422
         },
         {
             "attributes": {
@@ -60,8 +61,8 @@
             "id": "6",
             "name": "Type",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -71,
-            "position_y": 10
+            "position_x": 454,
+            "position_y": 476
         },
         {
             "attributes": {
@@ -69,8 +70,8 @@
             "id": "7",
             "name": "Output",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": 31,
-            "position_y": -163
+            "position_x": 556,
+            "position_y": 303
         },
         {
             "attributes": {
@@ -78,8 +79,8 @@
             "id": "13",
             "name": "Distance Worker",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -305,
-            "position_y": -155
+            "position_x": 220,
+            "position_y": 311
         },
         {
             "attributes": {
@@ -87,8 +88,8 @@
             "id": "15",
             "name": "EdgeSideWorker",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": -325,
-            "position_y": -210
+            "position_x": 200,
+            "position_y": 256
         },
         {
             "attributes": {
@@ -96,8 +97,8 @@
             "id": "16",
             "name": "C++",
             "namespace": "http://knova.ru/user/1636179455636",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 525,
+            "position_y": 466
         }
     ],
     "relations": [

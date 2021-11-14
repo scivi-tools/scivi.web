@@ -136,10 +136,13 @@ class Eon:
                     settingsChunk.write(bytes([opInst["attributes"]["dfd"], \
                                                ((sNumber & 0x0F) << 4) | (int(sType) & 0x0F)]))
                     self.dump_value(convertedValue, sType, settingsChunk)
-                if opMother["id"] in keys:
-                    keys[opMother["id"]].append(opInst["attributes"]["dfd"])
+                if (not ("attributes" in opMother)) or (not ("UID" in opMother["attributes"])):
+                    raise ValueError("Operator <" + opMother["name"] + "> has no UID")
+                opMotherUID = opMother["attributes"]["UID"]
+                if opMotherUID in keys:
+                    keys[opMotherUID].append(opInst["attributes"]["dfd"])
                 else:
-                    keys[opMother["id"]] = [opInst["attributes"]["dfd"]]
+                    keys[opMotherUID] = [opInst["attributes"]["dfd"]]
         
         for k in keys:
             keysChunk.write(struct.pack("!H", int(k) & 0xFFFF))
@@ -173,7 +176,7 @@ class Eon:
         #           --------------------------------------------
         #           | MotherOp | OpInst1 | OpInst2 | ... | 0x0 |
         #           --------------------------------------------
-        #           where MotherOp (2 bytes) - onto ID of operator (in mother ontology), which instances are used in DFD
+        #           where MotherOp (2 bytes) - onto UID of operator (in mother ontology), which instances are used in DFD
         #                 OpInst1, OpInst2, ... (each 1 byte) - DFD IDs of MotherOp instances
         #                 0x0 (1 byte) - zero byte terminating the list of MotherOp instances
         #
