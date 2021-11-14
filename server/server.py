@@ -209,25 +209,6 @@ class SciViServer:
             return 0
 
     def resolve_containers(self, code, inputs, outputs, settings, viewType):
-        types = ""
-        defs = ""
-        doms = ""
-        for s in settings:
-            if "attributes" in s:
-                dv = None
-                if "default" in s["attributes"]:
-                    dv = s["attributes"]["default"]
-                else:
-                    dv = self.resolve_default(s)
-                if isinstance(dv, str):
-                    dv = "\"" + dv + "\""
-                else:
-                    dv = str(dv).lower()
-                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
-                if "domain" in s["attributes"]:
-                    dm = s["attributes"]["domain"]
-                    doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
-            types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
         props = re.findall(r"PROPERTY\[\"(.+?)\"\]", code)
         for p in props:
             found = False
@@ -251,15 +232,7 @@ class SciViServer:
             addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position, '" + viewType["attributes"]["split"] + "'); }; "
         else:
             addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position); }; "
-        code = "if (!node.data.cache) " +\
-               "node.data.cache = {}; " +\
-               "if (!node.data.settings) { " +\
-               "node.data.settings = {" + doms + "}; " +\
-               "node.data.settingsVal = {" + defs + "}; " +\
-               "node.data.settingsType = {" + types + "}; " +\
-               "node.data.settingsChanged = {}; " +\
-               "} " +\
-               addVisualCall +\
+        code = addVisualCall +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
         for i, inp in enumerate(inputs):
@@ -296,8 +269,38 @@ class SciViServer:
                    "}"
 
     def gen_settings(self, settings):
+        types = ""
+        defs = ""
+        doms = ""
+        for s in settings:
+            if "attributes" in s:
+                dv = None
+                if "default" in s["attributes"]:
+                    dv = s["attributes"]["default"]
+                else:
+                    dv = self.resolve_default(s)
+                if isinstance(dv, str):
+                    dv = "\"" + dv + "\""
+                else:
+                    dv = str(dv).lower()
+                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
+                if "domain" in s["attributes"]:
+                    dm = s["attributes"]["domain"]
+                    doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
+            types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
+
+        initCode = "if (!node.data.cache) " +\
+                   "node.data.cache = {}; " +\
+                   "if (!node.data.settings) { " +\
+                   "node.data.settings = {" + doms + "}; " +\
+                   "node.data.settingsVal = {" + defs + "}; " +\
+                   "node.data.settingsType = {" + types + "}; " +\
+                   "node.data.settingsChanged = {}; " +\
+                   "} "
+
         if len(settings) > 0:
             f = "function (node){ " +\
+                initCode +\
                 "if (node.data) { node.data.settingsCtrl = \"\"; node.data.inlineSettingsCtrl = \"\"; } " +\
                 "if (!node.data || !node.data.settings) return; " +\
                 "var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; " +\
@@ -323,7 +326,7 @@ class SciViServer:
                     f = f + "(function () { " + code + " }).call(this);"
             f = f + " }"
             return f
-        return "function (node){}"
+        return "function (node){ " + initCode + " }"
 
     def check_mode(self, leaf):
         if self.mode != Mode.MIXED:
