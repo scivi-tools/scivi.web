@@ -412,7 +412,6 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                     sockets[item["type"]] = new D3NE.Socket(item["type"], item["type"], "");
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
-            workerFunc(node, inputs, outputs);
             settingsFunc(node);
             node.addControl(new D3NE.Control(_this.createControl(node), function (element, control) { }));
             return node;
@@ -420,7 +419,6 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
         worker(node, inputs, outputs) {
             try {
                 workerFunc(node, inputs, outputs);
-                settingsFunc(node);
             } catch(err) {
                 _this.showError(err);
             }
@@ -468,7 +466,7 @@ SciViEditor.prototype.extendNodes = function ()
             var nodeProto = _this.components[node.title];
             node.syncSettings = nodeProto.syncSettings;
         }
-        if (node.data.subTitle) {
+        if (node.data.subTitle) { // FIXME: this is deprecated!!!
             $("#t" + node.id).val(node.data.subTitle);
             $("#t" + node.id).show();
         }
