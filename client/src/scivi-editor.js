@@ -236,6 +236,7 @@ SciViEditor.prototype.run = function (mode)
 
 SciViEditor.prototype.uploadEON = function ()
 {
+    // FIXME: this mode is deprecated.
     var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
@@ -321,69 +322,17 @@ SciViEditor.prototype.runMixed = function ()
 
         var ont = data["ont"];
         var cor = data["cor"];
+        var eon = data["eon"];
 
         _this.taskOnto = ont;
 
-        // var eon = data["eon"];
-
-        /*var upEonDiv = $("<div class='scivi_upload_eon'>");
-        var ontoDiv = $("<div style='display: table-row;'>");
-        var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
-        var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
-        // var eonDiv = $("<div style='display: table-row;'>").html("EON blob: " + eon.length + " bytes");
-        var uplDiv = $("<div style='display: table-row;'>");
-        var uplAddr = $("<div style='display: table-cell;'>");
-        var targetAddressLbl = $("<label>").html("Device address: ");
-        var targetAddressTxt = $("<input class='ui-widget' type='text' value='192.168.4.1:81' style='margin-right: 5px;'>");
-        var uploadBtn = $("<button class='ui-widget scivi_button' style='display=table-cell;'>").html("Upload");
-
-        dlOntoBtn.click(function () {
-            var filename = prompt("Enter name of file to save", "task.ont");
-            if (!filename)
-                return;
-            if (!filename.includes("."))
-                filename += ".ont";
-            var element = document.createElement("a");
-            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(ont)));
-            element.setAttribute("download", filename);
-            element.style.display = "none";
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        });
-
-        // uploadBtn.click(function () {
-        //     console.log(targetAddressTxt.val());
-        //     var webSocket = new WebSocket("ws://" + targetAddressTxt.val());
-        //     webSocket.onopen = function(evt) {
-        //         console.log("WebSocket open");
-        //         console.log(eon);
-        //         webSocket.send(Uint8Array.from(eon));
-        //         webSocket.close();
-        //     };
-        //     webSocket.onclose = function(evt) { console.log("WebSocket close"); };
-        //     webSocket.onerror = function(evt) { console.log(evt); };
-        //     webSocket.onmessage = function(evt) { console.log(evt); };
-        // });
-
-        ontoDiv.append(ontoLbl);
-        ontoDiv.append(dlOntoBtn);
-
-        uplAddr.append(targetAddressLbl);
-        uplAddr.append(targetAddressTxt);
-
-        uplDiv.append(uplAddr);
-        uplDiv.append(uploadBtn);
-
-        upEonDiv.append(ontoDiv);
-        // upEonDiv.append(eonDiv);
-        upEonDiv.append(uplDiv);
-
-        $("#scivi_viewport").empty();
-        $("#scivi_viewport").append(upEonDiv);*/
-
-        if (Object.keys(cor).length > 0)
-            _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
+        if (Object.keys(cor).length > 0) {
+            // FIXME: address should be given by server, moreover, there may be multiple comms required.
+            if (eon.length > 0)
+                _this.startComm("ws://192.168.4.1:81/", cor, eon);
+            else
+                _this.startComm("ws://127.0.0.1:5001/", cor);
+        }
     });
 }
 
@@ -662,7 +611,7 @@ SciViEditor.prototype.showError = function (err)
     dp.find(".ui-button").css("border", "1px solid #3F3F3F");
 }
 
-SciViEditor.prototype.startComm = function (address, addressCorrespondences)
+SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon = null)
 {
     var ws = new WebSocket(address);
     var _this = this;
@@ -671,6 +620,9 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences)
         this.commsReconnects[address] = 10;
     ws.onopen = function(evt) {
         console.log("WebSocket open on " + address);
+        if (eon) {
+            ws.send(Uint8Array.from(eon));
+        }
     };
     ws.onclose = function(evt) {
         console.log("WebSocket close on " + address);
@@ -682,11 +634,10 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences)
         if (rc > 0) {
             --rc;
             _this.commsReconnects[address] = rc;
-            setTimeout(function () { _this.startComm(address, addressCorrespondences); }, 100);
+            setTimeout(function () { _this.startComm(address, addressCorrespondences, eon); }, 100);
         }
     };
     ws.onmessage = function(evt) {
-        // console.log(evt);
         var msg = JSON.parse(evt.data);
         for (var i = 0, n = msg.length; i < n; ++i) {
             Object.keys(msg[i]).forEach(function (key) {
