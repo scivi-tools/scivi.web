@@ -642,23 +642,25 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
         for (var i = 0, n = msg.length; i < n; ++i) {
             Object.keys(msg[i]).forEach(function (key) {
                 var cor = addressCorrespondences[key];
-                for (var j = 0, n = cor.length; j < n; ++j) {
-                    var dfdNodeID = cor[j][0];
-                    var isInput = cor[j][1];
-                    var socketNmb = cor[j][2];
-                    var dfdNode = _this.getNodeByID(dfdNodeID);
-                    if (isInput) {
-                        if (!dfdNode.data.inputDataPool)
-                            dfdNode.data.inputDataPool = [];
-                        for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
-                            dfdNode.data.inputDataPool.push(null);
-                        dfdNode.data.inputDataPool[socketNmb] = msg[key];
-                    } else {
-                        if (!dfdNode.data.outputDataPool)
-                            dfdNode.data.outputDataPool = [];
-                        for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
-                            dfdNode.data.outputDataPool.push(null);
-                        dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+                if (cor) {
+                    for (var j = 0, n = cor.length; j < n; ++j) {
+                        var dfdNodeID = cor[j][0];
+                        var isInput = cor[j][1];
+                        var socketNmb = cor[j][2];
+                        var dfdNode = _this.getNodeByID(dfdNodeID);
+                        if (isInput) {
+                            if (!dfdNode.data.inputDataPool)
+                                dfdNode.data.inputDataPool = [];
+                            for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
+                                dfdNode.data.inputDataPool.push(null);
+                            dfdNode.data.inputDataPool[socketNmb] = msg[key];
+                        } else {
+                            if (!dfdNode.data.outputDataPool)
+                                dfdNode.data.outputDataPool = [];
+                            for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
+                                dfdNode.data.outputDataPool.push(null);
+                            dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+                        }
                     }
                 }
             });
