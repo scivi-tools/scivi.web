@@ -30,6 +30,10 @@ def csv_page():
 def es_page():
     return getEditor("es")
 
+@app.route("/eon")
+def eon_page():
+    return getEditor("eon")
+
 @app.route("/shielder")
 def shielder_page():
     return getEditor("shielder")
@@ -127,6 +131,7 @@ def gen_eon():
 def gen_mixed():
     dfd = request.get_json(force = True)
     oldExeKey = request.cookies.get("exe")
+    exeKey = None
     try:
         srv = getSrv()
         srv.stop_execer(oldExeKey)

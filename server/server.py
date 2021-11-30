@@ -261,7 +261,7 @@ class SciViServer:
         else:
             code = ""
             return "function (node, inputs, outputs) { " +\
-                        self.resolve_containers(code, inputs, outputs, settings, viewType) +\
+                        self.resolve_containers(code, inputs, outputs, settings, None) +\
                         "if (node.data.outputDataPool) { " +\
                             "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
                                 "outputs[i] = node.data.outputDataPool[i]; " +\
@@ -444,17 +444,32 @@ class SciViServer:
     def gen_mixed(self, dfd):
         dfd2onto = DFD2Onto(self.onto)
         mixedOnto = dfd2onto.get_onto(dfd)
+        # Server
         srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
-        hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
-        serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
-        if self.task_onto_has_operations(serverOnto):
-            execer = Execer(self.onto, serverOnto)
-            serverOntoHash = serverOnto.calc_hash()
-            self.execers[serverOntoHash] = execer
-            execer.start()
-        else:
-            serverOntoHash = None
-        return { "ont": serverOnto.data, "cor": corTable }, serverOntoHash
+        serverOntoData = None
+        serverOntoHash = None
+        corTable = None
+        if srvRes:
+            hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
+            serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            if self.task_onto_has_operations(serverOnto):
+                execer = Execer(self.onto, serverOnto)
+                serverOntoHash = serverOnto.calc_hash()
+                self.execers[serverOntoHash] = execer
+                execer.start()
+                serverOntoData = serverOnto.data
+        # Edge
+        edgeRes = mixedOnto.first(mixedOnto.get_nodes_by_name("ESP8266"))
+        eonBytes = []
+        if edgeRes:
+            hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(edgeRes, "is_instance"))
+            edgeOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            eon = Eon(self.onto)
+            bs, eonOnto = eon.get_eon(edgeOnto)
+            eonBytes = []
+            for b in bs:
+                eonBytes.append(b)
+        return { "ont": edgeOnto.data, "cor": corTable, "eon": eonBytes }, serverOntoHash
 
     def stop_execer(self, serverOntoHash):
         if serverOntoHash and serverOntoHash in self.execers:
