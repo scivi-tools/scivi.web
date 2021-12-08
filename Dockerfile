@@ -11,9 +11,17 @@ COPY lib /app/lib
 COPY onto /app/onto
 COPY server /app/server
 COPY scivi.py /app/
+COPY Makefile /app/
+COPY run.sh /app/
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN apt install nodejs
+
+RUN (cd /app/client/ npm install)
+RUN (cd /app/ && make)
 
 WORKDIR /app
 
 ENV PYTHONPATH=/app
 
-CMD gunicorn -w 4 --bind 0.0.0.0:5000 --timeout 600 --access-logfile - scivi:app
+CMD sh run.sh
