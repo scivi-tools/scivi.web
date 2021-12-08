@@ -17,7 +17,6 @@ COPY run.sh /app/
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt install nodejs
 
-RUN (cd /app/client/ && npm install)
 RUN make -C /app
 
 WORKDIR /app
