@@ -487,14 +487,28 @@ SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
     el.splitIndex = pos[1];
     this.visuals.push(el);
     this.visuals.sort(function (e1, e2) { return e1.splitIndex > e2.splitIndex ? 1 : -1; });
-    if (this.visuals.length == 1)
-        vp.appendChild(el);
-    else
-    {
-        var visualContainers = [];
-        this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0], forceDir);
+    if (forceDir === "vertical") {
         for (var i = 0, n = this.visuals.length; i < n; ++i)
-            visualContainers[i].appendChild(this.visuals[i]);
+            vp.appendChild(this.visuals[i]);
+        var h = 0;
+        for (var i = 0, n = this.visuals.length; i < n; ++i) {
+            if (!this.visuals[i].style.height)
+                h += $(this.visuals[i].firstChild).outerHeight(true);
+        }
+        for (var i = 0, n = this.visuals.length; i < n; ++i) {
+            if (this.visuals[i].style.height)
+                this.visuals[i].style.height = "calc(100% - " + h + "px)";
+        }
+    } else {
+        if (this.visuals.length == 1)
+            vp.appendChild(el);
+        else
+        {
+            var visualContainers = [];
+            this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0], forceDir);
+            for (var i = 0, n = this.visuals.length; i < n; ++i)
+                visualContainers[i].appendChild(this.visuals[i]);
+        }
     }
     window.dispatchEvent(new Event("resize"));
 }
