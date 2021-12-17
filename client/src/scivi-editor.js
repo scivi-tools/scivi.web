@@ -95,14 +95,20 @@ SciViEditor.prototype.run = function (mode)
     });
 
     editor.eventListener.on("connectioncreate connectionremove", function () {
-        if (_this.selectedNode)
-            setTimeout(function() { _this.selectNode(_this.selectedNode); }, 1);
+        if (processingAllowed) {
+            setTimeout(function () {
+                _this.process();
+                if (_this.selectedNode)
+                    _this.selectNode(_this.selectedNode);
+            }, 1);
+        }
     });
 
-    editor.eventListener.on("nodecreate noderemove connectioncreate connectionremove", async function () {
+    editor.eventListener.on("nodecreate noderemove", function () {
         if (processingAllowed) {
-            await engine.abort();
-            await engine.process(editor.toJSON());
+            setTimeout(function() {
+                _this.process();
+            }, 1);
         }
     });
 
