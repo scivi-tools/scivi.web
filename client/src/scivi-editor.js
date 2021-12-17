@@ -506,6 +506,29 @@ SciViEditor.prototype.process = function ()
     nodes.sort(function (a, b) {
         return a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0;
     });
+
+    for (var i = 0; i < n; ++i) {
+        var node = this.getNodeByID(nodes[i].id);
+        var inputs = [];
+        for (var j = 0, m = nodes[i].inputs.length; j < m; ++j) {
+            if (nodes[i].inputs[j].connections.length > 0) {
+                var srcNodeID = nodes[i].inputs[j].connections[0].node;
+                var srcOutputID = nodes[i].inputs[j].connections[0].output;
+                var srcNode = this.getNodeByID(srcNodeID);
+                if (srcNode.outputData)
+                    inputs.push([srcNode.outputData[srcOutputID]])
+                else
+                    inputs.push([null]);
+            } else {
+                inputs.push([]);
+            }
+        }
+        var outputs = [];
+        for (var j = 0, m = nodes[i].outputs.length; j < m; ++j)
+            outputs.push(null);
+        this.components[nodes[i].title].worker(node, inputs, outputs);
+        node.outputData = outputs;
+    }
 }
 
 SciViEditor.prototype.viewportContainer = function ()
