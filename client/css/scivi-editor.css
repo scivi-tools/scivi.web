@@ -378,6 +378,13 @@ input[type="file"]
     color: #fff;
 }
 
+.scivi_button.disabled, .scivi_button.disabled:active, .scivi_button.disabled:hover, .scivi_button.disabled.pushed
+{
+    color: #999;
+    background: #e0e0e0;
+    cursor: default;
+}
+
 /***************************/
 /*       Loader stuff      */
 /***************************/
