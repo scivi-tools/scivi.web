@@ -441,7 +441,71 @@ SciViEditor.prototype.extendNodes = function ()
 
 SciViEditor.prototype.process = function ()
 {
-    this.engine.process(this.editor.toJSON());
+    function dumpToArray(nodes)
+    {
+        var result = [];
+        for (key in nodes) {
+            if (nodes.hasOwnProperty(key))
+                result.push(nodes[key]);
+        }
+        return result;
+    }
+
+    function getSourceNodes(nodes, node, remRec)
+    {
+        var result = [];
+        for (var i = 0, n = node.inputs.length; i < n; ++i) {
+            if (node.inputs[i].connections.length > 0) {
+                var src = nodes[node.inputs[i].connections[0].node];
+                if (!remRec || src.position[0] < node.position[0] || (src.position[0] === node.position[0] && src.position[1] < node.position[1]))
+                    result.push(src);
+            }
+        }
+        return result;
+    }
+
+    function getMaxRank(nodes)
+    {
+        var result = -1;
+        for (var i = 0, n = nodes.length; i < n; ++i) {
+            if (nodes[i].rank === undefined)
+                return undefined;
+            else if (nodes[i].rank > result)
+                result = nodes[i].rank;
+        }
+        return result;
+    }
+
+    var dfd = this.editor.toJSON();
+    var nodes = dumpToArray(dfd.nodes);
+    var rankedNodes = 0;
+    var n = nodes.length;
+    var removeRecursives = false;
+    while (rankedNodes < n) {
+        var hasCycle = true;
+        for (var i = 0; i < n; ++i) {
+            if (nodes[i].rank !== undefined)
+                continue;
+            var srcNodes = getSourceNodes(dfd.nodes, nodes[i], removeRecursives);
+            if (srcNodes.length === 0) {
+                nodes[i].rank = 0;
+                ++rankedNodes;
+                hasCycle = false;
+            } else {
+                var mr = getMaxRank(srcNodes);
+                if (mr !== undefined) {
+                    nodes[i].rank = mr + 1;
+                    ++rankedNodes;
+                    hasCycle = false;
+                }
+            }
+        }
+        removeRecursives = hasCycle;
+    }
+
+    nodes.sort(function (a, b) {
+        return a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0;
+    });
 }
 
 SciViEditor.prototype.viewportContainer = function ()
