@@ -15,7 +15,7 @@
             "id": "1",
             "name": "Root",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 337,
+            "position_x": 426,
             "position_y": 261
         },
         {
@@ -24,7 +24,7 @@
             "id": "2",
             "name": "DataSource",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 319,
+            "position_x": 408,
             "position_y": 307
         },
         {
@@ -33,7 +33,7 @@
             "id": "3",
             "name": "Calibrator",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 332,
+            "position_x": 421,
             "position_y": 349
         },
         {
@@ -42,7 +42,7 @@
             "id": "4",
             "name": "Gaze",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 278,
+            "position_x": 367,
             "position_y": 411
         },
         {
@@ -51,7 +51,7 @@
             "id": "5",
             "name": "Grid",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 308,
+            "position_x": 397,
             "position_y": 458
         },
         {
@@ -60,7 +60,7 @@
             "id": "6",
             "name": "Type",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 349,
+            "position_x": 438,
             "position_y": 510
         },
         {
@@ -69,7 +69,7 @@
             "id": "7",
             "name": "Picture",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 430,
+            "position_x": 519,
             "position_y": 405
         },
         {
@@ -78,7 +78,7 @@
             "id": "8",
             "name": "Image",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 407,
+            "position_x": 496,
             "position_y": 461
         },
         {
@@ -87,7 +87,7 @@
             "id": "9",
             "name": "Input",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 200,
+            "position_x": 289,
             "position_y": 363
         },
         {
@@ -96,7 +96,7 @@
             "id": "10",
             "name": "Output",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 505,
+            "position_x": 594,
             "position_y": 354
         },
         {
@@ -106,7 +106,7 @@
             "id": "11",
             "name": "Calibrator Worker",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 613,
+            "position_x": 702,
             "position_y": 290
         },
         {
@@ -115,7 +115,7 @@
             "id": "12",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 760,
+            "position_x": 849,
             "position_y": 339
         },
         {
@@ -124,7 +124,7 @@
             "id": "13",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 622,
+            "position_x": 711,
             "position_y": 200
         },
         {
@@ -133,7 +133,7 @@
             "id": "27",
             "name": "Free Mode",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 128,
+            "position_x": 217,
             "position_y": 400
         },
         {
@@ -142,16 +142,16 @@
             "id": "28",
             "name": "Bool",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 167,
+            "position_x": 256,
             "position_y": 446
         },
         {
             "attributes": {
             },
             "id": "29",
-            "name": "Settings",
+            "name": "Setting",
             "namespace": "http://knova.ru/user/1639988931836",
-            "position_x": 111,
+            "position_x": 200,
             "position_y": 331
         }
     ],
