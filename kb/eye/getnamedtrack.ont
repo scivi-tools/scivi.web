@@ -124,8 +124,8 @@
             "id": "31",
             "name": "Get Name Track Worker",
             "namespace": "http://knova.ru/user/1640324494303",
-            "position_x": 224,
-            "position_y": -437
+            "position_x": 225,
+            "position_y": -445
         },
         {
             "attributes": {
