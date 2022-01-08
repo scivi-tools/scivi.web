@@ -580,7 +580,7 @@ SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
     el.splitIndex = pos[1];
     this.visuals.push(el);
     this.visuals.sort(function (e1, e2) { return e1.splitIndex > e2.splitIndex ? 1 : -1; });
-    if (forceDir === "vertical") {
+    if (forceDir === "vertical" || (forceDir === undefined && this.forceDir === "vertical")) {
         for (var i = 0, n = this.visuals.length; i < n; ++i)
             vp.appendChild(this.visuals[i]);
         var h = 0;
@@ -603,6 +603,8 @@ SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
                 visualContainers[i].appendChild(this.visuals[i]);
         }
     }
+    if (forceDir !== undefined)
+        this.forceDir = forceDir;
     window.dispatchEvent(new Event("resize"));
 }
 
@@ -612,6 +614,7 @@ SciViEditor.prototype.clearViewport = function ()
     while (vp.firstChild)
         vp.removeChild(vp.firstChild);
     this.visuals = [];
+    this.forceDir = undefined;
 }
 
 SciViEditor.prototype.getNodeByID = function (nodeID)
