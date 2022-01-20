@@ -47,6 +47,8 @@ class OntoMerger:
                 if isaNode in prototypes:
                     return None
             return dupli[0]["id"]
+        if len(dupli) > 1:
+            print("WARNING: Ontology have %d nodes with same name `%s`" % (len(dupli), node["name"]))
         return None
 
     def merge_attrs(self, node1, node2):
