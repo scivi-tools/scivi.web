@@ -140,10 +140,10 @@
                 "path": "lib/gis/zeroBasedMapColorScale.js"
             },
             "id": "35",
-            "name": "Map Color Scale Worker",
+            "name": "Zero Based Map Color Scale Worker",
             "namespace": "http://knova.ru/user/1603180432288",
-            "position_x": 752,
-            "position_y": 314
+            "position_x": 763,
+            "position_y": 317
         },
         {
             "attributes": {
