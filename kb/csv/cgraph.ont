@@ -1,5 +1,5 @@
 {
-    "last_id": "137",
+    "last_id": "142",
     "namespaces": {
         "default": "http://knova.ru/user/1551554527520",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -420,6 +420,16 @@
             "namespace": "http://knova.ru/user/1551554527520",
             "position_x": 1418,
             "position_y": 1120
+        },
+        {
+            "attributes": {
+                "path": "lib/cgraph/help-en.html"
+            },
+            "id": "138",
+            "name": "GraphHelp",
+            "namespace": "http://knova.ru/user/1551554527520",
+            "position_x": 512,
+            "position_y": 761
         }
     ],
     "relations": [
@@ -1223,6 +1233,24 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1551554527520",
             "source_node_id": "132"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "26",
+            "id": "139",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551554527520",
+            "source_node_id": "138"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "138",
+            "id": "140",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551554527520",
+            "source_node_id": "19"
         }
     ],
     "visualize_ont_path": ""
