@@ -42,6 +42,7 @@ function SciViEditor()
     SciViEditor.prototype.visuals = null;
     SciViEditor.prototype.comms = {};
     SciViEditor.prototype.commsReconnects = {};
+    SciViEditor.prototype.mode = null;
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -51,9 +52,9 @@ SciViEditor.prototype.run = function (mode)
     var components = $.map(this.components, function(value, key) { return value });
     var editor = new D3NE.NodeEditor("SciViNodeEditor@0.1.0", container, components);
     var engine = new D3NE.Engine("SciViNodeEditor@0.1.0", components);
-    var viewPortVisible = false;
     var processingAllowed = true;
 
+    this.mode = mode;
     this.selectedNode = null;
 
     Split(["#scivi_editor_left", "#scivi_editor_right"], {
@@ -119,7 +120,7 @@ SciViEditor.prototype.run = function (mode)
     });
 
     $("#scivi_btn_visualize").click(function (e) {
-        if (viewPortVisible && e.shiftKey) {
+        if (_this.inVisualization && e.shiftKey) {
             var filename = prompt("Enter name of file to save", "task.ont");
             if (!filename)
                 return;
@@ -133,29 +134,7 @@ SciViEditor.prototype.run = function (mode)
             element.click();
             document.body.removeChild(element);
         } else {
-            viewPortVisible = !viewPortVisible;
-            _this.inVisualization = viewPortVisible;
-            _this.clearViewport();
-            _this.process();
-            if (!viewPortVisible) {
-                $(".scivi_slide").css({"transform": "translateX(0%)"});
-                $("#scivi_btn_visualize").html(_this.runButtonName(mode));
-                $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
-                $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
-                if (mode == MIXED_MODE) {
-                    _this.stopMixed();
-                }
-            } else {
-                $(".scivi_slide").css({"transform": "translateX(-100%)"});
-                $("#scivi_btn_visualize").html("◀");
-                $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
-                $(".scivi_menu").css({"margin-left": "20px"});
-                if (mode == IOT_PROGRAMMING_MODE) {
-                    _this.uploadEON();
-                } else if (mode == MIXED_MODE) {
-                    _this.runMixed();
-                }
-            }
+            _this.startVisualization();
         }
     });
 
@@ -230,13 +209,42 @@ SciViEditor.prototype.run = function (mode)
 
     var urlParams = new URLSearchParams(window.location.search);
     var preset = urlParams.get("preset");
+    var autorun = urlParams.get("start");
     if (preset) {
         $(".loader").show();
         $.getJSON("preset/" + preset, async function (data) {
             $(".loader").hide();
             await editor.fromJSON(data);
             _this.extendNodes();
+            if (autorun)
+                _this.startVisualization();
         });
+    }
+}
+
+SciViEditor.prototype.startVisualization = function ()
+{
+    this.inVisualization = !this.inVisualization;
+    this.clearViewport();
+    this.process();
+    if (this.inVisualization) {
+        $(".scivi_slide").css({"transform": "translateX(-100%)"});
+        $("#scivi_btn_visualize").html("◀");
+        $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+        $(".scivi_menu").css({"margin-left": "20px"});
+        if (this.mode == IOT_PROGRAMMING_MODE) {
+            this.uploadEON();
+        } else if (this.mode == MIXED_MODE) {
+            this.runMixed();
+        }
+    } else {
+        $(".scivi_slide").css({"transform": "translateX(0%)"});
+        $("#scivi_btn_visualize").html(this.runButtonName(this.mode));
+        $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
+        $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
+        if (this.mode == MIXED_MODE) {
+            this.stopMixed();
+        }
     }
 }
 
