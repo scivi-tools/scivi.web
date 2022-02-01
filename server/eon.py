@@ -2,395 +2,190 @@
 # -*- coding: utf-8 -*-
 
 from onto.onto import Onto
-from server.dfd2onto import DFD2Onto
+from enum import IntEnum
 import math
 import io
 import struct
 import re
 
 
-class RPN:
-    def __init__(self, operations):
-        self.top = -1
-        self.array = []
-        self.output = []
-        self.operations = operations
-        self.expression = None
-
-    def empty(self):
-        return self.top == -1
-
-    def peek(self):
-        return self.array[-1]
-
-    def pop(self):
-        if not self.empty():
-            self.top -= 1
-            return self.array.pop()
-        else:
-            raise ValueError("Incorrect expression " + str(self.expression))
-
-    def push(self, op):
-        self.top += 1
-        self.array.append(op)
-
-    def operand(self, op):
-        return (not (op in self.operations)) and (op != "(") and (op != ")")
-
-    def less_priority(self, op):
-        try:
-            p1 = self.operations[op]["prec"]
-            p2 = self.operations[self.peek()]["prec"]
-            return p1 <= p2
-        except KeyError:
-            return False
-
-    def append(self, op):
-        if (op != "(") and (op != ")"):
-            self.output.append(op)
-
-    def convertToFloat(self, x):
-        fx = None
-        try:
-            fx = float(x)
-        except ValueError:
-            pass
-        return fx
-
-    def opAdd(self, token):
-        y = self.pop()
-        x = self.pop()
-        fx = self.convertToFloat(x)
-        fy = self.convertToFloat(y)
-        if (fx != None) and (fy != None):
-            self.push(str(fx + fy))
-        elif (fx == None) and (fy == 0.0):
-            self.push(x)
-        elif (fx == 0.0) and (fy == None):
-            self.push(y)
-        else:
-            self.push(x)
-            self.push(y)
-            self.push(token)
-
-    def opSub(self, token):
-        y = self.pop()
-        x = self.pop()
-        fx = self.convertToFloat(x)
-        fy = self.convertToFloat(y)
-        if (fx != None) and (fy != None):
-            self.push(str(fx - fy))
-        elif (fx == None) and (fy == 0.0):
-            self.push(x)
-        else:
-            self.push(x)
-            self.push(y)
-            self.push(token)
-
-    def opMul(self, token):
-        y = self.pop()
-        x = self.pop()
-        fx = self.convertToFloat(x)
-        fy = self.convertToFloat(y)
-        if (fx != None) and (fy != None):
-            self.push(str(fx * fy))
-        elif (fx == 0.0) or (fy == 0.0):
-            self.push("0")
-        else:
-            self.push(x)
-            self.push(y)
-            self.push(token)
-
-    def opDiv(self, token):
-        y = self.pop()
-        x = self.pop()
-        fx = self.convertToFloat(x)
-        fy = self.convertToFloat(y)
-        if (fx != None) and (fy != None):
-            self.push(str(fx / fy))
-        elif fx == 0.0:
-            self.push("0")
-        else:
-            self.push(x)
-            self.push(y)
-            self.push(token)
-
-    def precalc(self):
-        self.top = -1
-        self.array = []
-        ops = { \
-                "+": self.opAdd, \
-                "-": self.opSub, \
-                "*": self.opMul, \
-                "/": self.opDiv
-              }
-        for token in self.output:
-            if token in ops:
-                ops[token](token)
-            else:
-                self.push(token)
-        return self.array
-
-    def convert(self, expression):
-        self.expression = expression
-        for token in expression:
-            if self.operand(token):
-                self.append(token)
-            elif token == "(":
-                self.push(token)
-            elif token == ")":
-                while (not self.empty()) and (self.peek() != "("):
-                    op = self.pop()
-                    self.append(op)
-                if (not self.empty()) and (self.peek() != "("):
-                    raise ValueError("Incorrect expression " + str(self.expression))
-                else:
-                    self.pop()
-            else:
-                while (not self.empty()) and self.less_priority(token):
-                    self.append(self.pop())
-                self.push(token)
-        while not self.empty():
-            self.append(self.pop())
-        return self.precalc()
+class EonType(IntEnum):
+    UINT8   = 0
+    UINT16  = 1
+    UINT32  = 2
+    INT8    = 3
+    INT16   = 4
+    INT32   = 5
+    FLOAT32 = 6
+    STRING  = 7
 
 class Eon:
     def __init__(self, onto):
         self.onto = onto
-        self.operations = { \
-            "+":                  { "prec": 1, "opcode": 0 }, \
-            "-":                  { "prec": 1, "opcode": 1 }, \
-            "*":                  { "prec": 2, "opcode": 2 }, \
-            "/":                  { "prec": 2, "opcode": 3 }, \
-            ">":                  { "prec": 0, "opcode": 4 }, \
-            "<":                  { "prec": 0, "opcode": 5 }, \
-            ">=":                 { "prec": 0, "opcode": 6 }, \
-            "<=":                 { "prec": 0, "opcode": 7 }, \
-            "==":                 { "prec": 0, "opcode": 8 }, \
-            "dw":                 { "prec": 1, "opcode": 9 }, \
-            "meander":            { "prec": 1, "opcode": 10 }, \
-            "wifiAP" :            { "prec": 1, "opcode": 11 }, \
-            "wifiAPClientsCount": { "prec": 1, "opcode": 12 }, \
-            "adc":                { "prec": 1, "opcode": 13 }, \
-            "tone":               { "prec": 1, "opcode": 14 }, \
-            "mpu6050Gyro":        { "prec": 1, "opcode": 15 }, \
-            "mpu6050Accel":       { "prec": 1, "opcode": 16 }, \
-            "madjwick":           { "prec": 1, "opcode": 17 }, \
-            "quat2json":          { "prec": 1, "opcode": 18 }, \
-            "wifi":               { "prec": 1, "opcode": 19 }, \
-            "wsBroadcast":        { "prec": 1, "opcode": 20 },
-        }
 
-    def extract_assignment(self, evalCode, targetName):
-        g = re.search(targetName + " *?=(.*?)(?:;|$)", evalCode)
-        if g:
-            return g.group(1).strip()
-        else:
-            return None
+    def get_number_of_ios(self, node, type, ios):
+        iosNodes = self.onto.get_nodes_linked_from(node, "has")
+        index = 0
+        for iosNode in iosNodes:
+            if self.onto.is_node_of_type(iosNode, type):
+                if iosNode == ios:
+                    return index
+                index += 1
+        return None
 
-    def get_code(self, worker, targetName, settings, types):
-        if ("attributes" in worker) and ("eval" in worker["attributes"]):
-            code = self.extract_assignment(worker["attributes"]["eval"], targetName)
-            code = self.resolve_settings(code, settings, types)
-            return code
-        else:
-            return None
+    def get_io_op(self, ioInstID, type, dfdOnto):
+        ioInst = dfdOnto.get_node_by_id(ioInstID)
+        ioProto = dfdOnto.first(dfdOnto.get_nodes_linked_from(ioInst, "is_instance"))
+        ioMother = self.onto.get_node_by_id(ioProto["attributes"]["mother"])
+        ioMotherOp = self.onto.first(self.onto.get_nodes_linked_to(ioMother, "has"))
+        ioNumber = self.get_number_of_ios(ioMotherOp, type, ioMother)
+        ioOpInst = dfdOnto.first(dfdOnto.get_nodes_linked_to(ioInst, "has"))
+        return ioOpInst, ioNumber
 
-    def resolve_settings(self, code, settings, types):
-        if code and settings and types:
-            for s in settings:
-                if types[s] == "String":
-                    code = code.replace(s, "'" + str(settings[s]) + "'")
-                elif types[s] == "Bool":
-                    if settings[s]:
-                        code = code.replace(s, "1")
-                    else:
-                        code = code.replace(s, "0")
-                else:
-                    code = code.replace(s, str(settings[s]))
-        return code
+    def get_setting_by_name(self, node, settingName):
+        sNodes = self.onto.get_nodes_linked_from(node, "has")
+        for sNode in sNodes:
+            if sNode["name"] == settingName:
+                return sNode
+        return None
 
-    def get_related_nodes(self, node, onto):
-        result = onto.get_nodes_linked_from(node, "has")
-        superNode = onto.first(onto.get_nodes_linked_to(node, "has"))
-        if superNode:
-            result += onto.get_nodes_linked_from(superNode, "has")
-        return result
-
-    def dump_int(self, intVal, result):
-        # 8, 16 and 32 bit signed and unsigned integers are supported.
-        # Let's guess which one we have and store accordingly.
-        if intVal < 0: # signed
-            if intVal < -32767: # int32
-                result.write(struct.pack("!Bi", 5 | 0x40, intVal))
-            elif intVal < -127: # int16
-                result.write(struct.pack("!Bh", 4 | 0x40, intVal))
-            else: # int8
-                result.write(struct.pack("!Bb", 3 | 0x40, intVal))
-        else: # unsigned
-            if intVal > 65535: # uint32
-                result.write(struct.pack("!BI", 2 | 0x40, intVal))
-            elif intVal > 255: # uint16
-                result.write(struct.pack("!BH", 1 | 0x40, intVal))
-            else: #uint8
-                result.write(struct.pack("!BB", 0 | 0x40, intVal))
-
-    def dump_attrs(self, node, onto):
-        result = io.BytesIO()
-        tokens = []
-        curToken = ""
-        delimeters = [" ", ",", "(", ")"]
-        for ch in node["attributes"]["eval"]:
-            if ch in delimeters:
-                if len(curToken) > 0:
-                    tokens.append(curToken)
-                curToken = ""
-                if (ch == "(") or (ch == ")"):
-                    tokens.append(ch)
-                continue
-            curToken += ch
-        if len(curToken) > 0:
-            tokens.append(curToken)
-        related = self.get_related_nodes(node, onto)
-        tokens = RPN(self.operations).convert(tokens)
-        for token in tokens:
-            if token in self.operations:
-                # Function ID is stored like this: 1 0 X X X X X X,
-                # where X are bits of ID number.
-                result.write(bytes([self.operations[token]["opcode"] | 0x80]))
+    def classify_int(self, intVal):
+        if intVal < 0:
+            if intVal < -32767:
+                return EonType.INT32
+            elif intVal < -127:
+                return EonType.INT16
             else:
-                relatedNode = None
-                for ln in related:
-                    lnMother = onto.first(onto.get_nodes_linked_from(ln, "is_instance"))
-                    if lnMother["name"] == token:
-                        relatedNode = ln
-                        break
-                if relatedNode:
-                    # Node address is stored like this: 0 0 X X X X X X,
-                    # where X are bits of ID number.
-                    result.write(bytes([relatedNode["id"]]))
+                return EonType.INT8
+        else:
+            if intVal > 65535:
+                return EonType.UINT32
+            elif intVal > 255:
+                return EonType.UINT16
+            else:
+                return EonType.UINT8
+
+    def guess_type(self, value):
+        try:
+            intVal = int(value)
+            return self.classify_int(intVal), intVal
+        except ValueError:
+            try:
+                floatVal = float(value)
+                if floatVal.is_integer():
+                    intVal = int(floatVal)
+                    return self.classify_int(intVal), intVal
                 else:
-                    # Numeric value is stored like this: 0 1 T T T T T T,
-                    # where T are bits of type ID; afterwards goes the value, which length may vary
-                    # according to the type.
-                    # The values are stored in the network byte order (big endian).
-                    # Supported types:
-                    # 0 - uint8
-                    # 1 - uint16
-                    # 2 - uint32
-                    # 3 - int8
-                    # 4 - int16
-                    # 5 - int32
-                    # 6 - float32
-                    # 7 - string
-                    try:
-                        intVal = int(token) # integer?
-                        self.dump_int(intVal, result)
-                    except ValueError:
-                        try:
-                            floatVal = float(token) # float?
-                            if floatVal.is_integer(): # really float?
-                                self.dump_int(int(floatVal), result)
-                            else:
-                                result.write(struct.pack("!Bf", 6 | 0x40, floatVal))
-                        except ValueError:
-                            if token.startswith("'") and token.endswith("'"): # String?
-                                # String values are stored as null-terminated byte sequences.
-                                result.write(bytes([7 | 0x40]))
-                                result.write(token[1:-1].encode())
-                                result.write(bytes([0x0]))
-                            else:
-                                raise ValueError("Undefined token in eval attribute of <" + node["name"] + ">: " + token)
-        return result.getbuffer()
+                    return EonType.FLOAT32, floatVal
+            except ValueError:
+                if (len(value) == 0) or (value.startswith("'") and value.endswith("'")):
+                    return EonType.STRING, value
+                else:
+                    raise ValueError("Cannot guess type of value <" + value + ">")
 
-    def dump_len(self, chunk):
-        return struct.pack("!H", chunk.getbuffer().nbytes)
-
-    def process_onto(self, dfdOnto):
-        dfd2onto = DFD2Onto(self.onto)
-        edgeRes = dfdOnto.first(dfdOnto.get_nodes_by_name("ESP8266"))
-        hosting = dfdOnto.first(dfdOnto.get_nodes_linked_to(edgeRes, "is_instance"))
-        result, corTable = dfd2onto.split_onto(dfdOnto, hosting)
-        dfdNodes = result.nodes()
-        for node in dfdNodes:
-            if ("attributes" in node) and ("mother" in node["attributes"]) and \
-               (not result.is_node_of_type(node, "Input")) and \
-               (not result.is_node_of_type(node, "Output")):
-                motherNode = self.onto.get_node_by_id(node["attributes"]["mother"])
-                ontoWorker = self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "EdgeSideWorker"))
-                insNodes = result.get_nodes_linked_to(node, "is_instance")
-                for insNode in insNodes:
-                    settings = None
-                    if ("attributes" in insNode) and ("settingsVal" in insNode["attributes"]):
-                        settings = insNode["attributes"]["settingsVal"]
-                    types = None
-                    if ("attributes" in insNode) and ("settingsType" in insNode["attributes"]):
-                        types = insNode["attributes"]["settingsType"]
-                    code = self.get_code(ontoWorker, node["name"], settings, types)
-                    if code:
-                        insNode["attributes"]["eval"] = code
-                    ioNodes = result.get_nodes_linked_from(insNode, "has")
-                    for ioNode in ioNodes:
-                        ioProto = result.first(result.get_nodes_linked_from(ioNode, "is_instance"))
-                        code = self.get_code(ontoWorker, ioProto["name"], settings, types)
-                        if code:
-                            ioNode["attributes"]["eval"] = code
-
-        return result
+    def dump_value(self, value, type, buffer):
+        if type == EonType.UINT8:
+            buffer.write(struct.pack("!B", value))
+        elif type == EonType.UINT16:
+            buffer.write(struct.pack("!H", value))
+        elif type == EonType.UINT32:
+            buffer.write(struct.pack("!I", value))
+        elif type == EonType.INT8:
+            buffer.write(struct.pack("!b", value))
+        elif type == EonType.INT16:
+            buffer.write(struct.pack("!h", value))
+        elif type == EonType.INT32:
+            buffer.write(struct.pack("!i", value))
+        elif type == EonType.FLOAT32:
+            buffer.write(struct.pack("!f", value))
+        elif type == EonType.STRING:
+            # String values are stored as null-terminated byte sequences.
+            if len(value) > 0:
+                buffer.write(value[1:-1].encode())
+            buffer.write(bytes([0x0]))
+        else:
+            raise ValueError("Cannot dump value <" + value + "> of unknown type <" + type + ">")
 
     def get_eon(self, dfdOnto):
-        eonOnto = self.process_onto(dfdOnto)
-
-        if len(eonOnto.nodes()) > 64:
-            raise ValueError("Cannot compose EON16 stream: too many nodes in ontology (" + str(len(eonOnto.nodes())) + ")")
-
-        result = io.BytesIO()
-        # Links chunk
-        linksChunk = io.BytesIO()
-        usedNodes = {}
-        for link in eonOnto.links():
-            # Format 16 bit (task onto is limited to 64 nodes)
-            # S - src node ID
-            # D - dst node ID
-            # tID - internal task onto ID
-            # mID - external mother onto ID
-            # is_used:     SSSSSS 0000 DDDDDD          // src and dst are tIDs
-            # is_instance: SSSSSS 10 DDDDDDDD          // src is tID, dst is mID, dst <= 256
-            # is_instance: SSSSSS 11 DDDDDDDD DDDDDDDD // src is tID, dst is mID, 256 < dst <= 65536
+        dataFlowChunk = io.BytesIO()
+        settingsChunk = io.BytesIO()
+        keysChunk = io.BytesIO()
+        dataFlowChunkLen = 0
+        keys = {}
+        
+        for link in dfdOnto.links():
             if link["name"] == "is_used":
-                linksChunk.write(bytes([link["source_node_id"] << 2]))
-                linksChunk.write(bytes([link["destination_node_id"]]))
-            elif link["name"] == "is_instance":
-                srcNode = eonOnto.get_node_by_id(link["source_node_id"])
-                dstNode = eonOnto.get_node_by_id(link["destination_node_id"])
-                # Node is not trimmed, if it is a part of is_used link having mother prototype
-                # OR it has an eval action
-                if (eonOnto.first(eonOnto.get_nodes_linked_from(srcNode, "is_used")) or \
-                    eonOnto.first(eonOnto.get_nodes_linked_to(srcNode, "is_used")) or \
-                    (("attributes" in srcNode) and ("eval" in srcNode["attributes"]))) and \
-                    ("attributes" in dstNode) and ("mother" in dstNode["attributes"]):
-                    motherID = int(dstNode["attributes"]["mother"])
-                    if motherID <= 256:
-                        linksChunk.write(bytes([link["source_node_id"] << 2 | 0x2]))
-                        linksChunk.write(bytes([motherID]))
-                    elif motherID <= 65536:
-                        linksChunk.write(bytes([link["source_node_id"] << 2 | 0x3]))
-                        linksChunk.write(bytes([motherID >> 8, motherID & 0xFF]))
-
-        # Attributes chunk
-        attrsChunk = io.BytesIO()
-        for node in eonOnto.nodes():
-            if ("attributes" in node) and ("eval" in node["attributes"]):
-                # ID of node with attributes is stored like this: 1 1 X X X X X X,
-                # where X are bits of ID number.
-                attrsChunk.write(bytes([node["id"] | 0xC0]))
-                attrsChunk.write(self.dump_attrs(node, eonOnto))
-
-        # Compose stream
-        result.write(self.dump_len(linksChunk))
-        result.write(linksChunk.getbuffer())
-        result.write(self.dump_len(attrsChunk))
-        result.write(attrsChunk.getbuffer())
+                dataFlowChunkLen += 1
+                oOpInst, oNumber = self.get_io_op(link["source_node_id"], "Output", dfdOnto)
+                iOpInst, iNumber = self.get_io_op(link["destination_node_id"], "Input", dfdOnto)
+                dataFlowChunk.write(bytes([oOpInst["attributes"]["dfd"], \
+                                           ((oNumber & 0x0F) << 4) | (iNumber & 0x0F), \
+                                           iOpInst["attributes"]["dfd"]]))
+            elif link["name"] == "is_hosted":
+                opInst = dfdOnto.get_node_by_id(link["source_node_id"])
+                if not ("attributes" in opInst) or not ("settingsVal" in opInst["attributes"]):
+                    continue
+                settings = opInst["attributes"]["settingsVal"]
+                opProto = dfdOnto.first(dfdOnto.get_nodes_linked_from(opInst, "is_instance"))
+                opMother = self.onto.get_node_by_id(opProto["attributes"]["mother"])
+                for s in settings:
+                    sMother = self.get_setting_by_name(opMother, s)
+                    sNumber = self.get_number_of_ios(opMother, "Setting", sMother)
+                    sValue = settings[s]
+                    sType, convertedValue = self.guess_type(sValue)
+                    settingsChunk.write(bytes([opInst["attributes"]["dfd"], \
+                                               ((sNumber & 0x0F) << 4) | (int(sType) & 0x0F)]))
+                    self.dump_value(convertedValue, sType, settingsChunk)
+                if (not ("attributes" in opMother)) or (not ("UID" in opMother["attributes"])):
+                    raise ValueError("Operator <" + opMother["name"] + "> has no UID")
+                opMotherUID = opMother["attributes"]["UID"]
+                if opMotherUID in keys:
+                    keys[opMotherUID].append(opInst["attributes"]["dfd"])
+                else:
+                    keys[opMotherUID] = [opInst["attributes"]["dfd"]]
+        
+        for k in keys:
+            keysChunk.write(struct.pack("!H", int(k) & 0xFFFF))
+            keysChunk.write(bytes(keys[k]))
+            keysChunk.write(bytes([0x0]))
+        
+        #
+        # The EON 2.0 blob structure is as follows:
+        # ----------------------------------------------------------------------------------
+        # | DataFlowChunkLen | DataFlowChunk | SetingsChunkLen | SettingsChunk | KeysChunk |
+        # ----------------------------------------------------------------------------------
+        # where DataFlowChunkLen (1 byte) - number of 3-byte elements in DataFlowChunk
+        #       DataFlowChunk (3 * DataFlowChunkLen bytes) - chunk containing sequence of 'is_used' ontology links formed like this:
+        #           --------------------------------------
+        #           | OpInstA | Output | Input | OpInstB |
+        #           --------------------------------------
+        #           where OpInstA (1 byte), OpInstB (1 byte) - DFD IDs of the operators' instances, whereby output of OpInstA 
+        #                                                      is linked to the input of OpInstB
+        #                 Output (4 bits) - number of output of OpInstA
+        #                 Input (4 bits) - number of input of OpInstB
+        #       SettingsChunkLen (2 bytes) - length in bytes of SettingsChunk
+        #       SettingsChunk (SettingsChunkLen bytes) - chunk containing sequence of settings formed like this:
+        #           -----------------------------------
+        #           | OpInst | Setting | Type | Value |
+        #           -----------------------------------
+        #           where OpInst (1 byte) - DFD ID of operator's instance having the setting
+        #                 Setting (4 bits) - number of setting of OpInst
+        #                 Type (4 bits) - type ID of setting (see EonTypes)
+        #                 Value - encoded setting value (length depends on type, strings are NULL-terminated)
+        #       KeysChunk (length is not stored) - chunk containing sequence of operators' instances formed like this:
+        #           --------------------------------------------
+        #           | MotherOp | OpInst1 | OpInst2 | ... | 0x0 |
+        #           --------------------------------------------
+        #           where MotherOp (2 bytes) - onto UID of operator (in mother ontology), which instances are used in DFD
+        #                 OpInst1, OpInst2, ... (each 1 byte) - DFD IDs of MotherOp instances
+        #                 0x0 (1 byte) - zero byte terminating the list of MotherOp instances
+        #
+        result = io.BytesIO()
+        result.write(bytes([dataFlowChunkLen]))
+        result.write(dataFlowChunk.getbuffer())
+        result.write(struct.pack("!H", settingsChunk.getbuffer().nbytes))
+        result.write(settingsChunk.getbuffer())
+        result.write(keysChunk.getbuffer())
 
         print(result.getbuffer().nbytes)
         s = result.getvalue().hex()
@@ -399,6 +194,5 @@ class Eon:
         for b in arr:
             outStr += "0x" + b + ", "
         print("{%s}" % (outStr))
-        
-        return result.getvalue(), eonOnto
 
+        return result.getvalue(), dfdOnto

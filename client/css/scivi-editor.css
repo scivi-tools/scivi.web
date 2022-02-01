@@ -170,6 +170,12 @@ ul
     max-width: 150px;
 }
 
+.node-editor .control
+{
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
 /***************************/
 /*           UI            */
 /***************************/
@@ -370,6 +376,13 @@ input[type="file"]
 {
     background: #007bff;
     color: #fff;
+}
+
+.scivi_button.disabled, .scivi_button.disabled:active, .scivi_button.disabled:hover, .scivi_button.disabled.pushed
+{
+    color: #999;
+    background: #e0e0e0;
+    cursor: default;
 }
 
 /***************************/

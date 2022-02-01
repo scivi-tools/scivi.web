@@ -5,19 +5,24 @@ from flask import Flask, send_from_directory, request, jsonify
 
 from server.server import SciViServer, Mode
 from onto.merge import OntoMerger
+from threading import Lock
 
 
 app = Flask(__name__, static_url_path = "")
 srvDict = {}
+mutex = Lock()
 
 def getEditor(name):
     global srvDict
+    global mutex
+    mutex.acquire()
     if name in srvDict:
         del srvDict[name]
     res = send_from_directory("client", "editor.html")
     res.set_cookie("srv", value = name, samesite = "Lax")
     if name in srvDict:
         del srvDict[name]
+    mutex.release()
     return res, 200, {'Content-Type': 'text/html; charset=utf-8'}
 
 @app.route("/")
@@ -29,6 +34,10 @@ def csv_page():
 @app.route("/es")
 def es_page():
     return getEditor("es")
+
+@app.route("/eon")
+def eon_page():
+    return getEditor("eon")
 
 @app.route("/shielder")
 def shielder_page():
@@ -60,11 +69,14 @@ def ttype_page():
 
 def getSrv():
     global srvDict
+    global mutex
+    mutex.acquire()
     srvKey = request.cookies.get("srv")
     if not srvKey:
         raise "Server task not running, visit root page first"
     if not (srvKey in srvDict):
         srvDict[srvKey] = SciViServer(OntoMerger("kb/" + srvKey).onto, None)
+    mutex.release()
     return srvDict[srvKey]
 
 @app.route("/scivi-editor-main.js")
@@ -127,6 +139,7 @@ def gen_eon():
 def gen_mixed():
     dfd = request.get_json(force = True)
     oldExeKey = request.cookies.get("exe")
+    exeKey = None
     try:
         srv = getSrv()
         srv.stop_execer(oldExeKey)
