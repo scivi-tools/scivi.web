@@ -52,8 +52,12 @@ def soc_page():
     return getEditor("soc")
 
 @app.route("/eeg")
-def mxd_page():
+def eeg_page():
     return getEditor("eeg")
+
+@app.route("/bci")
+def bci_page():
+    return getEditor("bci")
 
 @app.route("/mmaps")
 def mmaps_page():
