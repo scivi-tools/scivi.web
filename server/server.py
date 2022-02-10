@@ -208,26 +208,7 @@ class SciViServer:
         else:
             return 0
 
-    def resolve_containers(self, code, inputs, outputs, settings):
-        types = ""
-        defs = ""
-        doms = ""
-        for s in settings:
-            if "attributes" in s:
-                dv = None
-                if "default" in s["attributes"]:
-                    dv = s["attributes"]["default"]
-                else:
-                    dv = self.resolve_default(s)
-                if isinstance(dv, str):
-                    dv = "\"" + dv + "\""
-                else:
-                    dv = str(dv).lower()
-                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
-                if "domain" in s["attributes"]:
-                    dm = s["attributes"]["domain"]
-                    doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
-            types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
+    def resolve_containers(self, code, inputs, outputs, settings, viewType):
         props = re.findall(r"PROPERTY\[\"(.+?)\"\]", code)
         for p in props:
             found = False
@@ -247,15 +228,11 @@ class SciViServer:
                     break
             if not found:
                 code = code.replace("PROPERTY[\"" + p + "\"]", "node.data.settingsVal[\"" + p + "\"]")
-        code = "if (!node.data.cache) " +\
-               "node.data.cache = {}; " +\
-               "if (!node.data.settings) { " +\
-               "node.data.settings = {" + doms + "}; " +\
-               "node.data.settingsVal = {" + defs + "}; " +\
-               "node.data.settingsType = {" + types + "}; " +\
-               "node.data.settingsChanged = {}; " +\
-               "} " +\
-               "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con); }; " +\
+        if viewType:
+            addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position, '" + viewType["attributes"]["split"] + "'); }; "
+        else:
+            addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position); }; "
+        code = addVisualCall +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
         for i, inp in enumerate(inputs):
@@ -277,12 +254,14 @@ class SciViServer:
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
             code = self.process_code(self.get_code(w), masks)
+            proto = self.onto.first(self.onto.get_nodes_linked_from(w, "is_instance"))
+            viewType = self.onto.first(self.onto.get_typed_nodes_linked_from(proto, "is_a", "View"))
             self.add_dependencies(w)
-            return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings) + " }"
+            return "function (node, inputs, outputs) { " + self.resolve_containers(code, inputs, outputs, settings, viewType) + " }"
         else:
             code = ""
             return "function (node, inputs, outputs) { " +\
-                        self.resolve_containers(code, inputs, outputs, settings) +\
+                        self.resolve_containers(code, inputs, outputs, settings, None) +\
                         "if (node.data.outputDataPool) { " +\
                             "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
                                 "outputs[i] = node.data.outputDataPool[i]; " +\
@@ -290,8 +269,42 @@ class SciViServer:
                    "}"
 
     def gen_settings(self, settings):
+        types = ""
+        defs = ""
+        doms = ""
+        for s in settings:
+            if "attributes" in s:
+                dv = None
+                if "default" in s["attributes"]:
+                    dv = s["attributes"]["default"]
+                else:
+                    dv = self.resolve_default(s)
+                if isinstance(dv, str):
+                    dv = "\"" + dv + "\""
+                else:
+                    dv = str(dv).lower()
+                defs = defs + "\"" + s["name"] + "\": " + dv + ", "
+                if "domain" in s["attributes"]:
+                    dm = s["attributes"]["domain"]
+                    doms = doms + "\"" + s["name"] + "\": " + self.resolve_domain(dm, s) + ", "
+            types = types + "\"" + s["name"] + "\": \"" + self.type_of_node(s)["name"] + "\", "
+
+        initCode = "if (!node.data.cache) " +\
+                   "node.data.cache = {}; " +\
+                   "if (!node.data.settings) { " +\
+                   "node.data.settings = {" + doms + "}; " +\
+                   "node.data.settingsVal = {" + defs + "}; " +\
+                   "node.data.settingsType = {" + types + "}; " +\
+                   "node.data.settingsChanged = {}; " +\
+                   "} "
+
         if len(settings) > 0:
-            f = "function (node){ if (node.data) node.data.settingsCtrl = \"\"; if (!node.data || !node.data.settings) return; var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; "
+            f = "function (node){ " +\
+                initCode +\
+                "if (node.data) { node.data.settingsCtrl = \"\"; node.data.inlineSettingsCtrl = \"\"; } " +\
+                "if (!node.data || !node.data.settings) return; " +\
+                "var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; " +\
+                "var INLINE_WIDGET = function (code) { node.data.inlineSettingsCtrl += code; }; "
             for s in settings:
                 t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
                 widgets = self.onto.get_typed_nodes_linked_to(t, "is_used", "Widget")
@@ -302,6 +315,8 @@ class SciViServer:
                         break
                 if widget:
                     code = self.get_code(widget)
+                    if ("inline" in s["attributes"]) and s["attributes"]["inline"]:
+                        code = code.replace("ADD_WIDGET", "INLINE_WIDGET")
                     code = code.replace("SETTINGS_VAL", "node.data.settingsVal")
                     code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged")
                     code = code.replace("SETTINGS", "node.data.settings")
@@ -311,7 +326,7 @@ class SciViServer:
                     f = f + "(function () { " + code + " }).call(this);"
             f = f + " }"
             return f
-        return "function (node){}"
+        return "function (node){ " + initCode + " }"
 
     def check_mode(self, leaf):
         if self.mode != Mode.MIXED:
@@ -429,17 +444,32 @@ class SciViServer:
     def gen_mixed(self, dfd):
         dfd2onto = DFD2Onto(self.onto)
         mixedOnto = dfd2onto.get_onto(dfd)
+        # Server
         srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
-        hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
-        serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
-        if self.task_onto_has_operations(serverOnto):
-            execer = Execer(self.onto, serverOnto)
-            serverOntoHash = serverOnto.calc_hash()
-            self.execers[serverOntoHash] = execer
-            execer.start()
-        else:
-            serverOntoHash = None
-        return { "ont": serverOnto.data, "cor": corTable }, serverOntoHash
+        serverOntoData = None
+        serverOntoHash = None
+        corTable = None
+        if srvRes:
+            hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
+            serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            if self.task_onto_has_operations(serverOnto):
+                execer = Execer(self.onto, serverOnto)
+                serverOntoHash = serverOnto.calc_hash()
+                self.execers[serverOntoHash] = execer
+                execer.start()
+                serverOntoData = serverOnto.data
+        # Edge
+        edgeRes = mixedOnto.first(mixedOnto.get_nodes_by_name("ESP8266"))
+        eonBytes = []
+        if edgeRes:
+            hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(edgeRes, "is_instance"))
+            edgeOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            eon = Eon(self.onto)
+            bs, eonOnto = eon.get_eon(edgeOnto)
+            eonBytes = []
+            for b in bs:
+                eonBytes.append(b)
+        return { "ont": edgeOnto.data, "cor": corTable, "eon": eonBytes }, serverOntoHash
 
     def stop_execer(self, serverOntoHash):
         if serverOntoHash and serverOntoHash in self.execers:

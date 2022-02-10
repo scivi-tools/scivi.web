@@ -42,6 +42,7 @@ function SciViEditor()
     SciViEditor.prototype.visuals = null;
     SciViEditor.prototype.comms = {};
     SciViEditor.prototype.commsReconnects = {};
+    SciViEditor.prototype.mode = null;
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -51,9 +52,9 @@ SciViEditor.prototype.run = function (mode)
     var components = $.map(this.components, function(value, key) { return value });
     var editor = new D3NE.NodeEditor("SciViNodeEditor@0.1.0", container, components);
     var engine = new D3NE.Engine("SciViNodeEditor@0.1.0", components);
-    var viewPortVisible = false;
     var processingAllowed = true;
 
+    this.mode = mode;
     this.selectedNode = null;
 
     Split(["#scivi_editor_left", "#scivi_editor_right"], {
@@ -95,14 +96,20 @@ SciViEditor.prototype.run = function (mode)
     });
 
     editor.eventListener.on("connectioncreate connectionremove", function () {
-        if (_this.selectedNode)
-            setTimeout(function() { _this.selectNode(_this.selectedNode); }, 1);
+        if (processingAllowed) {
+            setTimeout(function () {
+                _this.process();
+                if (_this.selectedNode)
+                    _this.selectNode(_this.selectedNode);
+            }, 1);
+        }
     });
 
-    editor.eventListener.on("nodecreate noderemove connectioncreate connectionremove", async function () {
+    editor.eventListener.on("nodecreate noderemove", function () {
         if (processingAllowed) {
-            await engine.abort();
-            await engine.process(editor.toJSON());
+            setTimeout(function() {
+                _this.process();
+            }, 1);
         }
     });
 
@@ -112,29 +119,22 @@ SciViEditor.prototype.run = function (mode)
             editor.removeNode(nodes[0]);
     });
 
-    $("#scivi_btn_visualize").click(function () {
-        viewPortVisible = !viewPortVisible;
-        _this.inVisualization = viewPortVisible;
-        _this.clearViewport();
-        _this.process();
-        if (!viewPortVisible) {
-            $(".scivi_slide").css({"transform": "translateX(0%)"});
-            $("#scivi_btn_visualize").html(_this.runButtonName(mode));
-            $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
-            $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
-            if (mode == MIXED_MODE) {
-                _this.stopMixed();
-            }
+    $("#scivi_btn_visualize").click(function (e) {
+        if (_this.inVisualization && e.shiftKey) {
+            var filename = prompt("Enter name of file to save", "task.ont");
+            if (!filename)
+                return;
+            if (!filename.includes("."))
+                filename += ".ont";
+            var element = document.createElement("a");
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(_this.taskOnto)));
+            element.setAttribute("download", filename);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
         } else {
-            $(".scivi_slide").css({"transform": "translateX(-100%)"});
-            $("#scivi_btn_visualize").html("◀");
-            $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
-            $(".scivi_menu").css({"margin-left": "20px"});
-            if (mode == IOT_PROGRAMMING_MODE) {
-                _this.uploadEON();
-            } else if (mode == MIXED_MODE) {
-                _this.runMixed();
-            }
+            _this.startVisualization();
         }
     });
 
@@ -209,18 +209,48 @@ SciViEditor.prototype.run = function (mode)
 
     var urlParams = new URLSearchParams(window.location.search);
     var preset = urlParams.get("preset");
+    var autorun = urlParams.get("start");
     if (preset) {
         $(".loader").show();
         $.getJSON("preset/" + preset, async function (data) {
             $(".loader").hide();
             await editor.fromJSON(data);
             _this.extendNodes();
+            if (autorun)
+                _this.startVisualization();
         });
+    }
+}
+
+SciViEditor.prototype.startVisualization = function ()
+{
+    this.inVisualization = !this.inVisualization;
+    this.clearViewport();
+    this.process();
+    if (this.inVisualization) {
+        $(".scivi_slide").css({"transform": "translateX(-100%)"});
+        $("#scivi_btn_visualize").html("◀");
+        $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+        $(".scivi_menu").css({"margin-left": "20px"});
+        if (this.mode == IOT_PROGRAMMING_MODE) {
+            this.uploadEON();
+        } else if (this.mode == MIXED_MODE) {
+            this.runMixed();
+        }
+    } else {
+        $(".scivi_slide").css({"transform": "translateX(0%)"});
+        $("#scivi_btn_visualize").html(this.runButtonName(this.mode));
+        $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
+        $(".scivi_menu").css({"margin-left": "calc(100vw - 120px)"});
+        if (this.mode == MIXED_MODE) {
+            this.stopMixed();
+        }
     }
 }
 
 SciViEditor.prototype.uploadEON = function ()
 {
+    // FIXME: this mode is deprecated.
     var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
@@ -306,67 +336,17 @@ SciViEditor.prototype.runMixed = function ()
 
         var ont = data["ont"];
         var cor = data["cor"];
+        var eon = data["eon"];
 
-        // var eon = data["eon"];
+        _this.taskOnto = ont;
 
-        /*var upEonDiv = $("<div class='scivi_upload_eon'>");
-        var ontoDiv = $("<div style='display: table-row;'>");
-        var ontoLbl = $("<div style='display: table-cell;'>").html("Task ontology: " + ont["nodes"].length + " nodes, " + ont["relations"].length + " edges");
-        var dlOntoBtn = $("<button class='ui-widget scivi_button' style='display: table-cell;'>").html("Download");
-        // var eonDiv = $("<div style='display: table-row;'>").html("EON blob: " + eon.length + " bytes");
-        var uplDiv = $("<div style='display: table-row;'>");
-        var uplAddr = $("<div style='display: table-cell;'>");
-        var targetAddressLbl = $("<label>").html("Device address: ");
-        var targetAddressTxt = $("<input class='ui-widget' type='text' value='192.168.4.1:81' style='margin-right: 5px;'>");
-        var uploadBtn = $("<button class='ui-widget scivi_button' style='display=table-cell;'>").html("Upload");
-
-        dlOntoBtn.click(function () {
-            var filename = prompt("Enter name of file to save", "task.ont");
-            if (!filename)
-                return;
-            if (!filename.includes("."))
-                filename += ".ont";
-            var element = document.createElement("a");
-            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(ont)));
-            element.setAttribute("download", filename);
-            element.style.display = "none";
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        });
-
-        // uploadBtn.click(function () {
-        //     console.log(targetAddressTxt.val());
-        //     var webSocket = new WebSocket("ws://" + targetAddressTxt.val());
-        //     webSocket.onopen = function(evt) {
-        //         console.log("WebSocket open");
-        //         console.log(eon);
-        //         webSocket.send(Uint8Array.from(eon));
-        //         webSocket.close();
-        //     };
-        //     webSocket.onclose = function(evt) { console.log("WebSocket close"); };
-        //     webSocket.onerror = function(evt) { console.log(evt); };
-        //     webSocket.onmessage = function(evt) { console.log(evt); };
-        // });
-
-        ontoDiv.append(ontoLbl);
-        ontoDiv.append(dlOntoBtn);
-
-        uplAddr.append(targetAddressLbl);
-        uplAddr.append(targetAddressTxt);
-
-        uplDiv.append(uplAddr);
-        uplDiv.append(uploadBtn);
-
-        upEonDiv.append(ontoDiv);
-        // upEonDiv.append(eonDiv);
-        upEonDiv.append(uplDiv);
-
-        $("#scivi_viewport").empty();
-        $("#scivi_viewport").append(upEonDiv);*/
-
-        if (Object.keys(cor).length > 0)
-            _this.startComm("ws://127.0.0.1:5001/", cor); // FIXME: address should be given by server, moreover, there may be multiple comms required.
+        if (Object.keys(cor).length > 0) {
+            // FIXME: address should be given by server, moreover, there may be multiple comms required.
+            if (eon.length > 0)
+                _this.startComm("ws://192.168.4.1:81/", cor, eon);
+            else
+                _this.startComm("ws://127.0.0.1:5001/", cor);
+        }
     });
 }
 
@@ -389,7 +369,10 @@ SciViEditor.prototype.changeSubTitle = function (nodeID)
 
 SciViEditor.prototype.createControl = function (node)
 {
-    return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
+    if (node.data.inlineSettingsCtrl !== undefined)
+        return node.data.inlineSettingsCtrl;
+    else // FIXME: subtitles are deprecated, remove them.
+        return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
 }
 
 SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
@@ -409,13 +392,13 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
                     sockets[item["type"]] = new D3NE.Socket(item["type"], item["type"], "");
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
+            settingsFunc(node);
             node.addControl(new D3NE.Control(_this.createControl(node), function (element, control) { }));
             return node;
         },
         worker(node, inputs, outputs) {
             try {
                 workerFunc(node, inputs, outputs);
-                settingsFunc(node);
             } catch(err) {
                 _this.showError(err);
             }
@@ -463,7 +446,7 @@ SciViEditor.prototype.extendNodes = function ()
             var nodeProto = _this.components[node.title];
             node.syncSettings = nodeProto.syncSettings;
         }
-        if (node.data.subTitle) {
+        if (node.data.subTitle) { // FIXME: this is deprecated!!!
             $("#t" + node.id).val(node.data.subTitle);
             $("#t" + node.id).show();
         }
@@ -472,7 +455,94 @@ SciViEditor.prototype.extendNodes = function ()
 
 SciViEditor.prototype.process = function ()
 {
-    this.engine.process(this.editor.toJSON());
+    function dumpToArray(nodes)
+    {
+        var result = [];
+        for (key in nodes) {
+            if (nodes.hasOwnProperty(key))
+                result.push(nodes[key]);
+        }
+        return result;
+    }
+
+    function getSourceNodes(nodes, node, remRec)
+    {
+        var result = [];
+        for (var i = 0, n = node.inputs.length; i < n; ++i) {
+            if (node.inputs[i].connections.length > 0) {
+                var src = nodes[node.inputs[i].connections[0].node];
+                if (!remRec || src.position[0] < node.position[0] || (src.position[0] === node.position[0] && src.position[1] < node.position[1]))
+                    result.push(src);
+            }
+        }
+        return result;
+    }
+
+    function getMaxRank(nodes)
+    {
+        var result = -1;
+        for (var i = 0, n = nodes.length; i < n; ++i) {
+            if (nodes[i].rank === undefined)
+                return undefined;
+            else if (nodes[i].rank > result)
+                result = nodes[i].rank;
+        }
+        return result;
+    }
+
+    var dfd = this.editor.toJSON();
+    var nodes = dumpToArray(dfd.nodes);
+    var rankedNodes = 0;
+    var n = nodes.length;
+    var removeRecursives = false;
+    while (rankedNodes < n) {
+        var hasCycle = true;
+        for (var i = 0; i < n; ++i) {
+            if (nodes[i].rank !== undefined)
+                continue;
+            var srcNodes = getSourceNodes(dfd.nodes, nodes[i], removeRecursives);
+            if (srcNodes.length === 0) {
+                nodes[i].rank = 0;
+                ++rankedNodes;
+                hasCycle = false;
+            } else {
+                var mr = getMaxRank(srcNodes);
+                if (mr !== undefined) {
+                    nodes[i].rank = mr + 1;
+                    ++rankedNodes;
+                    hasCycle = false;
+                }
+            }
+        }
+        removeRecursives = hasCycle;
+    }
+
+    nodes.sort(function (a, b) {
+        return a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0;
+    });
+
+    for (var i = 0; i < n; ++i) {
+        var node = this.getNodeByID(nodes[i].id);
+        var inputs = [];
+        for (var j = 0, m = nodes[i].inputs.length; j < m; ++j) {
+            if (nodes[i].inputs[j].connections.length > 0) {
+                var srcNodeID = nodes[i].inputs[j].connections[0].node;
+                var srcOutputID = nodes[i].inputs[j].connections[0].output;
+                var srcNode = this.getNodeByID(srcNodeID);
+                if (srcNode.outputData)
+                    inputs.push([srcNode.outputData[srcOutputID]])
+                else
+                    inputs.push([null]);
+            } else {
+                inputs.push([]);
+            }
+        }
+        var outputs = [];
+        for (var j = 0, m = nodes[i].outputs.length; j < m; ++j)
+            outputs.push(null);
+        this.components[nodes[i].title].worker(node, inputs, outputs);
+        node.outputData = outputs;
+    }
 }
 
 SciViEditor.prototype.viewportContainer = function ()
@@ -480,19 +550,15 @@ SciViEditor.prototype.viewportContainer = function ()
     return document.getElementById("scivi_viewport");
 }
 
-SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootContainer, visualContainers, conID)
+SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootContainer, visualContainers, conID, forceDir)
 {
+    var dir = forceDir === undefined ? (currentDepth % 2 === 0 ? "vertical" : "horizontal") : forceDir;
     var d1, d2;
     var id1 = "_" + conID + "_1";
     var id2 = "_" + conID + "_2";
     conID[0]++;
-    if (currentDepth % 2 === 0) {
-        d1 = $("<div class='split split-vertical' id='" + id1 + "'>");
-        d2 = $("<div class='split split-vertical' id='" + id2 + "'>");
-    } else {
-        d1 = $("<div class='split split-horizontal' id='" + id1 + "'>");
-        d2 = $("<div class='split split-horizontal' id='" + id2 + "'>");
-    }
+    d1 = $("<div class='split split-" + dir + "' id='" + id1 + "'>");
+    d2 = $("<div class='split split-" + dir + "' id='" + id2 + "'>");
 
     rootContainer.appendChild(d1[0]);
     rootContainer.appendChild(d2[0]);
@@ -501,7 +567,7 @@ SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootCo
         gutterSize: 8,
         sizes: [50, 50],
         minSize: 0,
-        direction: currentDepth % 2 === 0 ? "vertical" : "horizontal",
+        direction: dir,
         onDrag: function () { window.dispatchEvent(new Event("resize")); }
     });
 
@@ -509,26 +575,44 @@ SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootCo
         visualContainers.push(d1[0]);
         visualContainers.push(d2[0]);
     } else {
-        this.placeVisual(desiredDepth, currentDepth + 1, d1[0], visualContainers, conID);
-        this.placeVisual(desiredDepth, currentDepth + 1, d2[0], visualContainers, conID);
+        this.placeVisual(desiredDepth, currentDepth + 1, d1[0], visualContainers, conID, forceDir);
+        this.placeVisual(desiredDepth, currentDepth + 1, d2[0], visualContainers, conID, forceDir);
     }
 }
 
-SciViEditor.prototype.addVisualToViewport = function (el)
+SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
 {
     var vp = this.viewportContainer();
     while (vp.firstChild)
         vp.removeChild(vp.firstChild);
+    el.splitIndex = pos[1];
     this.visuals.push(el);
-    if (this.visuals.length == 1)
-        vp.appendChild(el);
-    else
-    {
-        var visualContainers = [];
-        this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0]);
+    this.visuals.sort(function (e1, e2) { return e1.splitIndex > e2.splitIndex ? 1 : -1; });
+    if (forceDir === "vertical" || (forceDir === undefined && this.forceDir === "vertical")) {
         for (var i = 0, n = this.visuals.length; i < n; ++i)
-            visualContainers[i].appendChild(this.visuals[i]);
+            vp.appendChild(this.visuals[i]);
+        var h = 0;
+        for (var i = 0, n = this.visuals.length; i < n; ++i) {
+            if (!this.visuals[i].style.height)
+                h += $(this.visuals[i].firstChild).outerHeight(true);
+        }
+        for (var i = 0, n = this.visuals.length; i < n; ++i) {
+            if (this.visuals[i].style.height)
+                this.visuals[i].style.height = "calc(100% - " + h + "px)";
+        }
+    } else {
+        if (this.visuals.length == 1)
+            vp.appendChild(el);
+        else
+        {
+            var visualContainers = [];
+            this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0], forceDir);
+            for (var i = 0, n = this.visuals.length; i < n; ++i)
+                visualContainers[i].appendChild(this.visuals[i]);
+        }
     }
+    if (forceDir !== undefined)
+        this.forceDir = forceDir;
     window.dispatchEvent(new Event("resize"));
 }
 
@@ -538,6 +622,7 @@ SciViEditor.prototype.clearViewport = function ()
     while (vp.firstChild)
         vp.removeChild(vp.firstChild);
     this.visuals = [];
+    this.forceDir = undefined;
 }
 
 SciViEditor.prototype.getNodeByID = function (nodeID)
@@ -644,7 +729,7 @@ SciViEditor.prototype.showError = function (err)
     dp.find(".ui-button").css("border", "1px solid #3F3F3F");
 }
 
-SciViEditor.prototype.startComm = function (address, addressCorrespondences)
+SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon = null)
 {
     var ws = new WebSocket(address);
     var _this = this;
@@ -653,6 +738,9 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences)
         this.commsReconnects[address] = 10;
     ws.onopen = function(evt) {
         console.log("WebSocket open on " + address);
+        if (eon) {
+            ws.send(Uint8Array.from(eon));
+        }
     };
     ws.onclose = function(evt) {
         console.log("WebSocket close on " + address);
@@ -664,32 +752,33 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences)
         if (rc > 0) {
             --rc;
             _this.commsReconnects[address] = rc;
-            setTimeout(function () { _this.startComm(address, addressCorrespondences); }, 100);
+            setTimeout(function () { _this.startComm(address, addressCorrespondences, eon); }, 100);
         }
     };
     ws.onmessage = function(evt) {
-        // console.log(evt);
         var msg = JSON.parse(evt.data);
         for (var i = 0, n = msg.length; i < n; ++i) {
             Object.keys(msg[i]).forEach(function (key) {
                 var cor = addressCorrespondences[key];
-                for (var j = 0, n = cor.length; j < n; ++j) {
-                    var dfdNodeID = cor[j][0];
-                    var isInput = cor[j][1];
-                    var socketNmb = cor[j][2];
-                    var dfdNode = _this.getNodeByID(dfdNodeID);
-                    if (isInput) {
-                        if (!dfdNode.data.inputDataPool)
-                            dfdNode.data.inputDataPool = [];
-                        for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
-                            dfdNode.data.inputDataPool.push(null);
-                        dfdNode.data.inputDataPool[socketNmb] = msg[key];
-                    } else {
-                        if (!dfdNode.data.outputDataPool)
-                            dfdNode.data.outputDataPool = [];
-                        for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
-                            dfdNode.data.outputDataPool.push(null);
-                        dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+                if (cor) {
+                    for (var j = 0, n = cor.length; j < n; ++j) {
+                        var dfdNodeID = cor[j][0];
+                        var isInput = cor[j][1];
+                        var socketNmb = cor[j][2];
+                        var dfdNode = _this.getNodeByID(dfdNodeID);
+                        if (isInput) {
+                            if (!dfdNode.data.inputDataPool)
+                                dfdNode.data.inputDataPool = [];
+                            for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
+                                dfdNode.data.inputDataPool.push(null);
+                            dfdNode.data.inputDataPool[socketNmb] = msg[key];
+                        } else {
+                            if (!dfdNode.data.outputDataPool)
+                                dfdNode.data.outputDataPool = [];
+                            for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
+                                dfdNode.data.outputDataPool.push(null);
+                            dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+                        }
                     }
                 }
             });
