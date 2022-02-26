@@ -17,6 +17,7 @@ class WordThread(Thread):
         self.iterCnt = iterCnt
         self.timeOut = timeOut
         self.mutex = Lock()
+        self.wordShown = False
         self.renderRunning = False
         self.locked = False
         self.curIndex = -1
@@ -98,9 +99,11 @@ class WordThread(Thread):
             if ((silence > 0) and (elapsed > silence)) or ((silence == 0) and (elapsed > self.timeOut) and (text or (not self.is_locked()))):
                 elapsed = 0
                 silence = 0
-                if text:
-                    text = None
+                if self.wordShown:
+                    self.wordShown = False
+                    text = self.create_text('█████', font)
                 else:
+                    self.wordShown = True
                     self.mutex.acquire()
                     self.curIndex += 1
                     if self.curIndex == len(self.words):
@@ -112,9 +115,9 @@ class WordThread(Thread):
                         text = self.create_text(self.words[self.curIndex], font)
                     self.mutex.release()
             screen.fill(self.BACKGROUND_COLOR)
-            if text:
-                txtSize = text.get_size()
-                screen.blit(text, ((screenSize[0] - txtSize[0]) // 2, (screenSize[1] - txtSize[1]) // 2))
+            txtSize = text.get_size()
+            screen.blit(text, ((screenSize[0] - txtSize[0]) // 2, (screenSize[1] - txtSize[1]) // 2))
+            if self.wordShown:
                 gpio.output(port.GPIO4, 1)
             else:
                 gpio.output(port.GPIO4, 0)
