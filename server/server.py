@@ -125,13 +125,19 @@ class SciViServer:
 
     def get_file(self, node):
         if ("attributes" in node) and ("path" in node["attributes"]):
-            with open(node["attributes"]["path"]) as f:
+            path = node["attributes"]["path"]
+            mode = "r"
+            if path.endswith(".png"):
+                mode += "b"
+            with open(node["attributes"]["path"], mode) as f:
                 return f.read()
         return None
 
     def guess_mime(self, filename):
         if filename.endswith(".svg"):
             return "image/svg+xml; charset=utf-8"
+        elif filename.endswith(".png"):
+            return "image/png"
         return None
 
     def get_mime(self, node):
