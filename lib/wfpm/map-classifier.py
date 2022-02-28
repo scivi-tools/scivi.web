@@ -1,6 +1,7 @@
 import json
 import os
 
+
 FOLDER_WITH_MAPS = "data"
 PATTERNS_FILES = {
     "Altai": "maps from Altai Republic.json",
@@ -91,7 +92,6 @@ def get_elementary_possibility(datum, atom):
             distance_to_left_neighbour = float(datum) - float(all_values[left_neighbour_index])
             distance_between_neighbours = float(all_values[right_neighbour_index])\
                                           - float(all_values[left_neighbour_index])
-            # print(distance_to_left_neighbour, distance_to_right_neighbour)
             datum_possibility = distance_to_left_neighbour / distance_between_neighbours *\
                 (right_neighbour_possibility - left_neighbour_possibility) + left_neighbour_possibility
             return datum_possibility
@@ -162,7 +162,7 @@ for pattern_name, pattern_file_name in PATTERNS_FILES.items():
     with open(os.path.join(FOLDER_WITH_MAPS, pattern_file_name)) as f:
         patterns_of_maps[pattern_name] = get_pattern_from_map_list(json.load(f))
 
-for data_source in ["maps from unknown place.json"]:  # files with maps to classify
+for data_source in TEST_MAPS_FILES:
     with open(os.path.join(FOLDER_WITH_MAPS, data_source)) as f:
         test_maps = json.load(f)
 
@@ -178,3 +178,4 @@ for data_source in ["maps from unknown place.json"]:  # files with maps to class
         joined_regions = ", ".join(map_regions)
         regions[joined_regions] = regions.setdefault(joined_regions, 0) + 1
     print(f"{data_source}, count of non-empty maps: {non_empty_map_number}, distribution by regions: {regions}")
+
