@@ -34,4 +34,6 @@ where <img src="https://latex.codecogs.com/svg.image?D_{i,k,l}"> is a frequency 
 
 # How to use implementation
 
-Just execute map-classifier.py file. You can adjust some weights and factors, define patterns and test sets at beginning of this file.
+&nbsp;&nbsp;&nbsp;&nbsp;Just execute map-classifier.py file. You can adjust some weights and factors, define patterns and test sets at beginning of this file.
+
+&nbsp;&nbsp;&nbsp;&nbsp;settlement-counter.py script may be useful to select popular settlements for map classifier POPULAR_SETTLEMENTS parameter. To reduce list of settlements to consider, SETTLEMENT_PREVALENCE_THRESHOLD parameter can be increased.
