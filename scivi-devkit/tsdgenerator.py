@@ -14,7 +14,10 @@ def onto_type_to_language_type(onto, typeNode):
     for implType in implementationTypes:
         implLanguage = onto.first(onto.get_nodes_linked_from(implType, "language"))
         if implLanguage and implLanguage["name"] == "TypeScript":
-            return implType["name"]
+            if "inline" in implType["attributes"]:
+                return implType["attributes"]["inline"]
+            else:
+                print("WARNING: No inline attribute definition for type `%s`" % (implType["name"]))
     print("WARNING: Could not find corresponding type for `%s`" % (typeNode["name"]))
     return None
 

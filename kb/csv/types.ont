@@ -1,5 +1,5 @@
 {
-    "last_id": "98",
+    "last_id": "99",
     "namespaces": {
         "default": "http://knova.ru/user/1532855052471",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -15,7 +15,7 @@
             "id": "1",
             "name": "Type",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 610,
+            "position_x": 598,
             "position_y": 558
         },
         {
@@ -25,7 +25,7 @@
             "id": "2",
             "name": "CRingScale",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 392,
+            "position_x": 380,
             "position_y": 586
         },
         {
@@ -35,7 +35,7 @@
             "id": "3",
             "name": "CRingScaleLevel",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 397,
+            "position_x": 385,
             "position_y": 515
         },
         {
@@ -45,7 +45,7 @@
             "id": "4",
             "name": "CGraphState",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 450,
+            "position_x": 438,
             "position_y": 458
         },
         {
@@ -55,7 +55,7 @@
             "id": "5",
             "name": "GraphNode",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 666,
+            "position_x": 654,
             "position_y": 377
         },
         {
@@ -65,7 +65,7 @@
             "id": "6",
             "name": "GraphEdge",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 701,
+            "position_x": 689,
             "position_y": 427
         },
         {
@@ -75,7 +75,7 @@
             "id": "7",
             "name": "Number",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 505,
+            "position_x": 493,
             "position_y": 622
         },
         {
@@ -85,7 +85,7 @@
             "id": "8",
             "name": "Color",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 480,
+            "position_x": 468,
             "position_y": 750
         },
         {
@@ -95,7 +95,7 @@
             "id": "9",
             "name": "String",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 700,
+            "position_x": 688,
             "position_y": 632
         },
         {
@@ -105,7 +105,7 @@
             "id": "18",
             "name": "GraphData",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 538,
+            "position_x": 526,
             "position_y": 411
         },
         {
@@ -114,7 +114,7 @@
             "id": "20",
             "name": "Array",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 742,
+            "position_x": 730,
             "position_y": 588
         },
         {
@@ -124,7 +124,7 @@
             "id": "22",
             "name": "Grid",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 831,
+            "position_x": 819,
             "position_y": 408
         },
         {
@@ -134,7 +134,7 @@
             "id": "24",
             "name": "Dictionary",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 502,
+            "position_x": 490,
             "position_y": 685
         },
         {
@@ -143,7 +143,7 @@
             "id": "26",
             "name": "Enum",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 794,
+            "position_x": 782,
             "position_y": 548
         },
         {
@@ -152,7 +152,7 @@
             "id": "28",
             "name": "File",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 719,
+            "position_x": 707,
             "position_y": 713
         },
         {
@@ -162,7 +162,7 @@
             "id": "29",
             "name": "FileWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 847,
+            "position_x": 835,
             "position_y": 770
         },
         {
@@ -171,7 +171,7 @@
             "id": "30",
             "name": "Widget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 984,
+            "position_x": 972,
             "position_y": 663
         },
         {
@@ -180,7 +180,7 @@
             "id": "31",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 1134,
+            "position_x": 1122,
             "position_y": 733
         },
         {
@@ -190,7 +190,7 @@
             "id": "36",
             "name": "EnumWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 925,
+            "position_x": 913,
             "position_y": 553
         },
         {
@@ -200,7 +200,7 @@
             "id": "42",
             "name": "StringWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 829,
+            "position_x": 817,
             "position_y": 657
         },
         {
@@ -209,7 +209,7 @@
             "id": "46",
             "name": "Bool",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 803,
+            "position_x": 791,
             "position_y": 509
         },
         {
@@ -219,7 +219,7 @@
             "id": "48",
             "name": "BoolWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 1096,
+            "position_x": 1084,
             "position_y": 518
         },
         {
@@ -228,7 +228,7 @@
             "id": "52",
             "name": "DataSource",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 939,
+            "position_x": 927,
             "position_y": 200
         },
         {
@@ -237,7 +237,7 @@
             "id": "53",
             "name": "Root",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 823,
+            "position_x": 811,
             "position_y": 280
         },
         {
@@ -246,7 +246,7 @@
             "id": "55",
             "name": "Filter",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 989,
+            "position_x": 977,
             "position_y": 352
         },
         {
@@ -255,7 +255,7 @@
             "id": "56",
             "name": "VisualObject",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 961,
+            "position_x": 949,
             "position_y": 256
         },
         {
@@ -265,7 +265,7 @@
             "id": "59",
             "name": "MapLayer",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 365,
+            "position_x": 353,
             "position_y": 652
         },
         {
@@ -274,7 +274,7 @@
             "id": "61",
             "name": "Files",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 665,
+            "position_x": 653,
             "position_y": 732
         },
         {
@@ -284,7 +284,7 @@
             "id": "63",
             "name": "FilesWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 889,
+            "position_x": 877,
             "position_y": 911
         },
         {
@@ -294,7 +294,7 @@
             "id": "67",
             "name": "JSON",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 772,
+            "position_x": 760,
             "position_y": 487
         },
         {
@@ -304,7 +304,7 @@
             "id": "69",
             "name": "ColorWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 679,
+            "position_x": 667,
             "position_y": 848
         },
         {
@@ -313,7 +313,7 @@
             "id": "96",
             "name": "Text",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 352,
+            "position_x": 346,
             "position_y": 753
         },
         {
@@ -323,7 +323,7 @@
             "id": "97",
             "name": "TextWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 393,
+            "position_x": 381,
             "position_y": 840
         },
         {
@@ -332,62 +332,58 @@
             "id": "73",
             "name": "TypeScript",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 316,
-            "position_y": 227
+            "position_x": 314,
+            "position_y": 209
         },
         {
             "attributes": {
+                "inline": "number"
             },
             "id": "74",
-            "name": "Number",
+            "name": "TSNumber",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 387,
-            "position_y": 314
+            "position_x": 377,
+            "position_y": 336
         },
         {
             "attributes": {
+                "inline": "any"
             },
             "id": "77",
-            "name": "any",
+            "name": "TSAny",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 269,
-            "position_y": 335
+            "position_x": 296,
+            "position_y": 357
         },
         {
             "attributes": {
+                "inline": "Array<Array<number>>"
             },
             "id": "80",
-            "name": "Array<Array<number>>",
+            "name": "TSGrid",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 561,
+            "position_x": 549,
             "position_y": 243
         },
         {
             "attributes": {
+                "inline": "boolean"
             },
             "id": "83",
-            "name": "boolean",
+            "name": "TSBoolean",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 477,
-            "position_y": 329
+            "position_x": 487,
+            "position_y": 293
         },
         {
             "attributes": {
+                "inline": "string"
             },
             "id": "86",
-            "name": "String",
+            "name": "TSString",
             "namespace": "http://knova.ru/user/1532855052471",
             "position_x": 200,
-            "position_y": 407
-        },
-        {
-            "attributes": {
-            },
-            "id": "95",
-            "name": "any",
-            "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 635,
-            "position_y": 318
+            "position_y": 319
         }
     ],
     "relations": [
@@ -907,29 +903,20 @@
         {
             "attributes": {
             },
-            "destination_node_id": "73",
-            "id": "96",
-            "name": "language",
-            "namespace": "http://knova.ru/user/1532855052471",
-            "source_node_id": "95"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "5",
-            "id": "97",
-            "name": "is_instance",
-            "namespace": "http://knova.ru/user/1532855052471",
-            "source_node_id": "95"
-        },
-        {
-            "attributes": {
-            },
             "destination_node_id": "8",
             "id": "98",
             "name": "is_instance",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "74"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "5",
+            "id": "99",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "77"
         }
     ],
     "visualize_ont_path": ""
