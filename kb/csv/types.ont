@@ -1,5 +1,5 @@
 {
-    "last_id": "99",
+    "last_id": "100",
     "namespaces": {
         "default": "http://knova.ru/user/1532855052471",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -872,6 +872,15 @@
             "name": "is_instance",
             "namespace": "http://knova.ru/user/1532855052471",
             "source_node_id": "77"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "96",
+            "id": "100",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1532855052471",
+            "source_node_id": "86"
         }
     ],
     "visualize_ont_path": ""
