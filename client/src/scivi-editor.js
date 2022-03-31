@@ -202,7 +202,7 @@ SciViEditor.prototype.run = function (mode)
         }
     });*/
 
-    ("#scivi_btn_poll").click(function() {
+    $("#scivi_btn_poll").click(function() {
         // FIXME: address.
         _this.startComm("ws://192.168.4.1:81/", {}, [ 0xE1 ]);
     });
