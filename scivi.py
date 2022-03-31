@@ -170,6 +170,15 @@ def stop_execer():
     resp.set_cookie("exe", value = "", samesite = "Lax")
     return resp
 
+@app.route("/fwgen/<domain>/<elementName>")
+def fwgen(domain, elementName):
+    srv = SciViServer(OntoMerger("kb/" + domain).onto, None)
+    f = srv.gen_firmware(elementName)
+    if f:
+        return f["content"], 200, {'Content-Type': f["mime"], "Content-Disposition": "attachment; filename=\"%s.zip\"" % elementName}
+    else:
+        return "Not found", 404
+
 @app.after_request
 def add_header(response):
     response.cache_control.max_age = 0
