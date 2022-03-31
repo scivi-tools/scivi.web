@@ -176,7 +176,7 @@ SciViEditor.prototype.run = function (mode)
         element.click();
     });
 
-    $("#scivi_btn_fs").click(function() {
+    /*$("#scivi_btn_fs").click(function() {
         if (document.fullscreenElement ||
             document.webkitFullscreenElement ||
             document.mozFullScreenElement ||
@@ -200,6 +200,11 @@ SciViEditor.prototype.run = function (mode)
             else if (element.msRequestFullscreen)
                 element.msRequestFullscreen();
         }
+    });*/
+
+    ("#scivi_btn_poll").click(function() {
+        // FIXME: address.
+        _this.startComm("ws://192.168.4.1:81/", {}, [ 0xE1 ]);
     });
 
     this.editor = editor;
@@ -342,10 +347,12 @@ SciViEditor.prototype.runMixed = function ()
 
         if (Object.keys(cor).length > 0) {
             // FIXME: address should be given by server, moreover, there may be multiple comms required.
-            if (eon.length > 0)
+            if (eon.length > 0) {
+                eon.unshift(0xE0);
                 _this.startComm("ws://192.168.4.1:81/", cor, eon);
-            else
+            } else {
                 _this.startComm("ws://127.0.0.1:5001/", cor);
+            }
         }
     });
 }
