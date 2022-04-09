@@ -342,16 +342,17 @@ SciViEditor.prototype.runMixed = function ()
         var ont = data["ont"];
         var cor = data["cor"];
         var eon = data["eon"];
+        var srvAddr = data["srvAddr"];
 
         _this.taskOnto = ont;
 
         if (Object.keys(cor).length > 0) {
-            // FIXME: address should be given by server, moreover, there may be multiple comms required.
             if (eon.length > 0) {
                 eon.unshift(0xE0);
+                // FIXME: address should be given by server, moreover, there may be multiple comms required.
                 _this.startComm("ws://192.168.4.1:81/", cor, eon);
             } else {
-                _this.startComm("ws://127.0.0.1:5001/", cor);
+                _this.startComm("ws://" + srvAddr + ":5001/", cor);
             }
         }
     });

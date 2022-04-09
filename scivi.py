@@ -150,6 +150,7 @@ def gen_mixed():
         res, exeKey = srv.gen_mixed(dfd)
     except ValueError as err:
         res = { "error": str(err) }
+    res["srvAddr"] = request.host.split(":")[0]
     resp = jsonify(res)
     resp.status_code = 200
     if exeKey:
