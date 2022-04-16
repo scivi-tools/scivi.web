@@ -35,6 +35,7 @@ module.exports = SciViEditor;
 function SciViEditor()
 {
     SciViEditor.prototype.components = {};
+    SciViEditor.prototype.componentsByUID = {};
     SciViEditor.prototype.sockets = {};
     SciViEditor.prototype.editor = null;
     SciViEditor.prototype.engine = null;
@@ -383,7 +384,7 @@ SciViEditor.prototype.createControl = function (node)
         return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
 }
 
-SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
+SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, workerFunc, settingsFunc)
 {
     var _this = this;
     var sockets = this.sockets;
@@ -414,6 +415,7 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
     });
     node.syncSettings = settingsFunc;
     this.components[name] = node;
+    this.componentsByUID[uid] = node;
 }
 
 SciViEditor.prototype.createNode = function (name)
