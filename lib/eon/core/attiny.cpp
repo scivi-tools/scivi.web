@@ -11,8 +11,10 @@
 //                  +----+
 
 #define ONE_WIRE_PIN PB1
+#define LED_PIN PB2
 
 #define CMD_POLL 0xDD
+#define CMD_PING 0xEE
 
 OneWireSlave g_1w(ONE_WIRE_PIN);
 uint8_t g_rom[8] = %<ROM>;
@@ -22,9 +24,23 @@ uint8_t g_rom[8] = %<ROM>;
 
 void setup()
 {
+    pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN, LOW);
     g_1w.setRom(g_rom);
     INIT();
     delay(100);
+}
+
+void blink()
+{
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        digitalWrite(LED_PIN, HIGH);
+        delay(500);
+        digitalWrite(LED_PIN, LOW);
+        if (i < 2)
+            delay(500);
+    }
 }
 
 void loop()
@@ -35,6 +51,10 @@ void loop()
     {
         case CMD_POLL:
             %<SEND>
+            break;
+
+        case CMD_PING:
+            blink();
             break;
 
         default:
