@@ -6,6 +6,7 @@ import importlib
 import datetime
 from onto.onto import Onto
 from enum import Enum
+import uuid
 from server.eon import Eon
 from server.dfd2onto import DFD2Onto
 from server.execer import Execer
@@ -423,18 +424,16 @@ class SciViServer:
         mixedOnto = dfd2onto.get_onto(dfd)
         # Server
         srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
-        serverOntoData = None
-        serverOntoHash = None
+        serverTaskHash = None
         corTable = None
         if srvRes:
             hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
             if self.task_onto_has_operations(serverOnto):
                 execer = Execer(self.onto, serverOnto)
-                serverOntoHash = serverOnto.calc_hash()
-                self.execers[serverOntoHash] = execer
+                serverTaskHash = str(uuid.uuid4())
+                self.execers[serverTaskHash] = execer
                 execer.start()
-                serverOntoData = serverOnto.data
         # Edge
         edgeRes = mixedOnto.first(mixedOnto.get_nodes_by_name("ESP8266"))
         eonBytes = []
@@ -446,11 +445,11 @@ class SciViServer:
             eonBytes = []
             for b in bs:
                 eonBytes.append(b)
-        return { "ont": edgeOnto.data, "cor": corTable, "eon": eonBytes }, serverOntoHash
+        return { "ont": edgeOnto.data, "cor": corTable, "eon": eonBytes }, serverTaskHash
 
-    def stop_execer(self, serverOntoHash):
-        if serverOntoHash and serverOntoHash in self.execers:
-            self.execers[serverOntoHash].stop()
+    def stop_execer(self, serverTaskHash):
+        if serverTaskHash and serverTaskHash in self.execers:
+            self.execers[serverTaskHash].stop()
 
     def get_file_from_storage(self, filename):
         return self.files[filename]
