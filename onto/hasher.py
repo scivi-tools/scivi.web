@@ -61,6 +61,7 @@ class OntoHasher:
                 owners = self.onto.get_nodes_linked_to(node, "has")
                 for owner in owners:
                     keyName += owner["name"]
+                keyName += proto["name"]
                 break
         return self.hash_key(keyName)
 
