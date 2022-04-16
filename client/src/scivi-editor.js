@@ -642,7 +642,7 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
 
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
 {
-    var el = $("#" + settingID.toString())
+    var el = $("#" + settingID.toString());
     var value = 0;
     if (el.is(":checkbox"))
         value = el.is(":checked");
@@ -809,4 +809,17 @@ SciViEditor.prototype.cleanupComms = function ()
         node.data.inputDataPool = [];
         node.data.outputDataPool = [];
     });
+}
+
+SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
+{
+    var device = $("#d_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
+    var guid = $("#g_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
+    var node = this.getNodeByID(nodeID);
+    node.data.settingsVal[settingName] = { device: device, guid: guid };
+    node.data.settingsChanged[settingName] = true;
+}
+
+SciViEditor.prototype.pingByOntoBusAddress = function (settingName, settingID, nodeID)
+{
 }
