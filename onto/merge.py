@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from onto.onto import Onto
+from onto.hasher import OntoHasher
 import sys
 import math
 import os
@@ -26,6 +27,7 @@ class OntoMerger:
                         self.onto = Onto.load_from_file(p)
                     else:
                         self.onto = self.merge(self.onto, Onto.load_from_file(p))
+        OntoHasher(self.onto)
 
     def duplicate_id(self, onto1, onto2, node, prototypes):
         '''

@@ -56,7 +56,7 @@ class FWGen:
 
     def resolve_masks(self, node, code):
         # %<ROM>
-        nodeID = int(node["id"])
+        nodeID = int(node["UID"])
         code = code.replace("%<ROM>", "{ 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x }" % \
                             (0xE0, \
                              nodeID >> 8 & 0xFF, nodeID & 0xFF, \
