@@ -35,6 +35,7 @@ module.exports = SciViEditor;
 function SciViEditor()
 {
     SciViEditor.prototype.components = {};
+    SciViEditor.prototype.componentsByUID = {};
     SciViEditor.prototype.sockets = {};
     SciViEditor.prototype.editor = null;
     SciViEditor.prototype.engine = null;
@@ -176,7 +177,7 @@ SciViEditor.prototype.run = function (mode)
         element.click();
     });
 
-    $("#scivi_btn_fs").click(function() {
+    /*$("#scivi_btn_fs").click(function() {
         if (document.fullscreenElement ||
             document.webkitFullscreenElement ||
             document.mozFullScreenElement ||
@@ -200,6 +201,11 @@ SciViEditor.prototype.run = function (mode)
             else if (element.msRequestFullscreen)
                 element.msRequestFullscreen();
         }
+    });*/
+
+    $("#scivi_btn_poll").click(function() {
+        // FIXME: address.
+        _this.startComm("ws://192.168.4.1:81/", {}, [ 0xE1 ]);
     });
 
     this.editor = editor;
@@ -337,15 +343,18 @@ SciViEditor.prototype.runMixed = function ()
         var ont = data["ont"];
         var cor = data["cor"];
         var eon = data["eon"];
+        var srvAddr = data["srvAddr"];
 
         _this.taskOnto = ont;
 
         if (Object.keys(cor).length > 0) {
-            // FIXME: address should be given by server, moreover, there may be multiple comms required.
-            if (eon.length > 0)
+            if (eon.length > 0) {
+                eon.unshift(0xE0);
+                // FIXME: address should be given by server, moreover, there may be multiple comms required.
                 _this.startComm("ws://192.168.4.1:81/", cor, eon);
-            else
-                _this.startComm("ws://127.0.0.1:5001/", cor);
+            } else {
+                _this.startComm("ws://" + srvAddr + ":5001/", cor);
+            }
         }
     });
 }
@@ -375,7 +384,7 @@ SciViEditor.prototype.createControl = function (node)
         return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
 }
 
-SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc, settingsFunc)
+SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, workerFunc, settingsFunc)
 {
     var _this = this;
     var sockets = this.sockets;
@@ -406,11 +415,11 @@ SciViEditor.prototype.registerNode = function (name, inputs, outputs, workerFunc
     });
     node.syncSettings = settingsFunc;
     this.components[name] = node;
+    this.componentsByUID[uid] = node;
 }
 
-SciViEditor.prototype.createNode = function (name)
+SciViEditor.prototype.createNodeFromProto = function (nodeProto)
 {
-    var nodeProto = this.components[name];
     var node = nodeProto.builder(nodeProto.newNode());
     var container = $("#scivi_node_editor")[0];
     node.position = [(container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k,
@@ -418,6 +427,16 @@ SciViEditor.prototype.createNode = function (name)
     node.syncSettings = nodeProto.syncSettings;
     this.editor.addNode(node);
     this.editor.view.update();
+}
+
+SciViEditor.prototype.createNode = function (name)
+{
+    this.createNodeFromProto(this.components[name]);
+}
+
+SciViEditor.prototype.createNodeByUID = function (uid)
+{
+    this.createNodeFromProto(this.componentsByUID[uid]);
 }
 
 SciViEditor.prototype.selectNode = function (node)
@@ -632,7 +651,7 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
 
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
 {
-    var el = $("#" + settingID.toString())
+    var el = $("#" + settingID.toString());
     var value = 0;
     if (el.is(":checkbox"))
         value = el.is(":checked");
@@ -799,4 +818,17 @@ SciViEditor.prototype.cleanupComms = function ()
         node.data.inputDataPool = [];
         node.data.outputDataPool = [];
     });
+}
+
+SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
+{
+    var device = $("#d_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
+    var guid = $("#g_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
+    var node = this.getNodeByID(nodeID);
+    node.data.settingsVal[settingName] = { device: device, guid: guid };
+    node.data.settingsChanged[settingName] = true;
+}
+
+SciViEditor.prototype.pingByOntoBusAddress = function (settingName, settingID, nodeID)
+{
 }

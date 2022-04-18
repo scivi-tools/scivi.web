@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from onto.onto import Onto
+from onto.hasher import OntoHasher
 import sys
 import math
 import os
@@ -26,6 +27,7 @@ class OntoMerger:
                         self.onto = Onto.load_from_file(p)
                     else:
                         self.onto = self.merge(self.onto, Onto.load_from_file(p))
+        OntoHasher(self.onto)
 
     def duplicate_id(self, onto1, onto2, node, prototypes):
         '''
@@ -47,8 +49,6 @@ class OntoMerger:
                 if isaNode in prototypes:
                     return None
             return dupli[0]["id"]
-        if len(dupli) > 1:
-            print("WARNING: Ontology have %d nodes with same name `%s`" % (len(dupli), node["name"]))
         return None
 
     def merge_attrs(self, node1, node2):
@@ -64,6 +64,19 @@ class OntoMerger:
                 print("Warning: conflicting attribute <%s> of node %s, value <%s> from first onto used" % (attr, node1["name"], attrs1[attr]))
             else:
                 attrs1[attr] = attrs2[attr]
+
+    def check_for_duplicates(self, onto, prototypes):
+        for node in onto.nodes():
+            dupli = onto.get_nodes_by_name(node["name"])
+            if len(dupli) > 1:
+                isaNodes = onto.get_nodes_linked_from(node, "is_a")
+                isProto = False
+                for isaNode in isaNodes:
+                    if isaNode in prototypes:
+                        isProto = True
+                        break
+                if not isProto:
+                    print("WARNING: Ontology has %d nodes with the same name `%s`" % (len(dupli), node["name"]))
 
     def merge(self, onto1, onto2):
         '''
@@ -86,6 +99,9 @@ class OntoMerger:
         prototypes.extend(onto2.get_nodes_by_name("Input"))
         prototypes.extend(onto2.get_nodes_by_name("Output"))
         prototypes.extend(onto2.get_nodes_by_name("Setting"))
+
+        self.check_for_duplicates(onto1, prototypes)
+        self.check_for_duplicates(onto2, prototypes)
 
         for node in onto2.nodes():
             dID = self.duplicate_id(onto1, onto2, node, prototypes)

@@ -274,6 +274,12 @@ input[type="file"]
     padding-right: 15px;
 }
 
+#scivi_btn_poll
+{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 .scivi_filemenu
 {
     text-align: center;
