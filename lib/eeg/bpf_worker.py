@@ -10,9 +10,10 @@ BPF_OUTPUT_SIGNAL_BAND = 'Signal Band'
 low_thresh  = float(SETTINGS_VAL[BPF_SETTING_LOW_CUT])
 high_thresh = float(SETTINGS_VAL[BPF_SETTING_HIGH_CUT])
 
-raws = INPUT[BPF_INPUT_SIGNAL]
+if BPF_INPUT_SIGNAL in INPUT:
+    raws = INPUT[BPF_INPUT_SIGNAL]
 
-for raw in raws:
-    raw.filter(low_thresh, high_thresh, picks=["eeg"], fir_design='firwin', skip_by_annotation='edge')
+    for raw in raws:
+        raw.filter(low_thresh, high_thresh, picks=["eeg"], fir_design='firwin', skip_by_annotation='edge')
 
-OUTPUT[BPF_OUTPUT_SIGNAL_BAND] = raws
+    OUTPUT[BPF_OUTPUT_SIGNAL_BAND] = raws

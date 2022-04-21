@@ -22,6 +22,7 @@ if EEG_KEY not in GLOB:
     #client = EBLiteClient("127.0.0.1", 64)
     GLOB[EEG_KEY] = client
     client.connect()
+    print ("Connection succeed")
     REGISTER_SUBTHREAD(client, client.disconnect)
 
 if current_EEG_mode_KEY not in GLOB:
@@ -45,12 +46,13 @@ if GLOB[current_EEG_mode_KEY] != settings_mode:
     GLOB[current_EEG_mode_KEY] = settings_mode
 
 if settings_mode == MODE_SAMPLING:
-    frames_count = 16
+    frames_count = 16*4
     frames = client.get_shorts(frames_count)
     transformed = client.transform_frame_by_montage(frames, "cap21")
 
     names = transformed[0]
     data = transformed[1]
+    #print (data.tolist())
 
     OUTPUT["EEG"] = [
         names,

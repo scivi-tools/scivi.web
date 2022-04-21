@@ -47,8 +47,9 @@ class EegWriter(object):
             'label'        : label,    # channel label (string, <= 16 characters, must be unique)
             'dimension'    : "uV",     # physical dimension (e.g., mV) (string, <= 8 characters)
             'transducer'   : "AgAl",   # 
-            'prefilter'    : "50 Hz",  # 
-            'sample_rate'  : 128,      # sample frequency in hertz (int)
+            'prefilter'    : "0.1 Hz",  # 
+            #'sample_rate'  : 128,      # sample frequency in hertz (int)
+            'sample_rate'  : 512,      # sample frequency in hertz (int)
             'physical_max' : +4096.0,  # maximum physical value (float)
             'physical_min' : -4096.0,  # minimum physical value (float)
             'digital_max'  :  2**15-1, # maximum digital value (int, -2**15 <= x < 2**15)

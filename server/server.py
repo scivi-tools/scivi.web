@@ -2,14 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import re
-import urllib
 import importlib
 import datetime
 from onto.onto import Onto
 from enum import Enum
+import uuid
 from server.eon import Eon
 from server.dfd2onto import DFD2Onto
 from server.execer import Execer
+from server.utils import CodeUtils
+from server.fwgen import FWGen
 
 
 class Mode(Enum):
@@ -65,6 +67,7 @@ class SciViServer:
         self.dependencies = {}
         self.files = {}
         self.execers = {}
+        self.codeUtils = CodeUtils()
 
         self.gen_tree()
 
@@ -95,17 +98,6 @@ class SciViServer:
                      "' },"
         return result + "]"
 
-    def read_file(self, path):
-        with open(path, "r", encoding="utf-8") as f:
-            return f.read()
-
-    def download_file(self, url):
-        try:
-            return urllib.request.urlopen(url).read().decode("utf-8")
-        except:
-            print("Error by loading url: " + url)
-            return ""
-
     def get_language(self, node):
         result = self.onto.first(self.onto.get_nodes_linked_from(node, "language"))
         if result:
@@ -113,25 +105,11 @@ class SciViServer:
         else:
             return ""
 
-    def get_code(self, node):
-        if "inline" in node["attributes"]:
-            return node["attributes"]["inline"]
-        elif "path" in node["attributes"]:
-            return self.read_file(node["attributes"]["path"])
-        elif "url" in node["attributes"]:
-            return self.download_file(node["attributes"]["url"])
-        else:
-            return ""
-
-    def get_file(self, node):
-        if ("attributes" in node) and ("path" in node["attributes"]):
-            with open(node["attributes"]["path"]) as f:
-                return f.read()
-        return None
-
     def guess_mime(self, filename):
         if filename.endswith(".svg"):
             return "image/svg+xml; charset=utf-8"
+        elif filename.endswith(".png"):
+            return "image/png"
         return None
 
     def get_mime(self, node):
@@ -150,10 +128,10 @@ class SciViServer:
                 if lang:
                     if not (lang in self.dependencies):
                         self.dependencies[lang] = {}
-                    self.dependencies[lang][d["id"]] = self.get_code(d)
+                    self.dependencies[lang][d["id"]] = self.codeUtils.get_code(d)
                     self.add_dependencies(d)
                 else:
-                    self.files[d["name"]] = { "content": self.get_file(d), "mime": self.get_mime(d) }
+                    self.files[d["name"]] = { "content": self.codeUtils.get_file(d), "mime": self.get_mime(d) }
 
     def execute(self, node):
         if "inline" in node["attributes"]:
@@ -253,7 +231,7 @@ class SciViServer:
         w = self.onto.first(workers)
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
-            code = self.process_code(self.get_code(w), masks)
+            code = self.process_code(self.codeUtils.get_code(w), masks)
             proto = self.onto.first(self.onto.get_nodes_linked_from(w, "is_instance"))
             viewType = self.onto.first(self.onto.get_typed_nodes_linked_from(proto, "is_a", "View"))
             self.add_dependencies(w)
@@ -314,7 +292,7 @@ class SciViServer:
                         widget = w
                         break
                 if widget:
-                    code = self.get_code(widget)
+                    code = self.codeUtils.get_code(widget)
                     if ("inline" in s["attributes"]) and s["attributes"]["inline"]:
                         code = code.replace("ADD_WIDGET", "INLINE_WIDGET")
                     code = code.replace("SETTINGS_VAL", "node.data.settingsVal")
@@ -354,7 +332,7 @@ class SciViServer:
         worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
         sett = self.gen_settings(settingNodes)
         self.treeNodes = self.treeNodes +\
-                         "editor.registerNode('" + leaf["name"] + "', " + inputs + ", " + outputs + ", " + worker + ", " + sett + ");"
+                         "editor.registerNode('" + leaf["name"] + "', " + str(leaf["UID"]) + ", " + inputs + ", " + outputs + ", " + worker + ", " + sett + ");"
         self.treeHandlers = self.treeHandlers +\
                             "$('#i" + str(self.treeID) +\
                             "').click(function (e){editor.createNode('" + leaf["name"] + "');});"
@@ -446,34 +424,37 @@ class SciViServer:
         mixedOnto = dfd2onto.get_onto(dfd)
         # Server
         srvRes = mixedOnto.first(mixedOnto.get_nodes_by_name("SciVi Server"))
-        serverOntoData = None
-        serverOntoHash = None
+        serverTaskHash = None
         corTable = None
         if srvRes:
             hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance"))
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
             if self.task_onto_has_operations(serverOnto):
                 execer = Execer(self.onto, serverOnto)
-                serverOntoHash = serverOnto.calc_hash()
-                self.execers[serverOntoHash] = execer
+                serverTaskHash = str(uuid.uuid4())
+                self.execers[serverTaskHash] = execer
                 execer.start()
-                serverOntoData = serverOnto.data
         # Edge
         edgeRes = mixedOnto.first(mixedOnto.get_nodes_by_name("ESP8266"))
         eonBytes = []
         if edgeRes:
             hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(edgeRes, "is_instance"))
-            edgeOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            edgeOnto, corTableEdge = dfd2onto.split_onto(mixedOnto, hosting)
+            corTable.update(corTableEdge)
             eon = Eon(self.onto)
             bs, eonOnto = eon.get_eon(edgeOnto)
             eonBytes = []
             for b in bs:
                 eonBytes.append(b)
-        return { "ont": edgeOnto.data, "cor": corTable, "eon": eonBytes }, serverOntoHash
+        return { "ont": edgeOnto.data, "cor": corTable, "eon": eonBytes }, serverTaskHash
 
-    def stop_execer(self, serverOntoHash):
-        if serverOntoHash and serverOntoHash in self.execers:
-            self.execers[serverOntoHash].stop()
+    def stop_execer(self, serverTaskHash):
+        if serverTaskHash and serverTaskHash in self.execers:
+            self.execers[serverTaskHash].stop()
 
     def get_file_from_storage(self, filename):
         return self.files[filename]
+
+    def gen_firmware(self, elementName):
+        fwGen = FWGen(self.onto)
+        return fwGen.generate(elementName, "/tmp/" + elementName)

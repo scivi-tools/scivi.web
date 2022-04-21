@@ -202,6 +202,20 @@ class Onto:
                 return True
         return False
 
+    def is_subclass(self, node, proto):
+        '''
+        Check of node is subclass of prototype given by name. The class-subclass relation is represented by is_a.
+        B is a subclass of A, if there is a path of is_a links from B to A.
+        @param node - node to check.
+        @param proto - name of a prototype.
+        @return true if node is a subclass of proto, false if not.
+        '''
+        supers = self.get_nodes_linked_from(node, "is_a")
+        for s in supers:
+            if s["name"] == proto or self.is_subclass(s, proto):
+                return True
+        return False
+
     def has_link(self, srcID, dstID, linkName):
         '''
         Check if nodes by given IDs have link of given name.

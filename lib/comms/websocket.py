@@ -33,7 +33,7 @@ class WSThread(Thread):
         print("> WebSocket server stopped")
 
     async def ws_run(self, stop):
-        async with websockets.serve(self.ws, "127.0.0.1", 5001):
+        async with websockets.serve(self.ws, "0.0.0.0", 5001):
             await stop
 
     def run(self):
