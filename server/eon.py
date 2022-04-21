@@ -181,6 +181,8 @@ class Eon:
         #                 0x0 (1 byte) - zero byte terminating the list of MotherOp instances
         #
         result = io.BytesIO()
+        if dataFlowChunkLen == 0:
+            return result.getvalue(), dfdOnto
         result.write(bytes([dataFlowChunkLen]))
         result.write(dataFlowChunk.getbuffer())
         result.write(struct.pack("!H", settingsChunk.getbuffer().nbytes))
