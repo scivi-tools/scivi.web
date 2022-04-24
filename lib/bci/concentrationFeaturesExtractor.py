@@ -2,8 +2,15 @@ import math
 import numpy as np
 from numpy.fft import rfft, rfftfreq
 
+DATA_SOURCE_FILE = 0
+DATA_SOURCE_EBNeuro = 1
+
+SETTING_DATA_SOURCE = 'Data source'
+
 INPUT_RAW = 'Raw'
 OUTPUT_FEATURES_LIST = 'Features'
+
+dataSource = int(SETTINGS_VAL[SETTING_DATA_SOURCE])
 
 if INPUT_RAW in INPUT:
     raws = INPUT[INPUT_RAW]
@@ -11,11 +18,19 @@ if INPUT_RAW in INPUT:
     features = []
 
     for raw in raws:
-        #Time and data arrays    
-        t1 = raw['Fp1'][1]
-        x1 = raw['Fp1'][0][0]
-        t2 = raw['Fp2'][1]
-        x2 = raw['Fp2'][0][0]
+        #Time and data arrays  
+        if dataSource == DATA_SOURCE_FILE:
+            t1 = raw['Fp1'][1]
+            x1 = raw['Fp1'][0][0]
+            t2 = raw['Fp2'][1]
+            x2 = raw['Fp2'][0][0]
+        elif dataSource == DATA_SOURCE_EBNeuro:
+            t1 = raw['FP1'][1]
+            x1 = raw['FP1'][0][0]
+            t2 = raw['FP2'][1]
+            x2 = raw['FP2'][0][0]
+        else:
+            raise ValueError()
             
         yf1 = np.abs(rfft(x1))/len(x1)
         xf1 = rfftfreq(len(x1), 1/len(x1))
@@ -35,7 +50,7 @@ if INPUT_RAW in INPUT:
         delta2 = sum(yf2[np.logical_and(xf2 >= 0.5, xf2 <= 3)])
         gamma2 = sum(yf2[np.logical_and(xf2 >= 31, xf2 <= 50)])
         
-        features.append(np.array([alpha1, gamma1, delta1, alpha2, beta2, gamma2, delta2, theta2]))
+        features.append(np.array([alpha1, beta1, gamma1, delta1, theta1,alpha2, beta2, gamma2, delta2, theta2]))
         
     features = np.array(features)
 

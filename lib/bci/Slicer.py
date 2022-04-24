@@ -27,13 +27,11 @@ for raw in raws_input:
     if not label:
         raise ValueError()
 
-
     dur = math.floor(raw.times[-1])
-    freq = raw.info['sfreq']
 
-    skip = 1.5
-    step = 0.1
-    length = 1
+    skip = 0
+    step = 0.25
+    length = 0.25
     
     for i in np.arange(skip,dur-length,step):
         raw_clone = raw.copy()
