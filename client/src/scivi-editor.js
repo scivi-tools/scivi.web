@@ -418,25 +418,22 @@ SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, worke
     this.componentsByUID[uid] = node;
 }
 
-SciViEditor.prototype.createNodeFromProto = function (nodeProto)
+SciViEditor.prototype.createNodeFromProto = function (nodeProto, position)
 {
     var node = nodeProto.builder(nodeProto.newNode());
     var container = $("#scivi_node_editor")[0];
-    node.position = [(container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k,
-                     (container.clientHeight / 2 - this.editor.view.transform.y) / this.editor.view.transform.k];
+    node.position = position;
     node.syncSettings = nodeProto.syncSettings;
     this.editor.addNode(node);
     this.editor.view.update();
+    return node;
 }
 
 SciViEditor.prototype.createNode = function (name)
 {
-    this.createNodeFromProto(this.components[name]);
-}
-
-SciViEditor.prototype.createNodeByUID = function (uid)
-{
-    this.createNodeFromProto(this.componentsByUID[uid]);
+    this.createNodeFromProto(this.components[name],
+                             [(container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k,
+                              (container.clientHeight / 2 - this.editor.view.transform.y) / this.editor.view.transform.k]);
 }
 
 SciViEditor.prototype.selectNode = function (node)
@@ -748,6 +745,15 @@ SciViEditor.prototype.showError = function (err)
     dp.find(".ui-button").css("border", "1px solid #3F3F3F");
 }
 
+SciViEditor.prototype.instEdgeNode = function (device, uid, guid, index, count)
+{
+    const x = (container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k;
+    const y = (container.clientHeight / 2 - this.editor.view.transform.y) / this.editor.view.transform.k;
+    const h = 50;
+    var node = this.createNodeFromProto(this.componentsByUID[uid], [x, y - h * count / 2.0 + h * index]);
+    node.settingsVal[settingName] = { device: device, guid: guid };
+}
+
 SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon = null)
 {
     var ws = new WebSocket(address);
@@ -776,33 +782,40 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
     };
     ws.onmessage = function(evt) {
         var msg = JSON.parse(evt.data);
-        for (var i = 0, n = msg.length; i < n; ++i) {
-            Object.keys(msg[i]).forEach(function (key) {
-                var cor = addressCorrespondences[key];
-                if (cor) {
-                    for (var j = 0, n = cor.length; j < n; ++j) {
-                        var dfdNodeID = cor[j][0];
-                        var isInput = cor[j][1];
-                        var socketNmb = cor[j][2];
-                        var dfdNode = _this.getNodeByID(dfdNodeID);
-                        if (isInput) {
-                            if (!dfdNode.data.inputDataPool)
-                                dfdNode.data.inputDataPool = [];
-                            for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
-                                dfdNode.data.inputDataPool.push(null);
-                            dfdNode.data.inputDataPool[socketNmb] = msg[key];
-                        } else {
-                            if (!dfdNode.data.outputDataPool)
-                                dfdNode.data.outputDataPool = [];
-                            for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
-                                dfdNode.data.outputDataPool.push(null);
-                            dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+        if (msg.bus !== undefined) {
+            // Message contains bus description from the Edge device.
+            console.log(msg);
+            ws.close();
+        } else {
+            // Message contains values computed on the remote.
+            for (var i = 0, n = msg.length; i < n; ++i) {
+                Object.keys(msg[i]).forEach(function (key) {
+                    var cor = addressCorrespondences[key];
+                    if (cor) {
+                        for (var j = 0, n = cor.length; j < n; ++j) {
+                            var dfdNodeID = cor[j][0];
+                            var isInput = cor[j][1];
+                            var socketNmb = cor[j][2];
+                            var dfdNode = _this.getNodeByID(dfdNodeID);
+                            if (isInput) {
+                                if (!dfdNode.data.inputDataPool)
+                                    dfdNode.data.inputDataPool = [];
+                                for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
+                                    dfdNode.data.inputDataPool.push(null);
+                                dfdNode.data.inputDataPool[socketNmb] = msg[key];
+                            } else {
+                                if (!dfdNode.data.outputDataPool)
+                                    dfdNode.data.outputDataPool = [];
+                                for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
+                                    dfdNode.data.outputDataPool.push(null);
+                                dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
+            _this.process();
         }
-        _this.process();
     };
 }
 
