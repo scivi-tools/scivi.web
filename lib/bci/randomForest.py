@@ -1,5 +1,4 @@
 import joblib
-import numpy as np
 
 RF_MODE_TRAIN = 0
 RF_MODE_EVAL = 1
