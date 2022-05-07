@@ -440,7 +440,10 @@ class SciViServer:
         if edgeRes:
             hosting = mixedOnto.first(mixedOnto.get_nodes_linked_to(edgeRes, "is_instance"))
             edgeOnto, corTableEdge = dfd2onto.split_onto(mixedOnto, hosting)
-            corTable.update(corTableEdge)
+            if corTable:
+                corTable.update(corTableEdge)
+            else:
+                corTable = corTableEdge
             eon = Eon(self.onto)
             bs, eonOnto = eon.get_eon(edgeOnto)
             eonBytes = []

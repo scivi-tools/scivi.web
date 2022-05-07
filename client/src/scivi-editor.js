@@ -421,7 +421,6 @@ SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, worke
 SciViEditor.prototype.createNodeFromProto = function (nodeProto, position)
 {
     var node = nodeProto.builder(nodeProto.newNode());
-    var container = $("#scivi_node_editor")[0];
     node.position = position;
     node.syncSettings = nodeProto.syncSettings;
     this.editor.addNode(node);
@@ -431,6 +430,7 @@ SciViEditor.prototype.createNodeFromProto = function (nodeProto, position)
 
 SciViEditor.prototype.createNode = function (name)
 {
+    var container = $("#scivi_node_editor")[0];
     this.createNodeFromProto(this.components[name],
                              [(container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k,
                               (container.clientHeight / 2 - this.editor.view.transform.y) / this.editor.view.transform.k]);
@@ -747,6 +747,7 @@ SciViEditor.prototype.showError = function (err)
 
 SciViEditor.prototype.instEdgeNode = function (device, uid, guid, index, count)
 {
+    const container = $("#scivi_node_editor")[0];
     const x = (container.clientWidth / 2 - this.editor.view.transform.x) / this.editor.view.transform.k;
     const y = (container.clientHeight / 2 - this.editor.view.transform.y) / this.editor.view.transform.k;
     const h = 50;

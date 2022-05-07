@@ -32,7 +32,7 @@
                 "UID": 2
             },
             "id": "3",
-            "name": "Distance",
+            "name": "Range",
             "namespace": "http://knova.ru/user/1636179455636",
             "position_x": 429,
             "position_y": 320
