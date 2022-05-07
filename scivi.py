@@ -63,6 +63,10 @@ def mmaps_page():
 def eye_page():
     return getEditor("eye")
 
+@app.route("/locw")
+def locw_page():
+    return getEditor("locw")
+
 @app.route("/paleo")
 def paleo_page():
     return getEditor("paleo")
