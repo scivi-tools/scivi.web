@@ -84,8 +84,9 @@ def getSrv():
         raise "Server task not running, visit root page first"
     if not (srvKey in srvDict):
         srvDict[srvKey] = SciViServer(OntoMerger("kb/" + srvKey).onto, None)
+    result = srvDict[srvKey]
     mutex.release()
-    return srvDict[srvKey]
+    return result
 
 @app.route("/scivi-editor-main.js")
 def editor_main():
