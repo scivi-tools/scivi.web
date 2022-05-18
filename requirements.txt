@@ -1,2 +1,4 @@
 flask
 gunicorn
+vosk
+numpy
