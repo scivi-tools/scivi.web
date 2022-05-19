@@ -357,7 +357,10 @@ class DFD2Onto:
         targetHost = dfdOnto.first(dfdOnto.get_nodes_linked_from(node, "is_hosted"))
         for b in belongingsToRemove:
             isInput = self.instance_of_type(b, "Input", dfdOnto)
-            connected = dfdOnto.get_nodes_linked_to(b, "is_used")
+            if isInput:
+                connected = dfdOnto.get_nodes_linked_to(b, "is_used")
+            else:
+                connected = dfdOnto.get_nodes_linked_from(b, "is_used")
             for c in connected:
                 if self.io_has_hosting(dfdOnto, c, hostNode):
                     rxtx = self.find_rxtx(dfdOnto, hostNode, targetHost)

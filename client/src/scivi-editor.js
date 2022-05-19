@@ -43,6 +43,7 @@ function SciViEditor()
     SciViEditor.prototype.visuals = null;
     SciViEditor.prototype.comms = {};
     SciViEditor.prototype.commsReconnects = {};
+    SciViEditor.prototype.addressCorrespondences = {};
     SciViEditor.prototype.mode = null;
 }
 
@@ -760,10 +761,25 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
     var ws = new WebSocket(address);
     var _this = this;
     this.comms[address] = ws;
+    this.addressCorrespondences[address] = addressCorrespondences;
     if (this.commsReconnects[address] === undefined)
         this.commsReconnects[address] = 10;
+    Object.keys(addressCorrespondences).forEach(function (key) {
+        var cor = addressCorrespondences[key];
+        if (cor) {
+            for (var j = 0, n = cor.length; j < n; ++j) {
+                var isInput = cor[j][1];
+                if (isInput) {
+                    var dfdNodeID = cor[j][0];
+                    var dfdNode = _this.getNodeByID(dfdNodeID);
+                    dfdNode.data.txAddress = address;
+                }
+            }
+        }
+    });
     ws.onopen = function(evt) {
         console.log("WebSocket open on " + address);
+        _this.commsReconnects[address] = -1;
         if (eon) {
             ws.send(Uint8Array.from(eon));
         }
@@ -794,17 +810,11 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
                     var cor = addressCorrespondences[key];
                     if (cor) {
                         for (var j = 0, n = cor.length; j < n; ++j) {
-                            var dfdNodeID = cor[j][0];
                             var isInput = cor[j][1];
-                            var socketNmb = cor[j][2];
-                            var dfdNode = _this.getNodeByID(dfdNodeID);
-                            if (isInput) {
-                                if (!dfdNode.data.inputDataPool)
-                                    dfdNode.data.inputDataPool = [];
-                                for (var k = dfdNode.data.inputDataPool.length; k <= socketNmb; ++k)
-                                    dfdNode.data.inputDataPool.push(null);
-                                dfdNode.data.inputDataPool[socketNmb] = msg[key];
-                            } else {
+                            if (!isInput) {
+                                var dfdNodeID = cor[j][0];
+                                var socketNmb = cor[j][2];
+                                var dfdNode = _this.getNodeByID(dfdNodeID);
                                 if (!dfdNode.data.outputDataPool)
                                     dfdNode.data.outputDataPool = [];
                                 for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
@@ -820,6 +830,29 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
     };
 }
 
+SciViEditor.prototype.transmitInput = function (address, nodeID, socketID, value)
+{
+    var ws = this.comms[address];
+    var isConnected = this.commsReconnects[address] === -1;
+    if (ws && isConnected) {
+        var addressCorrespondences = this.addressCorrespondences[address];
+        var keys = Object.keys(addressCorrespondences);
+        for (var i = 0, n = keys.length; i < n; ++i) {
+            var cor = addressCorrespondences[keys[i]];
+            if (cor) {
+                for (var j = 0, m = cor.length; j < m; ++j) {
+                    if (cor[j][0] === nodeID && cor[j][1] && cor[j][2] === socketID) {
+                        var msg = {};
+                        msg[keys[i]] = value;
+                        ws.send(JSON.stringify(msg));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
 SciViEditor.prototype.cleanupComms = function ()
 {
     var _this = this;
@@ -828,8 +861,8 @@ SciViEditor.prototype.cleanupComms = function ()
     });
     this.comms = {};
     this.commsReconnects = {};
+    this.addressCorrespondences = {};
     this.editor.nodes.forEach(function (node) {
-        node.data.inputDataPool = [];
         node.data.outputDataPool = [];
     });
 }

@@ -10,7 +10,8 @@ from threading import Thread, Lock
 class WSThread(Thread):
     def __init__(self):
         self.mutex = Lock()
-        self.queue = []
+        self.queueIn = []
+        self.queueOut = []
         self.loop = None
         self.stopper = None
         self.wsRunning = False
@@ -20,7 +21,8 @@ class WSThread(Thread):
         print("> WebSocket server started")
         self.set_ws_running(True)
         while True:
-            data = GLOB["WebSocketThread"].get_message()
+            wst = GLOB["WebSocketThread"]
+            data = wst.get_message_in()
             if data:
                 try:
                     await websocket.send(data)
@@ -28,7 +30,12 @@ class WSThread(Thread):
                     print("> WebSocket closed")
                     break
             else:
-                await asyncio.sleep(0)
+                try:
+                    msg = await asyncio.wait_for(websocket.recv(), timeout = 0.01)
+                    wst.put_message_out(json.loads(msg))
+                    PROCESS()
+                except asyncio.TimeoutError:
+                    pass
         self.set_ws_running(False)
         print("> WebSocket server stopped")
 
@@ -54,22 +61,38 @@ class WSThread(Thread):
         self.wsRunning = running
         self.mutex.release()
 
-    def put_message(self, msg):
+    def put_message_in(self, msg):
         self.mutex.acquire()
         if self.wsRunning:
-            self.queue.append(msg)
+            self.queueIn.append(msg)
         self.mutex.release()
 
-    def get_message(self):
+    def get_message_in(self):
         self.mutex.acquire()
-        if len(self.queue) > 0:
-            result = json.dumps(self.queue)
-            self.queue = []
+        if len(self.queueIn) > 0:
+            result = json.dumps(self.queueIn)
+            self.queueIn = []
         else:
             result = None
         self.mutex.release()
         return result
 
+    def put_message_out(self, msg):
+        self.mutex.acquire()
+        self.queueOut.append(msg)
+        self.mutex.release()
+
+    def get_message_out(self, addr):
+        self.mutex.acquire()
+        result = None
+        if self.wsRunning:
+            for msg in self.queueOut:
+                if addr in msg:
+                    result = msg[addr]
+                    self.queueOut.remove(msg)
+                    break
+        self.mutex.release()
+        return result
 
 if "WebSocketThread" in GLOB:
     wsThread = GLOB["WebSocketThread"]
@@ -79,8 +102,8 @@ else:
     REGISTER_SUBTHREAD(wsThread, wsThread.stop)
     wsThread.start()
 
-# tx = INPUT["TX"]
-# if tx:
-    # TODO: do not append to queue if ws is dead
-    # wsThread.put_message({ SETTINGS_VAL["Node Address"]: tx })
-wsThread.put_message({ SETTINGS_VAL["Node Address"]: INPUT["TX"] })
+tx = INPUT.get("TX")
+addr = SETTINGS_VAL["Node Address"]
+if tx is not None:
+    wsThread.put_message_in({ addr: tx })
+OUTPUT["RX"] = wsThread.get_message_out(str(addr))

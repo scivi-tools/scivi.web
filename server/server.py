@@ -244,6 +244,10 @@ class SciViServer:
                             "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
                                 "outputs[i] = node.data.outputDataPool[i]; " +\
                         "} " +\
+                        "if (node.data.txAddress) { " +\
+                            "for (var i = 0, n = inputs.length; i < n; ++i) " +\
+                                "editor.transmitInput(node.data.txAddress, node.id, i, inputs[i][0]); " +\
+                        "} " +\
                    "}"
 
     def gen_settings(self, settings):

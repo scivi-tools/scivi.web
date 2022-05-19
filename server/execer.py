@@ -23,9 +23,10 @@ class Execer(Thread):
         Thread.__init__(self)
 
     def run(self):
-        while self.is_active() and self.keepGoing:
-            self.keepGoing = False
-            self.turn()
+        while self.is_active():
+            if self.keepGoing:
+                self.keepGoing = False
+                self.turn()
             time.sleep(0)
         for st in self.subThreads:
             st.cancel()
