@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from onto.onto import Onto
+from onto.onto import Node, Onto
 
 
 class OntoHasher:
@@ -12,7 +12,7 @@ class OntoHasher:
     (when this small ontology is merged into different über-ontologies).
     '''
 
-    def __init__(self, onto):
+    def __init__(self, onto: Onto):
         '''
         Create instance of OntoHasher.
         @param onto - ontology to process.
@@ -41,27 +41,27 @@ class OntoHasher:
         self.prototypes = self.onto.get_nodes_by_name("Input")
         self.prototypes.extend(self.onto.get_nodes_by_name("Output"))
         self.prototypes.extend(self.onto.get_nodes_by_name("Setting"))
-        for node in self.onto.nodes():
+        for node in self.onto.nodes:
             uid = self.calc_uid(node)
             clash = self.get_node(uid)
             if clash:
-                print("WARNING: UID <%d> duplication for nodes <%s> and <%s>" % (uid, node["name"], clash["name"]))
-            node["UID"] = uid
+                print("WARNING: UID <%d> duplication for nodes <%s> and <%s>" % (uid, node.name, clash.name))
+            node.UID = uid
 
-    def calc_uid(self, node):
+    def calc_uid(self, node: Node):
         '''
         Calculate UID for given node.
         @param node - node to calculate UID for.
         @return UID of node.
         '''
         protos = self.onto.get_nodes_linked_from(node, "is_a")
-        keyName = node["name"]
+        keyName = node.name
         for proto in protos:
             if proto in self.prototypes:
                 owners = self.onto.get_nodes_linked_to(node, "has")
                 for owner in owners:
-                    keyName += owner["name"]
-                keyName += proto["name"]
+                    keyName += owner.name
+                keyName += proto.name
                 break
         return self.hash_key(keyName)
 
@@ -71,8 +71,8 @@ class OntoHasher:
         @param uid - UID of node.
         @return node having this UID or None if node is not found.
         '''
-        for node in self.onto.nodes():
-            if ("UID" in node) and (node["UID"] == uid):
+        for node in self.onto.nodes:
+            if (node.UID is not None) and (node.UID == uid):
                 return node
         return None
 

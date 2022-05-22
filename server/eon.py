@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from onto.onto import Onto
+from onto.onto import Onto, first
 from enum import IntEnum
 import math
 import io
@@ -35,11 +35,11 @@ class Eon:
 
     def get_io_op(self, ioInstID, type, dfdOnto):
         ioInst = dfdOnto.get_node_by_id(ioInstID)
-        ioProto = dfdOnto.first(dfdOnto.get_nodes_linked_from(ioInst, "is_instance"))
+        ioProto = first(dfdOnto.get_nodes_linked_from(ioInst, "is_instance"))
         ioMother = self.onto.get_node_by_id(ioProto["attributes"]["mother"])
-        ioMotherOp = self.onto.first(self.onto.get_nodes_linked_to(ioMother, "has"))
+        ioMotherOp = first(self.onto.get_nodes_linked_to(ioMother, "has"))
         ioNumber = self.get_number_of_ios(ioMotherOp, type, ioMother)
-        ioOpInst = dfdOnto.first(dfdOnto.get_nodes_linked_to(ioInst, "has"))
+        ioOpInst = first(dfdOnto.get_nodes_linked_to(ioInst, "has"))
         return ioOpInst, ioNumber
 
     def get_setting_by_name(self, node, settingName):
@@ -113,7 +113,7 @@ class Eon:
         dataFlowChunkLen = 0
         keys = {}
         
-        for link in dfdOnto.links():
+        for link in dfdOnto.links:
             if link["name"] == "is_used":
                 dataFlowChunkLen += 1
                 oOpInst, oNumber = self.get_io_op(link["source_node_id"], "Output", dfdOnto)
@@ -126,7 +126,7 @@ class Eon:
                 if not ("attributes" in opInst) or not ("settingsVal" in opInst["attributes"]):
                     continue
                 settings = opInst["attributes"]["settingsVal"]
-                opProto = dfdOnto.first(dfdOnto.get_nodes_linked_from(opInst, "is_instance"))
+                opProto = first(dfdOnto.get_nodes_linked_from(opInst, "is_instance"))
                 opMother = self.onto.get_node_by_id(opProto["attributes"]["mother"])
                 for s in settings:
                     sMother = self.get_setting_by_name(opMother, s)

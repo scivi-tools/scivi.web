@@ -1791,9 +1791,85 @@
             "operation": "Node name changed",
             "operation_type": "Do",
             "timestamp": 1652695341
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2022-05-20T06:34:48Z",
+            "node_id": 98,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1653028488
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2022-05-20T06:35:03Z",
+            "new_name": "Voice Recognation Initializator",
+            "new_namespace": "http://knova.ru/user/1619955769734",
+            "node_id": 98,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1653028503
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2022-05-20T06:35:08Z",
+            "destination_id": 14,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 99,
+            "source_id": 98,
+            "timestamp": 1653028508
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2022-05-20T06:35:13Z",
+            "new_name": "initialize",
+            "new_namespace": "http://knova.ru/user/1619955769734",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 99,
+            "timestamp": 1653028513
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2022-05-20T06:35:16Z",
+            "destination_id": 16,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 100,
+            "source_id": 98,
+            "timestamp": 1653028516
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2022-05-20T06:35:21Z",
+            "new_name": "language",
+            "new_namespace": "http://knova.ru/user/1619955769734",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 100,
+            "timestamp": 1653028521
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2022-05-20T06:37:17Z",
+            "new_name": "initializes",
+            "new_namespace": "http://knova.ru/user/1619955769734",
+            "old_name": "initialize",
+            "old_namespace": "http://knova.ru/user/1619955769734",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 99,
+            "timestamp": 1653028637
         }
     ],
-    "last_id": "97",
+    "last_id": "100",
     "namespaces": {
         "default": "http://knova.ru/user/1619955769734",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -1837,8 +1913,8 @@
             "id": "14",
             "name": "Voice Recognize Worker",
             "namespace": "http://knova.ru/user/1619955769734",
-            "position_x": 537,
-            "position_y": 281
+            "position_x": 543,
+            "position_y": 280
         },
         {
             "attributes": {
@@ -1846,8 +1922,8 @@
             "id": "15",
             "name": "ServerSideWorker",
             "namespace": "http://knova.ru/user/1619955769734",
-            "position_x": 619,
-            "position_y": 228
+            "position_x": 536,
+            "position_y": 198
         },
         {
             "attributes": {
@@ -1920,6 +1996,16 @@
             "namespace": "http://knova.ru/user/1619955769734",
             "position_x": 484,
             "position_y": 507
+        },
+        {
+            "attributes": {
+                "path": "lib/voicerecognizer/init.py"
+            },
+            "id": "98",
+            "name": "Voice Recognation Initializator",
+            "namespace": "http://knova.ru/user/1619955769734",
+            "position_x": 537,
+            "position_y": 382
         }
     ],
     "relations": [
@@ -2039,6 +2125,24 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1619955769734",
             "source_node_id": "92"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "14",
+            "id": "99",
+            "name": "initializes",
+            "namespace": "http://knova.ru/user/1619955769734",
+            "source_node_id": "98"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "16",
+            "id": "100",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1619955769734",
+            "source_node_id": "98"
         }
     ],
     "visualize_ont_path": ""

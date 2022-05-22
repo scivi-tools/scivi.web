@@ -4,6 +4,8 @@
 from threading import Thread, Lock
 import time
 
+from onto.onto import Onto, first
+
 
 class SubThread:
     def __init__(self, runner, cancelCallback):
@@ -11,7 +13,7 @@ class SubThread:
         self.cancel = cancelCallback
 
 class Execer(Thread):
-    def __init__(self, onto, taskOnto):
+    def __init__(self, onto: Onto, taskOnto: Onto):
         self.onto = onto
         self.taskOnto = taskOnto
         self.mutex = Lock()
@@ -21,6 +23,13 @@ class Execer(Thread):
         self.glob = {}
         self.cache = {}
         Thread.__init__(self)
+
+    def init_nodes(self):
+        for node in self.taskOnto.nodes:
+            if first(self.taskOnto.get_nodes_linked_from(node, "is_hosted")):
+                for initializer in self.taskOnto.get_nodes_linked_to(node, "initializes"):
+                    pass
+                
 
     def run(self):
         while self.is_active():
@@ -51,7 +60,7 @@ class Execer(Thread):
     def get_belonging_instance(self, instNode, protoOfBelonging):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
         for bNode in belongingNodes:
-            if self.taskOnto.first(self.taskOnto.get_nodes_linked_from(bNode, "is_instance")) == protoOfBelonging:
+            if first(self.taskOnto.get_nodes_linked_from(bNode, "is_instance")) == protoOfBelonging:
                 return bNode
         return None
 
@@ -60,7 +69,7 @@ class Execer(Thread):
         inputs = {}
         for inputNode in inputNodes:
             inputInst = self.get_belonging_instance(instNode, inputNode)
-            outputInst = self.taskOnto.first(self.taskOnto.get_nodes_linked_to(inputInst, "is_used"))
+            outputInst = first(self.taskOnto.get_nodes_linked_to(inputInst, "is_used"))
             if outputInst and (outputInst["id"] in self.buffer):
                 inputs[inputNode["name"]] = self.buffer[outputInst["id"]]
         return inputs
@@ -81,11 +90,14 @@ class Execer(Thread):
         elif "path" in workerNode["attributes"]:
             p = workerNode["attributes"]["path"]
             context["__name__"] = p.replace("/", ".").strip(".py")
-            exec(open(p).read(), context)
+            with open(p, encoding="utf-8") as f:
+                exec(f.read(), context)
+        else:
+            print("Error: 'path' not in workerNode['attributes']");
 
     def execute_worker(self, instNode, protoNode):
         motherNode = self.onto.get_node_by_id(protoNode["attributes"]["mother"])
-        workerNode = self.onto.first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
+        workerNode = first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
         inputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
         if not instNode["id"] in self.cache:
@@ -94,7 +106,7 @@ class Execer(Thread):
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode):
-        protoNode = self.taskOnto.first(self.taskOnto.get_nodes_linked_from(instNode, "is_instance"))
+        protoNode = first(self.taskOnto.get_nodes_linked_from(instNode, "is_instance"))
         if not (instNode["id"] in self.executed):
             self.execute_worker(instNode, protoNode)
             self.executed.add(instNode["id"])
@@ -102,6 +114,6 @@ class Execer(Thread):
     def turn(self):
         self.executed = set()
         self.buffer = {}
-        for node in self.taskOnto.nodes():
-            if self.taskOnto.first(self.taskOnto.get_nodes_linked_from(node, "is_hosted")):
+        for node in self.taskOnto.nodes:
+            if first(self.taskOnto.get_nodes_linked_from(node, "is_hosted")):
                 self.execute_node(node)

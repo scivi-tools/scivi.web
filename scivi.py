@@ -149,6 +149,7 @@ def gen_mixed():
     dfd = request.get_json(force = True)
     oldExeKey = request.cookies.get("exe")
     exeKey = None
+    #TODO: send message to browser about initialization
     try:
         srv = getSrv()
         srv.stop_execer(oldExeKey)

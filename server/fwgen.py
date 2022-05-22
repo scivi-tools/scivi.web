@@ -6,7 +6,7 @@ import shutil
 import io
 import zipfile
 from zipfile import ZipFile
-from onto.onto import Onto
+from onto.onto import Onto, first
 from server.utils import CodeUtils
 
 
@@ -18,15 +18,15 @@ class FWGen:
 
     def subclass(self, className, superClassName):
         cls = self.onto.get_nodes_by_name(className)
-        return self.onto.first(list(filter(lambda obj: self.onto.is_subclass(obj, superClassName), cls)))
+        return first(list(filter(lambda obj: self.onto.is_subclass(obj, superClassName), cls)))
 
     def typed_instance(self, classOfInstance, instanceType):
         its = self.onto.get_nodes_linked_to(classOfInstance, "is_instance")
-        return self.onto.first(list(filter(lambda obj: self.onto.is_node_of_type(obj, instanceType), its)))
+        return first(list(filter(lambda obj: self.onto.is_node_of_type(obj, instanceType), its)))
 
     def dump_file(self, content, name, path):
         if content:
-            with open(os.path.join(path, name), "w") as f:
+            with open(os.path.join(path, name), "w", encoding='utf-8') as f:
                 f.write(content)
 
     def get_dependencies(self, worker):
@@ -41,7 +41,7 @@ class FWGen:
         return "g_" + var["name"].replace(" ", "_")
 
     def declare_output(self, output):
-        varType = self.onto.first(self.onto.get_typed_nodes_linked_from(output, "is_a", "Type"))
+        varType = first(self.onto.get_typed_nodes_linked_from(output, "is_a", "Type"))
         varName = self.var_name(output)
         decl = ""
         send = ""
