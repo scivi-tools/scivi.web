@@ -862,3 +862,10 @@ SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, n
 SciViEditor.prototype.pingByOntoBusAddress = function (settingName, settingID, nodeID)
 {
 }
+
+SciViEditor.prototype.getEdgeDevices = function (gotDicevsesCB)
+{
+    $.getJSON("/scan_ssdp", function (data) {
+        console.log(data);
+    });
+}

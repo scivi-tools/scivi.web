@@ -7,6 +7,7 @@ import datetime
 from onto.onto import Onto
 from enum import Enum
 import uuid
+import socket
 from server.eon import Eon
 from server.dfd2onto import DFD2Onto
 from server.execer import Execer
@@ -465,3 +466,44 @@ class SciViServer:
     def gen_firmware(self, elementName):
         fwGen = FWGen(self.onto)
         return fwGen.generate(elementName, "/tmp/" + elementName)
+
+    def get_devices_list(self, st_val: str = "upnp:rootdevice", timeout: int = 3):
+        """Find devices in the network with SSDP protocol using specified ST header.
+
+        :param st_val:  ST header value. Please check UPnP documentation
+                        or use 'upnp:rootdevice' value to find all devices
+                        in network.
+        :param timeout: the time interval during which devices must respond
+                        (preferably from 1 to 5).
+
+        :returns:       set of ip addresses of the devices
+                        satisfying the search condition (ST header).
+        """
+
+        ssdp_addr = "239.255.255.250"
+        ssdp_port = 1900
+        ssdp_mx = timeout
+
+        ssdp_request = ("M-SEARCH * HTTP/1.1\r\n"
+                        + "HOST: %s:%d\r\n" % (ssdp_addr, ssdp_port)
+                        + "MAN: \"ssdp:discover\"\r\n"
+                        + "MX: %d\r\n" % (ssdp_mx, )
+                        + "ST: %s\r\n" % (st_val, ) + "\r\n")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+        sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 5)
+        sock.bind(('', 19011))
+
+        sock.settimeout(timeout * 1.1)
+        sock.sendto(ssdp_request.encode(), (ssdp_addr, ssdp_port))
+        ip_set = set()
+        while True:
+            try:
+                data, addr = sock.recvfrom(10240)
+            except socket.timeout:
+                break
+            ip_set.add(addr[0])
+        sock.close()
+        return list(ip_set)
+
+    def scan_ssdp(self):
+        return self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")
