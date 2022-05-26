@@ -25,6 +25,7 @@ require("jquery-ui/ui/widgets/tabs");
 require("jquery-contextmenu");
 var Split = require("split.js");
 var D3NE = require("d3-node-editor");
+var FileSaver = require("file-saver");
 
 const VISUALIZATION_MODE = 1;
 const IOT_PROGRAMMING_MODE = 2;
@@ -128,13 +129,7 @@ SciViEditor.prototype.run = function (mode)
                 return;
             if (!filename.includes("."))
                 filename += ".ont";
-            var element = document.createElement("a");
-            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(_this.taskOnto)));
-            element.setAttribute("download", filename);
-            element.style.display = "none";
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
+            FileSaver.saveAs(new Blob([JSON.stringify(_this.taskOnto)], {type: 'text/plain;charset=utf-8'}), filename);
         } else {
             _this.startVisualization();
         }
@@ -149,13 +144,7 @@ SciViEditor.prototype.run = function (mode)
         var content = JSON.stringify(editor.toJSON(), function(key, value) {
             return key === "cache" ? undefined : value;
         });
-        var element = document.createElement("a");
-        element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(content));
-        element.setAttribute("download", filename);
-        element.style.display = "none";
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
+        FileSaver.saveAs(new Blob([content], {type: 'text/plain;charset=utf-8'}), filename);
     });
 
     $("#scivi_btn_load").click(function() {
@@ -288,13 +277,7 @@ SciViEditor.prototype.uploadEON = function ()
                 return;
             if (!filename.includes("."))
                 filename += ".ont";
-            var element = document.createElement("a");
-            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(ont)));
-            element.setAttribute("download", filename);
-            element.style.display = "none";
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
+            FileSaver.saveAs(new Blob([JSON.stringify(ont)], {type: 'text/plain;charset=utf-8'}), filename);
         });
 
         uploadBtn.click(function () {

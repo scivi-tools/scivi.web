@@ -332,7 +332,7 @@ class SciViServer:
         outputNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Output")
         outputNodes = sorted(outputNodes, key = lambda outp: int(outp["id"]))
         outputs = self.gen_sockets(outputNodes)
-        settingNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Setting")
+        settingNodes = self.onto.get_typed_nodes_linked_from_inherited(leaf, "has", "Setting")
         worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
         sett = self.gen_settings(settingNodes)
         self.treeNodes = self.treeNodes +\

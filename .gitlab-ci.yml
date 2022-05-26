@@ -7,16 +7,16 @@ stages:
   - deploy
 
 build_scivi_static:
-  image: node:10
+  image: node:18
   stage: build_static
   cache:
     key: "static-npm"
     paths:
       - cgraph/node_modules
   before_script:
-    - pushd client
-    - npm install
-    - popd
+    - cd client
+    - npm ci
+    - cd ..
   script:
     - NODE_ENV=production make
   artifacts:
