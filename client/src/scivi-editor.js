@@ -46,6 +46,7 @@ function SciViEditor()
     SciViEditor.prototype.commsReconnects = {};
     SciViEditor.prototype.addressCorrespondences = {};
     SciViEditor.prototype.mode = null;
+    SciViEditor.prototype.selectedNode = null;
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -84,13 +85,16 @@ SciViEditor.prototype.run = function (mode)
         else {
             editor.selected.clear();
             _this.selectNode(null);
+            _this.selectedNode = null;
         }
         editor.view.update();
     };
 
     editor.eventListener.on("nodeselect", function (node) {
-        _this.selectedNode = node;
-        _this.selectNode(node);
+        if (node !== _this.selectedNode) {
+            _this.selectedNode = node;
+            _this.selectNode(node);
+        }
     });
 
     editor.eventListener.on("noderemove", function (node) {
@@ -103,7 +107,7 @@ SciViEditor.prototype.run = function (mode)
             setTimeout(function () {
                 _this.process();
                 if (_this.selectedNode)
-                    _this.selectNode(_this.selectedNode);
+                    _this.updateWidgets(_this.selectedNode);
             }, 1);
         }
     });
@@ -193,10 +197,10 @@ SciViEditor.prototype.run = function (mode)
         }
     });*/
 
-    $("#scivi_btn_poll").click(function() {
+    /*$("#scivi_btn_poll").click(function() {
         // FIXME: address.
         _this.startComm("ws://192.168.4.1:81/", {}, [ 0xE1 ]);
-    });
+    });*/
 
     this.editor = editor;
     this.engine = engine;
@@ -353,21 +357,6 @@ SciViEditor.prototype.stopMixed = function ()
     });
 }
 
-SciViEditor.prototype.changeSubTitle = function (nodeID)
-{
-    var el = $("#t" + nodeID);
-    var node = this.getNodeByID(nodeID);
-    node.data.subTitle = el.val();
-}
-
-SciViEditor.prototype.createControl = function (node)
-{
-    if (node.data.inlineSettingsCtrl !== undefined)
-        return node.data.inlineSettingsCtrl;
-    else // FIXME: subtitles are deprecated, remove them.
-        return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
-}
-
 SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, workerFunc, settingsFunc)
 {
     var _this = this;
@@ -386,7 +375,11 @@ SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, worke
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
             settingsFunc(node);
-            node.addControl(new D3NE.Control(_this.createControl(node), function (element, control) { }));
+            if (node.inlineSettingsCtrl !== undefined) {
+                node.addControl(new D3NE.Control("<div></div>", function (element, control) {
+                    element.appendChild(node.inlineSettingsCtrl);
+                }));
+            }
             return node;
         },
         worker(node, inputs, outputs) {
@@ -426,15 +419,14 @@ SciViEditor.prototype.selectNode = function (node)
         $("#scivi_settings_title").html(node.title);
         $("#scivi_settings_title").show();
         $("#scivi_btn_rmnode").show();
+        $("#scivi_settings_content").empty();
         node.syncSettings(node);
-        if (node.data.settingsCtrl)
-            $("#scivi_settings_content").html(node.data.settingsCtrl);
-        else
-            $("#scivi_settings_content").html("");
+        if (node.settingsCtrl)
+            $("#scivi_settings_content").append($(node.settingsCtrl));
     } else {
         $("#scivi_settings_title").hide();
         $("#scivi_btn_rmnode").hide();
-        $("#scivi_settings_content").html("");
+        $("#scivi_settings_content").empty();
     }
 }
 
@@ -630,63 +622,10 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
     return this.editor.nodes.find(function (node) { return node.id === nodeID; });
 }
 
-SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
-{
-    var el = $("#" + settingID.toString());
-    var value = 0;
-    if (el.is(":checkbox"))
-        value = el.is(":checked");
-    else {
-         value = el.get(0).valueAsNumber;
-         if (isNaN(value))
-            value = el.val();
-    }
-    var node = this.getNodeByID(nodeID);
-    node.data.settingsVal[settingName] = value;
-    node.data.settingsChanged[settingName] = true;
-}
-
-SciViEditor.prototype.getHumanReadableSize = function (size)
-{
-    var suffixes = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
-    var p = Math.floor(Math.log(size) / Math.log(1024.0));
-    var rem = size / Math.pow(1024, p);
-    var v = +(rem).toFixed(2);
-    return v + " " + suffixes[p];
-}
-
-SciViEditor.prototype.uploadFile = function (settingName, settingID, nodeID)
-{
-    var sid = settingID + "_" + nodeID;
-    var f = $("#f_" + sid)[0].files[0];
-    var node = this.getNodeByID(nodeID);
-    var meta = f.name + " (" + this.getHumanReadableSize(f.size) + ")";
-    $("#" + sid).html(meta);
-    node.data.settingsVal[settingName] = f;
-    node.data.settingsVal[settingName + "_meta"] = meta;
-    node.data.settingsChanged[settingName] = true;
-    this.process();
-}
-
-SciViEditor.prototype.uploadFiles = function (settingName, settingID, nodeID)
-{
-    var sid = settingID + "_" + nodeID;
-    var f = $("#f_" + sid)[0].files;
-    var node = this.getNodeByID(nodeID);
-    var meta = "</br>";
-    for (var i = 0, n = f.length; i < n; ++i)
-        meta += f[i].name + " (" + this.getHumanReadableSize(f[i].size) + ")</br>";
-    $("#" + sid).html(meta);
-    node.data.settingsVal[settingName] = f;
-    node.data.settingsVal[settingName + "_meta"] = meta;
-    node.data.settingsChanged[settingName] = true;
-    this.process();
-}
-
 SciViEditor.prototype.updateWidgets = function (node)
 {
     if (this.selectedNode && node.id === this.selectedNode.id)
-        this.selectNode(this.selectedNode);
+        this.selectNode(node);
 }
 
 SciViEditor.prototype.runButtonName = function (mode)
@@ -850,7 +789,7 @@ SciViEditor.prototype.cleanupComms = function ()
     });
 }
 
-SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
+/*SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
 {
     var device = $("#d_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
     var guid = $("#g_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
@@ -868,4 +807,4 @@ SciViEditor.prototype.getEdgeDevices = function (gotDicevsesCB)
     $.getJSON("/scan_ssdp", function (data) {
         console.log(data);
     });
-}
+}*/

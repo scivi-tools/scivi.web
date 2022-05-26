@@ -284,10 +284,10 @@ class SciViServer:
         if len(settings) > 0:
             f = "function (node){ " +\
                 initCode +\
-                "if (node.data) { node.data.settingsCtrl = \"\"; node.data.inlineSettingsCtrl = \"\"; } " +\
+                "if (node.data) { node.settingsCtrl = document.createElement(\"div\"); node.inlineSettingsCtrl = document.createElement(\"div\"); } " +\
                 "if (!node.data || !node.data.settings) return; " +\
-                "var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; " +\
-                "var INLINE_WIDGET = function (code) { node.data.inlineSettingsCtrl += code; }; "
+                "var ADD_WIDGET = function (el) { node.settingsCtrl.appendChild(el); }; " +\
+                "var INLINE_WIDGET = function (el) { node.inlineSettingsCtrl.appendChild(el); }; "
             for s in settings:
                 t = self.onto.first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
                 widgets = self.onto.get_typed_nodes_linked_to(t, "is_used", "Widget")
@@ -306,6 +306,7 @@ class SciViServer:
                     code = code.replace("SETTING_ID", s["id"])
                     code = code.replace("SETTING_NAME", s["name"])
                     code = code.replace("NODE_ID", "node.id")
+                    code = code.replace("PROCESS", "editor.process")
                     f = f + "(function () { " + code + " }).call(this);"
             f = f + " }"
             return f
