@@ -72,7 +72,7 @@ class SciViServer:
         self.mode = Mode.UNDEFINED
         self.dependencies = {}
         self.files = {}
-        self.execers : Dict[str, Execer] = {}
+        self.execers: Dict[str, Execer] = {}
         self.codeUtils = CodeUtils()
         self.gen_tree()
         self.node_states = {} #global storate for each node
@@ -87,7 +87,7 @@ class SciViServer:
             self.execers[execer_key].join()
             del self.execers[execer_key]
 
-    def add_node(self, node : Node):
+    def add_node(self, node: Node):
         self.tree = self.tree +\
                     "<li><input type='checkbox' id='i" +\
                     str(self.treeID) +\
@@ -96,7 +96,7 @@ class SciViServer:
                     "'>" + node + "</label>"
         self.treeID = self.treeID + 1
 
-    def gen_sockets(self, sockets : List[Node]):
+    def gen_sockets(self, sockets: List[Node]):
         result = "["
         for s in sockets:
             t = first(self.onto.get_typed_nodes_linked_from(s, "base_type", "Type"))
@@ -114,7 +114,7 @@ class SciViServer:
                      "' },"
         return result + "]"
 
-    def get_language(self, node : Node):
+    def get_language(self, node: Node):
         result = first(self.onto.get_nodes_linked_from(node, "language"))
         if result:
             return result.name
@@ -128,14 +128,14 @@ class SciViServer:
             return "image/png"
         return None
 
-    def get_mime(self, node : Node):
+    def get_mime(self, node: Node):
         if "mime" in node.attributes:
             return node.attributes["mime"]
         elif "path" in node.attributes:
             return self.guess_mime(node.attributes["path"])
         return None
 
-    def add_dependencies(self, node : Node):
+    def add_dependencies(self, node: Node):
         deps = self.onto.get_typed_nodes_linked_from(node, "has", "Dependency")
         if deps:
             for d in deps:
@@ -201,7 +201,7 @@ class SciViServer:
         else:
             return 0
 
-    def resolve_containers(self, code, inputs : List[Node], outputs  : List[Node], settings  : List[Node], viewType: Node):
+    def resolve_containers(self, code, inputs: List[Node], outputs : List[Node], settings : List[Node], viewType: Node):
         props = re.findall(r"PROPERTY\[\"(.+?)\"\]", code)
         for p in props:
             found = False
@@ -216,7 +216,7 @@ class SciViServer:
                             dv = str(dv).lower()
                     else:
                         dv = "undefined"
-                    code = code.replace("PROPERTY[\"" + p + "\"]", "(inputs[" + str(i) + "].length > 0 ? (inputs[" + str(i) + "][0] !== null ? inputs[" + str(i) + "][0] : " + dv + ") : " + dv + ")")
+                    code = code.replace("PROPERTY[\"" + p + "\"]", "(inputs[" + str(i) + "].length > 0 ? (inputs[" + str(i) + "][0] !== null ? inputs[" + str(i) + "][0]: " + dv + "): " + dv + ")")
                     found = True
                     break
             if not found:
@@ -268,7 +268,7 @@ class SciViServer:
                         "} " +\
                    "}"
 
-    def gen_settings(self, settings : List[Node]):
+    def gen_settings(self, settings: List[Node]):
         types = ""
         defs = ""
         doms = ""
@@ -341,7 +341,7 @@ class SciViServer:
             elif (curMode != Mode.UNDEFINED) and (self.mode != curMode):
                 self.mode = Mode.MIXED
 
-    def add_leaf(self, leaf : Node):
+    def add_leaf(self, leaf: Node):
         self.tree = self.tree + "<li><span id='i" + str(self.treeID) + "'>" + leaf.name + "</span></li>"
         inputNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Input")
         inputNodes = sorted(inputNodes, key = lambda inp: inp.id)
@@ -360,7 +360,7 @@ class SciViServer:
         self.treeID = self.treeID + 1
         self.check_mode(leaf)
 
-    def add_tree_level(self, root : Node, children : List[Node]):
+    def add_tree_level(self, root: Node, children: List[Node]):
         self.add_node(root)
         self.tree = self.tree + "<ul>"
         for c in children:
@@ -424,7 +424,7 @@ class SciViServer:
                     return self.execute(worker)
         return None
 
-    def task_onto_has_operations(self, taskOnto : Onto):
+    def task_onto_has_operations(self, taskOnto: Onto):
         for link in taskOnto.links:
             if link.name == "is_hosted":
                 return True

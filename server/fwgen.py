@@ -12,7 +12,7 @@ from server.utils import CodeUtils
 
 
 class FWGen:
-    def __init__(self, onto : Onto):
+    def __init__(self, onto: Onto):
         self.onto = onto
         self.codeUtils = CodeUtils()
         self.guid = os.urandom(4)
@@ -30,7 +30,7 @@ class FWGen:
             with open(os.path.join(path, name), "w", encoding='utf-8') as f:
                 f.write(content)
 
-    def get_dependencies(self, worker : Node) -> List[Node]:
+    def get_dependencies(self, worker: Node) -> List[Node]:
         result = []
         deps = self.onto.get_typed_nodes_linked_from(worker, "has", "Dependency")
         for d in deps:
@@ -38,10 +38,10 @@ class FWGen:
             result += self.get_dependencies(d)
         return result
 
-    def var_name(self, var : Node):
+    def var_name(self, var: Node):
         return "g_" + var.name.replace(" ", "_")
 
-    def declare_output(self, output : Node):
+    def declare_output(self, output: Node):
         varType = first(self.onto.get_typed_nodes_linked_from(output, "is_a", "Type"))
         varName = self.var_name(output)
         decl = ""
@@ -55,7 +55,7 @@ class FWGen:
                    (varName, varName, varName, varName)
         return decl, send
 
-    def resolve_masks(self, node : Node, code):
+    def resolve_masks(self, node: Node, code):
         # %<ROM>
         nodeID = node.UID
         code = code.replace("%<ROM>", "{ 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x }" % \
@@ -75,7 +75,7 @@ class FWGen:
         code = code.replace("%<SEND>", outputSends)
         return code
 
-    def process_code(self, node : Node, code):
+    def process_code(self, node: Node, code):
         outputs = self.onto.get_typed_nodes_linked_from(node, "has", "Output")
         for output in outputs:
             code = code.replace("OUTPUT[\"%s\"]" % output.name, self.var_name(output))

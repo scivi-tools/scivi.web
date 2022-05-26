@@ -6,7 +6,7 @@ import json
 from typing import Any, Dict, Generic, List, Optional, Sequence, TypeVar
 
 T = TypeVar('T')
-def first(array : Sequence[T]) -> T:
+def first(array: Sequence[T]) -> T:
         '''
         Safely get first element from array.
         @param array - array to get first element from.
@@ -187,7 +187,7 @@ class Onto:
                 result.append(self.get_node_by_id(link.destination_node_id))
         return result
 
-    def get_nodes_linked_to(self, node : Node, linkName) -> List[Node]:
+    def get_nodes_linked_to(self, node: Node, linkName) -> List[Node]:
         '''
         Return array of nodes, which are connected with the given one by the link with given name. 
         The direction of link is from nodes returned to the given node.
@@ -208,7 +208,7 @@ class Onto:
         @param filename - name of file to write into.
         '''
         with open(filename, "w", encoding='utf-8') as f:
-            json.dump(self, f, sort_keys = True, indent = 4, ensure_ascii = False)
+            json.dump(self, f, sort_keys = True, indent = 4, ensure_ascii = False, cls = OntoEncoder)
 
     
 

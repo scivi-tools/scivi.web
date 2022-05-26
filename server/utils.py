@@ -21,7 +21,7 @@ class CodeUtils:
             print("Error by loading url: " + url)
             return ""
 
-    def get_code(self, node : Node):
+    def get_code(self, node: Node):
         if "inline" in node.attributes:
             return node.attributes["inline"]
         elif "path" in node.attributes:

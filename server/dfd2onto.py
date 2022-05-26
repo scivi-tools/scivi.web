@@ -30,7 +30,7 @@ class DFD2Onto:
             return 0
 
     def is_prototype(self, node: Node, onto: Onto):
-        return first(onto.get_nodes_linked_from(node, "is_instance")) == None
+        return len(onto.get_nodes_linked_from(node, "is_instance")) == 0
 
     def is_resource(self, node: Node, onto: Onto):
         return len(onto.get_nodes_linked_to(node, "is_hosted")) > 0
@@ -139,13 +139,13 @@ class DFD2Onto:
                 index += 1
         return None
 
-    def link(self, src : Node, srcOutputNumber, dst : Node, dstInputNumber, onto: Onto):
+    def link(self, src: Node, srcOutputNumber, dst: Node, dstInputNumber, onto: Onto):
         instOutput = self.get_io_of_number(src, "Output", srcOutputNumber, onto)
         instInput = self.get_io_of_number(dst, "Input", dstInputNumber, onto)
         if instOutput and instInput:
             onto.link_nodes(instOutput, instInput, "is_used")
 
-    def add_proto_node(self, motherNode: Node, onto : Onto):
+    def add_proto_node(self, motherNode: Node, onto: Onto):
         result = None
         protoNodes = onto.get_nodes_by_name(motherNode.name)
         if protoNodes:
@@ -157,7 +157,7 @@ class DFD2Onto:
             result = onto.add_node(motherNode.name, { "mother": motherNode.id })
         return result
 
-    def instanciate_node(self, motherNode: Node, hostNode: Node, instNmb, instAttrs, onto: Onto, nodeI: Node, nodeO : Node):
+    def instanciate_node(self, motherNode: Node, hostNode: Node, instNmb, instAttrs, onto: Onto, nodeI: Node, nodeO: Node):
         instanceNode = onto.add_node(self.get_instance_name(motherNode.name, instNmb), instAttrs)
         protoNode = self.add_proto_node(motherNode, onto)
         onto.link_nodes(instanceNode, protoNode, "is_instance")
@@ -184,7 +184,7 @@ class DFD2Onto:
             onto.link_nodes(instanceNode, instanceOutput, "has")
         return instanceNode
 
-    def get_dfd_data(self, dfdNode : dict, key : str):
+    def get_dfd_data(self, dfdNode: dict, key: str):
         if ("data" in dfdNode) and (key in dfdNode["data"]):
             return dfdNode["data"][key]
         return {}
@@ -219,7 +219,7 @@ class DFD2Onto:
             return "127.0.0.1:81"
         return ""
 
-    def traverse_computing_resources(self, res: Node, onto : Onto):
+    def traverse_computing_resources(self, res: Node, onto: Onto):
         ch = self.onto.get_nodes_linked_to(res, "is_a")
         if len(ch) == 0:
             resInst = onto.add_node(res.name + self.INST_SUFFIX, { "address": self.get_res_address(res.name) })
@@ -229,13 +229,13 @@ class DFD2Onto:
             for c in ch:
                 self.traverse_computing_resources(c, onto)
 
-    def instanciate_computing_resources(self, onto : Onto):
+    def instanciate_computing_resources(self, onto: Onto):
         # TODO: do it according to the info from GUI.
         self.traverse_computing_resources(first(self.onto.get_nodes_by_name("ComputingResource")), onto)
 
     def get_onto(self, dfd) -> Onto:
         dfdNodes = dfd["nodes"]
-        resultNodesArr : dict[Node] = {}
+        resultNodesArr: dict[Node] = {}
         result = Onto.empty()
         resultI = result.add_node("Input")
         resultO = result.add_node("Output")
@@ -274,7 +274,7 @@ class DFD2Onto:
         self.layout_onto(result)
         return result
 
-    def io_has_hosting(self, dfd: Onto, ioNode : Node, hostNode):
+    def io_has_hosting(self, dfd: Onto, ioNode: Node, hostNode):
         opNode = first(dfd.get_nodes_linked_to(ioNode, "has"))
         result = first(dfd.get_nodes_linked_from(opNode, "is_hosted"))
         return hostNode == result
@@ -315,11 +315,11 @@ class DFD2Onto:
         else:
             return commonProtocols[0]
 
-    def remove_node(self, onto : Onto, node : Node):
+    def remove_node(self, onto: Onto, node: Node):
         node.attributes = {}
         onto.remove_node(node)
 
-    def replace_io(self, dfd : Onto, node : Node, hostNode: Node, rxtxNmb, InputNode : Node, OutputNode: Node, addrCorrespondence):
+    def replace_io(self, dfd: Onto, node: Node, hostNode: Node, rxtxNmb, InputNode: Node, OutputNode: Node, addrCorrespondence):
         '''
         Replace a part of DFD by corresponding receiver and/or transmitter.
         This enables converting DFD of mixed session into the set of smaller DFDs for individual computation parts.
@@ -403,7 +403,7 @@ class DFD2Onto:
         self.remove_node(dfd, node)
         return rxtxNmb
 
-    def split_onto(self, dfd : Onto, hostNode: Node) -> Tuple[Onto, Any]: 
+    def split_onto(self, dfd: Onto, hostNode: Node) -> Tuple[Onto, Any]: 
         result = copy.deepcopy(dfd)
         rxtxNmb = 1
         InputNode = first(result.get_nodes_by_name("Input"))

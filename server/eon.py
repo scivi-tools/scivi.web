@@ -20,10 +20,10 @@ class EonType(IntEnum):
     STRING  = 7
 
 class Eon:
-    def __init__(self, onto : Onto):
+    def __init__(self, onto: Onto):
         self.onto = onto
 
-    def get_number_of_ios(self, node : Node, type, ios):
+    def get_number_of_ios(self, node: Node, type, ios):
         iosNodes = self.onto.get_nodes_linked_from(node, "has")
         index = 0
         for iosNode in iosNodes:
@@ -33,7 +33,7 @@ class Eon:
                 index += 1
         return None
 
-    def get_io_op(self, ioInstID, type, dfdOnto : Onto):
+    def get_io_op(self, ioInstID, type, dfdOnto: Onto):
         ioInst = dfdOnto.get_node_by_id(ioInstID)
         ioProto = first(dfdOnto.get_nodes_linked_from(ioInst, "is_instance"))
         ioMother = self.onto.get_node_by_id(ioProto.attributes["mother"])
@@ -42,7 +42,7 @@ class Eon:
         ioOpInst = first(dfdOnto.get_nodes_linked_to(ioInst, "has"))
         return ioOpInst, ioNumber
 
-    def get_setting_by_name(self, node : Node, settingName):
+    def get_setting_by_name(self, node: Node, settingName):
         sNodes = self.onto.get_nodes_linked_from(node, "has")
         for sNode in sNodes:
             if sNode.name == settingName:
@@ -106,7 +106,7 @@ class Eon:
         else:
             raise ValueError("Cannot dump value <" + value + "> of unknown type <" + type + ">")
 
-    def get_eon(self, dfdOnto : Onto):
+    def get_eon(self, dfdOnto: Onto):
         dataFlowChunk = io.BytesIO()
         settingsChunk = io.BytesIO()
         keysChunk = io.BytesIO()

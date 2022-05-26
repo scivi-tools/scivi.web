@@ -29,7 +29,7 @@ class OntoMerger:
                         self.onto = self.merge(self.onto, Onto.load_from_file(p))
         OntoHasher(self.onto)
 
-    def duplicate_id(self, onto1: Onto, onto2: Onto, node : Node, prototypes):
+    def duplicate_id(self, onto1: Onto, onto2: Onto, node: Node, prototypes):
         '''
         Find duplicates of given nodes.
         @param onto1 - first ontology to merge.
@@ -65,7 +65,7 @@ class OntoMerger:
             else:
                 attrs1[attr] = attrs2[attr]
 
-    def check_for_duplicates(self, onto : Onto, prototypes):
+    def check_for_duplicates(self, onto: Onto, prototypes):
         for node in onto.nodes:
             dupli = onto.get_nodes_by_name(node.name)
             if len(dupli) > 1:

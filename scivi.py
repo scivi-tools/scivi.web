@@ -71,22 +71,22 @@ class Session:
     def stop_execers(self):
         self.serverInst.stop_all_execers()
 
-sessions : Dict[str, Session] = {}
+sessions: Dict[str, Session] = {}
 mutex = Lock()
 
 def getSession(remote_addr, name):
     global sessions
     global mutex
     print("get sessions")
-    #mutex.acquire()
-    if remote_addr not in sessions:
-        sessions[remote_addr] = Session(name)
-    elif sessions[remote_addr].name != name:
-        del sessions[remote_addr]
-        print('session with', remote_addr, 'closed')
-        sessions[remote_addr] = Session(name)
-    sessions[remote_addr].stop_execers()
-    return sessions[remote_addr]
+    with mutex:
+        if remote_addr not in sessions:
+            sessions[remote_addr] = Session(name)
+        elif sessions[remote_addr].name != name:
+            del sessions[remote_addr]
+            print('session with', remote_addr, 'closed')
+            sessions[remote_addr] = Session(name)
+        sessions[remote_addr].stop_execers()
+        return sessions[remote_addr]
 
 
 @app.route("/")
@@ -179,10 +179,8 @@ def getServerInst(remote_addr) -> SciViServer:
     print("get server")
     global sessions
     global mutex
-    #mutex.acquire()
-    result = sessions[remote_addr].serverInst
-    #mutex.release()
-    return result
+    with mutex:
+        return sessions[remote_addr].serverInst
 
 @app.route("/scivi-editor-main.js")
 def editor_main():
