@@ -11,9 +11,10 @@
   "license": "",
   "dependencies": {
     "d3-node-editor": "0.7.4",
+    "file-saver": "^2.0.5",
     "jquery": "^3.5.0",
     "jquery-contextmenu": "^2.8.1",
-    "jquery-ui": "github:jquery/jquery-ui#1.12.0",
+    "jquery-ui": "^1.13.1",
     "jquery.cookie": "^1.4.1",
     "split.js": "^1.5.11"
   },
