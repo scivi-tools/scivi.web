@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from onto.onto import Onto, first
+from onto.onto import Onto, first, Node, Link
 from enum import IntEnum
 import math
 import io
@@ -20,10 +20,10 @@ class EonType(IntEnum):
     STRING  = 7
 
 class Eon:
-    def __init__(self, onto):
+    def __init__(self, onto : Onto):
         self.onto = onto
 
-    def get_number_of_ios(self, node, type, ios):
+    def get_number_of_ios(self, node : Node, type, ios):
         iosNodes = self.onto.get_nodes_linked_from(node, "has")
         index = 0
         for iosNode in iosNodes:
@@ -33,19 +33,19 @@ class Eon:
                 index += 1
         return None
 
-    def get_io_op(self, ioInstID, type, dfdOnto):
+    def get_io_op(self, ioInstID, type, dfdOnto : Onto):
         ioInst = dfdOnto.get_node_by_id(ioInstID)
         ioProto = first(dfdOnto.get_nodes_linked_from(ioInst, "is_instance"))
-        ioMother = self.onto.get_node_by_id(ioProto["attributes"]["mother"])
+        ioMother = self.onto.get_node_by_id(ioProto.attributes["mother"])
         ioMotherOp = first(self.onto.get_nodes_linked_to(ioMother, "has"))
         ioNumber = self.get_number_of_ios(ioMotherOp, type, ioMother)
         ioOpInst = first(dfdOnto.get_nodes_linked_to(ioInst, "has"))
         return ioOpInst, ioNumber
 
-    def get_setting_by_name(self, node, settingName):
+    def get_setting_by_name(self, node : Node, settingName):
         sNodes = self.onto.get_nodes_linked_from(node, "has")
         for sNode in sNodes:
-            if sNode["name"] == settingName:
+            if sNode.name == settingName:
                 return sNode
         return None
 
@@ -106,7 +106,7 @@ class Eon:
         else:
             raise ValueError("Cannot dump value <" + value + "> of unknown type <" + type + ">")
 
-    def get_eon(self, dfdOnto):
+    def get_eon(self, dfdOnto : Onto):
         dataFlowChunk = io.BytesIO()
         settingsChunk = io.BytesIO()
         keysChunk = io.BytesIO()
@@ -114,35 +114,35 @@ class Eon:
         keys = {}
         
         for link in dfdOnto.links:
-            if link["name"] == "is_used":
+            if link.name == "is_used":
                 dataFlowChunkLen += 1
-                oOpInst, oNumber = self.get_io_op(link["source_node_id"], "Output", dfdOnto)
-                iOpInst, iNumber = self.get_io_op(link["destination_node_id"], "Input", dfdOnto)
-                dataFlowChunk.write(bytes([oOpInst["attributes"]["dfd"], \
+                oOpInst, oNumber = self.get_io_op(link.source_node_id, "Output", dfdOnto)
+                iOpInst, iNumber = self.get_io_op(link.destination_node_id, "Input", dfdOnto)
+                dataFlowChunk.write(bytes([oOpInst.attributes["dfd"], \
                                            ((oNumber & 0x0F) << 4) | (iNumber & 0x0F), \
-                                           iOpInst["attributes"]["dfd"]]))
-            elif link["name"] == "is_hosted":
-                opInst = dfdOnto.get_node_by_id(link["source_node_id"])
-                if not ("attributes" in opInst) or not ("settingsVal" in opInst["attributes"]):
+                                           iOpInst.attributes["dfd"]]))
+            elif link.name == "is_hosted":
+                opInst = dfdOnto.get_node_by_id(link.source_node_id)
+                if not ("settingsVal" in opInst.attributes):
                     continue
-                settings = opInst["attributes"]["settingsVal"]
+                settings = opInst.attributes["settingsVal"]
                 opProto = first(dfdOnto.get_nodes_linked_from(opInst, "is_instance"))
-                opMother = self.onto.get_node_by_id(opProto["attributes"]["mother"])
+                opMother = self.onto.get_node_by_id(opProto.attributes["mother"])
                 for s in settings:
                     sMother = self.get_setting_by_name(opMother, s)
                     sNumber = self.get_number_of_ios(opMother, "Setting", sMother)
                     sValue = settings[s]
                     sType, convertedValue = self.guess_type(sValue)
-                    settingsChunk.write(bytes([opInst["attributes"]["dfd"], \
+                    settingsChunk.write(bytes([opInst.attributes["dfd"], \
                                                ((sNumber & 0x0F) << 4) | (int(sType) & 0x0F)]))
                     self.dump_value(convertedValue, sType, settingsChunk)
-                if (not ("attributes" in opMother)) or (not ("UID" in opMother["attributes"])):
-                    raise ValueError("Operator <" + opMother["name"] + "> has no UID")
-                opMotherUID = opMother["attributes"]["UID"]
+                if not ("UID" in opMother.attributes):
+                    raise ValueError("Operator <" + opMother.name + "> has no UID")
+                opMotherUID = opMother.attributes["UID"]
                 if opMotherUID in keys:
-                    keys[opMotherUID].append(opInst["attributes"]["dfd"])
+                    keys[opMotherUID].append(opInst.attributes["dfd"])
                 else:
-                    keys[opMotherUID] = [opInst["attributes"]["dfd"]]
+                    keys[opMotherUID] = [opInst.attributes["dfd"]]
         
         for k in keys:
             keysChunk.write(struct.pack("!H", int(k) & 0xFFFF))

@@ -225,6 +225,27 @@ ul
     height: 100%;
 }
 
+#scivi_loadscreen
+{
+    display: none; 
+    position: fixed;
+    width: 26%;
+    left: 50%;
+    top: 50%;
+    margin: -13% 0 0 -13%;
+    z-index: 10;
+    background-color: #b8b8b9;
+    border-radius: 15px;
+    text-align: center;     
+    font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;                                      
+}
+
+#scivi_load_progressbar
+{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 input[type="file"]
 {
     display: none;

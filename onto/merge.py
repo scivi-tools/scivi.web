@@ -61,7 +61,7 @@ class OntoMerger:
         attrs2 = node2.attributes
         for attr in attrs2:
             if (attr in attrs1) and (attrs1[attr] != attrs2[attr]):
-                print("Warning: conflicting attribute <%s> of node %s, value <%s> from first onto used" % (attr, node1["name"], attrs1[attr]))
+                print("Warning: conflicting attribute <%s> of node %s, value <%s> from first onto used" % (attr, node1.name, attrs1[attr]))
             else:
                 attrs1[attr] = attrs2[attr]
 

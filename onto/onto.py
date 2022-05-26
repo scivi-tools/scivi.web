@@ -3,9 +3,10 @@
 
 import hashlib
 import json
-from typing import Any, Dict, List
+from typing import Any, Dict, Generic, List, Optional, Sequence, TypeVar
 
-def first(array) -> any:
+T = TypeVar('T')
+def first(array : Sequence[T]) -> T:
         '''
         Safely get first element from array.
         @param array - array to get first element from.
@@ -23,8 +24,8 @@ class Node:
     namespace: str
     position_x: int
     position_y: int
-    merged_id: int | None
-    UID: int | None
+    merged_id: Optional[int]
+    UID: Optional[int]
 
     def __init__(self,id, name, attributes, namespace, position_x, position_y):
         self.attributes = attributes
@@ -35,6 +36,11 @@ class Node:
         self.position_y = position_y
         self.merged_id = None
         self.UID = None
+
+    def __eq__(self, other):
+        if (isinstance(other, Node)):
+            return self.id == other.id
+        else: return False
 
 
 class Link(json.JSONEncoder):
@@ -52,6 +58,11 @@ class Link(json.JSONEncoder):
         self.namespace = namespace
         self.source_node_id = source_node_id
         self.destination_node_id = destination_node_id
+
+    def __eq__(self, other):
+        if (isinstance(other, Link)):
+            return self.id == other.id
+        else: return False
 
 class Onto:
     history: List[Dict[str,str]]

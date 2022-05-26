@@ -1,119 +1,142 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import asyncio
+import enum
+import json
 from threading import Thread, Lock
 import time
+from typing import Callable, List
 
-from onto.onto import Onto, first
+from colorama import init
 
+from onto.onto import Node, Onto, first
+
+SendMessageFunc =  Callable[[str], None]
 
 class SubThread:
     def __init__(self, runner, cancelCallback):
         self.runner = runner
         self.cancel = cancelCallback
 
+class ExecutionMode(enum.Enum):
+    INITIALIZATION = 1
+    RUNNING = 2
+    DESTRUCTION = 3
+
+
 class Execer(Thread):
-    def __init__(self, onto: Onto, taskOnto: Onto):
+    def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict], send_message_func: SendMessageFunc, event_loop):
         self.onto = onto
         self.taskOnto = taskOnto
-        self.mutex = Lock()
-        self.active = True
-        self.keepGoing = True
+        self.process_scheduled = False
         self.subThreads = []
         self.glob = {}
         self.cache = {}
+        self.node_states = node_states
+        self.__cmd_server_loop__ = event_loop
+        self.process_loop = asyncio.new_event_loop()
+        self.push_message_to_send = send_message_func
+        asyncio.set_event_loop(self.process_loop)
         Thread.__init__(self)
 
-    def init_nodes(self):
-        for node in self.taskOnto.nodes:
-            if first(self.taskOnto.get_nodes_linked_from(node, "is_hosted")):
-                for initializer in self.taskOnto.get_nodes_linked_to(node, "initializes"):
-                    pass
-                
-
     def run(self):
-        while self.is_active():
-            if self.keepGoing:
-                self.keepGoing = False
-                self.turn()
-            time.sleep(0)
+        Thread.run(self)
+        self.process_loop.run_forever()
+        self.process_loop.close()
         for st in self.subThreads:
             st.cancel()
-
-    def is_active(self):
-        self.mutex.acquire()
-        result = self.active
-        self.mutex.release()
-        return result
+        print('execer stopped')
 
     def stop(self):
-        self.mutex.acquire()
-        self.active = False
-        self.mutex.release()
+        print('execer stopping')
+        self.turn(ExecutionMode.DESTRUCTION)
+        self.process_loop.call_soon_threadsafe(self.process_loop.stop)
 
     def process(self):
-        self.keepGoing = True
+        if not self.process_scheduled: 
+            self.process_loop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
+        self.process_scheduled = True
 
     def register_subthread(self, runner, cancelCallback):
+        print("WARNING: Creation of subthreads may block stop_execer, so I recommend to not to do that. use Asyncio.get_event_pool, to run things in parallel")
         self.subThreads.append(SubThread(runner, cancelCallback))
 
-    def get_belonging_instance(self, instNode, protoOfBelonging):
+    def get_belonging_instance(self, instNode : Node, protoOfBelonging : Node):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
         for bNode in belongingNodes:
             if first(self.taskOnto.get_nodes_linked_from(bNode, "is_instance")) == protoOfBelonging:
                 return bNode
         return None
 
-    def gen_inputs(self, instNode, protoNode):
+    def gen_inputs(self, instNode : Node, protoNode : Node):
         inputNodes = self.taskOnto.get_typed_nodes_linked_from(protoNode, "has", "Input")
         inputs = {}
         for inputNode in inputNodes:
             inputInst = self.get_belonging_instance(instNode, inputNode)
             outputInst = first(self.taskOnto.get_nodes_linked_to(inputInst, "is_used"))
-            if outputInst and (outputInst["id"] in self.buffer):
-                inputs[inputNode["name"]] = self.buffer[outputInst["id"]]
+            if outputInst and (outputInst.id in self.buffer):
+                inputs[inputNode.name] = self.buffer[outputInst.id]
         return inputs
 
-    def store_outputs(self, instNode, protoNode, outputs):
+    def store_outputs(self, instNode : Node, protoNode : Node, outputs):
         outputNodes = self.taskOnto.get_typed_nodes_linked_from(protoNode, "has", "Output")
         for outputNode in outputNodes:
-            if outputNode["name"] in outputs:
+            if outputNode.name in outputs:
                 outputInst = self.get_belonging_instance(instNode, outputNode)
-                self.buffer[outputInst["id"]] = outputs[outputNode["name"]]
+                self.buffer[outputInst.id] = outputs[outputNode.name]
 
-    def execute_code(self, workerNode, inputs, outputs, settings, cache):
+    def execute_code(self, workerNode : Node, mode: ExecutionMode, inputs : dict, outputs : dict, settings, cache, node_state: dict):
         context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
-                    "CACHE": cache, "GLOB": self.glob, \
+                    "CACHE": cache, "GLOB": self.glob, "STATE": node_state,\
+                    "MODE": mode.name, \
                     "PROCESS": self.process, "REGISTER_SUBTHREAD": self.register_subthread }
-        if "inline" in workerNode["attributes"]:
-            exec(workerNode["attributes"]["inline"], context)
-        elif "path" in workerNode["attributes"]:
-            p = workerNode["attributes"]["path"]
+        if "inline" in workerNode.attributes:
+            exec(workerNode.attributes["inline"], context)
+        elif "path" in workerNode.attributes:
+            p = workerNode.attributes["path"]
             context["__name__"] = p.replace("/", ".").strip(".py")
             with open(p, encoding="utf-8") as f:
+                #print('exec', p)
                 exec(f.read(), context)
         else:
-            print("Error: 'path' not in workerNode['attributes']");
+            print("Error: Can't execute node. 'path' not in workerNode.attributes");
 
-    def execute_worker(self, instNode, protoNode):
-        motherNode = self.onto.get_node_by_id(protoNode["attributes"]["mother"])
+    def execute_worker(self, instNode : Node, protoNode : Node, mode: ExecutionMode):
+        motherNode = self.onto.get_node_by_id(protoNode.attributes["mother"])
         workerNode = first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
         inputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
-        if not instNode["id"] in self.cache:
-            self.cache[instNode["id"]] = {}
-        self.execute_code(workerNode, inputs, outputs, instNode["attributes"]["settingsVal"], self.cache[instNode["id"]])
+        if not instNode.id in self.cache:
+            self.cache[instNode.id] = {}
+        #print('execute', workerNode.name)
+        self.execute_code(workerNode, mode, inputs, outputs, instNode.attributes["settingsVal"], 
+        self.cache[instNode.id], self.node_states[instNode.id])
         self.store_outputs(instNode, protoNode, outputs)
 
-    def execute_node(self, instNode):
+    def execute_node(self, instNode : Node, mode: ExecutionMode):
         protoNode = first(self.taskOnto.get_nodes_linked_from(instNode, "is_instance"))
-        if not (instNode["id"] in self.executed):
-            self.execute_worker(instNode, protoNode)
-            self.executed.add(instNode["id"])
-
-    def turn(self):
-        self.executed = set()
+        self.execute_worker(instNode, protoNode, mode)
+        
+    def turn(self, mode : ExecutionMode):
         self.buffer = {}
+        self.process_scheduled = False
+        executed = set()
+        nodes_to_execute = []
         for node in self.taskOnto.nodes:
-            if first(self.taskOnto.get_nodes_linked_from(node, "is_hosted")):
-                self.execute_node(node)
+            if len(self.taskOnto.get_nodes_linked_from(node, "is_hosted")) > 0:
+                    nodes_to_execute.append(node)
+
+        nodes_to_execute_count = len(nodes_to_execute)
+        for node in self.taskOnto.nodes:
+            if len(self.taskOnto.get_nodes_linked_from(node, "is_hosted")) > 0:
+                self.execute_node(node, mode)
+                executed.add(node.id)
+                if mode == ExecutionMode.INITIALIZATION:
+                    command = {"command": "wait_for_initialization",
+                                    "progress": len(executed) / nodes_to_execute_count}
+                    self.push_message_to_send(json.dumps(command))
+                elif mode == ExecutionMode.DESTRUCTION:
+                    command = {"command": "wait_for_destruction",
+                                    "progress": len(executed) / nodes_to_execute_count}
+                    self.push_message_to_send(json.dumps(command))         

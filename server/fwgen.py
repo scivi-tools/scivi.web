@@ -4,14 +4,15 @@
 import os
 import shutil
 import io
+from typing import List
 import zipfile
 from zipfile import ZipFile
-from onto.onto import Onto, first
+from onto.onto import Node, Onto, first
 from server.utils import CodeUtils
 
 
 class FWGen:
-    def __init__(self, onto):
+    def __init__(self, onto : Onto):
         self.onto = onto
         self.codeUtils = CodeUtils()
         self.guid = os.urandom(4)
@@ -29,7 +30,7 @@ class FWGen:
             with open(os.path.join(path, name), "w", encoding='utf-8') as f:
                 f.write(content)
 
-    def get_dependencies(self, worker):
+    def get_dependencies(self, worker : Node) -> List[Node]:
         result = []
         deps = self.onto.get_typed_nodes_linked_from(worker, "has", "Dependency")
         for d in deps:
@@ -37,26 +38,26 @@ class FWGen:
             result += self.get_dependencies(d)
         return result
 
-    def var_name(self, var):
-        return "g_" + var["name"].replace(" ", "_")
+    def var_name(self, var : Node):
+        return "g_" + var.name.replace(" ", "_")
 
-    def declare_output(self, output):
+    def declare_output(self, output : Node):
         varType = first(self.onto.get_typed_nodes_linked_from(output, "is_a", "Type"))
         varName = self.var_name(output)
         decl = ""
         send = ""
-        if varType["name"] == "Bool":
+        if varType.name == "Bool":
             decl = "bool %s = false;\n" % varName
             send = "g_1w.send(%s);\n" % varName
-        elif varType["name"] == "Number":
+        elif varType.name == "Number":
             decl = "int %s = 0;\n" % varName
             send = "g_1w.send((%s >> 24) & 0xFF);\ng_1w.send((%s >> 16) & 0xFF);\ng_1w.send((%s >> 8) & 0xFF);\ng_1w.send(%s & 0xFF);\n" % \
                    (varName, varName, varName, varName)
         return decl, send
 
-    def resolve_masks(self, node, code):
+    def resolve_masks(self, node : Node, code):
         # %<ROM>
-        nodeID = int(node["UID"])
+        nodeID = node.UID
         code = code.replace("%<ROM>", "{ 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x }" % \
                             (0xE0, \
                              nodeID >> 8 & 0xFF, nodeID & 0xFF, \
@@ -74,10 +75,10 @@ class FWGen:
         code = code.replace("%<SEND>", outputSends)
         return code
 
-    def process_code(self, node, code):
+    def process_code(self, node : Node, code):
         outputs = self.onto.get_typed_nodes_linked_from(node, "has", "Output")
         for output in outputs:
-            code = code.replace("OUTPUT[\"%s\"]" % output["name"], self.var_name(output))
+            code = code.replace("OUTPUT[\"%s\"]" % output.name, self.var_name(output))
         return code
 
     def generate(self, elementName, path):
@@ -95,10 +96,10 @@ class FWGen:
         deps = self.get_dependencies(worker)
         firstDep = True
         for d in deps:
-            if "path" in d["attributes"]:
-                code = self.codeUtils.read_file(d["attributes"]["path"])
+            if "path" in d.attributes:
+                code = self.codeUtils.read_file(d.attributes["path"])
                 code = self.resolve_masks(element, code)
-                name = os.path.basename(d["attributes"]["path"])
+                name = os.path.basename(d.attributes["path"])
                 if firstDep:
                     name = elementName + ".ino"
                     firstDep = False

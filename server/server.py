@@ -5,16 +5,17 @@ import json
 import re
 import importlib
 import datetime
-from typing import Dict, List, Tuple
+from turtle import done
+from typing import Dict, List, Tuple, Optional
 from xmlrpc import server
 
-import websockets, asyncio
+from threading import Thread
 from onto.onto import Node, Onto, OntoEncoder, first
 from enum import Enum
 import uuid
 from server.eon import Eon
 from server.dfd2onto import DFD2Onto
-from server.execer import Execer
+from server.execer import Execer, ExecutionMode, SendMessageFunc
 from server.utils import CodeUtils
 from server.fwgen import FWGen
 
@@ -59,7 +60,7 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, onto: Onto, context):
+    def __init__(self, onto: Onto, send_message_func: SendMessageFunc, event_loop, context):
         self.onto = onto
         self.loc = "eng"
         self.tree = ""
@@ -71,13 +72,21 @@ class SciViServer:
         self.mode = Mode.UNDEFINED
         self.dependencies = {}
         self.files = {}
-        self.execers = {}
+        self.execers : Dict[str, Execer] = {}
         self.codeUtils = CodeUtils()
-
         self.gen_tree()
+        self.node_states = {} #global storate for each node
+        for node in self.onto.nodes:
+            self.node_states[node.id] = {}
+        self.push_message_to_send = send_message_func
+        self.__cmd_server_loop__ = event_loop
 
-    
-    
+    def __del__(self):
+        for execer_key in self.execers:
+            self.execers[execer_key].stop()
+            self.execers[execer_key].join()
+            del self.execers[execer_key]
+
     def add_node(self, node : Node):
         self.tree = self.tree +\
                     "<li><input type='checkbox' id='i" +\
@@ -431,7 +440,7 @@ class SciViServer:
             barr.append(b)
         return { "ont": eonOnto.data, "eon": barr }
 
-    def gen_mixed(self, dfd) -> Tuple[Dict, str | None]:
+    def gen_mixed(self, dfd) -> Tuple[Dict, Optional[str]]:
         dfd2onto = DFD2Onto(self.onto) #load ontology
         mixedOnto = dfd2onto.get_onto(dfd) # get ontology for dfd
         # Server
@@ -441,10 +450,11 @@ class SciViServer:
         if srvRes:
             hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # get all plugins
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
-            if self.task_onto_has_operations(serverOnto):
-                execer = Execer(self.onto, serverOnto)
+            if self.task_onto_has_operations(serverOnto): 
+                execer = Execer(self.onto, serverOnto, self.node_states, self.push_message_to_send, self.__cmd_server_loop__)
                 serverTaskHash = str(uuid.uuid4())
                 self.execers[serverTaskHash] = execer
+                execer.turn(ExecutionMode.INITIALIZATION)
                 execer.start()
         # Edge
         edgeRes = first(mixedOnto.get_nodes_by_name("ESP8266"))
@@ -467,6 +477,14 @@ class SciViServer:
     def stop_execer(self, serverTaskHash):
         if serverTaskHash and serverTaskHash in self.execers:
             self.execers[serverTaskHash].stop()
+            self.execers[serverTaskHash].join()
+            del self.execers[serverTaskHash]
+
+    def stop_all_execers(self):
+        for execerTaskHash in self.execers:
+            self.execers[execerTaskHash].stop()
+            self.execers[execerTaskHash].join()
+        self.execers = {}
 
     def get_file_from_storage(self, filename):
         return self.files[filename]
