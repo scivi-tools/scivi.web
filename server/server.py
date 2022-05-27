@@ -95,7 +95,6 @@ class SciViServer:
         self.execers: Dict[str, Execer] = {}
         self.mutex = Lock()
         self.codeUtils = CodeUtils()
-        self.gen_tree()
         self.node_states = {} #global storate for each node
         for node in self.onto.nodes:
             self.node_states[node.id] = {}

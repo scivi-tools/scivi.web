@@ -28,7 +28,9 @@ async def wait_for_connection():
 
 if MODE == "INITIALIZATION":
     CACHE["RX"] = deque()
-    asyncio.get_event_loop().create_task(wait_for_connection())
+    if "DataWebSocketStarted" not in GLOB:
+        GLOB["DataWebSocketStarted"] = True
+        asyncio.get_event_loop().create_task(wait_for_connection())
 
 elif MODE == "RUNNING" and "DataWebSocket" in GLOB:
     websocket = GLOB["DataWebSocket"]
@@ -39,9 +41,11 @@ elif MODE == "RUNNING" and "DataWebSocket" in GLOB:
     if len(CACHE["RX"]) > 0:
         OUTPUT["RX"] = CACHE["RX"].popleft()
 if MODE == "DESTRUCTION" and "DataWebSocket" in GLOB:
-    print('destroy data server')
-    webserver = GLOB["DataWebServer"]
-    webserver.close()
-    del GLOB["DataWebSocket"]
-    del GLOB["DataWebServer"]
+    if "DataWebServer" in GLOB:
+        print('destroy data server')
+        webserver = GLOB["DataWebServer"]
+        webserver.close()
+        del GLOB["DataWebSocket"]
+        del GLOB["DataWebServer"]
+        GLOB.pop("DataWebSocketStarted")
     

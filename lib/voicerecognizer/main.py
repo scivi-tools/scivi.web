@@ -26,27 +26,27 @@ elif MODE == "RUNNING":
                 CACHE['SampleRate'] = SampleRate
                 print('recognizer created')
                 #generate header for wav file
-                #with open('aud.wav', "ab") as f:
-                #    f.write(b'RIFF')
-                #    f.write(b'0000')
-                #    f.write(bytes.fromhex('57415645666D7420'))
-                #    f.write(bytes.fromhex('10000000'))
-                #    f.write(bytes.fromhex('0100'))
-                #    f.write(bytes.fromhex('0100'))
-                #    f.write(bytes.fromhex('44AC0000'))
-                #    f.write(bytes.fromhex('88580100'))
-                #    f.write(bytes.fromhex('0200'))
-                #    f.write(bytes.fromhex('1000'))
-                #    f.write(b'data')
-                #    f.write(b'0000')
+                with open('aud.wav', "ab") as f:
+                    f.write(b'RIFF')
+                    f.write(b'0000')
+                    f.write(bytes.fromhex('57415645666D7420'))
+                    f.write(bytes.fromhex('10000000'))
+                    f.write(bytes.fromhex('0100'))
+                    f.write(bytes.fromhex('0100'))
+                    f.write(bytes.fromhex('44AC0000'))
+                    f.write(bytes.fromhex('88580100'))
+                    f.write(bytes.fromhex('0200'))
+                    f.write(bytes.fromhex('1000'))
+                    f.write(b'data')
+                    f.write(b'0000')
 
             elif CACHE['SampleRate'] == SampleRate:
                 rec = CACHE['recognizer']
                 header, encode = pcm.split(',', 1)
                 b = b64decode(encode)
                 #save pcm to wav file (for debug)
-                #with open('aud.wav', "ab") as f:
-                #    f.write(b)
+                with open('aud.wav', "ab") as f:
+                    f.write(b)
                 if rec.AcceptWaveform(b):
                     result = json.loads(rec.Result()) 
                     print('recognized', result["text"])

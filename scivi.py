@@ -26,20 +26,20 @@ servers: Dict[str, SciViServer] = {}
 disposed_servers = []
 mutex = Lock()
 
-def DisposeServer(server_id: str, force: bool = False):
+def disposeServer(server_id: str, force: bool = False):
     if force or server_id in disposed_servers:
         print('Disposing Server Instance')
         servers[server_id].release()
         server = servers.pop(server_id)
         del server
 
-def MarkServerAsUnused(server_id: str):
+def markServerAsUnused(server_id: str):
     global event_loop
     if server_id in servers:
         disposed_servers.append(server_id)
-        event_loop.call_later(300, DisposeServer, server_id)
+        event_loop.call_later(300, disposeServer, server_id)
 
-def MarkServerAsUsed(server_id: str):
+def markServerAsUsed(server_id: str):
     if server_id in disposed_servers:
         disposed_servers.remove(server_id)
     
@@ -47,24 +47,25 @@ def getServerInst() -> SciViServer:
     global mutex
     server_id = request.remote_addr
     with mutex:
-        MarkServerAsUsed(server_id)
+        markServerAsUsed(server_id)
         return servers[server_id]
 
 def poolServerInst(server_id, path_to_onto):
+    global mutex
     with mutex:
         if server_id not in servers:
             servers[server_id] = SciViServer(server_id, path_to_onto, event_loop, None)
-            servers[server_id].server_become_unused_event = MarkServerAsUnused
+            servers[server_id].server_become_unused_event = markServerAsUnused
         elif servers[server_id].path_to_onto != path_to_onto:
-            DisposeServer(server_id, True)
+            disposeServer(server_id, True)
             servers[server_id] = SciViServer(server_id, path_to_onto, event_loop, None)
-            servers[server_id].server_become_unused_event = MarkServerAsUnused
+            servers[server_id].server_become_unused_event = markServerAsUnused
         server = servers[server_id]
-        MarkServerAsUsed(server_id)
+        server.gen_tree()
+        markServerAsUsed(server_id)
         return server
 
 def LoadEditorPage(onto_name) -> Response:
-    global mutex
     global event_loop
     path_to_onto = "kb/" + onto_name
     server_id = request.remote_addr
