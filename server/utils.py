@@ -34,9 +34,10 @@ class CodeUtils:
     def get_file(self, node: Node):
         if "path" in node.attributes:
             path = node.attributes["path"]
-            mode = "r"
             if path.endswith(".png"):
-                mode += "b"
-            with open(node.attributes["path"], mode, encoding='utf-8') as f:
-                return f.read()
+                with open(path, "rb") as f:
+                    return f.read()
+            else:
+                with open(path, "r", encoding='utf-8') as f:
+                    return f.read()
         return None
