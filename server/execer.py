@@ -4,11 +4,8 @@
 import asyncio
 import enum
 import json
-from threading import Thread, Lock
-import time
-from typing import Callable, List
-
-from colorama import init
+from threading import Thread
+from typing import Callable
 
 from onto.onto import Node, Onto, first
 
