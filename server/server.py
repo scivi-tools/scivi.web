@@ -306,6 +306,7 @@ class SciViServer:
                     code = code.replace("SETTING_ID", s["id"])
                     code = code.replace("SETTING_NAME", s["name"])
                     code = code.replace("NODE_ID", "node.id")
+                    code = code.replace("CACHE", "node.data.cache")
                     code = code.replace("PROCESS", "editor.process")
                     f = f + "(function () { " + code + " }).call(this);"
             f = f + " }"
