@@ -304,10 +304,19 @@ SciViEditor.prototype.uploadEON = function ()
     });
     var _this = this;
     $.post("/gen_eon", content, function (data) {
+        document.getElementById('scivi_loadscreen').style.display = 'none';
         if (data["error"]) {
             _this.showError(data["error"]);
             return;
         }
+
+        this.inVisualization = true;
+        this.clearViewport();
+        this.process();
+        $(".scivi_slide").css({"transform": "translateX(-100%)"});
+        $("#scivi_btn_visualize").html("◀");
+        $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+        $(".scivi_menu").css({"margin-left": "20px"});
 
         var ont = data["ont"];
         var eon = data["eon"];
