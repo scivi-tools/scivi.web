@@ -322,7 +322,7 @@ class DFD2Onto:
         node.attributes = {}
         onto.remove_node(node)
 
-    def replace_io(self, dfdOnto: Onto, node: Node, hostNode: Node, rxtxNmb, InputNode: Node, OutputNode: Node, addrCorrespondence):
+    def replace_io(self, dfdOnto: Onto, node: Node, hostNode: Node, rxtxNmb, dfdI: Node, dfdO: Node, addrCorrespondence):
         '''
         Replace a part of DFD by corresponding receiver and/or transmitter.
         This enables converting DFD of mixed session into the set of smaller DFDs for individual computation parts.
@@ -340,7 +340,7 @@ class DFD2Onto:
         whereby they can communicate directly, without receivers/transmitters in between).
         In other words, this method helps to create task ontology for particular computing resource.
         The border between the parts is replaced by data receivers and transmitters to ensure the seamless data flow.
-        @param dfdOnto - Onto which is to be modified. It will be changed by this method, so make sure to pass here a deep copy of an original Onto.
+        @param dfdOnto - ontology which is to be modified. It will be changed by this method, so make sure to pass here a deep copy of an original Onto.
         @param node - node that does not belong to the computing resource dfdOnto stands for.
                       This node and all its belongings (nodes linked from it by "has") will be removed from dfdOnto with
                       all the incident links.
@@ -375,7 +375,7 @@ class DFD2Onto:
                                                        "settingsType": { "Node Address": "Integer", \
                                                                          "Target Address": "String" }, \
                                                        "dfd": node.attributes["dfd"] }, \
-                                                     dfdOnto, InputNode, OutputNode)
+                                                     dfdOnto, dfdI, dfdO)
                     if isInput:
                         rxtxSocketName = "Input"
                         operatorSocketType = "Output"
@@ -409,29 +409,29 @@ class DFD2Onto:
     def split_onto(self, dfdOnto: Onto, hostNode: Node) -> Tuple[Onto, Any]: 
         result = copy.deepcopy(dfdOnto)
         rxtxNmb = 1
-        InputNode = first(result.get_nodes_by_name("Input"))
-        OutpuyNode = first(result.get_nodes_by_name("Output"))
+        dfdI = first(result.get_nodes_by_name("Input"))
+        dfdO = first(result.get_nodes_by_name("Output"))
         needsRelayout = False
         corTable = {}
         
         # Replace I/O.
-        nodes = result.nodes.copy()
-        for node in nodes:
+        dfdNodes = result.nodes.copy()
+        for node in dfdNodes:
             aff = first(result.get_nodes_linked_from(node, "is_hosted"))
             if aff and (aff.id != hostNode.id):
-                rxtxNmb = self.replace_io(result, node, hostNode, rxtxNmb, InputNode, OutpuyNode, corTable)
+                rxtxNmb = self.replace_io(result, node, hostNode, rxtxNmb, dfdI, dfdO, corTable)
                 needsRelayout = True
         
         # Cleanup unusedd operators.
-        nodes = result.nodes.copy()
-        for node in nodes:
+        dfdNodes = result.nodes.copy()
+        for node in dfdNodes:
             if ("mother" in node.attributes) and \
                (len(result.get_nodes_linked_to(node, "is_instance")) == 0):
                self.remove_node(result, node)
                needsRelayout = True
         # Cleanup unused computing resources.
-        nodes = result.nodes.copy()
-        for node in nodes:
+        dfdNodes = result.nodes.copy()
+        for node in dfdNodes:
             if "address" in node.attributes:
                 if node != hostNode:
                     resProto = result.get_nodes_linked_from(node, "is_instance")
