@@ -46,6 +46,9 @@ class DFD2Onto:
         
         if "order" in node.attributes:
             return node.attributes["order"]
+        if self.is_prototype(node, onto) or self.is_resource(node, onto):
+            node.attributes["order"] = onto.last_id
+
         new_visited_nodes = [n for n in visited_nodes]
         new_visited_nodes.append(node)
         if self.instance_of_type(node, "Input", onto) and node not in visited_nodes:
@@ -86,10 +89,7 @@ class DFD2Onto:
 
     def layout_onto(self, onto: Onto):
         for node in onto.nodes:
-            if self.is_prototype(node, onto) or self.is_resource(node, onto):
-                node.attributes["order"] = onto.last_id
-            else: 
-                node.attributes["order"] = self.get_node_order(node, onto)
+            node.attributes["order"] = self.get_node_order(node, onto)
 
         onto.nodes = sorted(onto.nodes, key = lambda node: node.attributes["order"])
         onto.links = sorted(onto.links, key = lambda link: self.get_link_order(link, onto))
