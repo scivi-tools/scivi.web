@@ -160,7 +160,7 @@ class DFD2Onto:
             result = dfdOnto.add_node(motherNode.name, { "mother": motherNode.id })
         return result
 
-    def instanciate_node(self, motherNode: Node, hostNode: Node, instNmb, instAttrs, dfdOnto: Onto, nodeI: Node, nodeO: Node):
+    def instanciate_node(self, motherNode: Node, hostNode: Node, instNmb, instAttrs, dfdOnto: Onto, dfdI: Node, dfdO: Node):
         instanceNode = dfdOnto.add_node(self.get_instance_name(motherNode.name, instNmb), instAttrs)
         protoNode = self.add_proto_node(motherNode, dfdOnto)
         dfdOnto.link_nodes(instanceNode, protoNode, "is_instance")
@@ -172,7 +172,7 @@ class DFD2Onto:
             instanceInput = dfdOnto.add_node(self.get_instance_name(motherInput.name, instNmb))
             protoInput = self.add_proto_node(motherInput, dfdOnto)
             dfdOnto.link_nodes(instanceInput, protoInput, "is_instance")
-            dfdOnto.link_nodes(protoInput, nodeI, "is_a")
+            dfdOnto.link_nodes(protoInput, dfdI, "is_a")
             dfdOnto.link_nodes(protoNode, protoInput, "has")
             dfdOnto.link_nodes(instanceNode, instanceInput, "has")
         # Add outputs.
@@ -182,7 +182,7 @@ class DFD2Onto:
             instanceOutput = dfdOnto.add_node(self.get_instance_name(motherOutput.name, instNmb))
             protoOutput = self.add_proto_node(motherOutput, dfdOnto)
             dfdOnto.link_nodes(instanceOutput, protoOutput, "is_instance")
-            dfdOnto.link_nodes(protoOutput, nodeO, "is_a")
+            dfdOnto.link_nodes(protoOutput, dfdO, "is_a")
             dfdOnto.link_nodes(protoNode, protoOutput, "has")
             dfdOnto.link_nodes(instanceNode, instanceOutput, "has")
         return instanceNode
@@ -340,7 +340,7 @@ class DFD2Onto:
         whereby they can communicate directly, without receivers/transmitters in between).
         In other words, this method helps to create task ontology for particular computing resource.
         The border between the parts is replaced by data receivers and transmitters to ensure the seamless data flow.
-        @param dfdOnto - ontology which is to be modified. It will be changed by this method, so make sure to pass here a deep copy of an original Onto.
+        @param dfdOnto - ontology which is to be modified. It will be changed by this method, so make sure to pass here a deep copy of an original ontology.
         @param node - node that does not belong to the computing resource dfdOnto stands for.
                       This node and all its belongings (nodes linked from it by "has") will be removed from dfdOnto with
                       all the incident links.
