@@ -11,6 +11,7 @@ from flask import Flask, Response, send_from_directory, request, jsonify
 from server.server import SciViServer, Mode
 from onto.merge import OntoMerger
 from threading import Lock, Thread
+import traceback
 
 app = Flask(__name__, static_url_path = "")
 event_loop = asyncio.new_event_loop() # event loop for command servers
@@ -218,6 +219,20 @@ def fwgen(domain, elementName):
     f = srv.gen_firmware(elementName)
     if f:
         return f["content"], 200, {'Content-Type': f["mime"], "Content-Disposition": "attachment; filename=\"%s.zip\"" % elementName}
+    else:
+        return "Not found", 404
+
+@app.route("/scan_ssdp")
+def scan_ssdp():
+    try:
+        res = getSrv().scan_ssdp()
+    except Exception as e:
+        print(traceback.format_exc())
+        res = None
+    if res is not None:
+        resp = jsonify(res)
+        resp.status_code = 200
+        return resp
     else:
         return "Not found", 404
 
