@@ -82,7 +82,6 @@ class DFD2Onto:
             index += 1
 
     def layout_onto(self, onto: Onto):
-        
         for node in onto.nodes:
             node.attributes["order"] = self.get_node_order(node, onto)
         onto.nodes = sorted(onto.nodes, key = lambda node: node.attributes["order"])

@@ -23,6 +23,7 @@ from server.dfd2onto import DFD2Onto
 from server.execer import Execer, ExecutionMode, SendMessageFunc
 from server.utils import CodeUtils
 from server.fwgen import FWGen
+from threading import Lock
 
 def get_unused_port():
 
@@ -92,6 +93,7 @@ class SciViServer:
         self.dependencies = {}
         self.files = {}
         self.execers: Dict[str, Execer] = {}
+        self.mutex = Lock()
         self.codeUtils = CodeUtils()
         self.gen_tree()
         self.node_states = {} #global storate for each node
@@ -576,4 +578,7 @@ class SciViServer:
         return list(ip_set)
 
     def scan_ssdp(self):
-        return self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")
+        self.mutex.acquire()
+        result = self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")
+        self.mutex.release()
+        return result

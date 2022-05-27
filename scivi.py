@@ -225,7 +225,7 @@ def fwgen(domain, elementName):
 @app.route("/scan_ssdp")
 def scan_ssdp():
     try:
-        res = getSrv().scan_ssdp()
+        res = getServerInst().scan_ssdp()
     except Exception as e:
         print(traceback.format_exc())
         res = None
