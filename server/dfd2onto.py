@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from collections import deque
 import re
-from typing import Any, Tuple
+from typing import Any, List, Tuple
 
 from itsdangerous import json
 from onto.onto import Link, Node, Onto, first
@@ -39,24 +40,29 @@ class DFD2Onto:
         instNode = first(onto.get_nodes_linked_from(node, "is_instance"))
         return onto.is_node_of_type(instNode, type)
 
-    def get_node_order(self, node: Node, onto: Onto):
+    def get_node_order(self, node: Node, onto: Onto, visited_nodes : List[Node] = []):
         if not node:
             return -1
+        
         if "order" in node.attributes:
             return node.attributes["order"]
         if self.is_prototype(node, onto) or self.is_resource(node, onto):
-            return onto.last_id
-        if self.instance_of_type(node, "Input", onto):
+            node.attributes["order"] = onto.last_id
+
+        new_visited_nodes = [n for n in visited_nodes]
+        new_visited_nodes.append(node)
+        if self.instance_of_type(node, "Input", onto) and node not in visited_nodes:
             prev_output = first(onto.get_nodes_linked_to(node, "is_used"))
-            return self.get_node_order(prev_output, onto) + 1
-        if self.instance_of_type(node, "Output", onto):
+            return self.get_node_order(prev_output, onto, new_visited_nodes) + 1
+        if self.instance_of_type(node, "Output", onto) and node not in visited_nodes:
             owner = first(onto.get_nodes_linked_to(node, "has"))
-            return self.get_node_order(owner, onto) + 1
+            return self.get_node_order(owner, onto, new_visited_nodes) + 1
+        
         result = 0
         belongings = onto.get_nodes_linked_from(node, "has")
         for b in belongings:
-            if self.instance_of_type(b, "Input", onto):
-                result = max(result, self.get_node_order(b, onto) + 1)
+            if self.instance_of_type(b, "Input", onto) and node not in visited_nodes:
+                result = max(result, self.get_node_order(b, onto, new_visited_nodes) + 1)
         return result
 
     def get_link_order(self, link: Link, onto: Onto):
@@ -82,9 +88,9 @@ class DFD2Onto:
             index += 1
 
     def layout_onto(self, onto: Onto):
-        
         for node in onto.nodes:
             node.attributes["order"] = self.get_node_order(node, onto)
+
         onto.nodes = sorted(onto.nodes, key = lambda node: node.attributes["order"])
         onto.links = sorted(onto.links, key = lambda link: self.get_link_order(link, onto))
         self.normalize_onto(onto)
