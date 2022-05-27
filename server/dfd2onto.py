@@ -47,7 +47,7 @@ class DFD2Onto:
         if "order" in node.attributes:
             return node.attributes["order"]
         if self.is_prototype(node, onto) or self.is_resource(node, onto):
-            node.attributes["order"] = onto.last_id
+            return onto.last_id
 
         new_visited_nodes = [n for n in visited_nodes]
         new_visited_nodes.append(node)
