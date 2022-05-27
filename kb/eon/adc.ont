@@ -1,5 +1,5 @@
 {
-    "last_id": "19",
+    "last_id": "26",
     "namespaces": {
         "default": "http://knova.ru/user/1637004596363",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -22,7 +22,7 @@
             "attributes": {
             },
             "id": "2",
-            "name": "DataSource",
+            "name": "Edge Device",
             "namespace": "http://knova.ru/user/1637004596363",
             "position_x": 264,
             "position_y": 244
@@ -99,6 +99,33 @@
             "namespace": "http://knova.ru/user/1637004596363",
             "position_x": 506,
             "position_y": 317
+        },
+        {
+            "attributes": {
+            },
+            "id": "20",
+            "name": "Setting",
+            "namespace": "http://knova.ru/user/1637004596363",
+            "position_x": 148,
+            "position_y": 165
+        },
+        {
+            "attributes": {
+            },
+            "id": "21",
+            "name": "Address",
+            "namespace": "http://knova.ru/user/1637004596363",
+            "position_x": 0,
+            "position_y": 0
+        },
+        {
+            "attributes": {
+            },
+            "id": "22",
+            "name": "DeviceAddress",
+            "namespace": "http://knova.ru/user/1637004596363",
+            "position_x": 0,
+            "position_y": 0
         }
     ],
     "relations": [
@@ -182,6 +209,42 @@
             "name": "is_instance",
             "namespace": "http://knova.ru/user/1637004596363",
             "source_node_id": "8"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "21",
+            "id": "23",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1637004596363",
+            "source_node_id": "2"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "20",
+            "id": "24",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1637004596363",
+            "source_node_id": "21"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "22",
+            "id": "25",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1637004596363",
+            "source_node_id": "21"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "26",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1637004596363",
+            "source_node_id": "22"
         }
     ],
     "visualize_ont_path": ""

@@ -88,5 +88,6 @@ class OntoHasher:
             h = self.table[(ord(key[0]) + j) % 256]
             for i in range(1, len(key)):
                 h = self.table[(h ^ ord(key[i])) % 256]
+            h = self.table[(h ^ len(key)) % 256]
             result = (result << 8) | h
         return result

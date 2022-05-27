@@ -1,24 +1,42 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import asyncio
 import json
 import re
 import importlib
 import datetime
+import socket
 from turtle import done
 from typing import Dict, List, Tuple, Optional
 from xmlrpc import server
 
 from threading import Thread
+
+import websockets
+from onto.merge import OntoMerger
 from onto.onto import Node, Onto, OntoEncoder, first
 from enum import Enum
 import uuid
+import socket
 from server.eon import Eon
 from server.dfd2onto import DFD2Onto
 from server.execer import Execer, ExecutionMode, SendMessageFunc
 from server.utils import CodeUtils
 from server.fwgen import FWGen
 
+def get_unused_port():
+
+    """
+    Get an empty port for the Pyro nameservr by opening a socket on random port,
+    getting port number, and closing it [not atomic, so race condition is possible...]
+    Might be better to open with port 0 (random) and then figure out what port it used.
+    """
+    so = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    so.bind(('localhost', 0))
+    _, port = so.getsockname()
+    so.close()
+    return port 
 
 class Mode(Enum):
     '''
@@ -60,8 +78,10 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, onto: Onto, send_message_func: SendMessageFunc, event_loop, context):
-        self.onto = onto
+    def __init__(self, id, path_to_onto: str, event_loop : asyncio.AbstractEventLoop, context):
+        self.id = id
+        self.path_to_onto = path_to_onto
+        self.onto = OntoMerger(path_to_onto).onto
         self.loc = "eng"
         self.tree = ""
         self.treeID = 1
@@ -78,14 +98,37 @@ class SciViServer:
         self.node_states = {} #global storate for each node
         for node in self.onto.nodes:
             self.node_states[node.id] = {}
-        self.push_message_to_send = send_message_func
         self.__cmd_server_loop__ = event_loop
+         # start command server
+        self.__server__ = None
+        self.server_become_unused_event = None
+        self.__websockets__ = []
+        self.command_server_port = get_unused_port()
+        asyncio.run_coroutine_threadsafe(self.wait_for_connection(), self.__cmd_server_loop__)
 
-    def __del__(self):
-        for execer_key in self.execers:
-            self.execers[execer_key].stop()
-            self.execers[execer_key].join()
-            del self.execers[execer_key]
+    def release(self):
+        self.stop_all_execers()
+        self.__server__.close()
+
+    async def wait_for_connection(self):
+        self.__server__ = await websockets.serve(self.client_handler, 'localhost', self.command_server_port)
+         
+    async def client_handler(self, websocket):
+        print('Client connected to command server')
+        self.__websockets__.append(websocket)
+        try:
+            async for message in websocket:
+                print('message received', message)
+        finally:
+            self.__websockets__.remove(websocket)
+            print('Connection with command server was closed')
+            if len(self.__websockets__) == 0 and not self.server_become_unused_event is None:
+                self.server_become_unused_event(self.id)
+
+
+    def broadcast(self, message : str):
+        for socket in self.__websockets__:
+            self.__cmd_server_loop__.create_task(socket.send(message))
 
     def add_node(self, node: Node):
         self.tree = self.tree +\
@@ -451,7 +494,7 @@ class SciViServer:
             hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # get all plugins
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
             if self.task_onto_has_operations(serverOnto): 
-                execer = Execer(self.onto, serverOnto, self.node_states, self.push_message_to_send, self.__cmd_server_loop__)
+                execer = Execer(self.onto, serverOnto, self.node_states, self.broadcast, self.__cmd_server_loop__)
                 serverTaskHash = str(uuid.uuid4())
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
@@ -492,3 +535,44 @@ class SciViServer:
     def gen_firmware(self, elementName):
         fwGen = FWGen(self.onto)
         return fwGen.generate(elementName, "/tmp/" + elementName)
+
+    def get_devices_list(self, st_val: str = "upnp:rootdevice", timeout: int = 3):
+        """Find devices in the network with SSDP protocol using specified ST header.
+
+        :param st_val:  ST header value. Please check UPnP documentation
+                        or use 'upnp:rootdevice' value to find all devices
+                        in network.
+        :param timeout: the time interval during which devices must respond
+                        (preferably from 1 to 5).
+
+        :returns:       set of ip addresses of the devices
+                        satisfying the search condition (ST header).
+        """
+
+        ssdp_addr = "239.255.255.250"
+        ssdp_port = 1900
+        ssdp_mx = timeout
+
+        ssdp_request = ("M-SEARCH * HTTP/1.1\r\n"
+                        + "HOST: %s:%d\r\n" % (ssdp_addr, ssdp_port)
+                        + "MAN: \"ssdp:discover\"\r\n"
+                        + "MX: %d\r\n" % (ssdp_mx, )
+                        + "ST: %s\r\n" % (st_val, ) + "\r\n")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+        sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 5)
+        sock.bind(('', 19011))
+
+        sock.settimeout(timeout * 1.1)
+        sock.sendto(ssdp_request.encode(), (ssdp_addr, ssdp_port))
+        ip_set = set()
+        while True:
+            try:
+                data, addr = sock.recvfrom(10240)
+            except socket.timeout:
+                break
+            ip_set.add(addr[0])
+        sock.close()
+        return list(ip_set)
+
+    def scan_ssdp(self):
+        return self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")

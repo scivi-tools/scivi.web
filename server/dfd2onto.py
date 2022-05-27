@@ -47,9 +47,11 @@ class DFD2Onto:
         if self.is_prototype(node, onto) or self.is_resource(node, onto):
             return onto.last_id
         if self.instance_of_type(node, "Input", onto):
-            return self.get_node_order(first(onto.get_nodes_linked_to(node, "is_used")), onto) + 1
+            prev_output = first(onto.get_nodes_linked_to(node, "is_used"))
+            return self.get_node_order(prev_output, onto) + 1
         if self.instance_of_type(node, "Output", onto):
-            return self.get_node_order(first(onto.get_nodes_linked_to(node, "has")), onto) + 1
+            owner = first(onto.get_nodes_linked_to(node, "has"))
+            return self.get_node_order(owner, onto) + 1
         result = 0
         belongings = onto.get_nodes_linked_from(node, "has")
         for b in belongings:
@@ -80,6 +82,7 @@ class DFD2Onto:
             index += 1
 
     def layout_onto(self, onto: Onto):
+        
         for node in onto.nodes:
             node.attributes["order"] = self.get_node_order(node, onto)
         onto.nodes = sorted(onto.nodes, key = lambda node: node.attributes["order"])
@@ -145,43 +148,43 @@ class DFD2Onto:
         if instOutput and instInput:
             onto.link_nodes(instOutput, instInput, "is_used")
 
-    def add_proto_node(self, motherNode: Node, onto: Onto):
+    def add_proto_node(self, motherNode: Node, dfdOnto: Onto):
         result = None
-        protoNodes = onto.get_nodes_by_name(motherNode.name)
+        protoNodes = dfdOnto.get_nodes_by_name(motherNode.name)
         if protoNodes:
             for p in protoNodes:
                 if ("mother" in p.attributes) and (p.attributes["mother"] == motherNode.id):
                     result = p
                     break
         if not result:
-            result = onto.add_node(motherNode.name, { "mother": motherNode.id })
+            result = dfdOnto.add_node(motherNode.name, { "mother": motherNode.id })
         return result
 
-    def instanciate_node(self, motherNode: Node, hostNode: Node, instNmb, instAttrs, onto: Onto, nodeI: Node, nodeO: Node):
-        instanceNode = onto.add_node(self.get_instance_name(motherNode.name, instNmb), instAttrs)
-        protoNode = self.add_proto_node(motherNode, onto)
-        onto.link_nodes(instanceNode, protoNode, "is_instance")
-        onto.link_nodes(instanceNode, hostNode, "is_hosted")
+    def instanciate_node(self, motherNode: Node, hostNode: Node, instNmb, instAttrs, dfdOnto: Onto, nodeI: Node, nodeO: Node):
+        instanceNode = dfdOnto.add_node(self.get_instance_name(motherNode.name, instNmb), instAttrs)
+        protoNode = self.add_proto_node(motherNode, dfdOnto)
+        dfdOnto.link_nodes(instanceNode, protoNode, "is_instance")
+        dfdOnto.link_nodes(instanceNode, hostNode, "is_hosted")
         # Add inputs.
         motherInputs = self.onto.get_typed_nodes_linked_from(motherNode, "has", "Input")
         motherInputs = sorted(motherInputs, key = lambda inp: inp.id)
         for motherInput in motherInputs:
-            instanceInput = onto.add_node(self.get_instance_name(motherInput.name, instNmb))
-            protoInput = self.add_proto_node(motherInput, onto)
-            onto.link_nodes(instanceInput, protoInput, "is_instance")
-            onto.link_nodes(protoInput, nodeI, "is_a")
-            onto.link_nodes(protoNode, protoInput, "has")
-            onto.link_nodes(instanceNode, instanceInput, "has")
+            instanceInput = dfdOnto.add_node(self.get_instance_name(motherInput.name, instNmb))
+            protoInput = self.add_proto_node(motherInput, dfdOnto)
+            dfdOnto.link_nodes(instanceInput, protoInput, "is_instance")
+            dfdOnto.link_nodes(protoInput, nodeI, "is_a")
+            dfdOnto.link_nodes(protoNode, protoInput, "has")
+            dfdOnto.link_nodes(instanceNode, instanceInput, "has")
         # Add outputs.
         motherOutputs = self.onto.get_typed_nodes_linked_from(motherNode, "has", "Output")
         motherOutputs = sorted(motherOutputs, key = lambda inp: inp.id)
         for motherOutput in motherOutputs:
-            instanceOutput = onto.add_node(self.get_instance_name(motherOutput.name, instNmb))
-            protoOutput = self.add_proto_node(motherOutput, onto)
-            onto.link_nodes(instanceOutput, protoOutput, "is_instance")
-            onto.link_nodes(protoOutput, nodeO, "is_a")
-            onto.link_nodes(protoNode, protoOutput, "has")
-            onto.link_nodes(instanceNode, instanceOutput, "has")
+            instanceOutput = dfdOnto.add_node(self.get_instance_name(motherOutput.name, instNmb))
+            protoOutput = self.add_proto_node(motherOutput, dfdOnto)
+            dfdOnto.link_nodes(instanceOutput, protoOutput, "is_instance")
+            dfdOnto.link_nodes(protoOutput, nodeO, "is_a")
+            dfdOnto.link_nodes(protoNode, protoOutput, "has")
+            dfdOnto.link_nodes(instanceNode, instanceOutput, "has")
         return instanceNode
 
     def get_dfd_data(self, dfdNode: dict, key: str):
@@ -189,7 +192,7 @@ class DFD2Onto:
             return dfdNode["data"][key]
         return {}
 
-    def get_hosting(self, node: Node, onto: Onto):
+    def get_hosting(self, node: Node, dfdOnto: Onto):
         # TODO: this should be changed when we'll be able to choose hosting in the GUI for ambigous cases.
         # Ambigues case is when there are multiple workers of given node,
         # or there are multiple computing resurses linked to corresponding worker.
@@ -207,8 +210,8 @@ class DFD2Onto:
         elif n > 1:
             raise ValueError("Ambigous computing resource for <" + node.name + ">")
         res = first(resources)
-        resProto = first(onto.get_nodes_by_name(res.name))
-        hosting = first(onto.get_nodes_linked_to(resProto, "is_instance"))
+        resProto = first(dfdOnto.get_nodes_by_name(res.name))
+        hosting = first(dfdOnto.get_nodes_linked_to(resProto, "is_instance"))
         return hosting
 
     def get_res_address(self, resName):
@@ -219,22 +222,22 @@ class DFD2Onto:
             return "127.0.0.1:81"
         return ""
 
-    def traverse_computing_resources(self, res: Node, onto: Onto):
+    def traverse_computing_resources(self, res: Node, dfdOnto: Onto):
         ch = self.onto.get_nodes_linked_to(res, "is_a")
         if len(ch) == 0:
-            resInst = onto.add_node(res.name + self.INST_SUFFIX, { "address": self.get_res_address(res.name) })
-            resProto = onto.add_node(res.name)
-            onto.link_nodes(resInst, resProto, "is_instance")
+            resInst = dfdOnto.add_node(res.name + self.INST_SUFFIX, { "address": self.get_res_address(res.name) })
+            resProto = dfdOnto.add_node(res.name)
+            dfdOnto.link_nodes(resInst, resProto, "is_instance")
         else:
             for c in ch:
-                self.traverse_computing_resources(c, onto)
+                self.traverse_computing_resources(c, dfdOnto)
 
-    def instanciate_computing_resources(self, onto: Onto):
+    def instanciate_computing_resources(self, dfdOnto: Onto):
         # TODO: do it according to the info from GUI.
-        self.traverse_computing_resources(first(self.onto.get_nodes_by_name("ComputingResource")), onto)
+        self.traverse_computing_resources(first(self.onto.get_nodes_by_name("ComputingResource")), dfdOnto)
 
-    def get_onto(self, dfd) -> Onto:
-        dfdNodes = dfd["nodes"]
+    def get_onto(self, dfdJSON) -> Onto:
+        dfdNodes = dfdJSON["nodes"]
         resultNodesArr: dict[Node] = {}
         result = Onto.empty()
         resultI = result.add_node("Input")
@@ -274,12 +277,12 @@ class DFD2Onto:
         self.layout_onto(result)
         return result
 
-    def io_has_hosting(self, dfd: Onto, ioNode: Node, hostNode):
-        opNode = first(dfd.get_nodes_linked_to(ioNode, "has"))
-        result = first(dfd.get_nodes_linked_from(opNode, "is_hosted"))
+    def io_has_hosting(self, dfdOnto: Onto, ioNode: Node, hostNode):
+        opNode = first(dfdOnto.get_nodes_linked_to(ioNode, "has"))
+        result = first(dfdOnto.get_nodes_linked_from(opNode, "is_hosted"))
         return hostNode == result
 
-    def find_rxtx(self, dfd: Onto, srcHost: Node, dstHost: Node):
+    def find_rxtx(self, dfdOnto: Onto, srcHost: Node, dstHost: Node):
         '''
         Find a way to pass data between two given computing resources.
         @param srcHost - source computation resource.
@@ -287,8 +290,8 @@ class DFD2Onto:
         @return operator node for the 'srcHost' computing resource that corrsponds to the data receiver/transmitter
                 for the desired communication protocol.
         '''
-        srcRes = first(dfd.get_nodes_linked_from(srcHost, "is_instance"))
-        dstRes = first(dfd.get_nodes_linked_from(dstHost, "is_instance"))
+        srcRes = first(dfdOnto.get_nodes_linked_from(srcHost, "is_instance"))
+        dstRes = first(dfdOnto.get_nodes_linked_from(dstHost, "is_instance"))
         src = first(self.onto.get_nodes_by_name(srcRes.name))
         dst = first(self.onto.get_nodes_by_name(dstRes.name))
         srcWorkers = self.onto.get_nodes_linked_to(src, "is_used")
@@ -319,7 +322,7 @@ class DFD2Onto:
         node.attributes = {}
         onto.remove_node(node)
 
-    def replace_io(self, dfd: Onto, node: Node, hostNode: Node, rxtxNmb, InputNode: Node, OutputNode: Node, addrCorrespondence):
+    def replace_io(self, dfdOnto: Onto, node: Node, hostNode: Node, rxtxNmb, InputNode: Node, OutputNode: Node, addrCorrespondence):
         '''
         Replace a part of DFD by corresponding receiver and/or transmitter.
         This enables converting DFD of mixed session into the set of smaller DFDs for individual computation parts.
@@ -337,7 +340,7 @@ class DFD2Onto:
         whereby they can communicate directly, without receivers/transmitters in between).
         In other words, this method helps to create task ontology for particular computing resource.
         The border between the parts is replaced by data receivers and transmitters to ensure the seamless data flow.
-        @param onto - Onto which is to be modified. It will be changed by this method, so make sure to pass here a deep copy of an original Onto.
+        @param dfdOnto - Onto which is to be modified. It will be changed by this method, so make sure to pass here a deep copy of an original Onto.
         @param node - node that does not belong to the computing resource dfdOnto stands for.
                       This node and all its belongings (nodes linked from it by "has") will be removed from dfdOnto with
                       all the incident links.
@@ -355,31 +358,31 @@ class DFD2Onto:
                                     This array will help client (which has just a DFD, no onto) to handle marshalling.
         @return updated rxtxNmb.
         '''
-        belongingsToRemove = dfd.get_nodes_linked_from(node, "has")
-        targetHost = first(dfd.get_nodes_linked_from(node, "is_hosted"))
+        belongingsToRemove = dfdOnto.get_nodes_linked_from(node, "has")
+        targetHost = first(dfdOnto.get_nodes_linked_from(node, "is_hosted"))
         for b in belongingsToRemove:
-            isInput = self.instance_of_type(b, "Input", dfd)
+            isInput = self.instance_of_type(b, "Input", dfdOnto)
             if isInput:
-                connected = dfd.get_nodes_linked_to(b, "is_used")
+                connected = dfdOnto.get_nodes_linked_to(b, "is_used")
             else:
-                connected = dfd.get_nodes_linked_from(b, "is_used")
+                connected = dfdOnto.get_nodes_linked_from(b, "is_used")
             for c in connected:
-                if self.io_has_hosting(dfd, c, hostNode):
-                    rxtx = self.find_rxtx(dfd, hostNode, targetHost)
+                if self.io_has_hosting(dfdOnto, c, hostNode):
+                    rxtx = self.find_rxtx(dfdOnto, hostNode, targetHost)
                     rxtxInst = self.instanciate_node(rxtx, hostNode, rxtxNmb, \
                                                      { "settingsVal": { "Node Address": b.id, \
                                                                         "Target Address": targetHost.attributes["address"] }, \
                                                        "settingsType": { "Node Address": "Integer", \
                                                                          "Target Address": "String" }, \
                                                        "dfd": node.attributes["dfd"] }, \
-                                                     dfd, InputNode, OutputNode)
+                                                     dfdOnto, InputNode, OutputNode)
                     if isInput:
                         rxtxSocketName = "Input"
                         operatorSocketType = "Output"
                     else:
                         rxtxSocketName = "Output"
                         operatorSocketType = "Input"
-                    operatorNode = first(dfd.get_nodes_linked_to(c, "has"))
+                    operatorNode = first(dfdOnto.get_nodes_linked_to(c, "has"))
                     if b.id in addrCorrespondence:
                         cor = addrCorrespondence[b.id]
                     else:
@@ -387,24 +390,24 @@ class DFD2Onto:
                         addrCorrespondence[b.id] = cor
                     cor.append([ operatorNode.attributes["dfd"], \
                                  not isInput, \
-                                 self.get_number_of_io(operatorNode, operatorSocketType, c, dfd)])
+                                 self.get_number_of_io(operatorNode, operatorSocketType, c, dfdOnto)])
                     rxtxSocket = None
-                    rxtxInstBelongings = dfd.get_nodes_linked_from(rxtxInst, "has")
+                    rxtxInstBelongings = dfdOnto.get_nodes_linked_from(rxtxInst, "has")
                     for rxtxB in rxtxInstBelongings:
-                        if self.instance_of_type(rxtxB, rxtxSocketName, dfd):
+                        if self.instance_of_type(rxtxB, rxtxSocketName, dfdOnto):
                             rxtxSocket = rxtxB
                             break
                     if isInput:
-                        dfd.link_nodes(c, rxtxSocket, "is_used")
+                        dfdOnto.link_nodes(c, rxtxSocket, "is_used")
                     else:
-                        dfd.link_nodes(rxtxSocket, c, "is_used")
+                        dfdOnto.link_nodes(rxtxSocket, c, "is_used")
                     rxtxNmb += 1
-            self.remove_node(dfd, b)
-        self.remove_node(dfd, node)
+            self.remove_node(dfdOnto, b)
+        self.remove_node(dfdOnto, node)
         return rxtxNmb
 
-    def split_onto(self, dfd: Onto, hostNode: Node) -> Tuple[Onto, Any]: 
-        result = copy.deepcopy(dfd)
+    def split_onto(self, dfdOnto: Onto, hostNode: Node) -> Tuple[Onto, Any]: 
+        result = copy.deepcopy(dfdOnto)
         rxtxNmb = 1
         InputNode = first(result.get_nodes_by_name("Input"))
         OutpuyNode = first(result.get_nodes_by_name("Output"))

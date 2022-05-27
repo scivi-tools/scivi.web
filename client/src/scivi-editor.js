@@ -258,16 +258,30 @@ SciViEditor.prototype.startVisualization = function ()
 {
     if (!this.inVisualization) 
     {
-        document.getElementById('scivi_loadscreen').style.display = 'block';
-        $("#scivi_load_progressbar").progressbar({
-                    value: 0.0,
-                    max: 1.0
-                });
-        //load dfd to server
-        if (this.mode == IOT_PROGRAMMING_MODE) 
-            this.uploadEON();
-        else if (this.mode == MIXED_MODE) 
-            this.runMixed();
+        if (this.mode == VISUALIZATION_MODE)// no wait server if it's just visualization mode
+        {
+            this.inVisualization = true;
+            this.clearViewport();
+            this.process();
+            $(".scivi_slide").css({"transform": "translateX(-100%)"});
+            $("#scivi_btn_visualize").html("◀");
+            $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+            $(".scivi_menu").css({"margin-left": "20px"});
+        }
+        else
+        {
+            document.getElementById('scivi_loadscreen').style.display = 'block';
+            $("#scivi_load_progressbar").progressbar({
+                        value: 0.0,
+                        max: 1.0
+                    });
+            //load dfd to server
+            if (this.mode == IOT_PROGRAMMING_MODE) 
+                this.uploadEON();
+            else if (this.mode == MIXED_MODE) 
+                this.runMixed();
+        }
+        
     } else {
         this.inVisualization = false;
         this.clearViewport();
@@ -900,4 +914,11 @@ SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, n
 
 SciViEditor.prototype.pingByOntoBusAddress = function (settingName, settingID, nodeID)
 {
+}
+
+SciViEditor.prototype.getEdgeDevices = function (gotDicevsesCB)
+{
+    $.getJSON("/scan_ssdp", function (data) {
+        console.log(data);
+    });
 }

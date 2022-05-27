@@ -65,7 +65,6 @@ class Link(json.JSONEncoder):
         else: return False
 
 class Onto:
-    history: List[Dict[str,str]]
     last_id: int
     namespaces: Dict[str,str]
     nodes: List[Node]
@@ -74,12 +73,11 @@ class Onto:
     '''
     The Onto class is a wrapper to operate with ONTOLIS ontology files (*.ont).
     '''
-    def __init__(self, history, last_id, namespaces, nodes, links, visualize_ont_path):
+    def __init__(self, last_id, namespaces, nodes, links, visualize_ont_path):
         '''
         Create instance of Onto.
         @param data - dict representing ontology.
         '''
-        self.history = history
         self.last_id: int = last_id
         self.namespaces = namespaces
         self.nodes = nodes
@@ -101,8 +99,6 @@ class Onto:
             raise ValueError("corrupt ontology, <nodes> missing")
         if not ("relations" in data):
             raise ValueError("corrupt ontology, <relations> missing")
-        if 'history' not in data:
-            data['history'] = []
         if 'last_id' not in data:
             data['last_id'] = 0
         nodes = []
@@ -127,8 +123,7 @@ class Onto:
                                 int(link['source_node_id']),
                                 int(link['destination_node_id'])))
         
-        return cls(data['history'],
-                    int(data['last_id']), 
+        return cls(int(data['last_id']), 
                     data['namespaces'],
                     nodes,
                     links,
@@ -147,7 +142,7 @@ class Onto:
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema", \
                 "xsd": "http://www.w3.org/2001/XMLSchema"
         }
-        return cls([], 0, namespaces, [], [], "")
+        return cls(0, namespaces, [], [], "")
 
     def get_nodes_by_name(self, name) -> List[Node]:
         '''
@@ -223,10 +218,14 @@ class Onto:
         @param nodeType - name of the type defining node.
         @return array of nodes.
         '''
-        result = self.get_typed_nodes_linked_from(node, linkName, nodeType)
-        parents = self.get_nodes_linked_from(node, "is_a")
-        for p in parents:
-            result += self.get_typed_nodes_linked_from_inherited(p, linkName, nodeType)
+        result = []
+        linked = self.get_nodes_linked_from(node, linkName)
+        for lNode in linked:
+            rels = self.get_nodes_linked_from(lNode, "is_a")
+            for rNode in rels:
+                if rNode.name == nodeType:
+                    result.append(lNode)
+                    break
         return result
 
     def get_typed_nodes_linked_to(self, node: Node, linkName, nodeType) -> List[Node]:
@@ -357,8 +356,7 @@ class Onto:
 class OntoEncoder((json.JSONEncoder)):
     def default(self, obj):
         if isinstance(obj, Onto):
-            return {"history": obj.history,
-                    "last_id": obj.last_id,
+            return {"last_id": obj.last_id,
                     "namespaces": obj.namespaces,
                     "nodes": obj.nodes,
                     "relations": obj.links,
