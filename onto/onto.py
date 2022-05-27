@@ -228,6 +228,23 @@ class Onto:
                     break
         return result
 
+    def get_typed_nodes_linked_from_inherited(self, node: Node, linkName, nodeType) -> List[Node]:
+        '''
+        Return array of nodes, which are connected with the given one or any of its is_a parents
+        by the link with given name and are connected by is_a to the node with given name
+        (say, have given type).
+        The direction of link is from the given node to nodes returned.
+        @param node - node to find links from.
+        @param linkName - name of the link.
+        @param nodeType - name of the type defining node.
+        @return array of nodes.
+        '''
+        result = self.get_typed_nodes_linked_from(node, linkName, nodeType)
+        parents = self.get_nodes_linked_from(node, "is_a")
+        for p in parents:
+            result += self.get_typed_nodes_linked_from_inherited(p, linkName, nodeType)
+        return result
+
     def get_typed_nodes_linked_to(self, node: Node, linkName, nodeType) -> List[Node]:
         '''
         Return array of nodes, which are connected with the given one by the link with given name
