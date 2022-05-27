@@ -5,3 +5,6 @@ client/lib
 
 # Vim temporary files
 .*.swp
+
+# backups
+*.bak

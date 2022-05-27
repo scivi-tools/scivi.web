@@ -22,7 +22,9 @@ require("jquery-ui/ui/widgets/resizable");
 require("jquery-ui/ui/widgets/dialog");
 require("jquery-ui/ui/widgets/slider");
 require("jquery-ui/ui/widgets/tabs");
+require("jquery-ui/ui/widgets/progressbar");
 require("jquery-contextmenu");
+require("jquery.cookie");
 var Split = require("split.js");
 var D3NE = require("d3-node-editor");
 var FileSaver = require("file-saver");
@@ -46,6 +48,7 @@ function SciViEditor()
     SciViEditor.prototype.commsReconnects = {};
     SciViEditor.prototype.addressCorrespondences = {};
     SciViEditor.prototype.mode = null;
+    SciViEditor.prototype.command_socket = null;
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -216,24 +219,73 @@ SciViEditor.prototype.run = function (mode)
                 _this.startVisualization();
         });
     }
+    
+    //--------------- connect to server -----------------
+    let addr = document.URL.split(':')[1].slice(2);
+    this.command_socket = new WebSocket("ws://" + addr + ":" + $.cookie("CommandServerPort"));
+    this.command_socket.onopen = (event) => 
+    {
+        console.log('Connected to command server');
+    };
+    this.command_socket.onclose = (event)=> 
+    {
+        if (event.wasClean)
+            console.log(`Connection with command server was closed. Code=${event.code}, reason = ${event.reason}`);
+        else
+        alert('Connection was broken');
+    };
+    this.command_socket.onerror = (error) => 
+    {
+        alert(`Command Server Error(${error.code}): ${error.message}`);
+    };
+    this.command_socket.onmessage = (event) =>
+    {
+        var msg = JSON.parse(event.data);
+        switch(msg.command)
+        {
+            case 'wait_for_initialization': {
+                let progress = msg.progress;
+                $("#scivi_load_progressbar").progressbar({value: progress});
+            } break;
+            default: console.warn('Unknown message from command server', msg); break;
+        }
+    };
+    
+
 }
 
 SciViEditor.prototype.startVisualization = function ()
 {
-    this.inVisualization = !this.inVisualization;
-    this.clearViewport();
-    this.process();
-    if (this.inVisualization) {
-        $(".scivi_slide").css({"transform": "translateX(-100%)"});
-        $("#scivi_btn_visualize").html("◀");
-        $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
-        $(".scivi_menu").css({"margin-left": "20px"});
-        if (this.mode == IOT_PROGRAMMING_MODE) {
-            this.uploadEON();
-        } else if (this.mode == MIXED_MODE) {
-            this.runMixed();
+    if (!this.inVisualization) 
+    {
+        if (this.mode == VISUALIZATION_MODE)// no wait server if it's just visualization mode
+        {
+            this.inVisualization = true;
+            this.clearViewport();
+            this.process();
+            $(".scivi_slide").css({"transform": "translateX(-100%)"});
+            $("#scivi_btn_visualize").html("◀");
+            $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+            $(".scivi_menu").css({"margin-left": "20px"});
         }
+        else
+        {
+            document.getElementById('scivi_loadscreen').style.display = 'block';
+            $("#scivi_load_progressbar").progressbar({
+                        value: 0.0,
+                        max: 1.0
+                    });
+            //load dfd to server
+            if (this.mode == IOT_PROGRAMMING_MODE) 
+                this.uploadEON();
+            else if (this.mode == MIXED_MODE) 
+                this.runMixed();
+        }
+        
     } else {
+        this.inVisualization = false;
+        this.clearViewport();
+        this.process();
         $(".scivi_slide").css({"transform": "translateX(0%)"});
         $("#scivi_btn_visualize").html(this.runButtonName(this.mode));
         $("#scivi_btn_visualize").css({"padding-left": "15px", "padding-right": "10px"});
@@ -317,27 +369,37 @@ SciViEditor.prototype.runMixed = function ()
     var content = JSON.stringify(this.editor.toJSON(), function(key, value) {
         return key === "cache" ? undefined : value;
     });
-    var _this = this;
-    $.post("/gen_mixed", content, function (data) {
-        if (data["error"]) {
-            _this.showError(data["error"]);
+    $.post("/gen_mixed", content, (data) => {
+        document.getElementById('scivi_loadscreen').style.display = 'none';
+        if (data["error"]) 
+        {
+            this.showError(data["error"]);
             return;
         }
+        this.inVisualization = true;
+        this.clearViewport();
+        this.process();
+        $(".scivi_slide").css({"transform": "translateX(-100%)"});
+        $("#scivi_btn_visualize").html("◀");
+        $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
+        $(".scivi_menu").css({"margin-left": "20px"});
 
         var ont = data["ont"];
         var cor = data["cor"];
         var eon = data["eon"];
         var srvAddr = data["srvAddr"];
 
-        _this.taskOnto = ont;
+        this.taskOnto = ont;
 
-        if (Object.keys(cor).length > 0) {
+        
+        if (Object.keys(cor).length > 0) 
+        {
             if (eon.length > 0) {
                 eon.unshift(0xE0);
                 // FIXME: address should be given by server, moreover, there may be multiple comms required.
-                _this.startComm("ws://192.168.4.1:81/", cor, eon);
+                this.startComm("ws://192.168.4.1:81/", cor, eon);
             } else {
-                _this.startComm("ws://" + srvAddr + ":5001/", cor);
+                this.startComm("ws://" + srvAddr + ":5001/", cor);
             }
         }
     });
@@ -345,12 +407,8 @@ SciViEditor.prototype.runMixed = function ()
 
 SciViEditor.prototype.stopMixed = function ()
 {
-    var _this = this;
     this.cleanupComms();
-    $.post("/stop_execer", {}, function (data) {
-        if (data["error"])
-            _this.showError(data["error"]);
-    });
+    $.post("/stop_execer", {}, (data) => { if (data["error"]) this.showError(data["error"]); });
 }
 
 SciViEditor.prototype.changeSubTitle = function (nodeID)
@@ -838,16 +896,11 @@ SciViEditor.prototype.transmitInput = function (address, nodeID, socketID, value
 
 SciViEditor.prototype.cleanupComms = function ()
 {
-    var _this = this;
-    Object.keys(this.comms).forEach(function (key) {
-        _this.comms[key].close();
-    });
+    Object.keys(this.comms).forEach((key) => this.comms[key].close());
     this.comms = {};
     this.commsReconnects = {};
     this.addressCorrespondences = {};
-    this.editor.nodes.forEach(function (node) {
-        node.data.outputDataPool = [];
-    });
+    this.editor.nodes.forEach((node)=> node.data.outputDataPool = []);
 }
 
 SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
