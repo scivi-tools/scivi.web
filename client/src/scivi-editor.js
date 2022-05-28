@@ -584,14 +584,15 @@ SciViEditor.prototype.process = function ()
         removeRecursives = hasCycle;
     }
 
-    nodes.sort(function (a, b) {
-        return a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0;
-    });
+    nodes.sort((a, b) => a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0);
 
-    for (var i = 0; i < n; ++i) {
-        var node = this.getNodeByID(nodes[i].id);
+    // process each node
+    for (var i = 0; i < n; ++i) 
+    {
+        let node = this.getNodeByID(nodes[i].id);
         var inputs = [];
-        for (var j = 0, m = nodes[i].inputs.length; j < m; ++j) {
+        for (var j = 0, m = nodes[i].inputs.length; j < m; ++j) 
+        {
             if (nodes[i].inputs[j].connections.length > 0) {
                 var srcNodeID = nodes[i].inputs[j].connections[0].node;
                 var srcOutputID = nodes[i].inputs[j].connections[0].output;
@@ -600,10 +601,10 @@ SciViEditor.prototype.process = function ()
                     inputs.push([srcNode.outputData[srcOutputID]])
                 else
                     inputs.push([null]);
-            } else {
+            } else 
                 inputs.push([]);
-            }
         }
+
         var outputs = [];
         for (var j = 0, m = nodes[i].outputs.length; j < m; ++j)
             outputs.push(null);
@@ -694,7 +695,7 @@ SciViEditor.prototype.clearViewport = function ()
 
 SciViEditor.prototype.getNodeByID = function (nodeID)
 {
-    return this.editor.nodes.find(function (node) { return node.id === nodeID; });
+    return this.editor.nodes.find ((node) => node.id === nodeID);
 }
 
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
@@ -855,26 +856,26 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
             ws.close();
         } else {
             // Message contains values computed on the remote.
-            for (var i = 0, n = msg.length; i < n; ++i) {
-                Object.keys(msg[i]).forEach(function (key) {
-                    var cor = addressCorrespondences[key];
-                    if (cor) {
-                        for (var j = 0, n = cor.length; j < n; ++j) {
-                            var isInput = cor[j][1];
-                            if (!isInput) {
-                                var dfdNodeID = cor[j][0];
-                                var socketNmb = cor[j][2];
-                                var dfdNode = _this.getNodeByID(dfdNodeID);
-                                if (!dfdNode.data.outputDataPool)
-                                    dfdNode.data.outputDataPool = [];
-                                for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
-                                    dfdNode.data.outputDataPool.push(null);
-                                dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
-                            }
+            Object.keys(msg).forEach(function (key) {
+                var cor = addressCorrespondences[key];
+                if (cor) 
+                {
+                    for (var j = 0, n = cor.length; j < n; ++j) {
+                        var isInput = cor[j][1];
+                        if (!isInput) 
+                        {
+                            var dfdNodeID = cor[j][0];
+                            var socketNmb = cor[j][2];
+                            var dfdNode = _this.getNodeByID(dfdNodeID);
+                            if (!dfdNode.data.outputDataPool)
+                                dfdNode.data.outputDataPool = [];
+                            for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
+                                dfdNode.data.outputDataPool.push(null);
+                            dfdNode.data.outputDataPool[socketNmb] = msg[key];
                         }
                     }
-                });
-            }
+                }
+            });
             _this.process();
         }
     };

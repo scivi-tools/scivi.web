@@ -33,13 +33,16 @@ if MODE == "INITIALIZATION":
         asyncio.get_event_loop().create_task(wait_for_connection())
 
 elif MODE == "RUNNING" and "DataWebSocket" in GLOB:
+
     websocket = GLOB["DataWebSocket"]
     tx = INPUT.get("TX")
     addr = SETTINGS_VAL["Node Address"]
     if tx is not None:
         asyncio.get_event_loop().create_task(websocket.send(json.dumps({addr: tx})))
+
     if len(CACHE["RX"]) > 0:
         OUTPUT["RX"] = CACHE["RX"].popleft()
+
 if MODE == "DESTRUCTION" and "DataWebSocket" in GLOB:
     if "DataWebServer" in GLOB:
         print('destroy data server')

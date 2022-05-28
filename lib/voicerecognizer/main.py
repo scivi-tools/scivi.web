@@ -1,7 +1,27 @@
 from base64 import b64decode
+import datetime
 import os
+import sys
 from vosk import Model, KaldiRecognizer
 import json
+
+def WriteWAVHeader(path, sample_rate: int):
+    with open(path, "wb") as f:
+        f.write(b'RIFF')
+        f.write(b'0000')
+        f.write(bytes.fromhex('57415645666D7420'))
+        f.write(bytes.fromhex('10000000'))
+        f.write(bytes.fromhex('0100'))
+        f.write(bytes.fromhex('0100'))
+        f.write(sample_rate.to_bytes(4, sys.byteorder))
+        f.write((2 * sample_rate).to_bytes(4, sys.byteorder))
+        f.write(bytes.fromhex('0200'))
+        f.write(bytes.fromhex('1000'))
+        f.write(b'data')
+        f.write(b'0000')
+def WriteWAVPCM(path, pcm_bytes):
+    with open(path, "ab") as f:
+        f.write(pcm_bytes)
 
 if MODE == "INITIALIZATION":
     if not os.path.exists("lib/voicerecognizer/model"):
@@ -25,32 +45,27 @@ elif MODE == "RUNNING":
                 CACHE['recognizer'] = KaldiRecognizer(STATE['MODEL'], SampleRate)
                 CACHE['SampleRate'] = SampleRate
                 print('recognizer created')
-                #generate header for wav file
-                with open('aud.wav', "ab") as f:
-                    f.write(b'RIFF')
-                    f.write(b'0000')
-                    f.write(bytes.fromhex('57415645666D7420'))
-                    f.write(bytes.fromhex('10000000'))
-                    f.write(bytes.fromhex('0100'))
-                    f.write(bytes.fromhex('0100'))
-                    f.write(bytes.fromhex('44AC0000'))
-                    f.write(bytes.fromhex('88580100'))
-                    f.write(bytes.fromhex('0200'))
-                    f.write(bytes.fromhex('1000'))
-                    f.write(b'data')
-                    f.write(b'0000')
+                if SETTINGS_VAL["Record Voice"] and \
+                    not SETTINGS_VAL["WAV Name"] is None and \
+                    len(SETTINGS_VAL["WAV Name"]):
+                    if not os.path.exists('recognized'):
+                        os.makedirs('recognized')
+                    timestamp = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+                    CACHE["WAV_PATH"] = "recognized/" + SETTINGS_VAL["WAV Name"] + "_" + timestamp + ".wav"
+                    WriteWAVHeader(CACHE["WAV_PATH"], SampleRate)
 
-            elif CACHE['SampleRate'] == SampleRate:
+            if CACHE['SampleRate'] == SampleRate:
                 rec = CACHE['recognizer']
                 header, encode = pcm.split(',', 1)
-                b = b64decode(encode)
+                pcm_bytes = b64decode(encode)
                 #save pcm to wav file (for debug)
-                with open('aud.wav', "ab") as f:
-                    f.write(b)
-                if rec.AcceptWaveform(b):
-                    result = json.loads(rec.Result()) 
-                    print('recognized', result["text"])
-                    OUTPUT["Text Speech"] = result["text"]
+                if "WAV_PATH" in CACHE:
+                    WriteWAVPCM(CACHE["WAV_PATH"], pcm_bytes)
+                if rec.AcceptWaveform(pcm_bytes):
+                    result = json.loads(rec.Result())["text"] 
+                    if len(result) > 0:
+                        print('recognized', result)
+                        OUTPUT["Text Speech"] = result
             else: print("Error! SampleRate has changed. It must be constant")
 
     
