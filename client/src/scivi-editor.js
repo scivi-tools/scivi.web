@@ -227,7 +227,7 @@ SciViEditor.prototype.run = function (mode)
     {
         console.log('Connected to command server');
     };
-    this.command_socket.onclose = (event)=> 
+    this.command_socket.onclose = (event) => 
     {
         if (event.wasClean)
             console.log(`Connection with command server was closed. Code=${event.code}, reason = ${event.reason}`);
@@ -910,7 +910,7 @@ SciViEditor.prototype.cleanupComms = function ()
     this.comms = {};
     this.commsReconnects = {};
     this.addressCorrespondences = {};
-    this.editor.nodes.forEach((node)=> node.data.outputDataPool = []);
+    this.editor.nodes.forEach((node) => node.data.outputDataPool = []);
 }
 
 SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
@@ -931,4 +931,15 @@ SciViEditor.prototype.getEdgeDevices = function (gotDicevsesCB)
     $.getJSON("/scan_ssdp", function (data) {
         console.log(data);
     });
+}
+
+SciViEditor.prototype.saveFile = function (data, fileName, fileExt, fileType, shouldRequestName)
+{
+    if (shouldRequestName)
+        fileName = prompt("Enter name of file to save", fileName);
+    if (!fileName)
+        return;
+    if (!fileName.includes("."))
+        fileName += fileExt;
+    FileSaver.saveAs(new Blob([ data ], {type: fileType}), fileName);
 }

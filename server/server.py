@@ -284,6 +284,7 @@ class SciViServer:
         code = code.replace("SETTINGS_VAL", "node.data.settingsVal")
         code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged")
         code = code.replace("SETTINGS", "node.data.settings")
+        code = code.replace("SAVE_FILE", "editor.saveFile")
         return code
 
     def gen_worker(self, workers, inputs, outputs, settings):
@@ -393,7 +394,7 @@ class SciViServer:
         outputNodes = self.onto.get_typed_nodes_linked_from(leaf, "has", "Output")
         outputNodes = sorted(outputNodes, key = lambda outp: outp.id)
         outputs = self.gen_sockets(outputNodes)
-        settingNodes = self.onto.get_typed_nodes_linked_from_inherited(leaf, "has", "Setting")# inhereted
+        settingNodes = self.onto.get_typed_nodes_linked_from_inherited(leaf, "has", "Setting")
         worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
         sett = self.gen_settings(settingNodes)
         self.treeNodes = self.treeNodes +\
