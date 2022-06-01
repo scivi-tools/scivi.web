@@ -77,25 +77,11 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, id, path_to_onto: str, event_loop : asyncio.AbstractEventLoop, context):
+    def __init__(self, id, event_loop : asyncio.AbstractEventLoop, context):
         self.id = id
-        self.path_to_onto = path_to_onto
-        self.onto = OntoMerger(path_to_onto).onto
-        self.loc = "eng"
-        self.tree = ""
-        self.treeID = 1
-        self.treeHandlers = ""
-        self.treeNodes = ""
-        self.typeColors = {}
+        self.path_to_onto = None
+        self.onto = None
         self.ctx = context
-        self.mode = Mode.UNDEFINED
-        self.dependencies = {}
-        self.files = {}
-        self.execers: Dict[str, Execer] = {}
-        self.codeUtils = CodeUtils()
-        self.node_states = {} #global storate for each node
-        for node in self.onto.nodes:
-            self.node_states[node.id] = {}
         self.__cmd_server_loop__ = event_loop
          # start command server
         self.__server__ = None
@@ -127,6 +113,26 @@ class SciViServer:
     def broadcast(self, message : str):
         for socket in self.__websockets__:
             self.__cmd_server_loop__.create_task(socket.send(message))
+
+    def setOnto(self, path_to_onto):
+        self.path_to_onto = path_to_onto
+        self.onto = OntoMerger(path_to_onto).onto
+        self.loc = "eng"
+        self.tree = ""
+        self.treeID = 1
+        self.treeHandlers = ""
+        self.treeNodes = ""
+        self.typeColors = {}
+        self.mode = Mode.UNDEFINED
+        self.dependencies = {}
+        self.files = {}
+        self.execers: Dict[str, Execer] = {}
+        self.codeUtils = CodeUtils()
+        if self.path_to_onto != path_to_onto:
+            self.node_states = {} #global storate for each node
+            for node in self.onto.nodes:
+                self.node_states[node.id] = {}
+
 
     def add_node(self, node: Node):
         self.tree = self.tree +\

@@ -54,14 +54,11 @@ def poolServerInst(server_id, path_to_onto):
     global mutex
     with mutex:
         if server_id not in servers:
-            servers[server_id] = SciViServer(server_id, path_to_onto, event_loop, None)
-            servers[server_id].server_become_unused_event = markServerAsUnused
-        elif servers[server_id].path_to_onto != path_to_onto:
-            disposeServer(server_id, True)
-            servers[server_id] = SciViServer(server_id, path_to_onto, event_loop, None)
+            servers[server_id] = SciViServer(server_id, event_loop, None)
             servers[server_id].server_become_unused_event = markServerAsUnused
         server = servers[server_id]
-        server.gen_tree()
+        server.setOnto(path_to_onto) # reset ontology
+        server.gen_tree() # generate js & css code for page
         markServerAsUsed(server_id)
         return server
 
