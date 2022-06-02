@@ -83,6 +83,7 @@ class SciViServer:
         self.path_to_onto = None
         self.onto = None
         self.ctx = context
+        self.mutex = Lock()
         self.__cmd_server_loop__ = event_loop
          # start command server
         self.__server__ = None
