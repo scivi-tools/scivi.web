@@ -892,8 +892,6 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
                     }
                 }
             });
-
-            console.log('message received');
             this.process();
         }
     };
