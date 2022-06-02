@@ -286,6 +286,7 @@ class SciViServer:
         code = code.replace("SETTINGS_VAL", "node.data.settingsVal")
         code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged")
         code = code.replace("SETTINGS", "node.data.settings")
+        code = code.replace("SAVE_FILE", "editor.saveFile")
         return code
 
     def gen_worker(self, workers, inputs, outputs, settings):
