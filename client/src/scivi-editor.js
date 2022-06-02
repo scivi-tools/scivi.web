@@ -735,8 +735,7 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
     this.addressCorrespondences[address] = addressCorrespondences;
     if (this.commsReconnects[address] === undefined)
         this.commsReconnects[address] = 10;
-    Object.keys(addressCorrespondences)
-    .forEach((key) => {
+    Object.keys(addressCorrespondences).forEach((key) => {
         var cor = addressCorrespondences[key];
         if (cor) {
             for (var j = 0, n = cor.length; j < n; ++j) {
@@ -777,10 +776,9 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
             ws.close();
         } else {
             // Message contains values computed on the remote.
-            Object.keys(msg)
-            .forEach((key) => {
+            Object.keys(msg).forEach((key) => {
                 var cor = addressCorrespondences[key];
-                if (cor) 
+                if (cor)
                 {
                     for (var j = 0, n = cor.length; j < n; ++j) {
                         var isInput = cor[j][1];
