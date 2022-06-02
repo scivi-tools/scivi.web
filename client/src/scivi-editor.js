@@ -380,24 +380,19 @@ SciViEditor.prototype.runMixed = function ()
         $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
         $(".scivi_menu").css({"margin-left": "20px"});
 
-        var ont = data["ont"];
-        var cor = data["cor"];
-        var eon = data["eon"];
-        var srvAddr = data["srvAddr"];
+        var compRes = data["compRes"];
+        // Expected resource format:
+        // { address: "IP:Port", corTable: correspondences, eon: [bytes] }
+        // if eon.length == 0, this means serverside resource, else edge resource.
 
-        this.taskOnto = ont;
-
-        
-        if (Object.keys(cor).length > 0) 
-        {
-            if (eon.length > 0) {
-                eon.unshift(0xE0);
-                // FIXME: address should be given by server, moreover, there may be multiple comms required.
-                this.startComm("ws://192.168.4.1:81/", cor, eon);
+        compRes.forEach((res) => {
+            if (res.eon.length > 0) {
+                res.eon.unshift(0x0E);
+                this.startComm("ws://" + res.address + "/", res.corTable, res.eon);
             } else {
-                this.startComm("ws://" + srvAddr + ":5001/", cor);
+                this.startComm("ws://" + res.address + "/", res.corTable);
             }
-        }
+        });
     });
 }
 

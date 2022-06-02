@@ -495,41 +495,38 @@ class SciViServer:
             barr.append(b)
         return { "ont": eonOnto.data, "eon": barr }
 
-    def gen_mixed(self, dfd) -> Tuple[Dict, Optional[str]]:
+    def gen_mixed(self, dfd, serverAddress) -> Tuple[Dict, Optional[str]]:
         dfd2onto = DFD2Onto(self.onto) #load ontology
         mixedOnto = dfd2onto.get_onto(dfd) # get ontology for dfd
+        compRes = []
         # Server
         srvRes = first(mixedOnto.get_nodes_by_name("SciVi Server"))
         serverTaskHash = None
-        corTable = None
         if srvRes:
             hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # get all plugins
-            serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            serverOnto, serverCorTable = dfd2onto.split_onto(mixedOnto, hosting)
             if self.task_onto_has_operations(serverOnto): 
                 execer = Execer(self.onto, serverOnto, self.node_states, self.broadcast, self.__cmd_server_loop__)
                 serverTaskHash = str(uuid.uuid4())
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
                 execer.start()
+            compRes.append({ "address": serverAddress + ":5001", "corTable": serverCorTable, "eon": [] })
         # Edge
         edgeRes = first(mixedOnto.get_nodes_by_name("ESP8266"))
-        eonBytesArray = []
         if edgeRes:
             hosts = mixedOnto.get_nodes_linked_to(edgeRes, "is_instance")
             if hosts:
                 for host in hosts:
-                    edgeOnto, corTableEdge = dfd2onto.split_onto(mixedOnto, host)
-                    if corTable:
-                        corTable.update(corTableEdge)
-                    else:
-                        corTable = corTableEdge
+                    edgeOnto, edgeCorTable = dfd2onto.split_onto(mixedOnto, host)
+                    edgeAddress = host.attributes["address"]
                     eon = Eon(self.onto)
                     bs, eonOnto = eon.get_eon(edgeOnto)
                     eonBytes = []
                     for b in bs:
                         eonBytes.append(b)
-                    eonBytesArray.append(eonBytes)
-        return { "ont": "", "cor": corTable, "eon": eonBytesArray }, serverTaskHash
+                    compRes.append({ "address": edgeAddress, "corTable": edgeCorTable, "eon": eonBytes })
+        return { "compRes": compRes }, serverTaskHash
 
     def stop_execer(self, serverTaskHash):
         if serverTaskHash and serverTaskHash in self.execers:
