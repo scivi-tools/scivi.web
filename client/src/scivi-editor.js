@@ -862,13 +862,6 @@ SciViEditor.prototype.pingByOntoBusAddress = function (settingName, settingID, n
 {
 }*/
 
-SciViEditor.prototype.getEdgeDevices = function (gotDicevsesCB)
-{
-    $.getJSON("/scan_ssdp", function (data) {
-        console.log(data);
-    });
-}
-
 SciViEditor.prototype.saveFile = function (data, fileName, fileExt, fileType, shouldRequestName)
 {
     if (shouldRequestName)
