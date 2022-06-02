@@ -562,6 +562,7 @@ SciViEditor.prototype.process = function ()
     var rankedNodes = 0;
     var n = nodes.length;
     var removeRecursives = false;
+    var runs = 1;
     while (rankedNodes < n) {
         var hasCycle = true;
         for (var i = 0; i < n; ++i) {
@@ -582,34 +583,39 @@ SciViEditor.prototype.process = function ()
             }
         }
         removeRecursives = hasCycle;
+        if (hasCycle) runs = 2;
     }
 
-    nodes.sort(function (a, b) {
-        return a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0;
-    });
+    nodes.sort((a, b) => a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0);
 
-    for (var i = 0; i < n; ++i) {
-        var node = this.getNodeByID(nodes[i].id);
-        var inputs = [];
-        for (var j = 0, m = nodes[i].inputs.length; j < m; ++j) {
-            if (nodes[i].inputs[j].connections.length > 0) {
-                var srcNodeID = nodes[i].inputs[j].connections[0].node;
-                var srcOutputID = nodes[i].inputs[j].connections[0].output;
-                var srcNode = this.getNodeByID(srcNodeID);
-                if (srcNode.outputData)
-                    inputs.push([srcNode.outputData[srcOutputID]])
-                else
-                    inputs.push([null]);
-            } else {
-                inputs.push([]);
+    // process each node
+    for(var r = 0; r < runs; ++r)
+        for (var i = 0; i < n; ++i) 
+        {
+            let node = this.getNodeByID(nodes[i].id);
+            var inputs = [];
+            for (var j = 0, m = nodes[i].inputs.length; j < m; ++j) 
+            {
+                if (nodes[i].inputs[j].connections.length > 0) {
+                    var srcNodeID = nodes[i].inputs[j].connections[0].node;
+                    var srcOutputID = nodes[i].inputs[j].connections[0].output;
+                    var srcNode = this.getNodeByID(srcNodeID);
+                    if (srcNode.outputData)
+                        inputs.push([srcNode.outputData[srcOutputID]])
+                    else
+                        inputs.push([null]);
+                } else 
+                    inputs.push([]);
             }
+
+            var outputs = [];
+            for (var j = 0, m = nodes[i].outputs.length; j < m; ++j)
+                outputs.push(null);
+            //console.log('call worker for', nodes[i].title, 'with input:', inputs)
+            this.components[nodes[i].title].worker(node, inputs, outputs);
+
+            node.outputData = outputs;
         }
-        var outputs = [];
-        for (var j = 0, m = nodes[i].outputs.length; j < m; ++j)
-            outputs.push(null);
-        this.components[nodes[i].title].worker(node, inputs, outputs);
-        node.outputData = outputs;
-    }
 }
 
 SciViEditor.prototype.viewportContainer = function ()
@@ -694,7 +700,7 @@ SciViEditor.prototype.clearViewport = function ()
 
 SciViEditor.prototype.getNodeByID = function (nodeID)
 {
-    return this.editor.nodes.find(function (node) { return node.id === nodeID; });
+    return this.editor.nodes.find ((node) => node.id === nodeID);
 }
 
 SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
@@ -814,40 +820,41 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
     this.addressCorrespondences[address] = addressCorrespondences;
     if (this.commsReconnects[address] === undefined)
         this.commsReconnects[address] = 10;
-    Object.keys(addressCorrespondences).forEach(function (key) {
+    Object.keys(addressCorrespondences)
+    .forEach((key) => {
         var cor = addressCorrespondences[key];
         if (cor) {
             for (var j = 0, n = cor.length; j < n; ++j) {
                 var isInput = cor[j][1];
                 if (isInput) {
                     var dfdNodeID = cor[j][0];
-                    var dfdNode = _this.getNodeByID(dfdNodeID);
+                    var dfdNode = this.getNodeByID(dfdNodeID);
                     dfdNode.data.txAddress = address;
                 }
             }
         }
     });
-    ws.onopen = function(evt) {
+    ws.onopen = (evt) => {
         console.log("WebSocket open on " + address);
-        _this.commsReconnects[address] = -1;
+        this.commsReconnects[address] = -1;
         if (eon) {
             ws.send(Uint8Array.from(eon));
         }
     };
-    ws.onclose = function(evt) {
+    ws.onclose = (evt) => {
         console.log("WebSocket close on " + address);
-        delete _this.comms[address];
+        delete this.comms[address];
     };
-    ws.onerror = function(evt) {
+    ws.onerror = (evt) => {
         console.log(evt);
-        var rc = _this.commsReconnects[address];
+        var rc = this.commsReconnects[address];
         if (rc > 0) {
             --rc;
-            _this.commsReconnects[address] = rc;
-            setTimeout(function () { _this.startComm(address, addressCorrespondences, eon); }, 100);
+            this.commsReconnects[address] = rc;
+            setTimeout(() => this.startComm(address, addressCorrespondences, eon), 100);
         }
     };
-    ws.onmessage = function(evt) {
+    ws.onmessage = (evt) => {
         var msg = JSON.parse(evt.data);
         if (msg.bus !== undefined) {
             // Message contains bus description from the Edge device.
@@ -855,27 +862,37 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
             ws.close();
         } else {
             // Message contains values computed on the remote.
-            for (var i = 0, n = msg.length; i < n; ++i) {
-                Object.keys(msg[i]).forEach(function (key) {
-                    var cor = addressCorrespondences[key];
-                    if (cor) {
-                        for (var j = 0, n = cor.length; j < n; ++j) {
-                            var isInput = cor[j][1];
-                            if (!isInput) {
-                                var dfdNodeID = cor[j][0];
-                                var socketNmb = cor[j][2];
-                                var dfdNode = _this.getNodeByID(dfdNodeID);
-                                if (!dfdNode.data.outputDataPool)
-                                    dfdNode.data.outputDataPool = [];
-                                for (var k = dfdNode.data.outputDataPool.length; k <= socketNmb; ++k)
-                                    dfdNode.data.outputDataPool.push(null);
-                                dfdNode.data.outputDataPool[socketNmb] = msg[i][key];
+            Object.keys(msg)
+            .forEach((key) => {
+                var cor = addressCorrespondences[key];
+                if (cor) 
+                {
+                    for (var j = 0, n = cor.length; j < n; ++j) {
+                        var isInput = cor[j][1];
+                        if (!isInput) //means isOutput
+                        {
+                            var dfdNodeID = cor[j][0];
+                            var dfdNode = _this.getNodeByID(dfdNodeID);
+                            var socketNmb = cor[j][2];//means gate(output or input) id in dfdNode
+                            if (!dfdNode.data.outputDataPool)
+                                dfdNode.data.outputDataPool = [];
+                            let l = dfdNode.data.outputDataPool.length;
+                            if (l == 0 || 
+                                dfdNode.data.outputDataPool[l - 1][socketNmb])
+                            {
+                                var new_outputs = [];
+                                for(var i = 0; i < dfdNode.outputs.length; ++i)
+                                    new_outputs.push(null);
+                                dfdNode.data.outputDataPool.push(new_outputs);
+                                l++;
                             }
+                            var last_outputs = dfdNode.data.outputDataPool[l - 1];
+                            last_outputs[socketNmb] = msg[key];
                         }
                     }
-                });
-            }
-            _this.process();
+                }
+            });
+            this.process();
         }
     };
 }
