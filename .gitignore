@@ -1,7 +1,9 @@
 *.pyc
 node_modules
+recognized
 client/lib
 *.merged.ont
+lib/voicerecognizer/model
 
 # Vim temporary files
 .*.swp
