@@ -133,6 +133,9 @@ SciViEditor.prototype.run = function (mode)
     });
 
     $("#scivi_btn_save").click(() => {
+        var content = JSON.stringify(editor.toJSON(), function(key, value) {
+            return key === "cache" ? undefined : value;
+        });
         this.saveFile(content, "dataflow.json", ".json", "text/plain;charset=utf-8", true)
     });
 
