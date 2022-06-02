@@ -198,10 +198,27 @@ class DFD2Onto:
             return dfdNode["data"][key]
         return {}
 
-    def get_hosting(self, node: Node, dfdOnto: Onto):
-        # TODO: this should be changed when we'll be able to choose hosting in the GUI for ambigous cases.
-        # Ambigues case is when there are multiple workers of given node,
-        # or there are multiple computing resurses linked to corresponding worker.
+    def get_res_address(self, res: Node, dfdNode: dict):
+        if res.name == "SciVi Web Server":
+            return "127.0.0.1:81" # TODO: real server IP should be substituted here
+        else:
+            try:
+                addresses = dfdNode["data"]["settings"]["Address"]
+                addressIdx = dfdNode["data"]["settingsVal"]["Address"]
+                return addresses[int(addressIdx)] + ":81"
+            except KeyError:
+                pass
+        return ""
+
+    def get_hosting(self, node: Node, dfdNode: dict, dfdOnto: Onto):
+        '''
+        Get the computing resource instance associated with the given node.
+        If there is an instance in the task ontology, it is returned. Otherwise, it is created and appended to the task ontology.
+        @param node - node to get hosting for.
+        @param dfdNode - corresponding node from the DFD.
+        @param dfdOnto - task ontology.
+        @return the computing rource instance for given node.
+        '''
         workers = self.onto.get_nodes_linked_to(node, "is_instance")
         n = len(workers)
         if n == 0:
@@ -217,30 +234,15 @@ class DFD2Onto:
             raise ValueError("Ambigous computing resource for <" + node.name + ">")
         res = first(resources)
         resProto = first(dfdOnto.get_nodes_by_name(res.name))
-        hosting = first(dfdOnto.get_nodes_linked_to(resProto, "is_instance"))
-        return hosting
-
-    def get_res_address(self, resName):
-        # TODO: this should be derived from GUI.
-        if resName == "ESP8266":
-            return "192.168.1.4:81"
-        elif resName == "SciVi Web Server":
-            return "127.0.0.1:81"
-        return ""
-
-    def traverse_computing_resources(self, res: Node, dfdOnto: Onto):
-        ch = self.onto.get_nodes_linked_to(res, "is_a")
-        if len(ch) == 0:
-            resInst = dfdOnto.add_node(res.name + self.INST_SUFFIX, { "address": self.get_res_address(res.name) })
+        if not resProto:
             resProto = dfdOnto.add_node(res.name)
-            dfdOnto.link_nodes(resInst, resProto, "is_instance")
-        else:
-            for c in ch:
-                self.traverse_computing_resources(c, dfdOnto)
-
-    def instanciate_computing_resources(self, dfdOnto: Onto):
-        # TODO: do it according to the info from GUI.
-        self.traverse_computing_resources(first(self.onto.get_nodes_by_name("ComputingResource")), dfdOnto)
+        resAddress = self.get_res_address(resProto, dfdNode)
+        resInstName = resProto.name + "@" + resAddress
+        hosting = first(dfdOnto.get_nodes_by_name(resInstName))
+        if not hosting:
+            hosting = dfdOnto.add_node(resInstName, { "address": resAddress })
+            dfdOnto.link_nodes(hosting, resProto, "is_instance")
+        return hosting
 
     def get_onto(self, dfdJSON) -> Onto:
         dfdNodes = dfdJSON["nodes"]
@@ -249,14 +251,13 @@ class DFD2Onto:
         resultI = result.add_node("Input")
         resultO = result.add_node("Output")
         resultInstances = {}
-        self.instanciate_computing_resources(result)
         # Add all nodes from DFD.
         for dfdNodeKey in dfdNodes:
             dfdNode = dfdNodes[dfdNodeKey]
             # Add node.
             resultAttrs = {}
             motherNode = first(self.onto.get_nodes_by_name(dfdNode["title"]))
-            hostNode = self.get_hosting(motherNode, result)
+            hostNode = self.get_hosting(motherNode, dfdNode, result)
             instNmb = 1
             if dfdNode["title"] in resultInstances:
                 instNmb = resultInstances[dfdNode["title"]]

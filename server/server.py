@@ -504,21 +504,23 @@ class SciViServer:
                 execer.start()
         # Edge
         edgeRes = first(mixedOnto.get_nodes_by_name("ESP8266"))
-        eonBytes = []
+        eonBytesArray = []
         if edgeRes:
-            hosting = first(mixedOnto.get_nodes_linked_to(edgeRes, "is_instance"))
-            edgeOnto, corTableEdge = dfd2onto.split_onto(mixedOnto, hosting)
-            if corTable:
-                corTable.update(corTableEdge)
-            else:
-                corTable = corTableEdge
-            eon = Eon(self.onto)
-            bs, eonOnto = eon.get_eon(edgeOnto)
-            eonBytes = []
-            for b in bs:
-                eonBytes.append(b)
-        return { "ont": json.dumps(edgeOnto, cls = OntoEncoder), 
-                    "cor": corTable, "eon": eonBytes }, serverTaskHash
+            hosts = mixedOnto.get_nodes_linked_to(edgeRes, "is_instance")
+            if hosts:
+                for host in hosts:
+                    edgeOnto, corTableEdge = dfd2onto.split_onto(mixedOnto, host)
+                    if corTable:
+                        corTable.update(corTableEdge)
+                    else:
+                        corTable = corTableEdge
+                    eon = Eon(self.onto)
+                    bs, eonOnto = eon.get_eon(edgeOnto)
+                    eonBytes = []
+                    for b in bs:
+                        eonBytes.append(b)
+                    eonBytesArray.append(eonBytes)
+        return { "ont": "", "cor": corTable, "eon": eonBytesArray }, serverTaskHash
 
     def stop_execer(self, serverTaskHash):
         if serverTaskHash and serverTaskHash in self.execers:

@@ -24,14 +24,11 @@ class Eon:
         self.onto = onto
 
     def get_number_of_ios(self, node: Node, type, ios):
-        iosNodes = self.onto.get_nodes_linked_from(node, "has")
-        index = 0
-        for iosNode in iosNodes:
-            if self.onto.is_node_of_type(iosNode, type):
-                if iosNode == ios:
-                    return index
-                index += 1
-        return None
+        iosNodes = self.onto.get_typed_nodes_linked_from(node, "has", type)
+        try:
+            return iosNodes.index(ios)
+        except ValueError:
+            return None
 
     def get_io_op(self, ioInstID, type, dfdOnto: Onto):
         ioInst = dfdOnto.get_node_by_id(ioInstID)
@@ -131,6 +128,8 @@ class Eon:
                 for s in settings:
                     sMother = self.get_setting_by_name(opMother, s)
                     sNumber = self.get_number_of_ios(opMother, "Setting", sMother)
+                    if sNumber == None:
+                        continue
                     sValue = settings[s]
                     sType, convertedValue = self.guess_type(sValue)
                     settingsChunk.write(bytes([opInst.attributes["dfd"], \
