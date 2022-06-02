@@ -9,6 +9,13 @@ import json
 async def ws_handler(websocket):
     print("> WebSocket server started")
     GLOB["DataWebSocket"] = websocket
+     #clear queue for send
+    addr = SETTINGS_VAL["Node Address"]
+    # if we send message before socket opened, we stack messages to queue and send it on connect completed
+    while len(CACHE["TX"]) > 0:
+        tx = CACHE["TX"].popleft()
+        print('sent', tx)
+        asyncio.get_event_loop().create_task(websocket.send(json.dumps({addr: tx})))
     try:
         async for message in websocket:
             d = json.loads(message)
@@ -28,20 +35,27 @@ async def wait_for_connection():
 
 if MODE == "INITIALIZATION":
     CACHE["RX"] = deque()
+    CACHE["TX"] = deque()
     if "DataWebSocketStarted" not in GLOB:
         GLOB["DataWebSocketStarted"] = True
         asyncio.get_event_loop().create_task(wait_for_connection())
 
-elif MODE == "RUNNING" and "DataWebSocket" in GLOB:
-
-    websocket = GLOB["DataWebSocket"]
+elif MODE == "RUNNING":
     tx = INPUT.get("TX")
-    addr = SETTINGS_VAL["Node Address"]
+
     if tx is not None:
-        asyncio.get_event_loop().create_task(websocket.send(json.dumps({addr: tx})))
+        if "DataWebSocket" in GLOB:
+            print('sent', tx)
+            websocket = GLOB["DataWebSocket"]
+            addr = SETTINGS_VAL["Node Address"]
+            asyncio.get_event_loop().create_task(websocket.send(json.dumps({addr: tx})))
+        else:
+            CACHE["TX"].append(tx)
 
     if len(CACHE["RX"]) > 0:
         OUTPUT["RX"] = CACHE["RX"].popleft()
+        if len(CACHE["RX"]) > 0:
+            PROCESS()
 
 if MODE == "DESTRUCTION" and "DataWebSocket" in GLOB:
     if "DataWebServer" in GLOB:

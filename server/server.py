@@ -115,7 +115,6 @@ class SciViServer:
             self.__cmd_server_loop__.create_task(socket.send(message))
 
     def setOnto(self, path_to_onto):
-        self.path_to_onto = path_to_onto
         self.onto = OntoMerger(path_to_onto).onto
         self.loc = "eng"
         self.tree = ""
@@ -132,6 +131,7 @@ class SciViServer:
             self.node_states = {} #global storate for each node
             for node in self.onto.nodes:
                 self.node_states[node.id] = {}
+        self.path_to_onto = path_to_onto
 
 
     def add_node(self, node: Node):
@@ -308,10 +308,10 @@ class SciViServer:
             code = ""
             return "function (node, inputs, outputs) { " +\
                         self.resolve_containers(code, inputs, outputs, settings, None) +\
-                        "if (node.data.outputDataPool) { " +\
-                            "for (var i = 0, n = Math.min(node.data.outputDataPool.length, outputs.length); i < n; ++i) " +\
-                                "outputs[i] = node.data.outputDataPool[i]; " +\
-                            "node.data.outputDataPool = null;" +\
+                        "if (node.data.outputDataPool && node.data.outputDataPool.length > 0) { " +\
+                            "let received_data = node.data.outputDataPool.shift(); " +\
+                            "for (var i = 0, n = outputs.length; i < n; ++i) " +\
+                                "outputs[i] = received_data[i]; " +\
                         "} " +\
                         "if (node.data.txAddress) { " +\
                             "for (var i = 0, n = inputs.length; i < n; ++i) " +\

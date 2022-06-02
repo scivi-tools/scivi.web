@@ -67,5 +67,12 @@ elif MODE == "RUNNING":
                         print('recognized', result)
                         OUTPUT["Text Speech"] = result
             else: print("Error! SampleRate has changed. It must be constant")
+        elif wav == "End" and 'recognizer' in CACHE:
+            rec = CACHE['recognizer']
+            result = json.loads(rec.FinalResult())["text"] 
+            if len(result) > 0:
+                print('recognized', result)
+                OUTPUT["Text Speech"] = result
+
 
     
