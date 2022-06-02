@@ -418,6 +418,7 @@ SciViEditor.prototype.createControl = function (node)
 SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, workerFunc, settingsFunc)
 {
     var sockets = this.sockets;
+    var _this = this;
     var node = new D3NE.Component(name,
     {
         builder(node) {
@@ -432,14 +433,14 @@ SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, worke
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
             settingsFunc(node);
-            node.addControl(new D3NE.Control(this.createControl(node), (element, control) => { }));
+            node.addControl(new D3NE.Control(_this.createControl(node), (element, control) => { }));
             return node;
         },
         worker(node, inputs, outputs) {
             try {
                 workerFunc(node, inputs, outputs);
             } catch(err) {
-                this.showError(err);
+                _this.showError(err);
             }
         }
     });
