@@ -665,6 +665,14 @@ SciViEditor.prototype.clearViewport = function ()
         vp.removeChild(vp.firstChild);
     this.visuals = [];
     this.forceDir = undefined;
+
+    var body = document.querySelectorAll("body")[0];
+    for (var i = 0; i < body.children.length;) {
+        if (body.children[i].id !== "embrace")
+            body.removeChild(body.children[i]);
+        else
+            ++i;
+    }
 }
 
 SciViEditor.prototype.getNodeByID = function (nodeID)
@@ -782,11 +790,11 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
                 {
                     for (var j = 0, n = cor.length; j < n; ++j) {
                         var isInput = cor[j][1];
-                        if (!isInput) //means isOutput
+                        if (!isInput) // Means isOutput
                         {
                             var dfdNodeID = cor[j][0];
                             var dfdNode = this.getNodeByID(dfdNodeID);
-                            var socketNmb = cor[j][2];//means gate(output or input) id in dfdNode
+                            var socketNmb = cor[j][2]; // Means gate (output or input) id in dfdNode
                             if (!dfdNode.data.outputDataPool)
                                 dfdNode.data.outputDataPool = [];
                             let l = dfdNode.data.outputDataPool.length;
