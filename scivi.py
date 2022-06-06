@@ -86,6 +86,10 @@ def es_page():
 def eon_page():
     return LoadEditorPage('eon'), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route("/pong")
+def pong_page():
+    return LoadEditorPage('pong'), 200, {'Content-Type': 'text/html; charset=utf-8'}
+
 @app.route("/shielder")
 def shielder_page():
     return LoadEditorPage('shielder'), 200, {'Content-Type': 'text/html; charset=utf-8'}
