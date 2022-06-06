@@ -217,8 +217,8 @@
             "id": "68",
             "name": "DeviceAddress",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 200,
-            "position_y": 200
+            "position_x": 387,
+            "position_y": 453
         },
         {
             "attributes": {
@@ -227,8 +227,8 @@
             "id": "70",
             "name": "DeviceAddressWidget",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 200,
-            "position_y": 200
+            "position_x": 463,
+            "position_y": 359
         }
     ],
     "relations": [
