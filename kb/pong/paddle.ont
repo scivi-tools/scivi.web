@@ -56,21 +56,23 @@
         },
         {
             "attributes": {
+                "default": 120
             },
             "id": "6",
-            "name": "Angle",
+            "name": "Width",
             "namespace": "http://knova.ru/user/1654459655357",
-            "position_x": -151,
-            "position_y": -335
+            "position_x": -152,
+            "position_y": -336
         },
         {
             "attributes": {
+                "default": 30
             },
             "id": "7",
-            "name": "Length",
+            "name": "Height",
             "namespace": "http://knova.ru/user/1654459655357",
-            "position_x": -95,
-            "position_y": -334
+            "position_x": -106,
+            "position_y": -336
         },
         {
             "attributes": {
@@ -151,8 +153,8 @@
             "id": "35",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1654459655357",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 153,
+            "position_y": -383
         }
     ],
     "relations": [
