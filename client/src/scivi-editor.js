@@ -558,7 +558,7 @@ SciViEditor.prototype.process = function ()
     nodes.sort((a, b) => a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0);
 
     // process each node
-    for(var r = 0; r < runs; ++r)
+    for(var r = 0; r < runs; ++r) {
         for (var i = 0; i < n; ++i) 
         {
             let node = this.getNodeByID(nodes[i].id);
@@ -585,6 +585,7 @@ SciViEditor.prototype.process = function ()
 
             node.outputData = outputs;
         }
+    }
 }
 
 SciViEditor.prototype.viewportContainer = function ()
