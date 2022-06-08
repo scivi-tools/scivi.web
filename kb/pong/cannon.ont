@@ -1,5 +1,5 @@
 {
-    "last_id": "40",
+    "last_id": "44",
     "namespaces": {
         "default": "http://knova.ru/user/1654617775098",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -70,8 +70,8 @@
             "id": "7",
             "name": "Shoot Interval",
             "namespace": "http://knova.ru/user/1654617775098",
-            "position_x": -133,
-            "position_y": -208
+            "position_x": -162,
+            "position_y": -207
         },
         {
             "attributes": {
@@ -79,7 +79,7 @@
             "id": "8",
             "name": "Object",
             "namespace": "http://knova.ru/user/1654617775098",
-            "position_x": -11,
+            "position_x": 32,
             "position_y": -210
         },
         {
@@ -163,6 +163,16 @@
             "namespace": "http://knova.ru/user/1654617775098",
             "position_x": -145,
             "position_y": -98
+        },
+        {
+            "attributes": {
+                "default": 200
+            },
+            "id": "41",
+            "name": "Ball Speed",
+            "namespace": "http://knova.ru/user/1654617775098",
+            "position_x": -55,
+            "position_y": -204
         }
     ],
     "relations": [
@@ -363,6 +373,33 @@
             "name": "language",
             "namespace": "http://knova.ru/user/1654617775098",
             "source_node_id": "12"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "10",
+            "id": "42",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654617775098",
+            "source_node_id": "41"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "15",
+            "id": "43",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654617775098",
+            "source_node_id": "41"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "41",
+            "id": "44",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1654617775098",
+            "source_node_id": "3"
         }
     ],
     "visualize_ont_path": ""
