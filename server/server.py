@@ -95,10 +95,11 @@ class SciViServer:
         self.__server__.close()
 
     async def wait_for_connection(self):
-        self.__server__ = await websockets.serve(self.client_handler, 'localhost', self.command_server_port)
+        self.__server__ = await websockets.serve(self.client_handler, port=self.command_server_port)
+        print('server started at', self.command_server_port, 'port')
          
     async def client_handler(self, websocket):
-        print('Client connected to command server')
+        print('Client connected to command server', self.command_server_port)
         self.__websockets__.append(websocket)
         try:
             async for message in websocket:

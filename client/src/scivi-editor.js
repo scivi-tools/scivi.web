@@ -211,17 +211,18 @@ SciViEditor.prototype.run = function (mode)
     
     //--------------- connect to server -----------------
     let addr = document.URL.split(':')[1].slice(2);
-    this.command_socket = new WebSocket("ws://" + addr + ":" + $.cookie("CommandServerPort"));
+    let port = $.cookie("CommandServerPort")
+    this.command_socket = new WebSocket("ws://" + addr + ":" + port);
     this.command_socket.onopen = (event) => 
     {
-        console.log('Connected to command server');
+        console.log('Connected to command server at', addr, ":", port);
     };
     this.command_socket.onclose = (event) => 
     {
         if (event.wasClean)
             console.log(`Connection with command server was closed. Code=${event.code}, reason = ${event.reason}`);
         else
-        alert('Connection was broken');
+        alert('Connection was broken with', addr, ":", port);
     };
     this.command_socket.onerror = (error) => 
     {
