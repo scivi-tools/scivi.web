@@ -31,7 +31,7 @@ async def ws_handler(websocket):
     print("> WebSocket server stopped")
 
 async def wait_for_connection():
-    GLOB["DataWebServer"] = await websockets.serve(ws_handler, "localhost", 5001)
+    GLOB["DataWebServer"] = await websockets.serve(ws_handler, port=5001)
 
 if MODE == "INITIALIZATION":
     CACHE["RX"] = deque()
