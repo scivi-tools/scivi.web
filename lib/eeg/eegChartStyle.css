@@ -1,0 +1,112 @@
+.scrl {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.navbar {
+    overflow: hidden;
+    background: linear-gradient(45deg, #102eff, #d2379b);;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    overflow: hidden;
+
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+
+
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+    overflow: hidden;
+
+
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+
+
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+    overflow: scroll;
+    max-height: 350px;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.button-navbar-def {
+    /*background-color: #4CAF50; !* Green *!*/
+    background-color: #efefef;
+    border: 1px solid black;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    width: 160px;
+    height: 56.7px;
+    display: block;
+}
+.button-navbar-dis {
+    /*background-color: #4CAF50; !* Green *!*/
+    background-color: gray;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    width: 160px;
+    height: 56.7px;
+    display: block;
+}
+.button-navbar-def:hover{
+    background-color: darkgray;
+}
+.button-navbar-dis:hover{
+    background-color: darkgray;
+}
