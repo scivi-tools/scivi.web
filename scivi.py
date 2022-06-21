@@ -27,7 +27,7 @@ disposed_servers = []
 mutex = Lock()
 
 def disposeServer(server_id: str, force: bool = False):
-    if force or server_id in disposed_servers:
+    if server_id in servers and (force or server_id in disposed_servers):
         print('Disposing Server Instance')
         servers[server_id].release()
         server = servers.pop(server_id)
