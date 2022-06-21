@@ -7,7 +7,7 @@ import websockets
 import json
     
 async def ws_handler(websocket):
-    print("> WebSocket server started")
+    print(">Data WebSocket: Connection opened")
     GLOB["DataWebSocket"] = websocket
      #clear queue for send
     addr = SETTINGS_VAL["Node Address"]
@@ -28,10 +28,10 @@ async def ws_handler(websocket):
                 PROCESS()
     except websockets.exceptions.ConnectionClosedError:
         pass
-    print("> WebSocket server stopped")
+    print("> DataWebSocket: Connection closed")
 
 async def wait_for_connection():
-    GLOB["DataWebServer"] = await websockets.serve(ws_handler, "localhost", 5001)
+    GLOB["DataWebServer"] = await websockets.serve(ws_handler, port=5001)
 
 if MODE == "INITIALIZATION":
     CACHE["RX"] = deque()
@@ -59,10 +59,10 @@ elif MODE == "RUNNING":
 
 if MODE == "DESTRUCTION" and "DataWebSocket" in GLOB:
     if "DataWebServer" in GLOB:
-        print('destroy data server')
         webserver = GLOB["DataWebServer"]
         webserver.close()
         del GLOB["DataWebSocket"]
         del GLOB["DataWebServer"]
         GLOB.pop("DataWebSocketStarted")
+        print('> Data WebSocket: server at 5001 closed')
     
