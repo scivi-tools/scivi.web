@@ -31,11 +31,12 @@ async def ws_handler(websocket):
     print("> DataWebSocket: Connection closed")
 
 async def wait_for_connection():
-    GLOB["DataWebServer"] = await websockets.serve(ws_handler, port=5001)
+    GLOB["DataWebServer"] = await websockets.serve(ws_handler, port=CACHE["Port"])
 
 if MODE == "INITIALIZATION":
     CACHE["RX"] = deque()
     CACHE["TX"] = deque()
+    CACHE["Port"] = GLOB["DataServerPort"]
     if "DataWebSocketStarted" not in GLOB:
         GLOB["DataWebSocketStarted"] = True
         asyncio.get_event_loop().create_task(wait_for_connection())

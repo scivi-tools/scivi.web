@@ -383,7 +383,7 @@ SciViEditor.prototype.runMixed = function ()
         var srvAddr = data["srvAddr"];
 
         this.taskOnto = ont;
-
+        const data_server_port = $.cookie("DataServerPort");
         
         if (Object.keys(cor).length > 0) 
         {
@@ -392,7 +392,7 @@ SciViEditor.prototype.runMixed = function ()
                 // FIXME: address should be given by server, moreover, there may be multiple comms required.
                 this.startComm("ws://192.168.4.1:81/", cor, eon);
             } else {
-                this.startComm("ws://" + srvAddr + ":5001/", cor);
+                this.startComm("ws://" + srvAddr + ":" + data_server_port + "/", cor);
             }
         }
     });

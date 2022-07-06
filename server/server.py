@@ -492,18 +492,20 @@ class SciViServer:
             barr.append(b)
         return { "ont": eonOnto.data, "eon": barr }
 
-    def gen_mixed(self, dfd) -> Tuple[Dict, Optional[str]]:
+    def gen_mixed(self, dfd) -> Tuple[Dict, Optional[str], int]:
         dfd2onto = DFD2Onto(self.onto) #load ontology
         mixedOnto = dfd2onto.get_onto(dfd) # get ontology for dfd
         # Server
         srvRes = first(mixedOnto.get_nodes_by_name("SciVi Server"))
         serverTaskHash = None
         corTable = None
+        data_server_port = get_unused_port()
         if srvRes:
             hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # get all plugins
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
             if self.task_onto_has_operations(serverOnto): 
-                execer = Execer(self.onto, serverOnto, self.node_states, self.broadcast, self.__cmd_server_loop__)
+                execer = Execer(self.onto, serverOnto, self.node_states, self.broadcast, 
+                                self.__cmd_server_loop__, data_server_port)
                 serverTaskHash = str(uuid.uuid4())
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
@@ -524,7 +526,7 @@ class SciViServer:
             for b in bs:
                 eonBytes.append(b)
         return { "ont": json.dumps(edgeOnto, cls = OntoEncoder), 
-                    "cor": corTable, "eon": eonBytes }, serverTaskHash
+                    "cor": corTable, "eon": eonBytes }, serverTaskHash, data_server_port
 
     def stop_execer(self, serverTaskHash):
         if serverTaskHash and serverTaskHash in self.execers:

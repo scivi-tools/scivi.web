@@ -18,7 +18,8 @@ class ExecutionMode(enum.Enum):
 
 
 class Execer(Thread):
-    def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict], send_message_func: SendMessageFunc, event_loop):
+    def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict],
+                    send_message_func: SendMessageFunc, event_loop: asyncio.AbstractEventLoop, data_server_port: int = 0):
         self.onto = onto
         self.taskOnto = taskOnto
         self.process_scheduled = False
@@ -28,14 +29,17 @@ class Execer(Thread):
         self.__cmd_server_loop__ = event_loop
         self.process_loop = asyncio.new_event_loop()
         self.push_message_to_send = send_message_func
+        self.glob["DataServerPort"] = data_server_port # pass port to data websocket
         asyncio.set_event_loop(self.process_loop)
         Thread.__init__(self)
 
     def run(self):
         Thread.run(self)
-        self.process_loop.run_forever()
-        self.process_loop.close()
-        print('execer stopped')
+        try:
+            self.process_loop.run_forever()
+        finally:
+            self.process_loop.close()
+            print('execer stopped')
 
     def stop(self):
         print('execer stopping')
@@ -93,7 +97,7 @@ class Execer(Thread):
         outputs = {}
         if not instNode.id in self.cache:
             self.cache[instNode.id] = {}
-        #print('execute', workerNode.name)
+        #print('execute', workerNode.name, workerNode.id)
         self.execute_code(workerNode, mode, inputs, outputs, instNode.attributes["settingsVal"], 
         self.cache[instNode.id], self.node_states[instNode.id])
         self.store_outputs(instNode, protoNode, outputs)
