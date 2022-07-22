@@ -143,18 +143,18 @@ ul.pseudo-list input[type=checkbox] {
     height: 0.6em;
 }
 
-table
+.connectivity_matrix
 {
     font-size: 12px;
 }
 
 
-th {
+.connectivity_matrix_header {
     font-weight: normal;
     background-color: #fff;
 }
 
-th[scope=row]
+.connectivity_matrix_header[scope=row]
 {
     position: -webkit-sticky;
     position: sticky;
@@ -163,7 +163,7 @@ th[scope=row]
     text-align: right;
 }
 
-th.vertical_header {
+.connectivity_matrix_header.vertical_header {
     writing-mode: vertical-rl;
     text-align: left;
     position: -webkit-sticky;
