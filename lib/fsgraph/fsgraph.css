@@ -163,7 +163,27 @@ ul.pseudo-list input[type=checkbox] {
     text-align: right;
 }
 
-.connectivity_matrix_header.vertical_header {
+
+.connectivity_matrix_header.right_header[scope=row]
+{
+    position: -webkit-sticky;
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    text-align: left;
+}
+
+.connectivity_matrix_header.bottom_header
+{
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    text-align: center;
+    vertical-align: top;
+}
+
+.connectivity_matrix_header.top_header {
     writing-mode: vertical-rl;
     text-align: left;
     position: -webkit-sticky;
