@@ -5,7 +5,7 @@ import asyncio
 import enum
 import json
 from threading import Thread
-from typing import Callable
+from typing import Any, Callable
 
 from onto.onto import Node, Onto, first
 
@@ -18,7 +18,7 @@ class ExecutionMode(enum.Enum):
 
 
 class Execer(Thread):
-    def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict],
+    def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict[str, Any]],
                     send_message_func: SendMessageFunc, event_loop: asyncio.AbstractEventLoop, data_server_port: int = 0):
         self.onto = onto
         self.taskOnto = taskOnto
