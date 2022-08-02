@@ -5,7 +5,6 @@ from collections import deque
 import re
 from typing import Any, List, Tuple
 
-from itsdangerous import json
 from onto.onto import Link, Node, Onto, first
 import copy
 
