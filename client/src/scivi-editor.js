@@ -212,7 +212,7 @@ SciViEditor.prototype.run = function (mode)
     //--------------- connect to server -----------------
     let addr = document.URL.split(':')[1].slice(2);
     let port = $.cookie("CommandServerPort")
-    this.command_socket = new WebSocket("ws://" + addr + ":" + port);
+    this.command_socket = new WebSocket("wss://" + addr + ":" + port);
     this.command_socket.onopen = (event) => 
     {
         console.log('Connected to command server at', addr, ":", port);
