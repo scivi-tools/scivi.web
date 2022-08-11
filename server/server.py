@@ -8,9 +8,6 @@ import importlib
 import datetime
 import socket
 from typing import Dict, List, Tuple, Optional
-from xmlrpc import server
-
-from threading import Thread
 
 import websockets
 from onto.merge import OntoMerger
@@ -20,7 +17,7 @@ import uuid
 import socket
 from server.eon import Eon
 from server.dfd2onto import DFD2Onto
-from server.execer import Execer, ExecutionMode, SendMessageFunc
+from server.execer import Execer, ExecutionMode
 from server.utils import CodeUtils
 from server.fwgen import FWGen
 
@@ -379,7 +376,7 @@ class SciViServer:
             return f
         return "function (node){ " + initCode + " }"
 
-    def check_mode(self, leaf):
+    def check_mode(self, leaf : Node):
         if self.mode != Mode.MIXED:
             curMode = Mode.UNDEFINED
             if first(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ServerSideWorker")):
