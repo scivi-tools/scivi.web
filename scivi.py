@@ -155,7 +155,10 @@ def editor_storage(filename):
 
 @app.route("/preset/<path:filename>")
 def editor_preset(filename):
-    return send_from_directory("client/preset", filename), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    return send_from_directory("client/preset", filename + ".gz"), \
+                               200, \
+                               {"Content-Type": "application/json; charset=utf-8", \
+                                "Content-Encoding": "gzip"}
 
 @app.route("/exec/<nodeID>")
 def srv_exec(nodeID):
