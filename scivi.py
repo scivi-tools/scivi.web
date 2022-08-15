@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import asyncio, websockets
-from wsgiref.util import request_uri
-import re
-import socket
-from typing import Any, Dict
+import asyncio
+from typing import Dict
 from flask import Flask, Response, send_from_directory, request, jsonify
 
-from server.server import SciViServer, Mode
-from onto.merge import OntoMerger
+from server.server import SciViServer
 from threading import Lock, Thread
 import traceback
 
