@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2 as cv
+import numpy as np
 
 image = INPUT["Picture"]
 template = INPUT["Template"]
@@ -28,4 +29,4 @@ dstPoints = np.float32([kpImage[m.trainIdx].pt for m in goodMatches]).reshape(-1
 m, mask = cv.findHomography(srcPoints, dstPoints, cv.RANSAC, 5.0)
 
 OUTPUT["Homography"] = m
-OUTPUT["Match"] = len(goodMatches) > 50
+OUTPUT["Match"] = len(goodMatches) > 150

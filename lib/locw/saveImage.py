@@ -5,4 +5,4 @@ import cv2 as cv
 
 img = INPUT["Picture"]
 path = INPUT["Path"]
-cv.imwrate(img, path + ".jpg")
+cv.imwrite(path + ".jpg", img)

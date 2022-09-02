@@ -8,4 +8,4 @@ img = INPUT["Picture"].copy()
 aois = INPUT["AOIs"]
 for aoi in aois:
     cv.polylines(img, [np.int32(aoi["shape"])], True, (0, 0, 255), 2)
-OUTPUT["Image"] = img
+OUTPUT["Picture"] = img

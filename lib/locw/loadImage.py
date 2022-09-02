@@ -4,7 +4,7 @@
 import cv2 as cv
 
 img = CACHE.get("Picture")
-if not img:
+if img is None:
     img = cv.imread(SETTINGS_VAL["Path"])
     CACHE["Picture"] = img
 

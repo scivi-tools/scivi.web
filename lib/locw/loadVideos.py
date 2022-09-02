@@ -15,7 +15,7 @@ if (not video) or (not video.isOpened()):
     if videoIndex is None:
         videoIndex = 0
     else:
-        videoIndex++
+        videoIndex = videoIndex + 1
     frameIndex = -1
     videoList = SETTINGS_VAL["List of Videos"].split("\n")
     videoCount = len(videoList)
@@ -38,7 +38,7 @@ if (not video) or (not video.isOpened()):
 if video and video.isOpened():
     ret, frame = video.read()
     if ret:
-        frameIndex++
+        frameIndex = frameIndex + 1
 
 CACHE["CUR_FRAME_INDEX"] = frameIndex
 
@@ -49,5 +49,5 @@ OUTPUT["Video Index"] = videoIndex
 OUTPUT["Video Count"] = videoCount
 OUTPUT["Video Path"] = videoPath
 
-if frame:
+if frame is not None:
     PROCESS()
