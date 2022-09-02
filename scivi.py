@@ -191,7 +191,7 @@ def gen_mixed():
         srv = getServerInst()
         srv.stop_execer(oldExeKey)
         res, exeKey, dataServerPort = srv.gen_mixed(dfd)
-    except ValueError as err:
+    except Exception as err:
         res = { "error": str(err) }
     res["srvAddr"] = request.host.split(":")[0]
     resp = jsonify(res)

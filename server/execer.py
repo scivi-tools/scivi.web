@@ -4,6 +4,8 @@
 import asyncio
 import enum
 import json
+import sys
+import traceback
 from threading import Thread
 from typing import Any, Callable
 
@@ -16,6 +18,15 @@ class ExecutionMode(enum.Enum):
     RUNNING = 2
     DESTRUCTION = 3
 
+class OperatorError(Exception):
+    def __init__(self, name: str, path: str, line: int, message: str):
+        self.name = name
+        self.path = path
+        self.line = line
+        self.message = message
+
+    def __str__(self):
+        return "SciVi operator <%s> error in file <%s> line %d:\n%s" % (self.name, self.path, self.line, self.message)
 
 class Execer(Thread):
     def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict[str, Any]],
@@ -75,18 +86,24 @@ class Execer(Thread):
                 outputInst = self.get_belonging_instance(instNode, outputNode)
                 self.buffer[outputInst.id] = outputs[outputNode.name]
 
+    def guarded_exec(self, name: str, path: str, code: str, context: dict):
+        try:
+            exec(code, context)
+        except Exception as e:
+            cl, exc, tb = sys.exc_info()
+            raise OperatorError(name, path, traceback.extract_tb(tb)[-1][1], str(e))
+
     def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, outputs: dict, settings, cache, node_state: dict):
         context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
                     "CACHE": cache, "GLOB": self.glob, "STATE": node_state,\
                     "MODE": mode.name, "PROCESS": self.process }
         if "inline" in workerNode.attributes:
-            exec(workerNode.attributes["inline"], context)
+            self.guarded_exec(workerNode.name, "inline", workerNode.attributes["inline"], context)
         elif "path" in workerNode.attributes:
             p = workerNode.attributes["path"]
             context["__name__"] = p.replace("/", ".").strip(".py")
             with open(p, encoding="utf-8") as f:
-                #print('exec', p)
-                exec(f.read(), context)
+                self.guarded_exec(workerNode.name, p, f.read(), context)
         else:
             print("Error: Can't execute node. 'path' not in workerNode.attributes");
 
