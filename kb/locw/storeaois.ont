@@ -119,6 +119,7 @@
         },
         {
             "attributes": {
+                "path": "lib/locw/storeAOIs.py"
             },
             "id": "29",
             "name": "Store AOIs Worker",

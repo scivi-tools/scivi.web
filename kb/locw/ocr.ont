@@ -15,8 +15,8 @@
             "id": "1",
             "name": "Root",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": -37,
-            "position_y": -398
+            "position_x": 317,
+            "position_y": 243
         },
         {
             "attributes": {
@@ -24,8 +24,8 @@
             "id": "2",
             "name": "Filter",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": -42,
-            "position_y": -355
+            "position_x": 312,
+            "position_y": 286
         },
         {
             "attributes": {
@@ -33,8 +33,8 @@
             "id": "3",
             "name": "OCR",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": -40,
-            "position_y": -311
+            "position_x": 314,
+            "position_y": 330
         },
         {
             "attributes": {
@@ -42,8 +42,8 @@
             "id": "4",
             "name": "Picture",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": -87,
-            "position_y": -252
+            "position_x": 267,
+            "position_y": 389
         },
         {
             "attributes": {
@@ -51,8 +51,8 @@
             "id": "5",
             "name": "Image",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": -83,
-            "position_y": -195
+            "position_x": 271,
+            "position_y": 446
         },
         {
             "attributes": {
@@ -60,8 +60,8 @@
             "id": "6",
             "name": "Type",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": -47,
-            "position_y": -154
+            "position_x": 307,
+            "position_y": 487
         },
         {
             "attributes": {
@@ -69,8 +69,8 @@
             "id": "7",
             "name": "Input",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": -154,
-            "position_y": -301
+            "position_x": 200,
+            "position_y": 340
         },
         {
             "attributes": {
@@ -78,8 +78,8 @@
             "id": "8",
             "name": "AOIs",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": 45,
-            "position_y": -255
+            "position_x": 399,
+            "position_y": 386
         },
         {
             "attributes": {
@@ -87,8 +87,8 @@
             "id": "9",
             "name": "Array",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": 40,
-            "position_y": -198
+            "position_x": 394,
+            "position_y": 443
         },
         {
             "attributes": {
@@ -96,8 +96,8 @@
             "id": "10",
             "name": "Area",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": 111,
-            "position_y": -197
+            "position_x": 465,
+            "position_y": 444
         },
         {
             "attributes": {
@@ -105,17 +105,18 @@
             "id": "11",
             "name": "Output",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": 114,
-            "position_y": -309
+            "position_x": 468,
+            "position_y": 332
         },
         {
             "attributes": {
+                "path": "lib/locw/ocr.py"
             },
             "id": "24",
             "name": "OCR Worker",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": 189,
-            "position_y": -397
+            "position_x": 543,
+            "position_y": 244
         },
         {
             "attributes": {
@@ -123,8 +124,8 @@
             "id": "25",
             "name": "ServerSideWorker",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": 190,
-            "position_y": -441
+            "position_x": 544,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -132,8 +133,8 @@
             "id": "26",
             "name": "Python",
             "namespace": "http://knova.ru/user/1651940190339",
-            "position_x": 251,
-            "position_y": -365
+            "position_x": 605,
+            "position_y": 276
         }
     ],
     "relations": [
