@@ -185,17 +185,19 @@ def gen_mixed():
     dfd = request.get_json(force = True)
     oldExeKey = request.cookies.get("exe")
     exeKey = None
+    dataServerPort = None
     #TODO: send message to browser about initialization
     try:
         srv = getServerInst()
         srv.stop_execer(oldExeKey)
-        res, exeKey, data_server_port = srv.gen_mixed(dfd)
+        res, exeKey, dataServerPort = srv.gen_mixed(dfd)
     except ValueError as err:
         res = { "error": str(err) }
     res["srvAddr"] = request.host.split(":")[0]
     resp = jsonify(res)
     resp.status_code = 200
-    resp.set_cookie("DataServerPort", value= str(data_server_port), samesite = "Lax")
+    if dataServerPort:
+        resp.set_cookie("DataServerPort", value = str(dataServerPort), samesite = "Lax")
     if exeKey:
         resp.set_cookie("exe", value = exeKey, samesite = "Lax")
     return resp
