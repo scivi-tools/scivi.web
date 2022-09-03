@@ -126,9 +126,9 @@ class SciViServer:
         self.execers: Dict[str, Execer] = {}
         self.codeUtils = CodeUtils()
         if self.path_to_onto != path_to_onto:
-            self.node_states = {} #global storate for each node
-            for node in self.onto.nodes:
-                self.node_states[node.id] = {}
+            self.node_states = {} #global storage for each node
+            #for node in self.onto.nodes:
+            #    self.node_states[node.id] = {}
         self.path_to_onto = path_to_onto
 
 
@@ -500,6 +500,9 @@ class SciViServer:
         if srvRes:
             hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # get all plugins
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            for instNode in serverOnto.nodes:
+                if not instNode.id in self.node_states:
+                    self.node_states[instNode.id] = {}
             if self.task_onto_has_operations(serverOnto): 
                 execer = Execer(self.onto, serverOnto, self.node_states, self.broadcast, 
                                 self.__cmd_server_loop__, dataServerPort)
