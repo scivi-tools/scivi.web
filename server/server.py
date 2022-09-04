@@ -76,7 +76,7 @@ class Localizer:
 class SciViServer:
     def __init__(self, id, event_loop : asyncio.AbstractEventLoop, context):
         self.id = id
-        self.path_to_onto = None
+        self.pathToOnto = None
         self.onto = None
         self.ctx = context
         self.__cmd_server_loop__ = event_loop
@@ -112,8 +112,8 @@ class SciViServer:
         for socket in self.__websockets__:
             self.__cmd_server_loop__.create_task(socket.send(message))
 
-    def setOnto(self, path_to_onto):
-        self.onto = OntoMerger(path_to_onto).onto
+    def setOnto(self, pathToOnto):
+        self.onto = OntoMerger(pathToOnto).onto
         self.loc = "eng"
         self.tree = ""
         self.treeID = 1
@@ -125,11 +125,9 @@ class SciViServer:
         self.files = {}
         self.execers: Dict[str, Execer] = {}
         self.codeUtils = CodeUtils()
-        if self.path_to_onto != path_to_onto:
-            self.node_states = {} #global storage for each node
-            #for node in self.onto.nodes:
-            #    self.node_states[node.id] = {}
-        self.path_to_onto = path_to_onto
+        if self.pathToOnto != pathToOnto:
+            self.nodeStates = {} # Global storage for each node
+        self.pathToOnto = pathToOnto
 
 
     def add_node(self, node: Node):
@@ -490,21 +488,18 @@ class SciViServer:
         return { "ont": eonOnto.data, "eon": barr }
 
     def gen_mixed(self, dfd) -> Tuple[Dict, Optional[str], int]:
-        dfd2onto = DFD2Onto(self.onto) #load ontology
-        mixedOnto = dfd2onto.get_onto(dfd) # get ontology for dfd
+        dfd2onto = DFD2Onto(self.onto) # Load ontology
+        mixedOnto = dfd2onto.get_onto(dfd) # Get ontology for dfd
         # Server
         srvRes = first(mixedOnto.get_nodes_by_name("SciVi Server"))
         serverTaskHash = None
         corTable = None
         dataServerPort = get_unused_port()
         if srvRes:
-            hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # get all plugins
+            hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # Get all plugins
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
-            for instNode in serverOnto.nodes:
-                if not instNode.id in self.node_states:
-                    self.node_states[instNode.id] = {}
             if self.task_onto_has_operations(serverOnto): 
-                execer = Execer(self.onto, serverOnto, self.node_states, self.broadcast, 
+                execer = Execer(self.onto, serverOnto, self.nodeStates, self.broadcast,
                                 self.__cmd_server_loop__, dataServerPort)
                 serverTaskHash = str(uuid.uuid4())
                 self.execers[serverTaskHash] = execer

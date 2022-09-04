@@ -29,14 +29,14 @@ class OperatorError(Exception):
         return "SciVi operator <%s> error in file <%s> line %d:\n%s" % (self.name, self.path, self.line, self.message)
 
 class Execer(Thread):
-    def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict[str, Any]],
+    def __init__(self, onto: Onto, taskOnto: Onto, nodeStates: dict[int, dict[str, Any]],
                     send_message_func: SendMessageFunc, event_loop: asyncio.AbstractEventLoop, data_server_port: int = 0):
         self.onto = onto
         self.taskOnto = taskOnto
         self.process_scheduled = False
         self.glob = {}
         self.cache = {}
-        self.node_states = node_states
+        self.nodeStates = nodeStates
         self.__cmd_server_loop__ = event_loop
         self.process_loop = asyncio.new_event_loop()
         self.push_message_to_send = send_message_func
@@ -114,9 +114,10 @@ class Execer(Thread):
         outputs = {}
         if not instNode.id in self.cache:
             self.cache[instNode.id] = {}
-        #print('execute', workerNode.name, workerNode.id)
+        if not instNode.id in self.nodeStates:
+            self.nodeStates[instNode.id] = {}
         self.execute_code(workerNode, mode, inputs, outputs, instNode.attributes["settingsVal"], 
-        self.cache[instNode.id], self.node_states[instNode.id])
+        self.cache[instNode.id], self.nodeStates[instNode.id])
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode: Node, mode: ExecutionMode):
