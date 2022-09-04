@@ -6,7 +6,7 @@ import enum
 import json
 import sys
 import traceback
-from threading import Thread
+from threading import Thread, Lock
 from typing import Any, Callable
 
 from onto.onto import Node, Onto, first
@@ -33,7 +33,9 @@ class Execer(Thread):
                     send_message_func: SendMessageFunc, event_loop: asyncio.AbstractEventLoop, data_server_port: int = 0):
         self.onto = onto
         self.taskOnto = taskOnto
-        self.process_scheduled = False
+        self.processScheduled = False
+        self.processMutex = Lock()
+        self.isRunning = True
         self.glob = {}
         self.cache = {}
         self.nodeStates = nodeStates
@@ -54,13 +56,19 @@ class Execer(Thread):
 
     def stop(self):
         print('execer stopping')
-        self.turn(ExecutionMode.DESTRUCTION)
+        with self.processMutex:
+           self.isRunning = False
+        self.process_loop.call_soon_threadsafe(self.turn, ExecutionMode.DESTRUCTION)
         self.process_loop.call_soon_threadsafe(self.process_loop.stop)
 
     def process(self):
-        if not self.process_scheduled: 
-            self.process_loop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
-        self.process_scheduled = True
+        isRunning = False
+        with self.processMutex:
+            isRunning = self.isRunning
+        if isRunning:
+            if not self.processScheduled:
+                self.process_loop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
+            self.processScheduled = True
 
     def get_belonging_instance(self, instNode: Node, protoOfBelonging: Node):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
@@ -126,7 +134,7 @@ class Execer(Thread):
         
     def turn(self, mode: ExecutionMode):
         self.buffer = {}
-        self.process_scheduled = False
+        self.processScheduled = False
         executed = set()
         nodes_to_execute = []
         for node in self.taskOnto.nodes:
