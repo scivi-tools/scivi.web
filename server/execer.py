@@ -80,12 +80,14 @@ class Execer(Thread):
     def gen_inputs(self, instNode: Node, protoNode: Node):
         inputNodes = self.taskOnto.get_typed_nodes_linked_from(protoNode, "has", "Input")
         inputs = {}
+        hasInputs = {}
         for inputNode in inputNodes:
             inputInst = self.get_belonging_instance(instNode, inputNode)
             outputInst = first(self.taskOnto.get_nodes_linked_to(inputInst, "is_used"))
+            hasInputs[inputNode.name] = outputInst is not None
             if outputInst and (outputInst.id in self.buffer):
                 inputs[inputNode.name] = self.buffer[outputInst.id]
-        return inputs
+        return inputs, hasInputs
 
     def store_outputs(self, instNode: Node, protoNode: Node, outputs):
         outputNodes = self.taskOnto.get_typed_nodes_linked_from(protoNode, "has", "Output")
@@ -101,8 +103,8 @@ class Execer(Thread):
             cl, exc, tb = sys.exc_info()
             raise OperatorError(name, path, traceback.extract_tb(tb)[-1][1], cl.__name__ + ": " + str(e))
 
-    def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, outputs: dict, settings, cache, node_state: dict):
-        context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
+    def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, hasInputs: dict, outputs: dict, settings, cache, node_state: dict):
+        context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
                     "CACHE": cache, "GLOB": self.glob, "STATE": node_state,\
                     "MODE": mode.name, "PROCESS": self.process }
         if "inline" in workerNode.attributes:
@@ -118,14 +120,14 @@ class Execer(Thread):
     def execute_worker(self, instNode: Node, protoNode: Node, mode: ExecutionMode):
         motherNode = self.onto.get_node_by_id(protoNode.attributes["mother"])
         workerNode = first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
-        inputs = self.gen_inputs(instNode, protoNode)
+        inputs, hasInputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
         if not instNode.id in self.cache:
             self.cache[instNode.id] = {}
         if not instNode.id in self.nodeStates:
             self.nodeStates[instNode.id] = {}
-        self.execute_code(workerNode, mode, inputs, outputs, instNode.attributes["settingsVal"], 
-        self.cache[instNode.id], self.nodeStates[instNode.id])
+        self.execute_code(workerNode, mode, inputs, hasInputs, outputs, instNode.attributes["settingsVal"],
+                          self.cache[instNode.id], self.nodeStates[instNode.id])
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode: Node, mode: ExecutionMode):
