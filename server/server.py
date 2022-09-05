@@ -74,43 +74,43 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, id, event_loop : asyncio.AbstractEventLoop, context):
+    def __init__(self, id, eventLoop : asyncio.AbstractEventLoop, context):
         self.id = id
         self.pathToOnto = None
         self.onto = None
         self.ctx = context
-        self.__cmd_server_loop__ = event_loop
+        self.commandServerLoop = eventLoop
          # start command server
-        self.__server__ = None
+        self.commandServer = None
         self.server_become_unused_event = None
-        self.__websockets__ = []
-        self.command_server_port = get_unused_port()
-        asyncio.run_coroutine_threadsafe(self.wait_for_connection(), self.__cmd_server_loop__)
+        self.webSockets = []
+        self.commandServerPort = get_unused_port()
+        asyncio.run_coroutine_threadsafe(self.wait_for_connection(), self.commandServerLoop)
 
     def release(self):
         self.stop_all_execers()
-        self.__server__.close()
+        self.commandServer.close()
 
     async def wait_for_connection(self):
-        self.__server__ = await websockets.serve(self.client_handler, port=self.command_server_port)
-        print('server started at', self.command_server_port, 'port')
+        self.commandServer = await websockets.serve(self.client_handler, port = self.commandServerPort)
+        print("Command server started at", self.commandServerPort, "port")
          
     async def client_handler(self, websocket):
-        print('Client connected to command server', self.command_server_port)
-        self.__websockets__.append(websocket)
+        print("Client connected to command server", self.commandServerPort)
+        self.webSockets.append(websocket)
         try:
             async for message in websocket:
                 print('message received', message)
         finally:
-            self.__websockets__.remove(websocket)
+            self.webSockets.remove(websocket)
             print('Connection with command server was closed')
-            if len(self.__websockets__) == 0 and not self.server_become_unused_event is None:
+            if len(self.webSockets) == 0 and not self.server_become_unused_event is None:
                 self.server_become_unused_event(self.id)
 
 
     def broadcast(self, message : str):
-        for socket in self.__websockets__:
-            self.__cmd_server_loop__.create_task(socket.send(message))
+        for socket in self.webSockets:
+            self.commandServerLoop.create_task(socket.send(message))
 
     def setOnto(self, pathToOnto):
         self.onto = OntoMerger(pathToOnto).onto
@@ -500,7 +500,7 @@ class SciViServer:
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
             if self.task_onto_has_operations(serverOnto): 
                 execer = Execer(self.onto, serverOnto, self.nodeStates, self.broadcast,
-                                self.__cmd_server_loop__, dataServerPort)
+                                self.commandServerLoop, dataServerPort)
                 serverTaskHash = str(uuid.uuid4())
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
