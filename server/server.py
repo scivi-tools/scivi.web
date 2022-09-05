@@ -169,6 +169,8 @@ class SciViServer:
             return "image/svg+xml; charset=utf-8"
         elif filename.endswith(".png"):
             return "image/png"
+        elif filename.endswith(".jpg"):
+            return "image/jpeg"
         return None
 
     def get_mime(self, node: Node):
@@ -535,8 +537,12 @@ class SciViServer:
             self.execers[execerTaskHash].join()
         self.execers = {}
 
-    def get_file_from_storage(self, filename):
-        return self.files[filename]
+    def get_file_from_storage(self, filename, serverTaskHash):
+        if filename in self.files:
+            return self.files[filename]
+        elif (serverTaskHash in self.execers) and ("/" + filename in self.execers[serverTaskHash].publishedFiles):
+            return { "content": self.codeUtils.read_file("/" + filename), "mime": self.guess_mime(filename) }
+        return None
 
     def gen_firmware(self, elementName):
         fwGen = FWGen(self.onto)

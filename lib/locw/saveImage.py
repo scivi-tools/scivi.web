@@ -4,5 +4,6 @@
 import cv2 as cv
 
 img = INPUT["Picture"]
-path = INPUT["Path"]
-cv.imwrite(path + ".jpg", img)
+path = INPUT["Path"] + ".jpg"
+cv.imwrite(path, img)
+PUBLISH_FILE(path)

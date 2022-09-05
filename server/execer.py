@@ -43,6 +43,7 @@ class Execer(Thread):
         self.processLoop = asyncio.new_event_loop()
         self.push_message_to_send = send_message_func
         self.glob["DataServerPort"] = dataServerPort # pass port to data websocket
+        self.publishedFiles = []
         asyncio.set_event_loop(self.processLoop)
         Thread.__init__(self)
 
@@ -69,6 +70,9 @@ class Execer(Thread):
             if not self.processScheduled:
                 self.processLoop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
             self.processScheduled = True
+
+    def publish_file(self, path):
+        self.publishedFiles.append(path)
 
     def get_belonging_instance(self, instNode: Node, protoOfBelonging: Node):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
@@ -106,7 +110,7 @@ class Execer(Thread):
     def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, hasInputs: dict, outputs: dict, settings, cache, node_state: dict):
         context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
                     "CACHE": cache, "GLOB": self.glob, "STATE": node_state,\
-                    "MODE": mode.name, "PROCESS": self.process }
+                    "MODE": mode.name, "PROCESS": self.process, "PUBLISH_FILE": self.publish_file }
         if "inline" in workerNode.attributes:
             self.guarded_exec(workerNode.name, "inline", workerNode.attributes["inline"], context)
         elif "path" in workerNode.attributes:
@@ -155,4 +159,4 @@ class Execer(Thread):
                 elif mode == ExecutionMode.DESTRUCTION:
                     command = {"command": "wait_for_destruction",
                                     "progress": len(executed) / nodes_to_execute_count}
-                    self.push_message_to_send(json.dumps(command))         
+                    self.push_message_to_send(json.dumps(command))
