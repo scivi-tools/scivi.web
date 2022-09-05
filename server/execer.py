@@ -30,7 +30,7 @@ class OperatorError(Exception):
 
 class Execer(Thread):
     def __init__(self, onto: Onto, taskOnto: Onto, nodeStates: dict[int, dict[str, Any]],
-                    send_message_func: SendMessageFunc, event_loop: asyncio.AbstractEventLoop, data_server_port: int = 0):
+                 send_message_func: SendMessageFunc, eventLoop: asyncio.AbstractEventLoop, dataServerPort: int = 0):
         self.onto = onto
         self.taskOnto = taskOnto
         self.processScheduled = False
@@ -39,27 +39,27 @@ class Execer(Thread):
         self.glob = {}
         self.cache = {}
         self.nodeStates = nodeStates
-        self.__cmd_server_loop__ = event_loop
-        self.process_loop = asyncio.new_event_loop()
+        self.commandServerLoop = eventLoop
+        self.processLoop = asyncio.new_event_loop()
         self.push_message_to_send = send_message_func
-        self.glob["DataServerPort"] = data_server_port # pass port to data websocket
-        asyncio.set_event_loop(self.process_loop)
+        self.glob["DataServerPort"] = dataServerPort # pass port to data websocket
+        asyncio.set_event_loop(self.processLoop)
         Thread.__init__(self)
 
     def run(self):
         Thread.run(self)
         try:
-            self.process_loop.run_forever()
+            self.processLoop.run_forever()
         finally:
-            self.process_loop.close()
+            self.processLoop.close()
             print('execer stopped')
 
     def stop(self):
         print('execer stopping')
         with self.processMutex:
            self.isRunning = False
-        self.process_loop.call_soon_threadsafe(self.turn, ExecutionMode.DESTRUCTION)
-        self.process_loop.call_soon_threadsafe(self.process_loop.stop)
+        self.processLoop.call_soon_threadsafe(self.turn, ExecutionMode.DESTRUCTION)
+        self.processLoop.call_soon_threadsafe(self.processLoop.stop)
 
     def process(self):
         isRunning = False
@@ -67,7 +67,7 @@ class Execer(Thread):
             isRunning = self.isRunning
         if isRunning:
             if not self.processScheduled:
-                self.process_loop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
+                self.processLoop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
             self.processScheduled = True
 
     def get_belonging_instance(self, instNode: Node, protoOfBelonging: Node):
