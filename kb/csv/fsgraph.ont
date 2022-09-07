@@ -289,7 +289,7 @@
         },
         {
             "attributes": {
-				"default": "true"
+                "default": "true"
             },
             "id": "62",
             "name": "Use Auto Orientation Detection",
