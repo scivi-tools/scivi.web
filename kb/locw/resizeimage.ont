@@ -15,8 +15,8 @@
             "id": "1",
             "name": "Root",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -52,
-            "position_y": -323
+            "position_x": 388,
+            "position_y": 211
         },
         {
             "attributes": {
@@ -24,8 +24,8 @@
             "id": "2",
             "name": "Filter",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -68,
-            "position_y": -283
+            "position_x": 372,
+            "position_y": 251
         },
         {
             "attributes": {
@@ -33,8 +33,8 @@
             "id": "3",
             "name": "Resize Image",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -80,
-            "position_y": -247
+            "position_x": 360,
+            "position_y": 287
         },
         {
             "attributes": {
@@ -42,8 +42,8 @@
             "id": "4",
             "name": "Picture",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -66,
-            "position_y": -196
+            "position_x": 374,
+            "position_y": 338
         },
         {
             "attributes": {
@@ -51,8 +51,8 @@
             "id": "5",
             "name": "Picture",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -3,
-            "position_y": -194
+            "position_x": 437,
+            "position_y": 340
         },
         {
             "attributes": {
@@ -61,8 +61,8 @@
             "id": "6",
             "name": "Width",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -186,
-            "position_y": -196
+            "position_x": 254,
+            "position_y": 338
         },
         {
             "attributes": {
@@ -71,8 +71,8 @@
             "id": "7",
             "name": "Height",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -133,
-            "position_y": -194
+            "position_x": 307,
+            "position_y": 340
         },
         {
             "attributes": {
@@ -80,8 +80,8 @@
             "id": "8",
             "name": "Image",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -29,
-            "position_y": -147
+            "position_x": 411,
+            "position_y": 387
         },
         {
             "attributes": {
@@ -89,8 +89,8 @@
             "id": "9",
             "name": "Number",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -140,
-            "position_y": -149
+            "position_x": 300,
+            "position_y": 385
         },
         {
             "attributes": {
@@ -98,8 +98,8 @@
             "id": "10",
             "name": "Type",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -45,
-            "position_y": -105
+            "position_x": 395,
+            "position_y": 429
         },
         {
             "attributes": {
@@ -107,8 +107,8 @@
             "id": "21",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": -240,
-            "position_y": -248
+            "position_x": 200,
+            "position_y": 286
         },
         {
             "attributes": {
@@ -116,8 +116,8 @@
             "id": "24",
             "name": "Input",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": 13,
-            "position_y": -247
+            "position_x": 453,
+            "position_y": 287
         },
         {
             "attributes": {
@@ -125,18 +125,18 @@
             "id": "25",
             "name": "Output",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": 62,
-            "position_y": -248
+            "position_x": 502,
+            "position_y": 286
         },
         {
             "attributes": {
-                "path": "lib/locw/resizeimage.py"
+                "path": "lib/locw/resizeImage.py"
             },
             "id": "30",
             "name": "ResizeImageWorker",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": 115,
-            "position_y": -334
+            "position_x": 555,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -144,8 +144,8 @@
             "id": "31",
             "name": "ServerSideWorker",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 563,
+            "position_y": 147
         },
         {
             "attributes": {
@@ -153,8 +153,8 @@
             "id": "32",
             "name": "Python",
             "namespace": "http://knova.ru/user/1650818450089",
-            "position_x": 180,
-            "position_y": -286
+            "position_x": 620,
+            "position_y": 248
         }
     ],
     "relations": [

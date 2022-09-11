@@ -73,6 +73,7 @@ elif MODE == "RUNNING":
             if len(result) > 0:
                 print('recognized', result)
                 OUTPUT["Text Speech"] = result
+            else: OUTPUT["Text Speech"] = "???"
 
 
     

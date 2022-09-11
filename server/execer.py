@@ -4,8 +4,10 @@
 import asyncio
 import enum
 import json
-from threading import Thread
-from typing import Callable
+import sys
+import traceback
+from threading import Thread, Lock
+from typing import Any, Callable
 
 from onto.onto import Node, Onto, first
 
@@ -16,36 +18,61 @@ class ExecutionMode(enum.Enum):
     RUNNING = 2
     DESTRUCTION = 3
 
+class OperatorError(Exception):
+    def __init__(self, name: str, path: str, line: int, message: str):
+        self.name = name
+        self.path = path
+        self.line = line
+        self.message = message
+
+    def __str__(self):
+        return "SciVi operator <%s> error in file <%s> line %d:\n%s" % (self.name, self.path, self.line, self.message)
 
 class Execer(Thread):
-    def __init__(self, onto: Onto, taskOnto: Onto, node_states: dict[int, dict], send_message_func: SendMessageFunc, event_loop):
+    def __init__(self, onto: Onto, taskOnto: Onto, nodeStates: dict[int, dict[str, Any]],
+                 send_message_func: SendMessageFunc, eventLoop: asyncio.AbstractEventLoop, dataServerPort: int = 0):
         self.onto = onto
         self.taskOnto = taskOnto
-        self.process_scheduled = False
+        self.processScheduled = False
+        self.processMutex = Lock()
+        self.isRunning = True
         self.glob = {}
         self.cache = {}
-        self.node_states = node_states
-        self.__cmd_server_loop__ = event_loop
-        self.process_loop = asyncio.new_event_loop()
+        self.nodeStates = nodeStates
+        self.commandServerLoop = eventLoop
+        self.processLoop = asyncio.new_event_loop()
         self.push_message_to_send = send_message_func
-        asyncio.set_event_loop(self.process_loop)
+        self.glob["DataServerPort"] = dataServerPort # pass port to data websocket
+        self.publishedFiles = []
+        asyncio.set_event_loop(self.processLoop)
         Thread.__init__(self)
 
     def run(self):
         Thread.run(self)
-        self.process_loop.run_forever()
-        self.process_loop.close()
-        print('execer stopped')
+        try:
+            self.processLoop.run_forever()
+        finally:
+            self.processLoop.close()
+            print('execer stopped')
 
     def stop(self):
         print('execer stopping')
-        self.turn(ExecutionMode.DESTRUCTION)
-        self.process_loop.call_soon_threadsafe(self.process_loop.stop)
+        with self.processMutex:
+           self.isRunning = False
+        self.processLoop.call_soon_threadsafe(self.turn, ExecutionMode.DESTRUCTION)
+        self.processLoop.call_soon_threadsafe(self.processLoop.stop)
 
     def process(self):
-        if not self.process_scheduled: 
-            self.process_loop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
-        self.process_scheduled = True
+        isRunning = False
+        with self.processMutex:
+            isRunning = self.isRunning
+        if isRunning:
+            if not self.processScheduled:
+                self.processLoop.call_soon_threadsafe(self.turn, ExecutionMode.RUNNING)
+            self.processScheduled = True
+
+    def publish_file(self, path):
+        self.publishedFiles.append(path)
 
     def get_belonging_instance(self, instNode: Node, protoOfBelonging: Node):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
@@ -57,12 +84,14 @@ class Execer(Thread):
     def gen_inputs(self, instNode: Node, protoNode: Node):
         inputNodes = self.taskOnto.get_typed_nodes_linked_from(protoNode, "has", "Input")
         inputs = {}
+        hasInputs = {}
         for inputNode in inputNodes:
             inputInst = self.get_belonging_instance(instNode, inputNode)
             outputInst = first(self.taskOnto.get_nodes_linked_to(inputInst, "is_used"))
+            hasInputs[inputNode.name] = outputInst is not None
             if outputInst and (outputInst.id in self.buffer):
                 inputs[inputNode.name] = self.buffer[outputInst.id]
-        return inputs
+        return inputs, hasInputs
 
     def store_outputs(self, instNode: Node, protoNode: Node, outputs):
         outputNodes = self.taskOnto.get_typed_nodes_linked_from(protoNode, "has", "Output")
@@ -71,31 +100,38 @@ class Execer(Thread):
                 outputInst = self.get_belonging_instance(instNode, outputNode)
                 self.buffer[outputInst.id] = outputs[outputNode.name]
 
-    def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, outputs: dict, settings, cache, node_state: dict):
-        context = { "INPUT": inputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
+    def guarded_exec(self, name: str, path: str, code: str, context: dict):
+        try:
+            exec(code, context)
+        except Exception as e:
+            cl, exc, tb = sys.exc_info()
+            raise OperatorError(name, path, traceback.extract_tb(tb)[-1][1], cl.__name__ + ": " + str(e))
+
+    def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, hasInputs: dict, outputs: dict, settings, cache, node_state: dict):
+        context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
                     "CACHE": cache, "GLOB": self.glob, "STATE": node_state,\
-                    "MODE": mode.name, "PROCESS": self.process }
+                    "MODE": mode.name, "PROCESS": self.process, "PUBLISH_FILE": self.publish_file }
         if "inline" in workerNode.attributes:
-            exec(workerNode.attributes["inline"], context)
+            self.guarded_exec(workerNode.name, "inline", workerNode.attributes["inline"], context)
         elif "path" in workerNode.attributes:
             p = workerNode.attributes["path"]
             context["__name__"] = p.replace("/", ".").strip(".py")
             with open(p, encoding="utf-8") as f:
-                #print('exec', p)
-                exec(f.read(), context)
+                self.guarded_exec(workerNode.name, p, f.read(), context)
         else:
             print("Error: Can't execute node. 'path' not in workerNode.attributes");
 
     def execute_worker(self, instNode: Node, protoNode: Node, mode: ExecutionMode):
         motherNode = self.onto.get_node_by_id(protoNode.attributes["mother"])
         workerNode = first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
-        inputs = self.gen_inputs(instNode, protoNode)
+        inputs, hasInputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
         if not instNode.id in self.cache:
             self.cache[instNode.id] = {}
-        #print('execute', workerNode.name)
-        self.execute_code(workerNode, mode, inputs, outputs, instNode.attributes["settingsVal"], 
-        self.cache[instNode.id], self.node_states[instNode.id])
+        if not instNode.id in self.nodeStates:
+            self.nodeStates[instNode.id] = {}
+        self.execute_code(workerNode, mode, inputs, hasInputs, outputs, instNode.attributes["settingsVal"],
+                          self.cache[instNode.id], self.nodeStates[instNode.id])
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode: Node, mode: ExecutionMode):
@@ -104,7 +140,7 @@ class Execer(Thread):
         
     def turn(self, mode: ExecutionMode):
         self.buffer = {}
-        self.process_scheduled = False
+        self.processScheduled = False
         executed = set()
         nodes_to_execute = []
         for node in self.taskOnto.nodes:
@@ -123,4 +159,4 @@ class Execer(Thread):
                 elif mode == ExecutionMode.DESTRUCTION:
                     command = {"command": "wait_for_destruction",
                                     "progress": len(executed) / nodes_to_execute_count}
-                    self.push_message_to_send(json.dumps(command))         
+                    self.push_message_to_send(json.dumps(command))

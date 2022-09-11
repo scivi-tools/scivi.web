@@ -5,64 +5,91 @@ import asyncio
 from collections import deque
 import websockets
 import json
-    
+
+
+def make_messages():
+    result = []
+    tx = GLOB["DataWebSocket-TX"]
+    n = max(map(lambda addr: len(tx[addr]), tx))
+    for i in range(n):
+        result.append({})
+        for addr in tx:
+            if len(tx[addr]) > i:
+                result[i][addr] = tx[addr][i]
+    return result
+
+def ready_to_send():
+    n = GLOB["DataWebSocketTXCount"]
+    tx = GLOB["DataWebSocket-TX"]
+    if len(tx) == n:
+        for addr in tx:
+            l = len(tx[addr])
+            if (l == 0) or (l % n != 0):
+                return False
+        return True
+    return False
+
+def send_all():
+    if ready_to_send():
+        messages = make_messages()
+        for message in messages:
+            asyncio.get_event_loop().create_task(GLOB["DataWebSocket"].send(json.dumps(message)))
+        GLOB["DataWebSocket-TX"] = {}
+
 async def ws_handler(websocket):
     print(">Data WebSocket: Connection opened")
     GLOB["DataWebSocket"] = websocket
-     #clear queue for send
-    addr = SETTINGS_VAL["Node Address"]
-    # if we send message before socket opened, we stack messages to queue and send it on connect completed
-    while len(CACHE["TX"]) > 0:
-        tx = CACHE["TX"].popleft()
-        print('sent', tx)
-        asyncio.get_event_loop().create_task(websocket.send(json.dumps({addr: tx})))
+    # if we sent message before socket opened, we stack messages to queue and send it on connect completed
+    send_all()
     try:
         async for message in websocket:
             d = json.loads(message)
-            need_process = False
+            needProcess = False
             for addr in d:
-                if not d[addr] is None:
-                    CACHE['RX'].append(d[addr])
-                    need_process = True
-            if need_process:
+                if d[addr] is not None:
+                    if addr not in GLOB["DataWebSocket-RX"]:
+                        GLOB["DataWebSocket-RX"][addr] = deque()
+                    GLOB["DataWebSocket-RX"][addr].append(d[addr])
+                    needProcess = True
+            if needProcess:
                 PROCESS()
     except websockets.exceptions.ConnectionClosedError:
         pass
     print("> DataWebSocket: Connection closed")
 
 async def wait_for_connection():
-    GLOB["DataWebServer"] = await websockets.serve(ws_handler, port=5001)
+    GLOB["DataWebServer"] = await websockets.serve(ws_handler, port = GLOB["DataServerPort"])
 
 if MODE == "INITIALIZATION":
-    CACHE["RX"] = deque()
-    CACHE["TX"] = deque()
-    if "DataWebSocketStarted" not in GLOB:
-        GLOB["DataWebSocketStarted"] = True
+    if "DataWebSocketTXCount" not in GLOB:
+        GLOB["DataWebSocketTXCount"] = 0
+        GLOB["DataWebSocket-RX"] = {}
+        GLOB["DataWebSocket-TX"] = {}
         asyncio.get_event_loop().create_task(wait_for_connection())
+    if HAS_INPUT["TX"]:
+        GLOB["DataWebSocketTXCount"] += 1
 
 elif MODE == "RUNNING":
-    tx = INPUT.get("TX")
+    addr = SETTINGS_VAL["Node Address"]
 
-    if tx is not None:
+    if HAS_INPUT["TX"]:
+        if addr not in GLOB["DataWebSocket-TX"]:
+            GLOB["DataWebSocket-TX"][addr] = []
+        GLOB["DataWebSocket-TX"][addr].append(INPUT.get("TX"))
         if "DataWebSocket" in GLOB:
-            print('sent', tx)
-            websocket = GLOB["DataWebSocket"]
-            addr = SETTINGS_VAL["Node Address"]
-            asyncio.get_event_loop().create_task(websocket.send(json.dumps({addr: tx})))
-        else:
-            CACHE["TX"].append(tx)
+            send_all()
 
-    if len(CACHE["RX"]) > 0:
-        OUTPUT["RX"] = CACHE["RX"].popleft()
-        if len(CACHE["RX"]) > 0:
+    if (addr in GLOB["DataWebSocket-RX"]) and (len(GLOB["DataWebSocket-RX"][addr]) > 0):
+        OUTPUT["RX"] = GLOB["DataWebSocket-RX"][addr].popleft()
+        if len(GLOB["DataWebSocket-RX"][addr]) > 0:
             PROCESS()
 
-if MODE == "DESTRUCTION" and "DataWebSocket" in GLOB:
-    if "DataWebServer" in GLOB:
-        webserver = GLOB["DataWebServer"]
-        webserver.close()
-        del GLOB["DataWebSocket"]
-        del GLOB["DataWebServer"]
-        GLOB.pop("DataWebSocketStarted")
-        print('> Data WebSocket: server at 5001 closed')
-    
+if (MODE == "DESTRUCTION") and ("DataWebSocket" in GLOB) and ("DataWebServer" in GLOB):
+    webserver = GLOB["DataWebServer"]
+    webserver.close()
+    del GLOB["DataWebSocket"]
+    del GLOB["DataWebServer"]
+    del GLOB["DataWebSocketTXCount"]
+    del GLOB["DataWebSocket-RX"]
+    del GLOB["DataWebSocket-TX"]
+    print("> Data WebSocket: server at 5001 closed")

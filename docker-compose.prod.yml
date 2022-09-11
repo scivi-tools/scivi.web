@@ -9,3 +9,8 @@ services:
       - ${PROD_SCIVI_PORT}:5000
     environment:
       - FLASK_ENV=production
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512m

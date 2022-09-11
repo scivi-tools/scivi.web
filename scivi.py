@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import asyncio, websockets
-from wsgiref.util import request_uri
-import re
-import socket
-from typing import Any, Dict
+import asyncio
+from typing import Dict
 from flask import Flask, Response, send_from_directory, request, jsonify
 
-from server.server import SciViServer, Mode
-from onto.merge import OntoMerger
+from server.server import SciViServer
 from threading import Lock, Thread
 import traceback
 
@@ -18,7 +14,10 @@ event_loop = asyncio.new_event_loop() # event loop for command servers
 def event_loop_main():
     global event_loop
     asyncio.set_event_loop(event_loop)
-    event_loop.run_forever()
+    try:
+        event_loop.run_forever()
+    finally:
+        event_loop.close()
 event_loop_thread = Thread(target=event_loop_main)
 event_loop_thread.start()
 
@@ -68,7 +67,7 @@ def LoadEditorPage(onto_name) -> Response:
     server_id = request.remote_addr
     server = poolServerInst(server_id, path_to_onto)
     res = send_from_directory("client", "editor.html")
-    res.set_cookie("CommandServerPort", str(server.command_server_port))
+    res.set_cookie("CommandServerPort", str(server.commandServerPort))
     return res
 
 
@@ -152,7 +151,7 @@ def editor_lib(filename):
 
 @app.route("/storage/<path:filename>")
 def editor_storage(filename):
-    f = getServerInst().get_file_from_storage(filename)
+    f = getServerInst().get_file_from_storage(filename, request.cookies.get("exe"))
     if f:
         return f["content"], 200, {'Content-Type': f["mime"]}
     else:
@@ -160,7 +159,10 @@ def editor_storage(filename):
 
 @app.route("/preset/<path:filename>")
 def editor_preset(filename):
-    return send_from_directory("client/preset", filename), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    return send_from_directory("client/preset", filename + ".gz"), \
+                               200, \
+                               {"Content-Type": "application/json; charset=utf-8", \
+                                "Content-Encoding": "gzip"}
 
 @app.route("/exec/<nodeID>")
 def srv_exec(nodeID):
@@ -192,7 +194,7 @@ def gen_mixed():
         srv = getServerInst()
         srv.stop_execer(oldExeKey)
         res, exeKey = srv.gen_mixed(dfd, request.host.split(":")[0])
-    except ValueError as err:
+    except Exception as err:
         res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
