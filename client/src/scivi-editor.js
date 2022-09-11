@@ -739,6 +739,19 @@ SciViEditor.prototype.instEdgeNode = function (device, uid, guid, index, count)
     node.settingsVal[settingName] = { device: device, guid: guid };
 }
 
+SciViEditor.prototype.commStateChanged = function ()
+{
+    var n = 0;
+    Object.keys(this.commsReconnects).forEach((key) => {
+        if (this.commsReconnects[key] > 0)
+            ++n;
+    });
+    if (n === 1)
+        $(".loader").show();
+    else if (n === 0)
+        $(".loader").hide();
+}
+
 SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon = null)
 {
     var ws = new WebSocket(address);
@@ -746,6 +759,7 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
     this.addressCorrespondences[address] = addressCorrespondences;
     if (this.commsReconnects[address] === undefined)
         this.commsReconnects[address] = 10;
+    this.commStateChanged();
     Object.keys(addressCorrespondences).forEach((key) => {
         var cor = addressCorrespondences[key];
         if (cor) {
@@ -765,6 +779,7 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
         if (eon) {
             ws.send(Uint8Array.from(eon));
         }
+        this.commStateChanged();
     };
     ws.onclose = (evt) => {
         console.log("WebSocket close on " + address);
@@ -777,6 +792,8 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
             --rc;
             this.commsReconnects[address] = rc;
             setTimeout(() => this.startComm(address, addressCorrespondences, eon), 100);
+        } else {
+            this.commStateChanged();
         }
     };
     ws.onmessage = (evt) => {
