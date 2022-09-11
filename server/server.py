@@ -511,7 +511,7 @@ class SciViServer:
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
                 execer.start()
-            compRes.append({ "address": serverAddress + ":" + dataServerPort, "corTable": serverCorTable, "eon": [] })
+            compRes.append({ "address": serverAddress + ":" + str(dataServerPort), "corTable": serverCorTable, "eon": [] })
         # Edge
         edgeRes = first(mixedOnto.get_nodes_by_name("ESP8266"))
         if edgeRes:

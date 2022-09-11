@@ -195,6 +195,7 @@ def gen_mixed():
         srv.stop_execer(oldExeKey)
         res, exeKey = srv.gen_mixed(dfd, request.host.split(":")[0])
     except Exception as err:
+        print(traceback.format_exc())
         res = { "error": str(err) }
     resp = jsonify(res)
     resp.status_code = 200
