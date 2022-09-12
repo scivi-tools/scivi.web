@@ -35,7 +35,14 @@ raw = INPUT[PSD_INPUT_SIGNAL]
 if mode == PSD_MODE_TRAIN:
     labels = INPUT[PSD_INPUT_LABELS]
     print(raw.shape)
-    OUTPUT[PSD_OUTPUT_SIGNAL_COMPONENTS] = psd.fit_transform(raw, labels)
+    print (raw, labels)
+    try:
+        OUTPUT[PSD_OUTPUT_SIGNAL_COMPONENTS] = psd.fit_transform(raw, labels)
+    except IndexError as e:
+        print("INDEX ERROR OCCURED!")
+        print(raw)
+        print(labels)
+        raise e
     joblib.dump(psd, model_file)
 elif mode == PSD_MODE_EVAL:
     psd = joblib.load(model_file)

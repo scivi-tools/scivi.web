@@ -14,80 +14,90 @@
             },
             "id": "1",
             "name": "BPF",
-            "position_x": 742,
-            "position_y": 750
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 620,
+            "position_y": 790
         },
         {
             "attributes": {
             },
             "id": "2",
             "name": "Filter",
-            "position_x": 734,
-            "position_y": 671
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 612,
+            "position_y": 711
         },
         {
             "attributes": {
             },
             "id": "3",
             "name": "Root",
-            "position_x": 757,
-            "position_y": 600
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 635,
+            "position_y": 640
         },
         {
             "attributes": {
             },
             "id": "4",
             "name": "Signal",
-            "position_x": 616,
-            "position_y": 695
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 494,
+            "position_y": 735
         },
         {
             "attributes": {
             },
             "id": "5",
             "name": "Signal Band",
-            "position_x": 742,
-            "position_y": 917
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 620,
+            "position_y": 957
         },
         {
             "attributes": {
             },
             "id": "6",
             "name": "Array",
-            "position_x": 538,
-            "position_y": 883
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 464,
+            "position_y": 937
         },
         {
             "attributes": {
             },
             "id": "7",
-            "name": "Number",
-            "position_x": 322,
-            "position_y": 724
+            "name": "RawEDF",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 200,
+            "position_y": 764
         },
         {
             "attributes": {
             },
             "id": "8",
             "name": "Input",
-            "position_x": 505,
-            "position_y": 652
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 383,
+            "position_y": 692
         },
         {
             "attributes": {
             },
             "id": "9",
             "name": "Output",
-            "position_x": 909,
-            "position_y": 724
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 787,
+            "position_y": 764
         },
         {
             "attributes": {
             },
             "id": "20",
             "name": "Type",
-            "position_x": 470,
-            "position_y": 976
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 348,
+            "position_y": 1016
         },
         {
             "attributes": {
@@ -95,8 +105,9 @@
             },
             "id": "23",
             "name": "High cut-off",
-            "position_x": 336,
-            "position_y": 455
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 214,
+            "position_y": 495
         },
         {
             "attributes": {
@@ -104,16 +115,18 @@
             },
             "id": "24",
             "name": "Low cut-off",
-            "position_x": 647,
-            "position_y": 459
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 525,
+            "position_y": 499
         },
         {
             "attributes": {
             },
             "id": "27",
             "name": "Setting",
-            "position_x": 480,
-            "position_y": 330
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 358,
+            "position_y": 370
         },
         {
             "attributes": {
@@ -121,24 +134,27 @@
             },
             "id": "31",
             "name": "BPF Worker",
-            "position_x": 1145,
-            "position_y": 404
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 1023,
+            "position_y": 444
         },
         {
             "attributes": {
             },
             "id": "32",
             "name": "Python",
-            "position_x": 798,
-            "position_y": 403
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 676,
+            "position_y": 443
         },
         {
             "attributes": {
             },
             "id": "33",
             "name": "ServerSideWorker",
-            "position_x": 915,
-            "position_y": 160
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 793,
+            "position_y": 200
         }
     ],
     "relations": [
@@ -148,6 +164,7 @@
             "destination_node_id": "2",
             "id": "10",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "1"
         },
         {
@@ -156,6 +173,7 @@
             "destination_node_id": "3",
             "id": "11",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "2"
         },
         {
@@ -164,6 +182,7 @@
             "destination_node_id": "4",
             "id": "12",
             "name": "has",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "1"
         },
         {
@@ -172,6 +191,7 @@
             "destination_node_id": "5",
             "id": "13",
             "name": "has",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "1"
         },
         {
@@ -180,6 +200,7 @@
             "destination_node_id": "8",
             "id": "14",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "4"
         },
         {
@@ -188,6 +209,7 @@
             "destination_node_id": "9",
             "id": "15",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "5"
         },
         {
@@ -196,6 +218,7 @@
             "destination_node_id": "6",
             "id": "16",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "4"
         },
         {
@@ -204,6 +227,7 @@
             "destination_node_id": "6",
             "id": "17",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "5"
         },
         {
@@ -212,6 +236,7 @@
             "destination_node_id": "7",
             "id": "18",
             "name": "base_type",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "4"
         },
         {
@@ -220,6 +245,7 @@
             "destination_node_id": "7",
             "id": "19",
             "name": "base_type",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "5"
         },
         {
@@ -228,6 +254,7 @@
             "destination_node_id": "20",
             "id": "21",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "6"
         },
         {
@@ -236,6 +263,7 @@
             "destination_node_id": "20",
             "id": "22",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "7"
         },
         {
@@ -244,6 +272,7 @@
             "destination_node_id": "7",
             "id": "25",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "24"
         },
         {
@@ -252,6 +281,7 @@
             "destination_node_id": "7",
             "id": "26",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "23"
         },
         {
@@ -260,6 +290,7 @@
             "destination_node_id": "27",
             "id": "29",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "24"
         },
         {
@@ -268,6 +299,7 @@
             "destination_node_id": "27",
             "id": "30",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "23"
         },
         {
@@ -276,6 +308,7 @@
             "destination_node_id": "33",
             "id": "34",
             "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "31"
         },
         {
@@ -284,6 +317,7 @@
             "destination_node_id": "32",
             "id": "35",
             "name": "language",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "31"
         },
         {
@@ -292,6 +326,7 @@
             "destination_node_id": "1",
             "id": "36",
             "name": "is_instance",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "31"
         },
         {
@@ -300,6 +335,7 @@
             "destination_node_id": "24",
             "id": "37",
             "name": "has",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "1"
         },
         {
@@ -308,6 +344,7 @@
             "destination_node_id": "23",
             "id": "38",
             "name": "has",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "1"
         }
     ],
