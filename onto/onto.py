@@ -10,12 +10,13 @@ class Onto:
     The Onto class is a wrapper to operate with ONTOLIS ontology files (*.ont).
     '''
 
-    def __init__(self, data):
+    def __init__(self, data, name = None):
         '''
         Create instance of Onto.
         @param data - dict representing ontology.
         '''
         self.data = data
+        self.name = name
 
     @classmethod
     def load_from_file(cls, filename):
@@ -32,7 +33,7 @@ class Onto:
             raise ValueError("corrupt ontology, <nodes> missing")
         if not ("relations" in data):
             raise ValueError("corrupt ontology, <relations> missing")
-        return cls(data)
+        return cls(data, filename)
 
     @classmethod
     def empty(cls):
