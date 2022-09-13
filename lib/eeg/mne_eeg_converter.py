@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-CONVERTER_INPUT_MNE_EEG = 'MNE-EEG'
+CONVERTER_INPUT_MNE_EEG = 'Raw EDF'
 CONVERTER_SETTING_MODE = 'Mode'
 CONVERTER_SETTING_PATTERN = 'Filename Label Pattern'
 
 CONVERTER_OUTPUT_LABELS = 'Labels'
-CONVERTER_OUTPUT_DATA = 'Signal'
+CONVERTER_OUTPUT_DATA = 'Raw Signal'
 
 CONVERTER_MODE_ANNOT = 0
 CONVERTER_MODE_DC_A = 1
@@ -63,9 +63,17 @@ elif mode == CONVERTER_MODE_DC_A:
         # We are only interesned in first two transitions (there may be 3rd one)
         idx = idx[1, :2]
         print(idx)
-        # TODO: hack!
+        
+        # Only one transition found
         if idx.shape[0] < 2:
+            # TODO: hack!
             print ("WARN: skipping file {}".format(raw.filenames[0]))
+            continue
+
+        # Two transitions are too close to each other
+        if (idx[1] - idx[0]) < 512:
+            # TODO: hack!
+            print ("INCORRECT file {}! Skipping".format(raw.filenames[0]))
             continue
 
         r_data = raw.get_data(picks=['eeg'])[:, idx[0]:idx[1]]

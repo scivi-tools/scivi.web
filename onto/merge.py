@@ -76,7 +76,7 @@ class OntoMerger:
                         isProto = True
                         break
                 if not isProto:
-                    print("WARNING: Ontology has %d nodes with the same name `%s`" % (len(dupli), node["name"]))
+                    print("WARNING: Ontology %s has %d nodes with the same name `%s`" % (onto.name, len(dupli), node["name"]))
 
     def merge(self, onto1, onto2):
         '''

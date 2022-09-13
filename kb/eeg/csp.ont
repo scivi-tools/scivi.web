@@ -1,5 +1,5 @@
 {
-    "last_id": "55",
+    "last_id": "57",
     "namespaces": {
         "default": "http://knova.ru/user/1610424825535",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -397,15 +397,6 @@
         {
             "attributes": {
             },
-            "destination_node_id": "7",
-            "id": "47",
-            "name": "is_a",
-            "namespace": "https://github.com/AlexProfanov/ontolis",
-            "source_node_id": "46"
-        },
-        {
-            "attributes": {
-            },
             "destination_node_id": "9",
             "id": "48",
             "name": "is_a",
@@ -456,6 +447,24 @@
             "name": "has",
             "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "56",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "46"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "50",
+            "id": "57",
+            "name": "base_type",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "46"
         }
     ],
     "visualize_ont_path": ""

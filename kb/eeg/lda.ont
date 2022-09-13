@@ -1,5 +1,5 @@
 {
-    "last_id": "48",
+    "last_id": "51",
     "namespaces": {
         "default": "http://knova.ru/user/1610425020402",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -42,8 +42,8 @@
             "id": "4",
             "name": "Signal",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 682,
-            "position_y": 693
+            "position_x": 698,
+            "position_y": 732
         },
         {
             "attributes": {
@@ -51,8 +51,8 @@
             "id": "5",
             "name": "Result",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 920,
-            "position_y": 622
+            "position_x": 892,
+            "position_y": 630
         },
         {
             "attributes": {
@@ -162,8 +162,8 @@
             "id": "37",
             "name": "Labels",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 501,
-            "position_y": 533
+            "position_x": 495,
+            "position_y": 529
         },
         {
             "attributes": {
@@ -342,15 +342,6 @@
         {
             "attributes": {
             },
-            "destination_node_id": "7",
-            "id": "38",
-            "name": "is_a",
-            "namespace": "https://github.com/AlexProfanov/ontolis",
-            "source_node_id": "37"
-        },
-        {
-            "attributes": {
-            },
             "destination_node_id": "10",
             "id": "39",
             "name": "is_a",
@@ -414,11 +405,29 @@
         {
             "attributes": {
             },
-            "destination_node_id": "7",
-            "id": "48",
+            "destination_node_id": "41",
+            "id": "49",
             "name": "base_type",
             "namespace": "https://github.com/AlexProfanov/ontolis",
             "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "50",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "37"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "41",
+            "id": "51",
+            "name": "base_type",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "37"
         }
     ],
     "visualize_ont_path": ""

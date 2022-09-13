@@ -15,7 +15,7 @@
             "id": "1",
             "name": "Root",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 781,
+            "position_x": 455,
             "position_y": 385
         },
         {
@@ -24,7 +24,7 @@
             "id": "2",
             "name": "Filter",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 857,
+            "position_x": 531,
             "position_y": 483
         },
         {
@@ -33,7 +33,7 @@
             "id": "3",
             "name": "Comparator",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 830,
+            "position_x": 504,
             "position_y": 563
         },
         {
@@ -42,7 +42,7 @@
             "id": "4",
             "name": "Prediction",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 947,
+            "position_x": 621,
             "position_y": 794
         },
         {
@@ -51,7 +51,7 @@
             "id": "5",
             "name": "Truth",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 528,
+            "position_x": 202,
             "position_y": 618
         },
         {
@@ -60,17 +60,17 @@
             "id": "6",
             "name": "Array",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 711,
+            "position_x": 385,
             "position_y": 715
         },
         {
             "attributes": {
             },
             "id": "7",
-            "name": "Number",
+            "name": "String",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 526,
-            "position_y": 852
+            "position_x": 152,
+            "position_y": 897
         },
         {
             "attributes": {
@@ -78,7 +78,7 @@
             "id": "9",
             "name": "Type",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 612,
+            "position_x": 286,
             "position_y": 784
         },
         {
@@ -87,7 +87,7 @@
             "id": "10",
             "name": "Input",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 801,
+            "position_x": 475,
             "position_y": 625
         },
         {
@@ -97,7 +97,7 @@
             "id": "24",
             "name": "Comparator Worker",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 595,
+            "position_x": 269,
             "position_y": 311
         },
         {
@@ -106,7 +106,7 @@
             "id": "25",
             "name": "ServerSideWorker",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 851,
+            "position_x": 525,
             "position_y": 318
         },
         {
@@ -115,7 +115,7 @@
             "id": "26",
             "name": "Python",
             "namespace": "https://github.com/AlexProfanov/ontolis",
-            "position_x": 967,
+            "position_x": 641,
             "position_y": 200
         }
     ],
