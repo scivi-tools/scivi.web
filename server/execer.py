@@ -80,7 +80,11 @@ class Execer(Thread):
         elif "path" in workerNode["attributes"]:
             p = workerNode["attributes"]["path"]
             context["__name__"] = p.replace("/", ".").strip(".py")
-            exec(open(p).read(), context)
+            try:
+                exec(open(p).read(), context)
+            except Exception as e:
+                print("ERROR: Executing module {} failed! See stacktrace below".format(p))
+                raise e
 
     def execute_worker(self, instNode, protoNode):
         motherNode = self.onto.get_node_by_id(protoNode["attributes"]["mother"])
