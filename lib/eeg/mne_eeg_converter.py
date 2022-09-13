@@ -43,6 +43,7 @@ if mode == CONVERTER_MODE_ANNOT:
 elif mode == CONVERTER_MODE_DC_A:
     import numpy as np
     from sklearn.preprocessing import minmax_scale
+    from os.path import basename
     data = []
     labels = []
     for raw in raws:
@@ -78,7 +79,7 @@ elif mode == CONVERTER_MODE_DC_A:
 
         r_data = raw.get_data(picks=['eeg'])[:, idx[0]:idx[1]]
         # TODO: for some reason EDF loader doesn't pick up the aux data
-        r_label = raw.filenames[0].split('_')[-2]
+        r_label = basename(raw.filenames[0]).split('_')[-2]
         print (d, idx, r_data.shape, r_label)
 
         data.append(r_data)

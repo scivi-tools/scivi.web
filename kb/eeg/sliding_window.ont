@@ -83,7 +83,7 @@
         },
         {
             "attributes": {
-                "path": "lib/eeg/sliding_window.py"
+                "path": "lib/eeg/sliding_window_worker.py"
             },
             "id": "23",
             "name": "Sliding Window Worker",
