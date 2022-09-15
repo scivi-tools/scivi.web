@@ -25,14 +25,14 @@ def p(x):
 mode = int(SETTINGS_VAL[CSP_SETTING_MODE])
 model_file = SETTINGS_VAL[CSP_SETTING_MODEL]
 
+raw = INPUT[CSP_INPUT_SIGNAL]
+
 csp = GLOB.get(p(CSP_KEY))
 if not csp:
     from mne.decoding import CSP
     n_components = int(SETTINGS_VAL[CSP_SETTING_COMPONENTS])
     csp = CSP(n_components=n_components, reg=None, log=True, norm_trace=False)
     GLOB[p(CSP_KEY)] = csp
-
-raw = INPUT[CSP_INPUT_SIGNAL]
 
 if mode == CSP_MODE_TRAIN:
     labels = INPUT[CSP_INPUT_LABELS]
@@ -58,7 +58,9 @@ if mode == CSP_MODE_TRAIN:
     plt.savefig('test.png')
     joblib.dump(csp, model_file)
 elif mode == CSP_MODE_EVAL:
+    print("CSP: ", raw.shape)
+    import numpy as np
     csp = joblib.load(model_file)
-    OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.transform(raw)
+    OUTPUT[CSP_OUTPUT_SIGNAL_COMPONENTS] = csp.transform(np.array(raw))
 else:
     raise ValueError

@@ -27,4 +27,6 @@ if not sw:
     sw = SlidingWindow(n_samples, raw.shape[1])
     GLOB[p(SW_KEY)] = sw
 
-OUTPUT[SW_OUTPUT_SIGNAL_COMPONENTS] = np.array([sw.feed(raw)])
+print("SWW: ", raw.shape)
+
+OUTPUT[SW_OUTPUT_SIGNAL_COMPONENTS] = sw.feed(raw)
