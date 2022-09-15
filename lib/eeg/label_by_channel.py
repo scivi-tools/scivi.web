@@ -14,7 +14,9 @@ from mne import create_info
 from mne.io import RawArray
 from os.path import basename
 
-channels = ['C3', 'C4', 'Cz', 'F3', 'F4', 'F7', 'F8', 'Fp1', 'Fp2', 'Fz', 'O1', 'O2', 'P3', 'P4', 'Pz', 'T3', 'T4', 'T5', 'T6', 'DC-A'] + ['0'] * 44
+montage = INPUT[LC_INPUT_MONTAGE_SCHEMA]
+
+channels = montage.electrode_names('cap21')
 info = create_info(channels, 512, 'eeg')
 
 raws = INPUT[LC_INPUT_RAW_SIGNAL]
@@ -22,7 +24,8 @@ raws = INPUT[LC_INPUT_RAW_SIGNAL]
 data = []
 labels = []
 for raw in raws:
-    raw = RawArray(raw.T, info)
+    raw = montage.transform_frame_by_montage(raw, 'cap21')[1]
+    raw = RawArray(raw, info)
     # First, get the data from DC channel
     dc_a = raw.get_data('DC-A') # TODO: pick channel from settings!
     # Scale it to [0, 1]

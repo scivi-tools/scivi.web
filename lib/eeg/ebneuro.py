@@ -4,7 +4,7 @@
 import time
 import random
 
-from .EBLite_python.EBLite import EBLiteClient
+from .EBLite_python.EBLite import EBLiteClient, DummyClient
 
 # Constants to index GLOB array
 current_EEG_mode_KEY = "current_EEG_mode"
@@ -18,7 +18,8 @@ MODE_SAMPLING    = 3
 
 # If EEG is yet to be initialized, do so
 if EEG_KEY not in GLOB:
-    client = EBLiteClient("192.168.171.81", 64)
+    #client = EBLiteClient("192.168.171.81", 64)
+    client = DummyClient("192.168.171.81", 64+4)
     #client = EBLiteClient("127.0.0.1", 64)
     GLOB[EEG_KEY] = client
     client.connect()
@@ -48,16 +49,8 @@ if GLOB[current_EEG_mode_KEY] != settings_mode:
 if settings_mode == MODE_SAMPLING:
     frames_count = 16*4
     frames = client.get_shorts(frames_count)
-    transformed = client.transform_frame_by_montage(frames, "cap21")
 
-    names = transformed[0]
-    data = transformed[1]
-    #print (data.tolist())
-
-    OUTPUT["EEG"] = [
-        names,
-        data.tolist()
-    ]
+    OUTPUT["EEG"] = frames.tolist()
 
     #OUTPUT["EEG"] = frame.reshape( (len(frame), n) ).tolist()
     # OUTPUT["EEG"] = [[random.random(), random.random(), random.random(), random.random()], \

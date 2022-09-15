@@ -18,7 +18,7 @@ SW_KEY = 'SW'
 def p(x):
     return "{}_{}".format(MODULE_PREFIX, x)
 
-raw = np.array(INPUT[SW_INPUT_SIGNAL][1])
+raw = np.array(INPUT[SW_INPUT_SIGNAL])
 
 sw = GLOB.get(p(SW_KEY))
 if not sw:
