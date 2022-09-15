@@ -8,6 +8,6 @@ class SlidingWindow(object):
 
     def feed(self, raw):
         n_samples = raw.shape[0]
-        self.buffer = np.roll(self.buffer, n_samples)
-        self.buffer[:n_samples, :] = raw
+        self.buffer = np.roll(self.buffer, -n_samples)
+        self.buffer[-n_samples:, :] = raw
         return self.buffer
