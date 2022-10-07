@@ -11,8 +11,12 @@ class CodeUtils:
         pass
 
     def read_file(self, path):
-        with open(path, "r", encoding="utf-8") as f:
-            return f.read()
+        if path.endswith(".png") or path.endswith(".jpg"):
+            with open(path, "rb") as f:
+                return f.read()
+        else:
+            with open(path, "r", encoding='utf-8') as f:
+                return f.read()
 
     def download_file(self, url):
         try:
@@ -33,11 +37,5 @@ class CodeUtils:
 
     def get_file(self, node: Node):
         if "path" in node.attributes:
-            path = node.attributes["path"]
-            if path.endswith(".png"):
-                with open(path, "rb") as f:
-                    return f.read()
-            else:
-                with open(path, "r", encoding='utf-8') as f:
-                    return f.read()
+            self.read_file(node.attributes["path"])
         return None

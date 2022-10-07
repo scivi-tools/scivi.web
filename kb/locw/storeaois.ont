@@ -15,8 +15,8 @@
             "id": "1",
             "name": "Root",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -134,
-            "position_y": -840
+            "position_x": 307,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -24,17 +24,17 @@
             "id": "2",
             "name": "Filter",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -135,
-            "position_y": -786
+            "position_x": 306,
+            "position_y": 254
         },
         {
             "attributes": {
             },
             "id": "3",
-            "name": "Store AOIs",
+            "name": "Save AOIs",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -147,
-            "position_y": -736
+            "position_x": 294,
+            "position_y": 304
         },
         {
             "attributes": {
@@ -42,26 +42,26 @@
             "id": "4",
             "name": "AOIs",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -189,
-            "position_y": -687
+            "position_x": 252,
+            "position_y": 353
         },
         {
             "attributes": {
             },
             "id": "5",
-            "name": "Path",
+            "name": "Frame Index",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -136,
-            "position_y": -686
+            "position_x": 305,
+            "position_y": 354
         },
         {
             "attributes": {
             },
             "id": "6",
-            "name": "Frame Index",
+            "name": "Path",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -74,
-            "position_y": -688
+            "position_x": 392,
+            "position_y": 355
         },
         {
             "attributes": {
@@ -69,8 +69,8 @@
             "id": "7",
             "name": "Input",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -241,
-            "position_y": -749
+            "position_x": 200,
+            "position_y": 291
         },
         {
             "attributes": {
@@ -78,8 +78,8 @@
             "id": "8",
             "name": "Array",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -220,
-            "position_y": -615
+            "position_x": 221,
+            "position_y": 425
         },
         {
             "attributes": {
@@ -87,26 +87,26 @@
             "id": "9",
             "name": "Area",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -152,
-            "position_y": -616
+            "position_x": 289,
+            "position_y": 424
         },
         {
             "attributes": {
             },
             "id": "10",
-            "name": "String",
+            "name": "Number",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -101,
-            "position_y": -617
+            "position_x": 340,
+            "position_y": 423
         },
         {
             "attributes": {
             },
             "id": "11",
-            "name": "Number",
+            "name": "String",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -40,
-            "position_y": -618
+            "position_x": 401,
+            "position_y": 422
         },
         {
             "attributes": {
@@ -114,17 +114,18 @@
             "id": "12",
             "name": "Type",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": -121,
-            "position_y": -563
+            "position_x": 320,
+            "position_y": 477
         },
         {
             "attributes": {
+                "path": "lib/locw/storeAOIs.py"
             },
             "id": "29",
             "name": "Store AOIs Worker",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": 34,
-            "position_y": -773
+            "position_x": 475,
+            "position_y": 267
         },
         {
             "attributes": {
@@ -132,8 +133,8 @@
             "id": "30",
             "name": "ServerSideWorker",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": 60,
-            "position_y": -824
+            "position_x": 501,
+            "position_y": 216
         },
         {
             "attributes": {
@@ -141,8 +142,8 @@
             "id": "31",
             "name": "Python",
             "namespace": "http://knova.ru/user/1651942047020",
-            "position_x": 110,
-            "position_y": -736
+            "position_x": 551,
+            "position_y": 304
         }
     ],
     "relations": [

@@ -67,7 +67,7 @@ def LoadEditorPage(onto_name) -> Response:
     server_id = request.remote_addr
     server = poolServerInst(server_id, path_to_onto)
     res = send_from_directory("client", "editor.html")
-    res.set_cookie("CommandServerPort", str(server.command_server_port))
+    res.set_cookie("CommandServerPort", str(server.commandServerPort))
     return res
 
 
@@ -147,7 +147,7 @@ def editor_lib(filename):
 
 @app.route("/storage/<path:filename>")
 def editor_storage(filename):
-    f = getServerInst().get_file_from_storage(filename)
+    f = getServerInst().get_file_from_storage(filename, request.cookies.get("exe"))
     if f:
         return f["content"], 200, {'Content-Type': f["mime"]}
     else:
@@ -185,17 +185,19 @@ def gen_mixed():
     dfd = request.get_json(force = True)
     oldExeKey = request.cookies.get("exe")
     exeKey = None
+    dataServerPort = None
     #TODO: send message to browser about initialization
     try:
         srv = getServerInst()
         srv.stop_execer(oldExeKey)
-        res, exeKey, data_server_port = srv.gen_mixed(dfd)
-    except ValueError as err:
+        res, exeKey, dataServerPort = srv.gen_mixed(dfd)
+    except Exception as err:
         res = { "error": str(err) }
     res["srvAddr"] = request.host.split(":")[0]
     resp = jsonify(res)
     resp.status_code = 200
-    resp.set_cookie("DataServerPort", value= str(data_server_port), samesite = "Lax")
+    if dataServerPort:
+        resp.set_cookie("DataServerPort", value = str(dataServerPort), samesite = "Lax")
     if exeKey:
         resp.set_cookie("exe", value = exeKey, samesite = "Lax")
     return resp
