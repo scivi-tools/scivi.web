@@ -67,7 +67,7 @@ def LoadEditorPage(onto_name) -> Response:
     server_id = request.remote_addr
     server = poolServerInst(server_id, path_to_onto)
     res = send_from_directory("client", "editor.html")
-    res.set_cookie("CommandServerPort", str(server.command_server_port))
+    res.set_cookie("CommandServerPort", str(server.commandServerPort))
     return res
 
 
@@ -147,7 +147,7 @@ def editor_lib(filename):
 
 @app.route("/storage/<path:filename>")
 def editor_storage(filename):
-    f = getServerInst().get_file_from_storage(filename)
+    f = getServerInst().get_file_from_storage(filename, request.cookies.get("exe"))
     if f:
         return f["content"], 200, {'Content-Type': f["mime"]}
     else:

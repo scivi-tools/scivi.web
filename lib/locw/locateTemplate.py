@@ -22,8 +22,6 @@ for m, n in matches:
     if m.distance < 0.75 * n.distance:
         goodMatches.append(m)
 
-print("Good matches: " + str(len(goodMatches)))
-
 srcPoints = np.float32([kpTemplate[m.queryIdx].pt for m in goodMatches]).reshape(-1, 1, 2)
 dstPoints = np.float32([kpImage[m.trainIdx].pt for m in goodMatches]).reshape(-1, 1, 2)
 m, mask = cv.findHomography(srcPoints, dstPoints, cv.RANSAC, 5.0)

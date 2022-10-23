@@ -74,46 +74,46 @@ class Localizer:
             return string
 
 class SciViServer:
-    def __init__(self, id, event_loop : asyncio.AbstractEventLoop, context):
+    def __init__(self, id, eventLoop : asyncio.AbstractEventLoop, context):
         self.id = id
-        self.path_to_onto = None
+        self.pathToOnto = None
         self.onto = None
         self.ctx = context
-        self.__cmd_server_loop__ = event_loop
+        self.commandServerLoop = eventLoop
          # start command server
-        self.__server__ = None
+        self.commandServer = None
         self.server_become_unused_event = None
-        self.__websockets__ = []
-        self.command_server_port = get_unused_port()
-        asyncio.run_coroutine_threadsafe(self.wait_for_connection(), self.__cmd_server_loop__)
+        self.webSockets = []
+        self.commandServerPort = get_unused_port()
+        asyncio.run_coroutine_threadsafe(self.wait_for_connection(), self.commandServerLoop)
 
     def release(self):
         self.stop_all_execers()
-        self.__server__.close()
+        self.commandServer.close()
 
     async def wait_for_connection(self):
-        self.__server__ = await websockets.serve(self.client_handler, port=self.command_server_port)
-        print('server started at', self.command_server_port, 'port')
+        self.commandServer = await websockets.serve(self.client_handler, port = self.commandServerPort)
+        print("Command server started at", self.commandServerPort, "port")
          
     async def client_handler(self, websocket):
-        print('Client connected to command server', self.command_server_port)
-        self.__websockets__.append(websocket)
+        print("Client connected to command server", self.commandServerPort)
+        self.webSockets.append(websocket)
         try:
             async for message in websocket:
                 print('message received', message)
         finally:
-            self.__websockets__.remove(websocket)
+            self.webSockets.remove(websocket)
             print('Connection with command server was closed')
-            if len(self.__websockets__) == 0 and not self.server_become_unused_event is None:
+            if len(self.webSockets) == 0 and not self.server_become_unused_event is None:
                 self.server_become_unused_event(self.id)
 
 
     def broadcast(self, message : str):
-        for socket in self.__websockets__:
-            self.__cmd_server_loop__.create_task(socket.send(message))
+        for socket in self.webSockets:
+            self.commandServerLoop.create_task(socket.send(message))
 
-    def setOnto(self, path_to_onto):
-        self.onto = OntoMerger(path_to_onto).onto
+    def setOnto(self, pathToOnto):
+        self.onto = OntoMerger(pathToOnto).onto
         self.loc = "eng"
         self.tree = ""
         self.treeID = 1
@@ -125,11 +125,9 @@ class SciViServer:
         self.files = {}
         self.execers: Dict[str, Execer] = {}
         self.codeUtils = CodeUtils()
-        if self.path_to_onto != path_to_onto:
-            self.node_states = {} #global storage for each node
-            #for node in self.onto.nodes:
-            #    self.node_states[node.id] = {}
-        self.path_to_onto = path_to_onto
+        if self.pathToOnto != pathToOnto:
+            self.nodeStates = {} # Global storage for each node
+        self.pathToOnto = pathToOnto
 
 
     def add_node(self, node: Node):
@@ -171,6 +169,8 @@ class SciViServer:
             return "image/svg+xml; charset=utf-8"
         elif filename.endswith(".png"):
             return "image/png"
+        elif filename.endswith(".jpg"):
+            return "image/jpeg"
         return None
 
     def get_mime(self, node: Node):
@@ -490,22 +490,19 @@ class SciViServer:
         return { "ont": eonOnto.data, "eon": barr }
 
     def gen_mixed(self, dfd) -> Tuple[Dict, Optional[str], int]:
-        dfd2onto = DFD2Onto(self.onto) #load ontology
-        mixedOnto = dfd2onto.get_onto(dfd) # get ontology for dfd
+        dfd2onto = DFD2Onto(self.onto) # Load ontology
+        mixedOnto = dfd2onto.get_onto(dfd) # Get ontology for dfd
         # Server
         srvRes = first(mixedOnto.get_nodes_by_name("SciVi Server"))
         serverTaskHash = None
         corTable = None
         dataServerPort = get_unused_port()
         if srvRes:
-            hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # get all plugins
+            hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # Get all plugins
             serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
-            for instNode in serverOnto.nodes:
-                if not instNode.id in self.node_states:
-                    self.node_states[instNode.id] = {}
             if self.task_onto_has_operations(serverOnto): 
-                execer = Execer(self.onto, serverOnto, self.node_states, self.broadcast, 
-                                self.__cmd_server_loop__, dataServerPort)
+                execer = Execer(self.onto, serverOnto, self.nodeStates, self.broadcast,
+                                self.commandServerLoop, dataServerPort)
                 serverTaskHash = str(uuid.uuid4())
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
@@ -540,8 +537,12 @@ class SciViServer:
             self.execers[execerTaskHash].join()
         self.execers = {}
 
-    def get_file_from_storage(self, filename):
-        return self.files[filename]
+    def get_file_from_storage(self, filename, serverTaskHash):
+        if filename in self.files:
+            return self.files[filename]
+        elif (serverTaskHash in self.execers) and ("/" + filename in self.execers[serverTaskHash].publishedFiles):
+            return { "content": self.codeUtils.read_file("/" + filename), "mime": self.guess_mime(filename) }
+        return None
 
     def gen_firmware(self, elementName):
         fwGen = FWGen(self.onto)
