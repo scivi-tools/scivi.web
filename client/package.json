@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "build.sh debug",
-    "release": "build.sh release"
+    "release": "build.sh release",
+    "postinstall": "patch-package"
   },
   "author": "Konstantin Ryabinin",
   "license": "",

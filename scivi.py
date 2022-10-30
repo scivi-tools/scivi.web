@@ -101,6 +101,10 @@ def soc_page():
 def mxd_page():
     return LoadEditorPage('eeg'), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route("/bci")
+def bci_page():
+    return getEditor("bci")
+
 @app.route("/mmaps")
 def mmaps_page():
     return LoadEditorPage('mmaps'), 200, {'Content-Type': 'text/html; charset=utf-8'}

@@ -73,7 +73,7 @@ class Onto:
     '''
     The Onto class is a wrapper to operate with ONTOLIS ontology files (*.ont).
     '''
-    def __init__(self, last_id, namespaces, nodes, links, visualize_ont_path):
+    def __init__(self, last_id, namespaces, nodes, links, visualize_ont_path, name = None):
         '''
         Create instance of Onto.
         @param data - dict representing ontology.
@@ -83,6 +83,7 @@ class Onto:
         self.nodes = nodes
         self.links = links
         self.visualize_ont_path = visualize_ont_path
+        self.name = name
 
     @classmethod
     def load_from_file(cls, filename: str):
@@ -127,7 +128,8 @@ class Onto:
                     data['namespaces'],
                     nodes,
                     links,
-                    data['visualize_ont_path'])
+                    data['visualize_ont_path'],
+                    name = filename)
 
     @classmethod
     def empty(cls):
