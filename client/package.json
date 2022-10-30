@@ -17,6 +17,7 @@
     "jquery-contextmenu": "^2.8.1",
     "jquery-ui": "^1.13.2",
     "jquery.cookie": "^1.4.1",
+    "patch-package": "^6.5.0",
     "split.js": "^1.5.11"
   },
   "devDependencies": {
