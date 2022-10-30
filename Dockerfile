@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.10
 
 COPY requirements.txt /var/requirements.txt
 RUN pip install --no-cache-dir -r /var/requirements.txt
@@ -16,4 +16,4 @@ WORKDIR /app
 
 ENV PYTHONPATH=/app
 
-CMD gunicorn -w 4 --bind 0.0.0.0:5000 --timeout 600 --access-logfile - scivi:app
+CMD gunicorn -w 1 --bind 0.0.0.0:5000 --timeout 600 --access-logfile - scivi:app

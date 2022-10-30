@@ -2,85 +2,94 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+from collections import deque
 import websockets
 import json
-from threading import Thread, Lock
 
 
-class WSThread(Thread):
-    def __init__(self):
-        self.mutex = Lock()
-        self.queue = []
-        self.loop = None
-        self.stopper = None
-        self.wsRunning = False
-        Thread.__init__(self)
+def make_messages():
+    result = []
+    tx = GLOB["DataWebSocket-TX"]
+    n = max(map(lambda addr: len(tx[addr]), tx))
+    for i in range(n):
+        result.append({})
+        for addr in tx:
+            if len(tx[addr]) > i:
+                result[i][addr] = tx[addr][i]
+    return result
 
-    async def ws(self, websocket, path):
-        print("> WebSocket server started")
-        self.set_ws_running(True)
-        while True:
-            data = GLOB["WebSocketThread"].get_message()
-            if data:
-                try:
-                    await websocket.send(data)
-                except:
-                    print("> WebSocket closed")
-                    break
-            else:
-                await asyncio.sleep(0)
-        self.set_ws_running(False)
-        print("> WebSocket server stopped")
+def ready_to_send():
+    n = GLOB["DataWebSocketTXCount"]
+    tx = GLOB["DataWebSocket-TX"]
+    if len(tx) == n:
+        for addr in tx:
+            l = len(tx[addr])
+            if (l == 0) or (l % n != 0):
+                return False
+        return True
+    return False
 
-    async def ws_run(self, stop):
-        async with websockets.serve(self.ws, "0.0.0.0", 5001):
-            await stop
+def send_all():
+    if ready_to_send():
+        messages = make_messages()
+        for message in messages:
+            asyncio.get_event_loop().create_task(GLOB["DataWebSocket"].send(json.dumps(message)))
+        GLOB["DataWebSocket-TX"] = {}
 
-    def run(self):
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
-        self.stopper = self.loop.create_future()
-        self.loop.run_until_complete(self.ws_run(self.stopper))
+async def ws_handler(websocket):
+    print(">Data WebSocket: Connection opened")
+    GLOB["DataWebSocket"] = websocket
+    # if we sent message before socket opened, we stack messages to queue and send it on connect completed
+    send_all()
+    try:
+        async for message in websocket:
+            d = json.loads(message)
+            needProcess = False
+            for addr in d:
+                if d[addr] is not None:
+                    if addr not in GLOB["DataWebSocket-RX"]:
+                        GLOB["DataWebSocket-RX"][addr] = deque()
+                    GLOB["DataWebSocket-RX"][addr].append(d[addr])
+                    needProcess = True
+            if needProcess:
+                PROCESS()
+    except websockets.exceptions.ConnectionClosedError:
+        pass
+    print("> DataWebSocket: Connection closed")
 
-    def stop_internal(self):
-        self.stopper.set_result(None)
+async def wait_for_connection():
+    GLOB["DataWebServer"] = await websockets.serve(ws_handler, port = GLOB["DataServerPort"])
 
-    def stop(self):
-        self.loop.call_soon_threadsafe(self.stop_internal)
-        self.join()
+if MODE == "INITIALIZATION":
+    if "DataWebSocketTXCount" not in GLOB:
+        GLOB["DataWebSocketTXCount"] = 0
+        GLOB["DataWebSocket-RX"] = {}
+        GLOB["DataWebSocket-TX"] = {}
+        asyncio.get_event_loop().create_task(wait_for_connection())
+    if HAS_INPUT["TX"]:
+        GLOB["DataWebSocketTXCount"] += 1
 
-    def set_ws_running(self, running):
-        self.mutex.acquire()
-        self.wsRunning = running
-        self.mutex.release()
+elif MODE == "RUNNING":
+    addr = SETTINGS_VAL["Node Address"]
 
-    def put_message(self, msg):
-        self.mutex.acquire()
-        if self.wsRunning:
-            self.queue.append(msg)
-        self.mutex.release()
+    if HAS_INPUT["TX"]:
+        if addr not in GLOB["DataWebSocket-TX"]:
+            GLOB["DataWebSocket-TX"][addr] = []
+        GLOB["DataWebSocket-TX"][addr].append(INPUT.get("TX"))
+        if "DataWebSocket" in GLOB:
+            send_all()
 
-    def get_message(self):
-        self.mutex.acquire()
-        if len(self.queue) > 0:
-            result = json.dumps(self.queue)
-            self.queue = []
-        else:
-            result = None
-        self.mutex.release()
-        return result
+    if (addr in GLOB["DataWebSocket-RX"]) and (len(GLOB["DataWebSocket-RX"][addr]) > 0):
+        OUTPUT["RX"] = GLOB["DataWebSocket-RX"][addr].popleft()
+        if len(GLOB["DataWebSocket-RX"][addr]) > 0:
+            PROCESS()
 
-
-if "WebSocketThread" in GLOB:
-    wsThread = GLOB["WebSocketThread"]
-else:
-    wsThread = WSThread()
-    GLOB["WebSocketThread"] = wsThread
-    REGISTER_SUBTHREAD(wsThread, wsThread.stop)
-    wsThread.start()
-
-# tx = INPUT["TX"]
-# if tx:
-    # TODO: do not append to queue if ws is dead
-    # wsThread.put_message({ SETTINGS_VAL["Node Address"]: tx })
-wsThread.put_message({ SETTINGS_VAL["Node Address"]: INPUT["TX"] })
+if (MODE == "DESTRUCTION") and ("DataWebSocket" in GLOB) and ("DataWebServer" in GLOB):
+    webserver = GLOB["DataWebServer"]
+    webserver.close()
+    del GLOB["DataWebSocket"]
+    del GLOB["DataWebServer"]
+    del GLOB["DataWebSocketTXCount"]
+    del GLOB["DataWebSocket-RX"]
+    del GLOB["DataWebSocket-TX"]
+    print("> Data WebSocket: server at 5001 closed")

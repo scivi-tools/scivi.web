@@ -1,23 +1,19 @@
-.gutter
-{
+.gutter {
     z-index: 2;
 }
 
-#scivi_fsgraph_a
-{
+#scivi_fsgraph_a {
     display: flex;
     flex-direction: column;
     z-index: 1;
     min-height: 0;
 }
 
-#scivi_fsgraph_b
-{
+#scivi_fsgraph_b {
     z-index: 10;
 }
 
-#scivi_fsgraph_rotate_bar_container
-{
+#scivi_fsgraph_rotate_bar_container {
     display: flex;
     flex-flow: row;
     padding: 10px 1.5em;
@@ -25,15 +21,13 @@
     background-color: white;
 }
 
-#rotate_bar_handle
-{
+#rotate_bar_handle {
     width: 2.5em;
     margin-left: -1.25em;
     text-align: center;
 }
 
-#scivi_fsgraph_view
-{
+#scivi_fsgraph_view {
     flex: 1;
     display: flex;
     min-height: 0;
@@ -42,74 +36,67 @@
 }
 
 
-#scivi_fsgraph_stateline_container
-{
+#scivi_fsgraph_stateline_container {
     z-index: 2;
     background-color: white;
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
-#scivi_fsgraph_stateline_labels > .scivi_fsgraph_stateline_label
-{
+#scivi_fsgraph_stateline_labels>.scivi_fsgraph_stateline_label {
     text-align: center;
     display: inline-block;
     vertical-align: top;
 }
 
-#scivi_fsgraph_tabs
-{
+#scivi_fsgraph_tabs {
     height: 100%;
     box-sizing: border-box;
 }
 
-#scivi_fsgraph_filters_control
-{
+#scivi_fsgraph_filters_control {
     margin-top: 10px;
 }
 
-#scivi_fsgraph_filters_control > ul, #scivi_fsgraph_settings_stateview > ul, ul.pseudo-list
-{
+#scivi_fsgraph_filters_control>ul,
+#scivi_fsgraph_settings_stateview>ul,
+ul.pseudo-list {
     margin: unset;
     margin-top: 0.5em;
     list-style-type: none;
     padding-left: 0px;
 }
 
-#scivi_fsgraph_filters_control .ui-slider, #scivi_fsgraph_settings_stateview .ui-slider, ul.pseudo-list .ui-slider, ul.pseudo-list input[type=checkbox]
-{
+#scivi_fsgraph_filters_control .ui-slider,
+#scivi_fsgraph_settings_stateview .ui-slider,
+ul.pseudo-list .ui-slider,
+ul.pseudo-list input[type=checkbox] {
     margin: 10px;
 }
 
-#scivi_fsgraph_settings_stateview
-{
+#scivi_fsgraph_settings_stateview {
     margin: 1em 0em;
 }
 
-#scivi_fsgraph_settings_nodelabel > input
-{
+#scivi_fsgraph_settings_nodelabel>input {
     width: 3em;
     margin-right: 10px;
 }
 
-#scivi_fsgraph_nodelist_container > *
-{
+#scivi_fsgraph_nodelist_container>* {
     display: inline-block;
     margin-top: 0.5em;
 }
 
-#scivi_fsgraph_nodelist_container li
-{
+#scivi_fsgraph_nodelist_container li {
     margin-top: 0.5em;
 }
 
-#scivi_fsgraph_list > div > span
-{
+#scivi_fsgraph_list>div>span {
     display: block;
 }
 
-.scivi_button
-{
+.scivi_button {
     background: #F6F6F6;
     color: #000;
     cursor: pointer;
@@ -123,42 +110,102 @@
     margin-right: 5px;
 }
 
-.scivi_button:hover
-{
+.scivi_button:hover {
     background: #ededed;
 }
 
-.scivi_button:active
-{
+.scivi_button:active {
     background: #007bff;
 }
 
-.scivi_button.pushed
-{
+.scivi_button.pushed {
     background: #007bff;
     color: #fff;
 }
 
-.scivi_fsgraph_metric_control
-{
+.scivi_fsgraph_metric_control {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.scivi_fsgraph_metric_control .centered
-{
+.scivi_fsgraph_metric_control .centered {
     width: 100%;
     text-align: center;
     padding-top: 5px;
 }
 
-.scivi_fsgraph_group_setting > div
-{
+.scivi_fsgraph_group_setting>div {
     padding: 5px;
     font-size: 0.8em;
 }
 
-.ui-slider-horizontal
-{
+.ui-slider-horizontal {
     height: 0.6em;
+}
+
+.connectivity_matrix
+{
+    font-size: 12px;
+}
+
+
+.connectivity_matrix_header {
+    font-weight: normal;
+    background-color: #fff;
+}
+
+.connectivity_matrix_header[scope=row]
+{
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    text-align: right;
+}
+
+
+.connectivity_matrix_header.right_header[scope=row]
+{
+    position: -webkit-sticky;
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    text-align: left;
+}
+
+.connectivity_matrix_header.bottom_header
+{
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    text-align: center;
+    vertical-align: top;
+}
+
+.connectivity_matrix_header.top_header {
+    writing-mode: vertical-rl;
+    text-align: left;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    transform: rotate(180deg);
+
+    /* Legacy vendor prefixes that you probably don't need... */
+
+    /* Safari */
+    -webkit-transform: rotate(180deg);
+
+    /* Firefox */
+    -moz-transform: rotate(180deg);
+
+    /* IE */
+    -ms-transform: rotate(180deg);
+
+    /* Opera */
+    -o-transform: rotate(180deg);
+
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }

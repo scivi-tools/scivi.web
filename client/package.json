@@ -11,15 +11,16 @@
   "author": "Konstantin Ryabinin",
   "license": "",
   "dependencies": {
-    "d3-node-editor": "^0.7.4",
+    "d3-node-editor": "0.7.4",
+    "file-saver": "^2.0.5",
     "jquery": "^3.5.0",
     "jquery-contextmenu": "^2.8.1",
-    "jquery-ui": "github:jquery/jquery-ui#1.12.0",
-    "patch-package": "^6.4.7",
+    "jquery-ui": "^1.13.2",
+    "jquery.cookie": "^1.4.1",
     "split.js": "^1.5.11"
   },
   "devDependencies": {
     "browserify": "^14.5.0",
-    "uglify-js": "^3.6.0"
+    "terser": "^5.14.2"
   }
 }
