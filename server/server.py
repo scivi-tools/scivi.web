@@ -20,6 +20,7 @@ from server.dfd2onto import DFD2Onto
 from server.execer import Execer, ExecutionMode
 from server.utils import CodeUtils
 from server.fwgen import FWGen
+from server.dfdbuilder import DFDBuilder
 
 def get_unused_port():
 
@@ -79,13 +80,14 @@ class SciViServer:
         self.pathToOnto = None
         self.onto = None
         self.ctx = context
-        self.commandServerLoop = eventLoop
-         # start command server
-        self.commandServer = None
-        self.server_become_unused_event = None
-        self.webSockets = []
-        self.commandServerPort = get_unused_port()
-        asyncio.run_coroutine_threadsafe(self.wait_for_connection(), self.commandServerLoop)
+        if eventLoop is not None:
+            self.commandServerLoop = eventLoop
+            # start command server
+            self.commandServer = None
+            self.server_become_unused_event = None
+            self.webSockets = []
+            self.commandServerPort = get_unused_port()
+            asyncio.run_coroutine_threadsafe(self.wait_for_connection(), self.commandServerLoop)
 
     def release(self):
         self.stop_all_execers()
@@ -588,3 +590,7 @@ class SciViServer:
 
     def scan_ssdp(self):
         return self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")
+
+    def build_dfd(self, preset, modify):
+        builder = DFDBuilder(preset, modify)
+        return builder.build()

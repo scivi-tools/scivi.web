@@ -172,7 +172,18 @@ def srv_exec(nodeID):
     print(nodeID)
     return "OK"
 
-@app.route("/gen_eon", methods = ['POST'])
+@app.route("/build_dfd", methods = ["POST"])
+def build_dfd():
+    config = request.get_json(force = True)
+    # try:
+    server = SciViServer(None, None, None)
+    server.setOnto("kb/" + config["toolset"])
+    dfd = server.build_dfd("client/preset/" + config["preset"] + ".gz", config["modify"])
+    return dfd, 200
+    # except:
+        # return "Not found", 404
+
+@app.route("/gen_eon", methods = ["POST"])
 def gen_eon():
     dfd = request.get_json(force = True)
     res = None
@@ -184,7 +195,7 @@ def gen_eon():
     resp.status_code = 200
     return resp
 
-@app.route("/gen_mixed", methods = ['POST'])
+@app.route("/gen_mixed", methods = ["POST"])
 def gen_mixed():
     dfd = request.get_json(force = True)
     oldExeKey = request.cookies.get("exe")
@@ -206,7 +217,7 @@ def gen_mixed():
         resp.set_cookie("exe", value = exeKey, samesite = "Lax")
     return resp
 
-@app.route("/stop_execer", methods = ['POST'])
+@app.route("/stop_execer", methods = ["POST"])
 def stop_execer():
     oldExeKey = request.cookies.get("exe")
     try:
