@@ -1,0 +1,1478 @@
+{
+    "history": [
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:17:11Z",
+            "node_id": 1,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657031
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:17:32Z",
+            "new_name": "ConcModelCreator",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 1,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657052
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:17:37Z",
+            "node_id": 2,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657057
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:17:43Z",
+            "new_name": "Filter",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 2,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657063
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:17:45Z",
+            "node_id": 3,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657065
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:17:48Z",
+            "new_name": "Root",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 3,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657068
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:17:53Z",
+            "destination_id": 2,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 4,
+            "source_id": 1,
+            "timestamp": 1648657073
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:18:05Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 4,
+            "timestamp": 1648657085
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:18:09Z",
+            "destination_id": 3,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 5,
+            "source_id": 2,
+            "timestamp": 1648657089
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:18:13Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 5,
+            "timestamp": 1648657093
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:19:18Z",
+            "node_id": 6,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657158
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:20:17Z",
+            "name": "",
+            "namespace": "",
+            "node_id": 6,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1648657217
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:20:19Z",
+            "node_id": 7,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657219
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:20:30Z",
+            "new_name": "Raw EEG",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 7,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657230
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:20:35Z",
+            "destination_id": 7,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 8,
+            "source_id": 1,
+            "timestamp": 1648657235
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:20:42Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 8,
+            "timestamp": 1648657242
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:20:55Z",
+            "node_id": 9,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657255
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:20:58Z",
+            "new_name": "Output",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 9,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657258
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:21:01Z",
+            "destination_id": 9,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 10,
+            "source_id": 7,
+            "timestamp": 1648657261
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:21:07Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 10,
+            "timestamp": 1648657267
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:21:58Z",
+            "node_id": 11,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657318
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:05Z",
+            "new_name": "Array",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 11,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657325
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:12Z",
+            "node_id": 12,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657332
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:15Z",
+            "node_id": 12,
+            "operation": "Node created",
+            "operation_type": "Undo",
+            "timestamp": 1648657335
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:18Z",
+            "destination_id": 11,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 13,
+            "source_id": 7,
+            "timestamp": 1648657338
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:22Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 13,
+            "timestamp": 1648657342
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:24Z",
+            "node_id": 14,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657344
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:29Z",
+            "new_name": "Number",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 14,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657349
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:31Z",
+            "destination_id": 14,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 15,
+            "source_id": 7,
+            "timestamp": 1648657351
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:42Z",
+            "new_name": "base_type",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 15,
+            "timestamp": 1648657362
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:50Z",
+            "node_id": 16,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648657370
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:53Z",
+            "new_name": "Type",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 16,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648657373
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:22:56Z",
+            "destination_id": 16,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 17,
+            "source_id": 11,
+            "timestamp": 1648657376
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:23:01Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 17,
+            "timestamp": 1648657381
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:23:04Z",
+            "destination_id": 16,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 18,
+            "source_id": 14,
+            "timestamp": 1648657384
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:23:08Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 18,
+            "timestamp": 1648657388
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:41:21Z",
+            "node_id": 19,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658481
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:41:26Z",
+            "new_name": "Model output path",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 19,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658486
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:41:30Z",
+            "destination_id": 19,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 20,
+            "source_id": 1,
+            "timestamp": 1648658490
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:41:33Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 20,
+            "timestamp": 1648658493
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:41:50Z",
+            "node_id": 21,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658510
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:41:54Z",
+            "new_name": "Setting",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 21,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658514
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:41:57Z",
+            "destination_id": 21,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 22,
+            "source_id": 19,
+            "timestamp": 1648658517
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:42:02Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 22,
+            "timestamp": 1648658522
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:42:11Z",
+            "node_id": 23,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658531
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:42:19Z",
+            "name": "",
+            "namespace": "",
+            "node_id": 23,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1648658539
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:42:59Z",
+            "node_id": 24,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658579
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:43:04Z",
+            "new_name": "File",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 24,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658584
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:43:21Z",
+            "destination_id": 24,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 25,
+            "source_id": 19,
+            "timestamp": 1648658601
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:43:26Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 25,
+            "timestamp": 1648658606
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:43:32Z",
+            "destination_id": 16,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 26,
+            "source_id": 24,
+            "timestamp": 1648658612
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:43:37Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 26,
+            "timestamp": 1648658617
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:45:02Z",
+            "new_name": "Concentration Model Creator",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 1,
+            "old_name": "ConcModelCreator",
+            "old_namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658702
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:45:24Z",
+            "node_id": 27,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658724
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:45:36Z",
+            "new_name": "Concentration Model Creator Worker",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 27,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658736
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:45:42Z",
+            "destination_id": 1,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 28,
+            "source_id": 27,
+            "timestamp": 1648658742
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:45:52Z",
+            "new_name": "is_instance",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 28,
+            "timestamp": 1648658752
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:00Z",
+            "node_id": 29,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658760
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:08Z",
+            "new_name": "ServerSideWorker",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 29,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658768
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:11Z",
+            "destination_id": 29,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 30,
+            "source_id": 27,
+            "timestamp": 1648658771
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:15Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 30,
+            "timestamp": 1648658775
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:22Z",
+            "node_id": 31,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658782
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:26Z",
+            "new_name": "python",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 31,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658786
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:31Z",
+            "name": "python",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 31,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1648658791
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:32Z",
+            "node_id": 32,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648658792
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:35Z",
+            "new_name": "Python",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 32,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658795
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:38Z",
+            "destination_id": 32,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 33,
+            "source_id": 27,
+            "timestamp": 1648658798
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:46:42Z",
+            "new_name": "language",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 33,
+            "timestamp": 1648658802
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:47:42Z",
+            "new_name": "Input",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 9,
+            "old_name": "Output",
+            "old_namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658862
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:48:21Z",
+            "new_name": "String",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 24,
+            "old_name": "File",
+            "old_namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658901
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T16:48:49Z",
+            "new_name": "Text",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 24,
+            "old_name": "String",
+            "old_namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648658929
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:12:43Z",
+            "node_id": 34,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648663963
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:12:52Z",
+            "new_name": "Scikit Learn",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 34,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648663972
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:13:26Z",
+            "destination_id": 34,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 35,
+            "source_id": 27,
+            "timestamp": 1648664006
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:13:30Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 35,
+            "timestamp": 1648664010
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:13:36Z",
+            "node_id": 36,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1648664016
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:13:47Z",
+            "new_name": "Dependency",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 36,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1648664027
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:13:53Z",
+            "destination_id": 36,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 37,
+            "source_id": 34,
+            "timestamp": 1648664033
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:14:00Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 37,
+            "timestamp": 1648664040
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:15:34Z",
+            "destination_id": 32,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 38,
+            "source_id": 34,
+            "timestamp": 1648664134
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-03-30T18:15:41Z",
+            "new_name": "language",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 38,
+            "timestamp": 1648664141
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:51:40Z",
+            "new_name": "EEG to Raw Converter",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 1,
+            "old_name": "Concentration Model Creator",
+            "old_namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1649091100
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:51:57Z",
+            "new_name": "EEG to Raw Converter Worker",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 27,
+            "old_name": "Concentration Model Creator Worker",
+            "old_namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1649091117
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:02Z",
+            "destination_id": 34,
+            "name": "has",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 35,
+            "source_id": 27,
+            "timestamp": 1649091122
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:02Z",
+            "destination_id": 36,
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 37,
+            "source_id": 34,
+            "timestamp": 1649091122
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:02Z",
+            "destination_id": 32,
+            "name": "language",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 38,
+            "source_id": 34,
+            "timestamp": 1649091122
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:02Z",
+            "name": "Scikit Learn",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 34,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1649091122
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:03Z",
+            "name": "Dependency",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 36,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1649091123
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:08Z",
+            "destination_id": 19,
+            "name": "has",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 20,
+            "source_id": 1,
+            "timestamp": 1649091128
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:08Z",
+            "destination_id": 21,
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 22,
+            "source_id": 19,
+            "timestamp": 1649091128
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:08Z",
+            "destination_id": 24,
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 25,
+            "source_id": 19,
+            "timestamp": 1649091128
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:08Z",
+            "name": "Model output path",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 19,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1649091128
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:09Z",
+            "name": "Setting",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 21,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1649091129
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:10Z",
+            "destination_id": 16,
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 26,
+            "source_id": 24,
+            "timestamp": 1649091130
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:10Z",
+            "name": "Text",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 24,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1649091130
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:31Z",
+            "node_id": 39,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1649091151
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:34Z",
+            "new_name": "EEG",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 39,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1649091154
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:41Z",
+            "destination_id": 39,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 40,
+            "source_id": 1,
+            "timestamp": 1649091161
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:52:45Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 40,
+            "timestamp": 1649091165
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:53:26Z",
+            "node_id": 41,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1649091206
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:53:29Z",
+            "new_name": "Grid",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 41,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1649091209
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:53:45Z",
+            "destination_id": 41,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 42,
+            "source_id": 39,
+            "timestamp": 1649091225
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:53:49Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 42,
+            "timestamp": 1649091229
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:53:53Z",
+            "destination_id": 16,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 43,
+            "source_id": 41,
+            "timestamp": 1649091233
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:53:56Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 43,
+            "timestamp": 1649091236
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:17Z",
+            "new_name": "Raw",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 7,
+            "old_name": "Raw EEG",
+            "old_namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1649091257
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:24Z",
+            "destination_id": 9,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 44,
+            "source_id": 39,
+            "timestamp": 1649091264
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:29Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 44,
+            "timestamp": 1649091269
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:31Z",
+            "destination_id": 9,
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 10,
+            "source_id": 7,
+            "timestamp": 1649091271
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:35Z",
+            "node_id": 45,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1649091275
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:38Z",
+            "new_name": "Output",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "node_id": 45,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1649091278
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:41Z",
+            "destination_id": 45,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 46,
+            "source_id": 7,
+            "timestamp": 1649091281
+        },
+        {
+            "author": "chiruhind@gmail.com",
+            "datetime": "2022-04-04T16:54:45Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1648657017648",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 46,
+            "timestamp": 1649091285
+        }
+    ],
+    "last_id": "46",
+    "namespaces": {
+        "default": "http://knova.ru/user/1648657017648",
+        "ontolis-avis": "http://knova.ru/ontolis-avis",
+        "owl": "http://www.w3.org/2002/07/owl",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "nodes": [
+        {
+            "attributes": {
+            },
+            "id": "1",
+            "name": "EEG to Raw Converter",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 537,
+            "position_y": 508
+        },
+        {
+            "attributes": {
+            },
+            "id": "2",
+            "name": "Filter",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 494,
+            "position_y": 372
+        },
+        {
+            "attributes": {
+            },
+            "id": "3",
+            "name": "Root",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 538,
+            "position_y": 200
+        },
+        {
+            "attributes": {
+            },
+            "id": "7",
+            "name": "Raw",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 299,
+            "position_y": 631
+        },
+        {
+            "attributes": {
+            },
+            "id": "9",
+            "name": "Input",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 283,
+            "position_y": 520
+        },
+        {
+            "attributes": {
+            },
+            "id": "11",
+            "name": "Array",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 200,
+            "position_y": 721
+        },
+        {
+            "attributes": {
+            },
+            "id": "14",
+            "name": "Number",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 425,
+            "position_y": 679
+        },
+        {
+            "attributes": {
+            },
+            "id": "16",
+            "name": "Type",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 375,
+            "position_y": 777
+        },
+        {
+            "attributes": {
+                "path": "lib/bci/eegToRawConverter.py"
+            },
+            "id": "27",
+            "name": "EEG to Raw Converter Worker",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 774,
+            "position_y": 367
+        },
+        {
+            "attributes": {
+            },
+            "id": "29",
+            "name": "ServerSideWorker",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 780,
+            "position_y": 255
+        },
+        {
+            "attributes": {
+            },
+            "id": "32",
+            "name": "Python",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 829,
+            "position_y": 465
+        },
+        {
+            "attributes": {
+            },
+            "id": "39",
+            "name": "EEG",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 601,
+            "position_y": 586
+        },
+        {
+            "attributes": {
+            },
+            "id": "41",
+            "name": "Grid",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 640,
+            "position_y": 660
+        },
+        {
+            "attributes": {
+            },
+            "id": "45",
+            "name": "Output",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "position_x": 142,
+            "position_y": 554
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {
+            },
+            "destination_node_id": "2",
+            "id": "4",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "3",
+            "id": "5",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "2"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "8",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "13",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "7"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "14",
+            "id": "15",
+            "name": "base_type",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "7"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "16",
+            "id": "17",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "11"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "16",
+            "id": "18",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "14"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "28",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "27"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "29",
+            "id": "30",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "27"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "32",
+            "id": "33",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "27"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "39",
+            "id": "40",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "41",
+            "id": "42",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "39"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "16",
+            "id": "43",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "41"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "9",
+            "id": "44",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "39"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "45",
+            "id": "46",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1648657017648",
+            "source_node_id": "7"
+        }
+    ],
+    "visualize_ont_path": ""
+}

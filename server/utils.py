@@ -37,5 +37,5 @@ class CodeUtils:
 
     def get_file(self, node: Node):
         if "path" in node.attributes:
-            self.read_file(node.attributes["path"])
+            return self.read_file(node.attributes["path"])
         return None

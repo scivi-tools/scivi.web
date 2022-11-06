@@ -1,0 +1,432 @@
+{
+    "last_id": "57",
+    "namespaces": {
+        "default": "http://knova.ru/user/1617490480029",
+        "ontolis-avis": "http://knova.ru/ontolis-avis",
+        "owl": "http://www.w3.org/2002/07/owl",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "nodes": [
+        {
+            "attributes": {
+            },
+            "id": "1",
+            "name": "Filter",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 756,
+            "position_y": 315
+        },
+        {
+            "attributes": {
+            },
+            "id": "2",
+            "name": "Root",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 695,
+            "position_y": 242
+        },
+        {
+            "attributes": {
+            },
+            "id": "3",
+            "name": "Labels by Channel",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 718,
+            "position_y": 390
+        },
+        {
+            "attributes": {
+            },
+            "id": "6",
+            "name": "Input",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 498,
+            "position_y": 464
+        },
+        {
+            "attributes": {
+            },
+            "id": "7",
+            "name": "Output",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 623,
+            "position_y": 497
+        },
+        {
+            "attributes": {
+            },
+            "id": "8",
+            "name": "Raw Signal",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 548,
+            "position_y": 557
+        },
+        {
+            "attributes": {
+            },
+            "id": "11",
+            "name": "Array",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 696,
+            "position_y": 640
+        },
+        {
+            "attributes": {
+            },
+            "id": "13",
+            "name": "Type",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 745,
+            "position_y": 730
+        },
+        {
+            "attributes": {
+                "path": "lib/eeg/label_by_channel.py"
+            },
+            "id": "25",
+            "name": "Label by Channel Worker",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 848,
+            "position_y": 403
+        },
+        {
+            "attributes": {
+            },
+            "id": "26",
+            "name": "ServerSideWorker",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 1000,
+            "position_y": 309
+        },
+        {
+            "attributes": {
+            },
+            "id": "28",
+            "name": "Python",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 1035,
+            "position_y": 484
+        },
+        {
+            "attributes": {
+                "default": "DC-A"
+            },
+            "id": "31",
+            "name": "Channel Name",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 510,
+            "position_y": 307
+        },
+        {
+            "attributes": {
+            },
+            "id": "32",
+            "name": "Setting",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 459,
+            "position_y": 200
+        },
+        {
+            "attributes": {
+            },
+            "id": "33",
+            "name": "String",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 895,
+            "position_y": 548
+        },
+        {
+            "attributes": {
+            },
+            "id": "38",
+            "name": "Labels",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "position_x": 739,
+            "position_y": 540
+        },
+        {
+            "attributes": {
+            },
+            "id": "42",
+            "name": "Montage Schema",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 200,
+            "position_y": 417
+        },
+        {
+            "attributes": {
+            },
+            "id": "43",
+            "name": "MontageSchema",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 370,
+            "position_y": 745
+        },
+        {
+            "attributes": {
+            },
+            "id": "48",
+            "name": "Number",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 489,
+            "position_y": 661
+        },
+        {
+            "attributes": {
+            },
+            "id": "53",
+            "name": "Signal",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "position_x": 843,
+            "position_y": 685
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "4",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "2",
+            "id": "5",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "8",
+            "id": "14",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "17",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "8"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "20",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "8"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "23",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "11"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "3",
+            "id": "27",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "25"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "28",
+            "id": "29",
+            "name": "languale",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "25"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "26",
+            "id": "30",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "25"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "33",
+            "id": "34",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "31"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "31",
+            "id": "35",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "32",
+            "id": "36",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "31"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "37",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "33"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "38",
+            "id": "39",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "41",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1617490480029",
+            "source_node_id": "38"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "43",
+            "id": "44",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "42"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "45",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "43"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "42",
+            "id": "46",
+            "name": "has",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "47",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "42"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "48",
+            "id": "49",
+            "name": "base_type",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "8"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "50",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "48"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "33",
+            "id": "51",
+            "name": "base_type",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "38"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "52",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "38"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "54",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "53"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "55",
+            "name": "is_a",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "53"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "48",
+            "id": "56",
+            "name": "base_type",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "53"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "53",
+            "id": "57",
+            "name": "has",
+            "namespace": "https://github.com/AlexProfanov/ontolis",
+            "source_node_id": "3"
+        }
+    ],
+    "visualize_ont_path": ""
+}

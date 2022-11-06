@@ -1,0 +1,157 @@
+{
+	"cap21": [
+		{
+			"name": "FP1",
+			"canonical_name": "Fp1",
+			"index": 2,
+			"color": "black"
+		},
+
+		{
+			"name": "FP2",
+			"canonical_name": "Fp2",
+			"index": 3,
+			"color": "black"
+		},
+
+		{
+			"name": "F7",
+			"canonical_name": "F7",
+			"index": 7,
+			"color": "black"
+		},
+
+		{
+			"name": "F3",
+			"canonical_name": "F3",
+			"index": 8,
+			"color": "black"
+		},
+
+		{
+			"name": "F4",
+			"canonical_name": "F4",
+			"index": 10,
+			"color": "black"
+		},
+
+		{
+			"name": "F8",
+			"canonical_name": "F8",
+			"index": 11,
+			"color": "black"
+		},
+
+		{
+			"name": "T3",
+			"canonical_name": "T7",
+			"index": 14,
+			"color": "black"
+		},
+
+		{
+			"name": "C3",
+			"canonical_name": "C3",
+			"index": 15,
+			"color": "black"
+		},
+
+		{
+			"name": "C4",
+			"canonical_name": "C4",
+			"index": 17,
+			"color": "black"
+		},
+
+		{
+			"name": "T4",
+			"canonical_name": "T8",
+			"index": 18,
+			"color": "black"
+		},
+
+		{
+			"name": "T5",
+			"canonical_name": "P7",
+			"index": 21,
+			"color": "black"
+		},
+
+		{
+			"name": "P3",
+			"canonical_name": "P3",
+			"index": 22,
+			"color": "black"
+		},
+
+		{
+			"name": "P4",
+			"canonical_name": "P4",
+			"index": 24,
+			"color": "black"
+		},
+
+		{
+			"name": "T6",
+			"canonical_name": "P8",
+			"index": 25,
+			"color": "black"
+		},
+
+		{
+			"name": "O1",
+			"canonical_name": "O1",
+			"index": 29,
+			"color": "black"
+		},
+
+		{
+			"name": "O2",
+			"canonical_name": "O2",
+			"index": 31,
+			"color": "black"
+		},
+
+		{
+			"name": "FZ",
+			"canonical_name": "Fz",
+			"index": 9,
+			"color": "black"
+		},
+
+		{
+			"name": "CZ",
+			"canonical_name": "Cz",
+			"index": 16,
+			"color": "black"
+		},
+
+		{
+			"name": "PZ",
+			"canonical_name": "Pz",
+			"index": 23,
+			"color": "black"
+		},
+
+		{
+			"name": "Red",
+			"canonical_name": "AFz",
+			"index": -1,
+			"color": "red"
+		},
+
+		{
+			"name": "Green",
+			"canonical_name": "FCz",
+			"index": -1,
+			"color": "green"
+		},
+
+		{
+			"name": "DC-A",
+			"canonical_name": "DC-A",
+			"index": 65,
+			"color": "black"
+		}
+	]
+}

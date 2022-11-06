@@ -1,0 +1,2491 @@
+{
+    "visualize_ont_path": "",
+    "nodes": [
+        {
+            "attributes": {},
+            "id": 1,
+            "name": "Name",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 805.6105359040213,
+            "position_y": 857.7350046697735
+        },
+        {
+            "attributes": {},
+            "id": 2,
+            "name": "Canonical Name",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 512.2860541614764,
+            "position_y": 690.6627154034105
+        },
+        {
+            "attributes": {},
+            "id": 3,
+            "name": "Color",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 621.8036149552437,
+            "position_y": 687.4866138294186
+        },
+        {
+            "attributes": {},
+            "id": 4,
+            "name": "Channel",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 917.1997248347712,
+            "position_y": 493.5952772779816
+        },
+        {
+            "attributes": {},
+            "id": 5,
+            "name": "Electrode",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 37.08629526652907,
+            "position_y": 235.58742377856478
+        },
+        {
+            "attributes": {},
+            "id": 6,
+            "name": "Montage",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 90.07726203286425,
+            "position_y": 941.3069428016046
+        },
+        {
+            "attributes": {},
+            "id": 7,
+            "name": "cap21",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 559.9408860075065,
+            "position_y": 320.30342198339866
+        },
+        {
+            "attributes": {},
+            "id": 9,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 632.8517401775073,
+            "position_y": 823.8309030343622
+        },
+        {
+            "attributes": {},
+            "id": 12,
+            "name": "FP1",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 718.2795219383244,
+            "position_y": 866.7688928308745
+        },
+        {
+            "attributes": {},
+            "id": 13,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 527.9090071854578,
+            "position_y": 447.4876237811819
+        },
+        {
+            "attributes": {},
+            "id": 14,
+            "name": 2,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 445.56973259223565,
+            "position_y": 689.1707137464289
+        },
+        {
+            "attributes": {},
+            "id": 15,
+            "name": "Fp1",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 593.2465316392058,
+            "position_y": 684.0769941116988
+        },
+        {
+            "attributes": {},
+            "id": 24,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 637.3603226213949,
+            "position_y": 98.85299068946995
+        },
+        {
+            "attributes": {},
+            "id": 27,
+            "name": "FP2",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 657.6376768292274,
+            "position_y": 694.6632153572981
+        },
+        {
+            "attributes": {},
+            "id": 28,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 962.7304304928615,
+            "position_y": 56.064776003899254
+        },
+        {
+            "attributes": {},
+            "id": 29,
+            "name": 3,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 649.7360076364412,
+            "position_y": 566.5115593211234
+        },
+        {
+            "attributes": {},
+            "id": 30,
+            "name": "Fp2",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 431.57818667428984,
+            "position_y": 956.1656623495486
+        },
+        {
+            "attributes": {},
+            "id": 39,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 297.2691335837314,
+            "position_y": 705.6600450887607
+        },
+        {
+            "attributes": {},
+            "id": 42,
+            "name": "F7",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 669.1889914999789,
+            "position_y": 31.497587154702078
+        },
+        {
+            "attributes": {},
+            "id": 43,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 770.0855923678679,
+            "position_y": 163.5251074138835
+        },
+        {
+            "attributes": {},
+            "id": 44,
+            "name": 7,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 910.2847003105736,
+            "position_y": 295.1339022881374
+        },
+        {
+            "attributes": {},
+            "id": 45,
+            "name": "F7",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 276.44523899437377,
+            "position_y": 404.8625732600659
+        },
+        {
+            "attributes": {},
+            "id": 54,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 734.7436106852184,
+            "position_y": 692.0051253762841
+        },
+        {
+            "attributes": {},
+            "id": 57,
+            "name": "F3",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 214.6726077144554,
+            "position_y": 714.2150126993974
+        },
+        {
+            "attributes": {},
+            "id": 58,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 827.4977480989979,
+            "position_y": 65.24038725379278
+        },
+        {
+            "attributes": {},
+            "id": 59,
+            "name": 8,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 736.754289429263,
+            "position_y": 846.6961885670647
+        },
+        {
+            "attributes": {},
+            "id": 60,
+            "name": "F3",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 385.5967016423315,
+            "position_y": 123.21063784192121
+        },
+        {
+            "attributes": {},
+            "id": 69,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 238.09663055675213,
+            "position_y": 1.5466765836744667
+        },
+        {
+            "attributes": {},
+            "id": 72,
+            "name": "F4",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 104.18194199372843,
+            "position_y": 415.6985137630187
+        },
+        {
+            "attributes": {},
+            "id": 73,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 239.26798616562485,
+            "position_y": 436.5966581303955
+        },
+        {
+            "attributes": {},
+            "id": 74,
+            "name": 10,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 577.3456413748951,
+            "position_y": 173.27744479436612
+        },
+        {
+            "attributes": {},
+            "id": 75,
+            "name": "F4",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 695.3219729312494,
+            "position_y": 794.9039119747591
+        },
+        {
+            "attributes": {},
+            "id": 84,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 347.08010400569134,
+            "position_y": 813.0170146307139
+        },
+        {
+            "attributes": {},
+            "id": 87,
+            "name": "F8",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 521.7157272507377,
+            "position_y": 982.5500716906498
+        },
+        {
+            "attributes": {},
+            "id": 88,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 854.4529774940786,
+            "position_y": 20.6972193093784
+        },
+        {
+            "attributes": {},
+            "id": 89,
+            "name": 11,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 661.5915820180107,
+            "position_y": 898.1020524415202
+        },
+        {
+            "attributes": {},
+            "id": 90,
+            "name": "F8",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 22.251174265671693,
+            "position_y": 149.89474188434616
+        },
+        {
+            "attributes": {},
+            "id": 99,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 871.7029789233848,
+            "position_y": 320.7630754349937
+        },
+        {
+            "attributes": {},
+            "id": 102,
+            "name": "T3",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 215.45814215639214,
+            "position_y": 153.23165209216583
+        },
+        {
+            "attributes": {},
+            "id": 103,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 966.8735882667588,
+            "position_y": 337.9287712274709
+        },
+        {
+            "attributes": {},
+            "id": 104,
+            "name": 14,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 997.6897825651413,
+            "position_y": 165.98135698333638
+        },
+        {
+            "attributes": {},
+            "id": 105,
+            "name": "T7",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 681.7974198766194,
+            "position_y": 402.49833324843667
+        },
+        {
+            "attributes": {},
+            "id": 114,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 467.1264080103833,
+            "position_y": 683.9894943660896
+        },
+        {
+            "attributes": {},
+            "id": 117,
+            "name": "C3",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 969.7193440071052,
+            "position_y": 666.7657784853609
+        },
+        {
+            "attributes": {},
+            "id": 118,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 887.814495530695,
+            "position_y": 396.4453155309342
+        },
+        {
+            "attributes": {},
+            "id": 119,
+            "name": 15,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 647.8002914669095,
+            "position_y": 295.99762258160575
+        },
+        {
+            "attributes": {},
+            "id": 120,
+            "name": "C3",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 267.1621237255207,
+            "position_y": 992.0205176300898
+        },
+        {
+            "attributes": {},
+            "id": 129,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 782.1505383729211,
+            "position_y": 722.0069190881395
+        },
+        {
+            "attributes": {},
+            "id": 132,
+            "name": "C4",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 530.5375866223186,
+            "position_y": 214.1137404065455
+        },
+        {
+            "attributes": {},
+            "id": 133,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 745.1797239700619,
+            "position_y": 917.64308411623
+        },
+        {
+            "attributes": {},
+            "id": 134,
+            "name": 17,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 132.80807520893822,
+            "position_y": 4.65733088609821
+        },
+        {
+            "attributes": {},
+            "id": 135,
+            "name": "C4",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 846.212308180789,
+            "position_y": 657.9681557863197
+        },
+        {
+            "attributes": {},
+            "id": 144,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 932.1470003355912,
+            "position_y": 987.9506140023453
+        },
+        {
+            "attributes": {},
+            "id": 147,
+            "name": "T4",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 998.2800915876426,
+            "position_y": 465.49469590614814
+        },
+        {
+            "attributes": {},
+            "id": 148,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 494.8929729043375,
+            "position_y": 467.453189016389
+        },
+        {
+            "attributes": {},
+            "id": 149,
+            "name": 18,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 692.3383971065514,
+            "position_y": 284.7158599524833
+        },
+        {
+            "attributes": {},
+            "id": 150,
+            "name": "T8",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 295.14453665782327,
+            "position_y": 302.5195019575043
+        },
+        {
+            "attributes": {},
+            "id": 159,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 189.30823383941154,
+            "position_y": 858.5762733034107
+        },
+        {
+            "attributes": {},
+            "id": 162,
+            "name": "T5",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 870.2346098437249,
+            "position_y": 194.65675671438564
+        },
+        {
+            "attributes": {},
+            "id": 163,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 976.4949844902222,
+            "position_y": 321.30613583915635
+        },
+        {
+            "attributes": {},
+            "id": 164,
+            "name": 21,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 748.7046530362071,
+            "position_y": 1.1747553558242307
+        },
+        {
+            "attributes": {},
+            "id": 165,
+            "name": "P7",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 63.85940798175538,
+            "position_y": 357.3234736348414
+        },
+        {
+            "attributes": {},
+            "id": 174,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 314.97548986724945,
+            "position_y": 729.824697765778
+        },
+        {
+            "attributes": {},
+            "id": 177,
+            "name": "P3",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 512.9784540382443,
+            "position_y": 1.489809805040987
+        },
+        {
+            "attributes": {},
+            "id": 178,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 639.5830036970865,
+            "position_y": 634.6310299977223
+        },
+        {
+            "attributes": {},
+            "id": 179,
+            "name": 22,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 1.804500814745591,
+            "position_y": 562.1648848495525
+        },
+        {
+            "attributes": {},
+            "id": 180,
+            "name": "P3",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 637.2552510213136,
+            "position_y": 747.0648801806077
+        },
+        {
+            "attributes": {},
+            "id": 189,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 959.8333422127454,
+            "position_y": 689.8649387708172
+        },
+        {
+            "attributes": {},
+            "id": 192,
+            "name": "P4",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 29.662036638028578,
+            "position_y": 11.80654808909698
+        },
+        {
+            "attributes": {},
+            "id": 193,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 88.94512333225147,
+            "position_y": 963.7739772557368
+        },
+        {
+            "attributes": {},
+            "id": 194,
+            "name": 24,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 555.4363267059647,
+            "position_y": 306.2870211033606
+        },
+        {
+            "attributes": {},
+            "id": 195,
+            "name": "P4",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 883.991842137606,
+            "position_y": 16.459599081884548
+        },
+        {
+            "attributes": {},
+            "id": 204,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 821.9811520858715,
+            "position_y": 43.06850677520602
+        },
+        {
+            "attributes": {},
+            "id": 207,
+            "name": "T6",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 739.5193708448481,
+            "position_y": 75.20849138383956
+        },
+        {
+            "attributes": {},
+            "id": 208,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 58.02452436882055,
+            "position_y": 910.9341540672604
+        },
+        {
+            "attributes": {},
+            "id": 209,
+            "name": 25,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 530.3187581968858,
+            "position_y": 473.8302005284527
+        },
+        {
+            "attributes": {},
+            "id": 210,
+            "name": "P8",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 105.62889298753831,
+            "position_y": 480.5194753861327
+        },
+        {
+            "attributes": {},
+            "id": 219,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 299.93957293175623,
+            "position_y": 947.8276128666078
+        },
+        {
+            "attributes": {},
+            "id": 222,
+            "name": "O1",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 587.2768816707934,
+            "position_y": 146.1333737924061
+        },
+        {
+            "attributes": {},
+            "id": 223,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 711.3708105892935,
+            "position_y": 101.65068625180362
+        },
+        {
+            "attributes": {},
+            "id": 224,
+            "name": 29,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 143.38059363373745,
+            "position_y": 932.2249213179136
+        },
+        {
+            "attributes": {},
+            "id": 225,
+            "name": "O1",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 258.51851478581654,
+            "position_y": 185.81455377780065
+        },
+        {
+            "attributes": {},
+            "id": 234,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 718.8062984332258,
+            "position_y": 34.496551566264856
+        },
+        {
+            "attributes": {},
+            "id": 237,
+            "name": "O2",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 457.9969054885294,
+            "position_y": 252.24908770305586
+        },
+        {
+            "attributes": {},
+            "id": 238,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 728.438814195141,
+            "position_y": 144.1239195474442
+        },
+        {
+            "attributes": {},
+            "id": 239,
+            "name": 31,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 218.81762856017738,
+            "position_y": 870.3837664380947
+        },
+        {
+            "attributes": {},
+            "id": 240,
+            "name": "O2",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 863.3255726057536,
+            "position_y": 990.7254252602041
+        },
+        {
+            "attributes": {},
+            "id": 249,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 50.142526313815104,
+            "position_y": 104.66100259562916
+        },
+        {
+            "attributes": {},
+            "id": 252,
+            "name": "FZ",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 949.4905950213066,
+            "position_y": 812.0787538032081
+        },
+        {
+            "attributes": {},
+            "id": 253,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 895.2377202858448,
+            "position_y": 794.7436258838445
+        },
+        {
+            "attributes": {},
+            "id": 254,
+            "name": 9,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 888.0788179015223,
+            "position_y": 70.12416632032293
+        },
+        {
+            "attributes": {},
+            "id": 255,
+            "name": "Fz",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 785.8867562748393,
+            "position_y": 329.03375769921803
+        },
+        {
+            "attributes": {},
+            "id": 264,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 296.54562147404926,
+            "position_y": 997.5057172042663
+        },
+        {
+            "attributes": {},
+            "id": 267,
+            "name": "CZ",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 812.5432100738369,
+            "position_y": 698.3260131217204
+        },
+        {
+            "attributes": {},
+            "id": 268,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 31.61372709411847,
+            "position_y": 751.6090329067912
+        },
+        {
+            "attributes": {},
+            "id": 269,
+            "name": 16,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 291.32434754409275,
+            "position_y": 18.47766328894107
+        },
+        {
+            "attributes": {},
+            "id": 270,
+            "name": "Cz",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 256.9285298575476,
+            "position_y": 689.0101442662211
+        },
+        {
+            "attributes": {},
+            "id": 279,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 299.5692880323283,
+            "position_y": 483.9748948037288
+        },
+        {
+            "attributes": {},
+            "id": 282,
+            "name": "PZ",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 249.83281469986352,
+            "position_y": 522.8008419834222
+        },
+        {
+            "attributes": {},
+            "id": 283,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 18.92581981191166,
+            "position_y": 892.4218843712669
+        },
+        {
+            "attributes": {},
+            "id": 284,
+            "name": 23,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 719.5865270694849,
+            "position_y": 269.9639335588595
+        },
+        {
+            "attributes": {},
+            "id": 285,
+            "name": "Pz",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 564.4486732269985,
+            "position_y": 652.8639606198193
+        },
+        {
+            "attributes": {},
+            "id": 294,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 382.17049933575754,
+            "position_y": 916.2347077313316
+        },
+        {
+            "attributes": {},
+            "id": 297,
+            "name": "Red",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 300.83541600850197,
+            "position_y": 22.75598463831663
+        },
+        {
+            "attributes": {},
+            "id": 298,
+            "name": "red",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 66.99526460816297,
+            "position_y": 350.9299761968042
+        },
+        {
+            "attributes": {},
+            "id": 299,
+            "name": -1,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 666.5355065447735,
+            "position_y": 683.606067643018
+        },
+        {
+            "attributes": {},
+            "id": 300,
+            "name": "AFz",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 480.4262911098065,
+            "position_y": 999.8004954756635
+        },
+        {
+            "attributes": {},
+            "id": 309,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 576.3913084707036,
+            "position_y": 461.7877679459268
+        },
+        {
+            "attributes": {},
+            "id": 312,
+            "name": "Green",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 484.35063158599365,
+            "position_y": 643.5480679585824
+        },
+        {
+            "attributes": {},
+            "id": 313,
+            "name": "green",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 377.84533791305665,
+            "position_y": 834.4665117933491
+        },
+        {
+            "attributes": {},
+            "id": 314,
+            "name": -1,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 531.3077134428787,
+            "position_y": 34.30597813536096
+        },
+        {
+            "attributes": {},
+            "id": 315,
+            "name": "FCz",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 876.3787827749389,
+            "position_y": 166.32499461543503
+        },
+        {
+            "attributes": {},
+            "id": 324,
+            "name": "_",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 581.659060509285,
+            "position_y": 700.8624232802556
+        },
+        {
+            "attributes": {},
+            "id": 327,
+            "name": "DC-A",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 116.98908240326145,
+            "position_y": 155.2828619505031
+        },
+        {
+            "attributes": {},
+            "id": 328,
+            "name": "black",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 358.554655408751,
+            "position_y": 579.1107462834303
+        },
+        {
+            "attributes": {},
+            "id": 329,
+            "name": 65,
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 200.8320152421448,
+            "position_y": 207.95377126178792
+        },
+        {
+            "attributes": {},
+            "id": 330,
+            "name": "DC-A",
+            "namespace": "http://knova.ru/user/1490806075329",
+            "position_x": 333.3624548439488,
+            "position_y": 580.7247975377342
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {},
+            "id": 8,
+            "name": "is_a",
+            "source_node_id": 7,
+            "destination_node_id": 6
+        },
+        {
+            "attributes": {},
+            "id": 10,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 9
+        },
+        {
+            "attributes": {},
+            "id": 11,
+            "name": "is_a",
+            "source_node_id": 9,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 16,
+            "name": "has",
+            "source_node_id": 9,
+            "destination_node_id": 12
+        },
+        {
+            "attributes": {},
+            "id": 17,
+            "name": "has",
+            "source_node_id": 9,
+            "destination_node_id": 13
+        },
+        {
+            "attributes": {},
+            "id": 18,
+            "name": "has",
+            "source_node_id": 9,
+            "destination_node_id": 14
+        },
+        {
+            "attributes": {},
+            "id": 19,
+            "name": "has",
+            "source_node_id": 9,
+            "destination_node_id": 15
+        },
+        {
+            "attributes": {},
+            "id": 20,
+            "name": "is_a",
+            "source_node_id": 12,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 21,
+            "name": "is_a",
+            "source_node_id": 13,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 22,
+            "name": "is_a",
+            "source_node_id": 14,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 23,
+            "name": "is_a",
+            "source_node_id": 15,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 25,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 24
+        },
+        {
+            "attributes": {},
+            "id": 26,
+            "name": "is_a",
+            "source_node_id": 24,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 31,
+            "name": "has",
+            "source_node_id": 24,
+            "destination_node_id": 27
+        },
+        {
+            "attributes": {},
+            "id": 32,
+            "name": "has",
+            "source_node_id": 24,
+            "destination_node_id": 28
+        },
+        {
+            "attributes": {},
+            "id": 33,
+            "name": "has",
+            "source_node_id": 24,
+            "destination_node_id": 29
+        },
+        {
+            "attributes": {},
+            "id": 34,
+            "name": "has",
+            "source_node_id": 24,
+            "destination_node_id": 30
+        },
+        {
+            "attributes": {},
+            "id": 35,
+            "name": "is_a",
+            "source_node_id": 27,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 36,
+            "name": "is_a",
+            "source_node_id": 28,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 37,
+            "name": "is_a",
+            "source_node_id": 29,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 38,
+            "name": "is_a",
+            "source_node_id": 30,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 40,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 39
+        },
+        {
+            "attributes": {},
+            "id": 41,
+            "name": "is_a",
+            "source_node_id": 39,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 46,
+            "name": "has",
+            "source_node_id": 39,
+            "destination_node_id": 42
+        },
+        {
+            "attributes": {},
+            "id": 47,
+            "name": "has",
+            "source_node_id": 39,
+            "destination_node_id": 43
+        },
+        {
+            "attributes": {},
+            "id": 48,
+            "name": "has",
+            "source_node_id": 39,
+            "destination_node_id": 44
+        },
+        {
+            "attributes": {},
+            "id": 49,
+            "name": "has",
+            "source_node_id": 39,
+            "destination_node_id": 45
+        },
+        {
+            "attributes": {},
+            "id": 50,
+            "name": "is_a",
+            "source_node_id": 42,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 51,
+            "name": "is_a",
+            "source_node_id": 43,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 52,
+            "name": "is_a",
+            "source_node_id": 44,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 53,
+            "name": "is_a",
+            "source_node_id": 45,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 55,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 54
+        },
+        {
+            "attributes": {},
+            "id": 56,
+            "name": "is_a",
+            "source_node_id": 54,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 61,
+            "name": "has",
+            "source_node_id": 54,
+            "destination_node_id": 57
+        },
+        {
+            "attributes": {},
+            "id": 62,
+            "name": "has",
+            "source_node_id": 54,
+            "destination_node_id": 58
+        },
+        {
+            "attributes": {},
+            "id": 63,
+            "name": "has",
+            "source_node_id": 54,
+            "destination_node_id": 59
+        },
+        {
+            "attributes": {},
+            "id": 64,
+            "name": "has",
+            "source_node_id": 54,
+            "destination_node_id": 60
+        },
+        {
+            "attributes": {},
+            "id": 65,
+            "name": "is_a",
+            "source_node_id": 57,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 66,
+            "name": "is_a",
+            "source_node_id": 58,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 67,
+            "name": "is_a",
+            "source_node_id": 59,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 68,
+            "name": "is_a",
+            "source_node_id": 60,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 70,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 69
+        },
+        {
+            "attributes": {},
+            "id": 71,
+            "name": "is_a",
+            "source_node_id": 69,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 76,
+            "name": "has",
+            "source_node_id": 69,
+            "destination_node_id": 72
+        },
+        {
+            "attributes": {},
+            "id": 77,
+            "name": "has",
+            "source_node_id": 69,
+            "destination_node_id": 73
+        },
+        {
+            "attributes": {},
+            "id": 78,
+            "name": "has",
+            "source_node_id": 69,
+            "destination_node_id": 74
+        },
+        {
+            "attributes": {},
+            "id": 79,
+            "name": "has",
+            "source_node_id": 69,
+            "destination_node_id": 75
+        },
+        {
+            "attributes": {},
+            "id": 80,
+            "name": "is_a",
+            "source_node_id": 72,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 81,
+            "name": "is_a",
+            "source_node_id": 73,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 82,
+            "name": "is_a",
+            "source_node_id": 74,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 83,
+            "name": "is_a",
+            "source_node_id": 75,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 85,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 84
+        },
+        {
+            "attributes": {},
+            "id": 86,
+            "name": "is_a",
+            "source_node_id": 84,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 91,
+            "name": "has",
+            "source_node_id": 84,
+            "destination_node_id": 87
+        },
+        {
+            "attributes": {},
+            "id": 92,
+            "name": "has",
+            "source_node_id": 84,
+            "destination_node_id": 88
+        },
+        {
+            "attributes": {},
+            "id": 93,
+            "name": "has",
+            "source_node_id": 84,
+            "destination_node_id": 89
+        },
+        {
+            "attributes": {},
+            "id": 94,
+            "name": "has",
+            "source_node_id": 84,
+            "destination_node_id": 90
+        },
+        {
+            "attributes": {},
+            "id": 95,
+            "name": "is_a",
+            "source_node_id": 87,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 96,
+            "name": "is_a",
+            "source_node_id": 88,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 97,
+            "name": "is_a",
+            "source_node_id": 89,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 98,
+            "name": "is_a",
+            "source_node_id": 90,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 100,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 99
+        },
+        {
+            "attributes": {},
+            "id": 101,
+            "name": "is_a",
+            "source_node_id": 99,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 106,
+            "name": "has",
+            "source_node_id": 99,
+            "destination_node_id": 102
+        },
+        {
+            "attributes": {},
+            "id": 107,
+            "name": "has",
+            "source_node_id": 99,
+            "destination_node_id": 103
+        },
+        {
+            "attributes": {},
+            "id": 108,
+            "name": "has",
+            "source_node_id": 99,
+            "destination_node_id": 104
+        },
+        {
+            "attributes": {},
+            "id": 109,
+            "name": "has",
+            "source_node_id": 99,
+            "destination_node_id": 105
+        },
+        {
+            "attributes": {},
+            "id": 110,
+            "name": "is_a",
+            "source_node_id": 102,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 111,
+            "name": "is_a",
+            "source_node_id": 103,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 112,
+            "name": "is_a",
+            "source_node_id": 104,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 113,
+            "name": "is_a",
+            "source_node_id": 105,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 115,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 114
+        },
+        {
+            "attributes": {},
+            "id": 116,
+            "name": "is_a",
+            "source_node_id": 114,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 121,
+            "name": "has",
+            "source_node_id": 114,
+            "destination_node_id": 117
+        },
+        {
+            "attributes": {},
+            "id": 122,
+            "name": "has",
+            "source_node_id": 114,
+            "destination_node_id": 118
+        },
+        {
+            "attributes": {},
+            "id": 123,
+            "name": "has",
+            "source_node_id": 114,
+            "destination_node_id": 119
+        },
+        {
+            "attributes": {},
+            "id": 124,
+            "name": "has",
+            "source_node_id": 114,
+            "destination_node_id": 120
+        },
+        {
+            "attributes": {},
+            "id": 125,
+            "name": "is_a",
+            "source_node_id": 117,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 126,
+            "name": "is_a",
+            "source_node_id": 118,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 127,
+            "name": "is_a",
+            "source_node_id": 119,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 128,
+            "name": "is_a",
+            "source_node_id": 120,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 130,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 129
+        },
+        {
+            "attributes": {},
+            "id": 131,
+            "name": "is_a",
+            "source_node_id": 129,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 136,
+            "name": "has",
+            "source_node_id": 129,
+            "destination_node_id": 132
+        },
+        {
+            "attributes": {},
+            "id": 137,
+            "name": "has",
+            "source_node_id": 129,
+            "destination_node_id": 133
+        },
+        {
+            "attributes": {},
+            "id": 138,
+            "name": "has",
+            "source_node_id": 129,
+            "destination_node_id": 134
+        },
+        {
+            "attributes": {},
+            "id": 139,
+            "name": "has",
+            "source_node_id": 129,
+            "destination_node_id": 135
+        },
+        {
+            "attributes": {},
+            "id": 140,
+            "name": "is_a",
+            "source_node_id": 132,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 141,
+            "name": "is_a",
+            "source_node_id": 133,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 142,
+            "name": "is_a",
+            "source_node_id": 134,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 143,
+            "name": "is_a",
+            "source_node_id": 135,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 145,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 144
+        },
+        {
+            "attributes": {},
+            "id": 146,
+            "name": "is_a",
+            "source_node_id": 144,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 151,
+            "name": "has",
+            "source_node_id": 144,
+            "destination_node_id": 147
+        },
+        {
+            "attributes": {},
+            "id": 152,
+            "name": "has",
+            "source_node_id": 144,
+            "destination_node_id": 148
+        },
+        {
+            "attributes": {},
+            "id": 153,
+            "name": "has",
+            "source_node_id": 144,
+            "destination_node_id": 149
+        },
+        {
+            "attributes": {},
+            "id": 154,
+            "name": "has",
+            "source_node_id": 144,
+            "destination_node_id": 150
+        },
+        {
+            "attributes": {},
+            "id": 155,
+            "name": "is_a",
+            "source_node_id": 147,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 156,
+            "name": "is_a",
+            "source_node_id": 148,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 157,
+            "name": "is_a",
+            "source_node_id": 149,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 158,
+            "name": "is_a",
+            "source_node_id": 150,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 160,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 159
+        },
+        {
+            "attributes": {},
+            "id": 161,
+            "name": "is_a",
+            "source_node_id": 159,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 166,
+            "name": "has",
+            "source_node_id": 159,
+            "destination_node_id": 162
+        },
+        {
+            "attributes": {},
+            "id": 167,
+            "name": "has",
+            "source_node_id": 159,
+            "destination_node_id": 163
+        },
+        {
+            "attributes": {},
+            "id": 168,
+            "name": "has",
+            "source_node_id": 159,
+            "destination_node_id": 164
+        },
+        {
+            "attributes": {},
+            "id": 169,
+            "name": "has",
+            "source_node_id": 159,
+            "destination_node_id": 165
+        },
+        {
+            "attributes": {},
+            "id": 170,
+            "name": "is_a",
+            "source_node_id": 162,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 171,
+            "name": "is_a",
+            "source_node_id": 163,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 172,
+            "name": "is_a",
+            "source_node_id": 164,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 173,
+            "name": "is_a",
+            "source_node_id": 165,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 175,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 174
+        },
+        {
+            "attributes": {},
+            "id": 176,
+            "name": "is_a",
+            "source_node_id": 174,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 181,
+            "name": "has",
+            "source_node_id": 174,
+            "destination_node_id": 177
+        },
+        {
+            "attributes": {},
+            "id": 182,
+            "name": "has",
+            "source_node_id": 174,
+            "destination_node_id": 178
+        },
+        {
+            "attributes": {},
+            "id": 183,
+            "name": "has",
+            "source_node_id": 174,
+            "destination_node_id": 179
+        },
+        {
+            "attributes": {},
+            "id": 184,
+            "name": "has",
+            "source_node_id": 174,
+            "destination_node_id": 180
+        },
+        {
+            "attributes": {},
+            "id": 185,
+            "name": "is_a",
+            "source_node_id": 177,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 186,
+            "name": "is_a",
+            "source_node_id": 178,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 187,
+            "name": "is_a",
+            "source_node_id": 179,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 188,
+            "name": "is_a",
+            "source_node_id": 180,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 190,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 189
+        },
+        {
+            "attributes": {},
+            "id": 191,
+            "name": "is_a",
+            "source_node_id": 189,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 196,
+            "name": "has",
+            "source_node_id": 189,
+            "destination_node_id": 192
+        },
+        {
+            "attributes": {},
+            "id": 197,
+            "name": "has",
+            "source_node_id": 189,
+            "destination_node_id": 193
+        },
+        {
+            "attributes": {},
+            "id": 198,
+            "name": "has",
+            "source_node_id": 189,
+            "destination_node_id": 194
+        },
+        {
+            "attributes": {},
+            "id": 199,
+            "name": "has",
+            "source_node_id": 189,
+            "destination_node_id": 195
+        },
+        {
+            "attributes": {},
+            "id": 200,
+            "name": "is_a",
+            "source_node_id": 192,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 201,
+            "name": "is_a",
+            "source_node_id": 193,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 202,
+            "name": "is_a",
+            "source_node_id": 194,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 203,
+            "name": "is_a",
+            "source_node_id": 195,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 205,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 204
+        },
+        {
+            "attributes": {},
+            "id": 206,
+            "name": "is_a",
+            "source_node_id": 204,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 211,
+            "name": "has",
+            "source_node_id": 204,
+            "destination_node_id": 207
+        },
+        {
+            "attributes": {},
+            "id": 212,
+            "name": "has",
+            "source_node_id": 204,
+            "destination_node_id": 208
+        },
+        {
+            "attributes": {},
+            "id": 213,
+            "name": "has",
+            "source_node_id": 204,
+            "destination_node_id": 209
+        },
+        {
+            "attributes": {},
+            "id": 214,
+            "name": "has",
+            "source_node_id": 204,
+            "destination_node_id": 210
+        },
+        {
+            "attributes": {},
+            "id": 215,
+            "name": "is_a",
+            "source_node_id": 207,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 216,
+            "name": "is_a",
+            "source_node_id": 208,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 217,
+            "name": "is_a",
+            "source_node_id": 209,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 218,
+            "name": "is_a",
+            "source_node_id": 210,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 220,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 219
+        },
+        {
+            "attributes": {},
+            "id": 221,
+            "name": "is_a",
+            "source_node_id": 219,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 226,
+            "name": "has",
+            "source_node_id": 219,
+            "destination_node_id": 222
+        },
+        {
+            "attributes": {},
+            "id": 227,
+            "name": "has",
+            "source_node_id": 219,
+            "destination_node_id": 223
+        },
+        {
+            "attributes": {},
+            "id": 228,
+            "name": "has",
+            "source_node_id": 219,
+            "destination_node_id": 224
+        },
+        {
+            "attributes": {},
+            "id": 229,
+            "name": "has",
+            "source_node_id": 219,
+            "destination_node_id": 225
+        },
+        {
+            "attributes": {},
+            "id": 230,
+            "name": "is_a",
+            "source_node_id": 222,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 231,
+            "name": "is_a",
+            "source_node_id": 223,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 232,
+            "name": "is_a",
+            "source_node_id": 224,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 233,
+            "name": "is_a",
+            "source_node_id": 225,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 235,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 234
+        },
+        {
+            "attributes": {},
+            "id": 236,
+            "name": "is_a",
+            "source_node_id": 234,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 241,
+            "name": "has",
+            "source_node_id": 234,
+            "destination_node_id": 237
+        },
+        {
+            "attributes": {},
+            "id": 242,
+            "name": "has",
+            "source_node_id": 234,
+            "destination_node_id": 238
+        },
+        {
+            "attributes": {},
+            "id": 243,
+            "name": "has",
+            "source_node_id": 234,
+            "destination_node_id": 239
+        },
+        {
+            "attributes": {},
+            "id": 244,
+            "name": "has",
+            "source_node_id": 234,
+            "destination_node_id": 240
+        },
+        {
+            "attributes": {},
+            "id": 245,
+            "name": "is_a",
+            "source_node_id": 237,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 246,
+            "name": "is_a",
+            "source_node_id": 238,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 247,
+            "name": "is_a",
+            "source_node_id": 239,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 248,
+            "name": "is_a",
+            "source_node_id": 240,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 250,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 249
+        },
+        {
+            "attributes": {},
+            "id": 251,
+            "name": "is_a",
+            "source_node_id": 249,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 256,
+            "name": "has",
+            "source_node_id": 249,
+            "destination_node_id": 252
+        },
+        {
+            "attributes": {},
+            "id": 257,
+            "name": "has",
+            "source_node_id": 249,
+            "destination_node_id": 253
+        },
+        {
+            "attributes": {},
+            "id": 258,
+            "name": "has",
+            "source_node_id": 249,
+            "destination_node_id": 254
+        },
+        {
+            "attributes": {},
+            "id": 259,
+            "name": "has",
+            "source_node_id": 249,
+            "destination_node_id": 255
+        },
+        {
+            "attributes": {},
+            "id": 260,
+            "name": "is_a",
+            "source_node_id": 252,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 261,
+            "name": "is_a",
+            "source_node_id": 253,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 262,
+            "name": "is_a",
+            "source_node_id": 254,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 263,
+            "name": "is_a",
+            "source_node_id": 255,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 265,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 264
+        },
+        {
+            "attributes": {},
+            "id": 266,
+            "name": "is_a",
+            "source_node_id": 264,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 271,
+            "name": "has",
+            "source_node_id": 264,
+            "destination_node_id": 267
+        },
+        {
+            "attributes": {},
+            "id": 272,
+            "name": "has",
+            "source_node_id": 264,
+            "destination_node_id": 268
+        },
+        {
+            "attributes": {},
+            "id": 273,
+            "name": "has",
+            "source_node_id": 264,
+            "destination_node_id": 269
+        },
+        {
+            "attributes": {},
+            "id": 274,
+            "name": "has",
+            "source_node_id": 264,
+            "destination_node_id": 270
+        },
+        {
+            "attributes": {},
+            "id": 275,
+            "name": "is_a",
+            "source_node_id": 267,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 276,
+            "name": "is_a",
+            "source_node_id": 268,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 277,
+            "name": "is_a",
+            "source_node_id": 269,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 278,
+            "name": "is_a",
+            "source_node_id": 270,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 280,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 279
+        },
+        {
+            "attributes": {},
+            "id": 281,
+            "name": "is_a",
+            "source_node_id": 279,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 286,
+            "name": "has",
+            "source_node_id": 279,
+            "destination_node_id": 282
+        },
+        {
+            "attributes": {},
+            "id": 287,
+            "name": "has",
+            "source_node_id": 279,
+            "destination_node_id": 283
+        },
+        {
+            "attributes": {},
+            "id": 288,
+            "name": "has",
+            "source_node_id": 279,
+            "destination_node_id": 284
+        },
+        {
+            "attributes": {},
+            "id": 289,
+            "name": "has",
+            "source_node_id": 279,
+            "destination_node_id": 285
+        },
+        {
+            "attributes": {},
+            "id": 290,
+            "name": "is_a",
+            "source_node_id": 282,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 291,
+            "name": "is_a",
+            "source_node_id": 283,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 292,
+            "name": "is_a",
+            "source_node_id": 284,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 293,
+            "name": "is_a",
+            "source_node_id": 285,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 295,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 294
+        },
+        {
+            "attributes": {},
+            "id": 296,
+            "name": "is_a",
+            "source_node_id": 294,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 301,
+            "name": "has",
+            "source_node_id": 294,
+            "destination_node_id": 297
+        },
+        {
+            "attributes": {},
+            "id": 302,
+            "name": "has",
+            "source_node_id": 294,
+            "destination_node_id": 298
+        },
+        {
+            "attributes": {},
+            "id": 303,
+            "name": "has",
+            "source_node_id": 294,
+            "destination_node_id": 299
+        },
+        {
+            "attributes": {},
+            "id": 304,
+            "name": "has",
+            "source_node_id": 294,
+            "destination_node_id": 300
+        },
+        {
+            "attributes": {},
+            "id": 305,
+            "name": "is_a",
+            "source_node_id": 297,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 306,
+            "name": "is_a",
+            "source_node_id": 298,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 307,
+            "name": "is_a",
+            "source_node_id": 299,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 308,
+            "name": "is_a",
+            "source_node_id": 300,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 310,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 309
+        },
+        {
+            "attributes": {},
+            "id": 311,
+            "name": "is_a",
+            "source_node_id": 309,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 316,
+            "name": "has",
+            "source_node_id": 309,
+            "destination_node_id": 312
+        },
+        {
+            "attributes": {},
+            "id": 317,
+            "name": "has",
+            "source_node_id": 309,
+            "destination_node_id": 313
+        },
+        {
+            "attributes": {},
+            "id": 318,
+            "name": "has",
+            "source_node_id": 309,
+            "destination_node_id": 314
+        },
+        {
+            "attributes": {},
+            "id": 319,
+            "name": "has",
+            "source_node_id": 309,
+            "destination_node_id": 315
+        },
+        {
+            "attributes": {},
+            "id": 320,
+            "name": "is_a",
+            "source_node_id": 312,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 321,
+            "name": "is_a",
+            "source_node_id": 313,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 322,
+            "name": "is_a",
+            "source_node_id": 314,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 323,
+            "name": "is_a",
+            "source_node_id": 315,
+            "destination_node_id": 2
+        },
+        {
+            "attributes": {},
+            "id": 325,
+            "name": "has",
+            "source_node_id": 7,
+            "destination_node_id": 324
+        },
+        {
+            "attributes": {},
+            "id": 326,
+            "name": "is_a",
+            "source_node_id": 324,
+            "destination_node_id": 5
+        },
+        {
+            "attributes": {},
+            "id": 331,
+            "name": "has",
+            "source_node_id": 324,
+            "destination_node_id": 327
+        },
+        {
+            "attributes": {},
+            "id": 332,
+            "name": "has",
+            "source_node_id": 324,
+            "destination_node_id": 328
+        },
+        {
+            "attributes": {},
+            "id": 333,
+            "name": "has",
+            "source_node_id": 324,
+            "destination_node_id": 329
+        },
+        {
+            "attributes": {},
+            "id": 334,
+            "name": "has",
+            "source_node_id": 324,
+            "destination_node_id": 330
+        },
+        {
+            "attributes": {},
+            "id": 335,
+            "name": "is_a",
+            "source_node_id": 327,
+            "destination_node_id": 1
+        },
+        {
+            "attributes": {},
+            "id": 336,
+            "name": "is_a",
+            "source_node_id": 328,
+            "destination_node_id": 3
+        },
+        {
+            "attributes": {},
+            "id": 337,
+            "name": "is_a",
+            "source_node_id": 329,
+            "destination_node_id": 4
+        },
+        {
+            "attributes": {},
+            "id": 338,
+            "name": "is_a",
+            "source_node_id": 330,
+            "destination_node_id": 2
+        }
+    ],
+    "last_id": 338
+}

@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "build.sh debug",
-    "release": "build.sh release"
+    "release": "build.sh release",
+    "postinstall": "patch-package"
   },
   "author": "Konstantin Ryabinin",
   "license": "",
@@ -16,6 +17,7 @@
     "jquery-contextmenu": "^2.8.1",
     "jquery-ui": "^1.13.2",
     "jquery.cookie": "^1.4.1",
+    "patch-package": "^6.5.0",
     "split.js": "^1.5.11"
   },
   "devDependencies": {
