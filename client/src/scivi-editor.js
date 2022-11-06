@@ -216,30 +216,30 @@ SciViEditor.prototype.run = function (mode)
         this.command_socket = new WebSocket("ws://" + addr + ":" + port);
         this.command_socket.onopen = (event) => 
         {
-            console.log('Connected to command server at', addr, ":", port);
+            console.log("Connected to command server at", addr, ":", port);
         };
         this.command_socket.onclose = (event) => 
         {
             if (event.wasClean)
                 console.log(`Connection with command server was closed. Code=${event.code}, reason = ${event.reason}`);
             else
-            alert('Connection was broken with ' + addr + ":" + port);
+                alert("Connection was broken with " + addr + ":" + port);
         };
         this.command_socket.onerror = (error) => 
         {
-            alert('Command Server Error. See log for details');
-            console.log('Command Server Error', error);
+            alert("Command Server Error. See log for details");
+            console.log("Command Server Error", error);
         };
         this.command_socket.onmessage = (event) =>
         {
             var msg = JSON.parse(event.data);
             switch(msg.command)
             {
-                case 'wait_for_initialization': {
+                case "wait_for_initialization": {
                     let progress = msg.progress;
                     $("#scivi_load_progressbar").progressbar({value: progress});
                 } break;
-                default: console.warn('Unknown message from command server', msg); break;
+                default: console.warn("Unknown message from command server", msg); break;
             }
         };
     }
