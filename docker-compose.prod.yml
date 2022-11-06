@@ -1,5 +1,16 @@
 version: "3.7"
 services:
+  db:
+    image: postgres:14-alpine
+    volumes:
+      - pgsql:/var/lib/postgresql/data
+      - type: tmpfs
+        target: /dev/shm
+        tmpfs:
+          size: 3000000000
+    environment:
+      - POSTGRES_USER=semograph
+      - POSTGRES_PASSWORD=${PROD_DATABASE_PASSWORD}
 
   scivi:
     image: docker.semograph.com/semograph/scivi/app:${CI_COMMIT_REF_NAME}
@@ -14,3 +25,6 @@ services:
       resources:
         limits:
           memory: 512m
+
+volumes:
+  pgsql:
