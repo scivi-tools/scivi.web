@@ -238,7 +238,7 @@
         },
         {
             "attributes": {
-                "path": "lib/mmaps/wfpm.js"
+                "path": "lib/mmaps/wfpm2.js"
             },
             "id": "73",
             "name": "WFPM Worker",
