@@ -129,6 +129,10 @@ def paleo_page():
 def ttype_page():
     return LoadEditorPage('ttype'), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route("/arduino")
+def arduino_page():
+    return LoadEditorPage('arduino'), 200, {'Content-Type': 'text/html; charset=utf-8'}
+
 @app.route("/scivi-editor-main.js")
 def editor_main():
     return getServerInst().get_editor_js(), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
