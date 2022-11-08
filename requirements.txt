@@ -3,3 +3,4 @@ gunicorn
 vosk
 numpy
 websockets
+serial
