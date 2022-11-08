@@ -107,8 +107,10 @@ class Execer(Thread):
             cl, exc, tb = sys.exc_info()
             raise OperatorError(name, path, traceback.extract_tb(tb)[-1][1], cl.__name__ + ": " + str(e))
 
-    def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, hasInputs: dict, outputs: dict, settings, cache, node_state: dict):
-        context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
+    def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, hasInputs: dict, outputs: dict,
+                     settings, settingsVal, cache, node_state: dict):
+        context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, \
+                    "SETTINGS": settings, "SETTINGS_VAL": settingsVal, \
                     "CACHE": cache, "GLOB": self.glob, "STATE": node_state,\
                     "MODE": mode.name, "PROCESS": self.process, "PUBLISH_FILE": self.publish_file }
         if "inline" in workerNode.attributes:
@@ -130,7 +132,8 @@ class Execer(Thread):
             self.cache[instNode.id] = {}
         if not instNode.id in self.nodeStates:
             self.nodeStates[instNode.id] = {}
-        self.execute_code(workerNode, mode, inputs, hasInputs, outputs, instNode.attributes["settingsVal"],
+        self.execute_code(workerNode, mode, inputs, hasInputs, outputs,
+                          instNode.attributes.get("settings"), instNode.attributes.get("settingsVal"),
                           self.cache[instNode.id], self.nodeStates[instNode.id])
         self.store_outputs(instNode, protoNode, outputs)
 

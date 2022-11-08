@@ -248,6 +248,20 @@ def scan_ssdp():
     else:
         return "Not found", 404
 
+@app.route("/scan_serial")
+def scan_serial():
+    try:
+        res = getServerInst().scan_serial()
+    except Exception as e:
+        print(traceback.format_exc())
+        res = None
+    if res is not None:
+        resp = jsonify(res)
+        resp.status_code = 200
+        return resp
+    else:
+        return "Not found", 404
+
 @app.after_request
 def add_header(response):
     response.cache_control.max_age = 0

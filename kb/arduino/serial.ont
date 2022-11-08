@@ -1,5 +1,5 @@
 {
-    "last_id": "24",
+    "last_id": "27",
     "namespaces": {
         "default": "http://knova.ru/user/1667779524903",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -15,8 +15,8 @@
             "id": "1",
             "name": "DataSource",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": -38,
-            "position_y": -263
+            "position_x": 298,
+            "position_y": 255
         },
         {
             "attributes": {
@@ -24,26 +24,26 @@
             "id": "2",
             "name": "Root",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": -15,
-            "position_y": -318
+            "position_x": 321,
+            "position_y": 200
         },
         {
             "attributes": {
             },
             "id": "3",
-            "name": "Serial",
+            "name": "Serial Port",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": -21,
-            "position_y": -206
+            "position_x": 306,
+            "position_y": 312
         },
         {
             "attributes": {
             },
             "id": "4",
-            "name": "Path",
+            "name": "Port",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 251,
+            "position_y": 367
         },
         {
             "attributes": {
@@ -51,8 +51,8 @@
             "id": "5",
             "name": "String",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 365,
+            "position_y": 419
         },
         {
             "attributes": {
@@ -60,8 +60,8 @@
             "id": "6",
             "name": "Type",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": -1,
-            "position_y": -41
+            "position_x": 288,
+            "position_y": 476
         },
         {
             "attributes": {
@@ -69,8 +69,8 @@
             "id": "7",
             "name": "Data",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": 40,
-            "position_y": -158
+            "position_x": 365,
+            "position_y": 366
         },
         {
             "attributes": {
@@ -78,8 +78,8 @@
             "id": "8",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": -136,
-            "position_y": -206
+            "position_x": 200,
+            "position_y": 313
         },
         {
             "attributes": {
@@ -87,8 +87,8 @@
             "id": "9",
             "name": "Output",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": 91,
-            "position_y": -208
+            "position_x": 427,
+            "position_y": 310
         },
         {
             "attributes": {
@@ -97,8 +97,8 @@
             "id": "19",
             "name": "Serial Worker",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": 189,
-            "position_y": -275
+            "position_x": 525,
+            "position_y": 243
         },
         {
             "attributes": {
@@ -106,8 +106,8 @@
             "id": "20",
             "name": "ServerSideWorker",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": 180,
-            "position_y": -318
+            "position_x": 516,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -115,8 +115,17 @@
             "id": "21",
             "name": "Python",
             "namespace": "http://knova.ru/user/1667779524903",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 587,
+            "position_y": 299
+        },
+        {
+            "attributes": {
+            },
+            "id": "25",
+            "name": "Serial",
+            "namespace": "http://knova.ru/user/1667779524903",
+            "position_x": 240,
+            "position_y": 423
         }
     ],
     "relations": [
@@ -155,15 +164,6 @@
             "name": "has",
             "namespace": "http://knova.ru/user/1667779524903",
             "source_node_id": "3"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "5",
-            "id": "14",
-            "name": "is_a",
-            "namespace": "http://knova.ru/user/1667779524903",
-            "source_node_id": "4"
         },
         {
             "attributes": {
@@ -227,6 +227,24 @@
             "name": "language",
             "namespace": "http://knova.ru/user/1667779524903",
             "source_node_id": "19"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "25",
+            "id": "26",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1667779524903",
+            "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "27",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1667779524903",
+            "source_node_id": "25"
         }
     ],
     "visualize_ont_path": ""

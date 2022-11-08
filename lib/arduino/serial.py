@@ -4,7 +4,7 @@
 import serial
 
 if "serial" not in CACHE:
-    CACHE["serial"] = serial.Serial(SETTINGS_VAL["Path"], 9600, timeout = 1)
+    CACHE["serial"] = serial.Serial(SETTINGS["Port"][int(SETTINGS_VAL["Port"])], 9600, timeout = 1)
 
 s = CACHE["serial"]
 

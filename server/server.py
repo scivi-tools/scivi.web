@@ -7,6 +7,7 @@ import re
 import importlib
 import datetime
 import socket
+import serial.tools.list_ports
 from typing import Dict, List, Tuple, Optional
 
 import websockets
@@ -592,5 +593,14 @@ class SciViServer:
     def scan_ssdp(self):
         self.mutex.acquire()
         result = self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")
+        self.mutex.release()
+        return result
+
+    def scan_serial(self):
+        self.mutex.acquire()
+        ports = serial.tools.list_ports.comports()
+        result = []
+        for p in ports:
+            result.append(p.device)
         self.mutex.release()
         return result

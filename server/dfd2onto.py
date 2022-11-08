@@ -267,6 +267,7 @@ class DFD2Onto:
             instanceNode = self.instanciate_node(motherNode, hostNode, instNmb, \
                                                  { "settingsVal": self.get_dfd_data(dfdNode, "settingsVal"), \
                                                    "settingsType": self.get_dfd_data(dfdNode, "settingsType"), \
+                                                   "settings": self.get_dfd_data(dfdNode, "settings"), \
                                                    "dfd": dfdNode["id"] }, \
                                                  result, resultI, resultO)
             resultNodesArr[dfdNode["id"]] = instanceNode
