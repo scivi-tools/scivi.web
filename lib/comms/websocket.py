@@ -70,7 +70,7 @@ if MODE == "INITIALIZATION":
         GLOB["DataWebSocketTXCount"] += 1
 
 elif MODE == "RUNNING":
-    addr = SETTINGS_VAL["Node Address"]
+    addr = str(SETTINGS_VAL["Node Address"])
 
     if HAS_INPUT["TX"]:
         if addr not in GLOB["DataWebSocket-TX"]:
