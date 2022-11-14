@@ -29,6 +29,8 @@ var Split = require("split.js");
 var D3NE = require("d3-node-editor");
 var FileSaver = require("file-saver");
 
+window.SCIVI = require("./scivi-functions.js");
+
 const VISUALIZATION_MODE = 1;
 const IOT_PROGRAMMING_MODE = 2;
 const MIXED_MODE = 3;
