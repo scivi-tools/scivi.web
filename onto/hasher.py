@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from onto.onto import Node, Onto
+from typing import List
 
 
 class OntoHasher:
     '''
-    The OntoHasher class assigns to each node a semantic UID that depends on the semantic structure.
-    This UID is not changed by merging ontologies (like the reguar ID does), so it can be used as
-    a consistent identifier of node accross different use-cases of corresponding small ontology
+    The OntoHasher class assigns to nodes, which represent operators, semantic UIDs,
+    which depend on operators' signatures.
+    These UIDs are not changed by merging ontologies (like the reguar IDs do), so they can be used as
+    consistent identifiers of operators accross different use-cases of corresponding small ontology
     (when this small ontology is merged into different über-ontologies).
     '''
 
@@ -38,34 +40,104 @@ class OntoHasher:
             255                                                                        \
         ]
         self.onto = onto
-        self.prototypes = self.onto.get_nodes_by_name("Input")
-        self.prototypes.extend(self.onto.get_nodes_by_name("Output"))
-        self.prototypes.extend(self.onto.get_nodes_by_name("Setting"))
         for node in self.onto.nodes:
-            uid = self.calc_uid(node)
-            clash = self.get_node(uid)
-            if clash:
-                print("WARNING: UID <%d> duplication for nodes <%s> and <%s>" % (uid, node.name, clash.name))
-            node.UID = uid
+            if self.is_operator(node):
+                uid = self.calc_uid(node)
+                clash = self.get_node(uid)
+                if clash:
+                    print("WARNING: UID <%d> duplication for nodes <%s> and <%s>" % (uid, node.name, clash.name))
+                node.UID = uid
 
-    def calc_uid(self, node: Node):
+    def calc_uid(self, node: Node) -> int:
         '''
         Calculate UID for given node.
         @param node - node to calculate UID for.
         @return UID of node.
         '''
-        protos = self.onto.get_nodes_linked_from(node, "is_a")
-        keyName = node.name
-        for proto in protos:
-            if proto in self.prototypes:
-                owners = self.onto.get_nodes_linked_to(node, "has")
-                for owner in owners:
-                    keyName += owner.name
-                keyName += proto.name
-                break
-        return self.hash_key(keyName)
+        return self.hash_key(self.get_op_signature(node))
 
-    def get_node(self, uid):
+    def is_operator(self, node: Node) -> bool:
+        '''
+        Check if given node is an operator.
+        @param node - node to check.
+        @return true if operator, false if not.
+        '''
+        protos = self.onto.get_nodes_linked_from(node, "is_a")
+        result = False
+        for proto in protos:
+            if proto.name == "Root": # FIXME: this should be "Operator", not "Root", but for now the engine and knowledge base are not yet refactored.
+                result = True
+            else:
+                result = self.is_operator(proto)
+            if result:
+                break
+        return result
+
+    def get_op_signature(self, node: Node) -> str:
+        '''
+        Assemble signature of operator.
+        @param node - node representing operator.
+        @return operator's signature as string.
+        '''
+        return node.name + \
+               self.dump_signature_part(node, "Input", "@I") + \
+               self.dump_signature_part(node, "Setting", "@S") + \
+               self.dump_signature_part(node, "Output", "@O")
+
+    def dump_signature_part(self, node: Node, partName: str, partID: str) -> str:
+        '''
+        Dump part of operator's signature to string.
+        @param node - node representing operator.
+        @param partName - name of signature part (Input, Setting, or Output).
+        @param partID - ID of signature part (@I, @S, @O).
+        @return string representation of the corresponding signature part.
+        '''
+        result = ""
+        part = self.onto.get_typed_nodes_linked_from(node, "has", partName)
+        if len(part) > 0:
+            partTypes = []
+            for p in part:
+                partType = self.get_type(p)
+                if partType:
+                    partTypes.append(partType)
+            if len(partTypes) > 0:
+                result += partID + ":".join(sorted(partTypes))
+        return result
+
+    def get_type(self, node: Node) -> str:
+        '''
+        Get type of given node.
+        @param node - node representing Input, Setting, or Output.
+        @return string representation of type of given node or None if no type presented in ontology.
+        '''
+        result = []
+        protos = self.onto.get_nodes_linked_from(node, "is_a")
+        for proto in protos:
+            result += self.get_type_taxonomy(proto)
+        bases = self.onto.get_nodes_linked_from(node, "base_type")
+        for base in bases:
+            result += self.get_type_taxonomy(base)
+        return ">".join(result)
+
+    def get_type_taxonomy(self, node: Node) -> List[str]:
+        '''
+        Return full taxonomy of types for given type.
+        @param node - node representing type.
+        @return array of nodes' names building the type hierarchy, starting with the given node and up to the deepest type.
+                If given node does not represent a type, empty array is returned.
+        '''
+        result = []
+        protos = self.onto.get_nodes_linked_from(node, "is_a")
+        for proto in protos:
+            if proto.name == "Type":
+                return [ node.name ]
+            else:
+                result += self.get_type_taxonomy(proto)
+        if len(result) > 0:
+            result = [ node.name ] + result
+        return result
+
+    def get_node(self, uid) -> Node:
         '''
         Get node by UID.
         @param uid - UID of node.
@@ -76,7 +148,7 @@ class OntoHasher:
                 return node
         return None
 
-    def hash_key(self, key):
+    def hash_key(self, key) -> int:
         '''
         Calculate hash of given string.
         @param key - string to hash.
