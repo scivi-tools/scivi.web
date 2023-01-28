@@ -11,6 +11,7 @@ from typing import Dict, List, Tuple, Optional
 
 import websockets
 from onto.merge import OntoMerger
+from onto.hasher import OntoHasher
 from onto.onto import Node, Onto, OntoEncoder, first
 from enum import Enum
 import uuid
@@ -116,6 +117,7 @@ class SciViServer:
 
     def setOnto(self, pathToOnto):
         self.onto = OntoMerger(pathToOnto).onto
+        OntoHasher(self.onto)
         self.loc = "eng"
         self.tree = ""
         self.treeID = 1

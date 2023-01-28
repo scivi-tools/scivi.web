@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from onto.onto import Node, Onto
+from onto.onto import Node, Onto, first
 from typing import List
+import hashlib
 
 
 class OntoHasher:
@@ -41,12 +42,29 @@ class OntoHasher:
         ]
         self.onto = onto
         for node in self.onto.nodes:
-            if self.is_operator(node):
+            if self.is_operator(node) and first(self.onto.get_nodes_linked_to(node, "is_instance")):
                 uid = self.calc_uid(node)
                 clash = self.get_node(uid)
                 if clash:
                     print("WARNING: UID <%d> duplication for nodes <%s> and <%s>" % (uid, node.name, clash.name))
                 node.UID = uid
+
+    def calc_fingerprint(self, UIDs: List[int]) -> str:
+        '''
+        Calculate fingerprint of a set of operators by given UIDs.
+        @param UIDs - array of operator's UIDs.
+        @return globally unique fingerprint of operators with UIDs from a given set,
+                if they all are presented in the ontology of Hasher.
+                None if at least one UID was not found in the ontology of Hasher.
+        '''
+        opSigns = []
+        for uid in UIDs:
+            op = self.get_node(uid)
+            if not op:
+                return None
+            opSigns.append(self.get_op_signature(op))
+        fp = "".join(sorted(opSigns))
+        return hashlib.md5(bytes(fp, "UTF-8")).hexdigest()
 
     def calc_uid(self, node: Node) -> int:
         '''

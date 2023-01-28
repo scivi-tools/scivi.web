@@ -27,7 +27,6 @@ class OntoMerger:
                         self.onto = Onto.load_from_file(p)
                     else:
                         self.onto = self.merge(self.onto, Onto.load_from_file(p))
-        OntoHasher(self.onto)
 
     def duplicate_id(self, onto1: Onto, onto2: Onto, node: Node, prototypes):
         '''
