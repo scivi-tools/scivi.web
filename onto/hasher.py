@@ -63,7 +63,7 @@ class OntoHasher:
             if not op:
                 return None
             opSigns.append(self.get_op_signature(op))
-        fp = "".join(sorted(opSigns))
+        fp = ";".join(sorted(opSigns))
         return hashlib.md5(bytes(fp, "UTF-8")).hexdigest()
 
     def calc_uid(self, node: Node) -> int:
@@ -111,7 +111,7 @@ class OntoHasher:
         @return string representation of the corresponding signature part.
         '''
         result = ""
-        part = self.onto.get_typed_nodes_linked_from(node, "has", partName)
+        part = self.assemble_part(node, partName)
         if len(part) > 0:
             partTypes = []
             for p in part:
@@ -120,6 +120,22 @@ class OntoHasher:
                     partTypes.append(partType)
             if len(partTypes) > 0:
                 result += partID + ":".join(sorted(partTypes))
+        return result
+
+    def assemble_part(self, node: Node, partName: str) -> List[Node]:
+        '''
+        Assemble inputs, settings, or outputs of operator traversing operator's taxonomy.
+        @param node - node representing operator.
+        @param partName - name of signature part (Input, Setting, or Output).
+        @return array of nodes representing all the inputs, settings, or outputs (depending on partName)
+                taking into account the is_a inheritance.
+        '''
+        result = []
+        protos = self.onto.get_nodes_linked_from(node, "is_a")
+        for proto in protos:
+            if self.is_operator(proto):
+                result += self.assemble_part(proto, partName)
+        result += self.onto.get_typed_nodes_linked_from(node, "has", partName)
         return result
 
     def get_type(self, node: Node) -> str:
