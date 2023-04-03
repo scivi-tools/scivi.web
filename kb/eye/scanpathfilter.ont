@@ -184,7 +184,7 @@
         },
         {
             "attributes": {
-                "path": "lib/eye/scanpathFilter.js"
+                "path": "lib/eye/fuzzyScanpath/scanpathFilter.js"
             },
             "id": "49",
             "name": "Scanpath Filter Worker",
