@@ -1,0 +1,1379 @@
+{
+    "history": [
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-03-01T16:23:52Z",
+            "new_name": "EDF File",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 30,
+            "old_name": "CSV File",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1646151832
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-03-01T16:27:45Z",
+            "new_name": "EDF Table",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 1,
+            "old_name": "CSV Table",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1646152065
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-03-01T16:57:37Z",
+            "new_name": "EDF Table Worker",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 13,
+            "old_name": "CSV Table Worker",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1646153857
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-03-01T16:58:10Z",
+            "new_name": "edf",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 46,
+            "old_name": "PapaParse",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1646153890
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-03-01T22:10:39Z",
+            "new_name": "EDF Table",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 1,
+            "old_name": "EDF Table",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1646172639
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-03-01T22:10:54Z",
+            "new_name": "EDF Reader",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 1,
+            "old_name": "EDF Table",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1646172654
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-03-01T22:11:05Z",
+            "new_name": "EDF Reader Worker",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 13,
+            "old_name": "EDF Table Worker",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1646172665
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T08:24:45Z",
+            "node_id": 51,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1651047885
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T08:24:47Z",
+            "new_name": "Root",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 51,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651047887
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T08:24:54Z",
+            "destination_id": 51,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 52,
+            "source_id": 2,
+            "timestamp": 1651047894
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T08:25:05Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 52,
+            "timestamp": 1651047905
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T08:25:18Z",
+            "new_name": "Filter",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 2,
+            "old_name": "DataSource",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651047918
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T08:25:50Z",
+            "new_name": "EEG Filter",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 1,
+            "old_name": "EDF Reader",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651047950
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:21:18Z",
+            "new_name": "enum",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 34,
+            "old_name": "File",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051278
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:22:21Z",
+            "new_name": "EEG Data",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 4,
+            "old_name": "Table",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051341
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:22:41Z",
+            "node_id": 53,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1651051361
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:22:43Z",
+            "new_name": "input",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 53,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051363
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:23:00Z",
+            "node_id": 54,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1651051380
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:23:07Z",
+            "new_name": "EEG Data",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 54,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051387
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:23:42Z",
+            "new_name": "EEG Data Out",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 4,
+            "old_name": "EEG Data",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051422
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:23:51Z",
+            "new_name": "EEG Data In",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 54,
+            "old_name": "EEG Data",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051431
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:24:04Z",
+            "destination_id": 54,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 55,
+            "source_id": 1,
+            "timestamp": 1651051444
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:24:08Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 55,
+            "timestamp": 1651051448
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:24:20Z",
+            "destination_id": 53,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 56,
+            "source_id": 54,
+            "timestamp": 1651051460
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:24:27Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 56,
+            "timestamp": 1651051467
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:25:20Z",
+            "new_name": "Filter mode",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 30,
+            "old_name": "EDF File",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051520
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:29:22Z",
+            "new_name": "eegFilter",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 46,
+            "old_name": "edf",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051762
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T09:29:57Z",
+            "new_name": "EEG Filter Worker",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 13,
+            "old_name": "EDF Reader Worker",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651051797
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T10:16:20Z",
+            "destination_id": 10,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 57,
+            "source_id": 54,
+            "timestamp": 1651054580
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T10:16:26Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 57,
+            "timestamp": 1651054586
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T10:18:56Z",
+            "new_name": "Input",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 53,
+            "old_name": "input",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651054736
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-04-27T10:19:30Z",
+            "new_name": "Enum",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 34,
+            "old_name": "enum",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1651054770
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:39:19Z",
+            "new_name": "eegSpectrum",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 46,
+            "old_name": "eegFilter",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654558759
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:39:45Z",
+            "new_name": "String",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 34,
+            "old_name": "Enum",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654558785
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:39:49Z",
+            "node_id": 58,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1654558789
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:40:01Z",
+            "new_name": "Number",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 58,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654558801
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:40:14Z",
+            "destination_id": 5,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 59,
+            "source_id": 58,
+            "timestamp": 1654558814
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:40:19Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 59,
+            "timestamp": 1654558819
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:42:39Z",
+            "new_name": "EEG FFT Worker",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 13,
+            "old_name": "EEG Filter Worker",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654558959
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:42:49Z",
+            "new_name": "Spectrum",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 4,
+            "old_name": "EEG Data Out",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654558969
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:43:27Z",
+            "new_name": "Utility",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 2,
+            "old_name": "Filter",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654559007
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:46:48Z",
+            "new_name": "Channel name",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 30,
+            "old_name": "Filter mode",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654559208
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:47:01Z",
+            "node_id": 60,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1654559221
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:47:10Z",
+            "new_name": "Samples",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 60,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654559230
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:47:14Z",
+            "destination_id": 31,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 61,
+            "source_id": 60,
+            "timestamp": 1654559234
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:47:20Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 61,
+            "timestamp": 1654559240
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:47:27Z",
+            "destination_id": 58,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 62,
+            "source_id": 60,
+            "timestamp": 1654559247
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:47:30Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 62,
+            "timestamp": 1654559250
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:48:11Z",
+            "new_name": "EEG FFT",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 1,
+            "old_name": "EEG Filter",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654559291
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:48:45Z",
+            "destination_id": 60,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 63,
+            "source_id": 1,
+            "timestamp": 1654559325
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-06T23:48:50Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 63,
+            "timestamp": 1654559330
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-07T00:05:50Z",
+            "destination_id": 10,
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 11,
+            "source_id": 4,
+            "timestamp": 1654560350
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-07T00:05:52Z",
+            "node_id": 64,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1654560352
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-07T00:05:58Z",
+            "new_name": "Array",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 64,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1654560358
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-07T00:06:01Z",
+            "destination_id": 64,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 65,
+            "source_id": 4,
+            "timestamp": 1654560361
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-07T00:06:08Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 65,
+            "timestamp": 1654560368
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-07T00:06:11Z",
+            "destination_id": 58,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 66,
+            "source_id": 64,
+            "timestamp": 1654560371
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-07T00:06:14Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 66,
+            "timestamp": 1654560374
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T11:50:48Z",
+            "new_name": "EEG Data",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 54,
+            "old_name": "EEG Data In",
+            "old_namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1655812248
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:01:23Z",
+            "node_id": 67,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1655812883
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:01:38Z",
+            "new_name": "kFFT",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 67,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1655812898
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:01:43Z",
+            "destination_id": 67,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 68,
+            "source_id": 46,
+            "timestamp": 1655812903
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:01:49Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 68,
+            "timestamp": 1655812909
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:01:54Z",
+            "destination_id": 49,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 69,
+            "source_id": 67,
+            "timestamp": 1655812914
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:01:58Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 69,
+            "timestamp": 1655812918
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:06:03Z",
+            "destination_id": 67,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 70,
+            "source_id": 13,
+            "timestamp": 1655813163
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:06:11Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 70,
+            "timestamp": 1655813171
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:07:57Z",
+            "destination_id": 15,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 71,
+            "source_id": 67,
+            "timestamp": 1655813277
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:08:03Z",
+            "new_name": "language",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 71,
+            "timestamp": 1655813283
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:11:25Z",
+            "destination_id": 46,
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 47,
+            "source_id": 13,
+            "timestamp": 1655813485
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:11:25Z",
+            "destination_id": 15,
+            "name": "language",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 48,
+            "source_id": 46,
+            "timestamp": 1655813485
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:11:25Z",
+            "destination_id": 49,
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 50,
+            "source_id": 46,
+            "timestamp": 1655813485
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:11:25Z",
+            "destination_id": 67,
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "operation": "Relation removed",
+            "operation_type": "Do",
+            "relation_id": 68,
+            "source_id": 46,
+            "timestamp": 1655813485
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:11:25Z",
+            "name": "eegSpectrum",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 46,
+            "operation": "Node removed",
+            "operation_type": "Do",
+            "timestamp": 1655813485
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:53:39Z",
+            "node_id": 72,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1655816019
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:53:45Z",
+            "new_name": "spectrumViz",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "node_id": 72,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1655816025
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:53:50Z",
+            "destination_id": 72,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 73,
+            "source_id": 13,
+            "timestamp": 1655816030
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:53:55Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 73,
+            "timestamp": 1655816035
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:53:57Z",
+            "destination_id": 15,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 74,
+            "source_id": 72,
+            "timestamp": 1655816037
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:54:02Z",
+            "new_name": "language",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 74,
+            "timestamp": 1655816042
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:54:05Z",
+            "destination_id": 49,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 75,
+            "source_id": 72,
+            "timestamp": 1655816045
+        },
+        {
+            "author": "admin@knova.ru",
+            "datetime": "2022-06-21T12:54:10Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1551540440580",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 75,
+            "timestamp": 1655816050
+        }
+    ],
+    "last_id": "75",
+    "namespaces": {
+        "default": "http://knova.ru/user/1551540440580",
+        "ontolis-avis": "http://knova.ru/ontolis-avis",
+        "owl": "http://www.w3.org/2002/07/owl",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "nodes": [
+        {
+            "attributes": {
+            },
+            "id": "1",
+            "name": "EEG FFT",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 806,
+            "position_y": 589
+        },
+        {
+            "attributes": {
+            },
+            "id": "2",
+            "name": "Utility",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 711,
+            "position_y": 487
+        },
+        {
+            "attributes": {
+            },
+            "id": "4",
+            "name": "Spectrum",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 749,
+            "position_y": 703
+        },
+        {
+            "attributes": {
+            },
+            "id": "5",
+            "name": "Type",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 491,
+            "position_y": 853
+        },
+        {
+            "attributes": {
+            },
+            "id": "6",
+            "name": "Output",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 723,
+            "position_y": 842
+        },
+        {
+            "attributes": {
+            },
+            "id": "10",
+            "name": "Grid",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 647,
+            "position_y": 745
+        },
+        {
+            "attributes": {
+                "path": "lib/eeg/eegPSD.js"
+            },
+            "id": "13",
+            "name": "EEG FFT Worker",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 951,
+            "position_y": 935
+        },
+        {
+            "attributes": {
+            },
+            "id": "15",
+            "name": "JavaScript",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 970,
+            "position_y": 678
+        },
+        {
+            "attributes": {
+            },
+            "id": "18",
+            "name": "ClientSideWorker",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 896,
+            "position_y": 573
+        },
+        {
+            "attributes": {
+                "default": 0,
+                "domain": "None, Notch, Bandpass"
+            },
+            "id": "30",
+            "name": "Channel name",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 497,
+            "position_y": 535
+        },
+        {
+            "attributes": {
+            },
+            "id": "31",
+            "name": "Setting",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 227,
+            "position_y": 517
+        },
+        {
+            "attributes": {
+            },
+            "id": "34",
+            "name": "String",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 377,
+            "position_y": 652
+        },
+        {
+            "attributes": {
+            },
+            "id": "49",
+            "name": "Dependency",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 1247,
+            "position_y": 651
+        },
+        {
+            "attributes": {
+            },
+            "id": "51",
+            "name": "Root",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 695,
+            "position_y": 402
+        },
+        {
+            "attributes": {
+            },
+            "id": "53",
+            "name": "Input",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 540,
+            "position_y": 400
+        },
+        {
+            "attributes": {
+            },
+            "id": "54",
+            "name": "EEG Data",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 590,
+            "position_y": 486
+        },
+        {
+            "attributes": {
+            },
+            "id": "58",
+            "name": "Number",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 515,
+            "position_y": 695
+        },
+        {
+            "attributes": {
+            },
+            "id": "60",
+            "name": "Samples",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 510,
+            "position_y": 604
+        },
+        {
+            "attributes": {
+            },
+            "id": "64",
+            "name": "Array",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 200,
+            "position_y": 200
+        },
+        {
+            "attributes": {
+                "path": "lib/eeg/kFFT/kFFT.js"
+            },
+            "id": "67",
+            "name": "kFFT",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 1142,
+            "position_y": 826
+        },
+        {
+            "attributes": {
+            },
+            "id": "72",
+            "name": "spectrumViz",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "position_x": 1154,
+            "position_y": 929
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {
+            },
+            "destination_node_id": "2",
+            "id": "3",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "4",
+            "id": "7",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "8",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "5",
+            "id": "12",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "10"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "14",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "15",
+            "id": "16",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "4",
+            "id": "17",
+            "name": "is_used",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "18",
+            "id": "19",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "30",
+            "id": "32",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "31",
+            "id": "33",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "30"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "34",
+            "id": "35",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "30"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "5",
+            "id": "36",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "34"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "51",
+            "id": "52",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "2"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "54",
+            "id": "55",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "53",
+            "id": "56",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "54"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "10",
+            "id": "57",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "54"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "5",
+            "id": "59",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "58"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "31",
+            "id": "61",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "60"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "58",
+            "id": "62",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "60"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "60",
+            "id": "63",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "64",
+            "id": "65",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "58",
+            "id": "66",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "64"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "49",
+            "id": "69",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "67"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "67",
+            "id": "70",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "15",
+            "id": "71",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "67"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "72",
+            "id": "73",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "13"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "15",
+            "id": "74",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "72"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "49",
+            "id": "75",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1551540440580",
+            "source_node_id": "72"
+        }
+    ],
+    "visualize_ont_path": ""
+}
