@@ -24,7 +24,7 @@ class Eon:
         self.onto = onto
 
     def get_number_of_ios(self, node: Node, type, ios):
-        iosNodes = self.onto.get_typed_nodes_linked_from(node, "has", type)
+        iosNodes = self.onto.get_typed_nodes_linked_from_inherited(node, "has", type)
         try:
             return iosNodes.index(ios)
         except ValueError:
@@ -40,7 +40,7 @@ class Eon:
         return ioOpInst, ioNumber
 
     def get_setting_by_name(self, node: Node, settingName):
-        sNodes = self.onto.get_nodes_linked_from(node, "has")
+        sNodes = self.onto.get_typed_nodes_linked_from_inherited(node, "has", "Setting")
         for sNode in sNodes:
             if sNode.name == settingName:
                 return sNode
