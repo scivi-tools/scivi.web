@@ -173,7 +173,7 @@
         },
         {
             "attributes": {
-                "path": "lib/eye/scanpathMerger.js"
+                "path": "lib/eye/fuzzyScanpath/scanpathMerger.js"
             },
             "id": "49",
             "name": "Scanpath Merger Worker",

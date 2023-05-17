@@ -11,6 +11,7 @@ from typing import Dict, List, Tuple, Optional
 
 import websockets
 from onto.merge import OntoMerger
+from onto.hasher import OntoHasher
 from onto.onto import Node, Onto, OntoEncoder, first
 from enum import Enum
 import uuid
@@ -20,6 +21,7 @@ from server.dfd2onto import DFD2Onto
 from server.execer import Execer, ExecutionMode
 from server.utils import CodeUtils
 from server.fwgen import FWGen
+from threading import Lock
 
 def get_unused_port():
 
@@ -79,6 +81,7 @@ class SciViServer:
         self.pathToOnto = None
         self.onto = None
         self.ctx = context
+        self.mutex = Lock()
         self.commandServerLoop = eventLoop
          # start command server
         self.commandServer = None
@@ -114,6 +117,7 @@ class SciViServer:
 
     def setOnto(self, pathToOnto):
         self.onto = OntoMerger(pathToOnto).onto
+        OntoHasher(self.onto)
         self.loc = "eng"
         self.tree = ""
         self.treeID = 1
@@ -349,10 +353,10 @@ class SciViServer:
         if len(settings) > 0:
             f = "function (node){ " +\
                 initCode +\
-                "if (node.data) { node.data.settingsCtrl = \"\"; node.data.inlineSettingsCtrl = \"\"; } " +\
+                "if (node.data) { node.settingsCtrl = document.createElement(\"div\"); node.inlineSettingsCtrl = document.createElement(\"div\"); } " +\
                 "if (!node.data || !node.data.settings) return; " +\
-                "var ADD_WIDGET = function (code) { node.data.settingsCtrl += code; }; " +\
-                "var INLINE_WIDGET = function (code) { node.data.inlineSettingsCtrl += code; }; "
+                "var ADD_WIDGET = function (el) { node.settingsCtrl.appendChild(el); }; " +\
+                "var INLINE_WIDGET = function (el) { node.inlineSettingsCtrl.appendChild(el); }; "
             for s in settings:
                 t = first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
                 widgets = self.onto.get_typed_nodes_linked_to(t, "is_used", "Widget")
@@ -371,12 +375,14 @@ class SciViServer:
                     code = code.replace("SETTING_ID", str(s.id))
                     code = code.replace("SETTING_NAME", s.name)
                     code = code.replace("NODE_ID", "node.id")
+                    code = code.replace("CACHE", "node.data.cache")
+                    code = code.replace("PROCESS", "editor.process")
                     f = f + "(function () { " + code + " }).call(this);"
             f = f + " }"
             return f
         return "function (node){ " + initCode + " }"
 
-    def check_mode(self, leaf : Node):
+    def check_mode(self, leaf: Node):
         if self.mode != Mode.MIXED:
             curMode = Mode.UNDEFINED
             if first(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ServerSideWorker")):
@@ -489,17 +495,17 @@ class SciViServer:
             barr.append(b)
         return { "ont": eonOnto.data, "eon": barr }
 
-    def gen_mixed(self, dfd) -> Tuple[Dict, Optional[str], int]:
+    def gen_mixed(self, dfd, serverAddress) -> Tuple[Dict, Optional[str]]:
         dfd2onto = DFD2Onto(self.onto) # Load ontology
-        mixedOnto = dfd2onto.get_onto(dfd) # Get ontology for dfd
+        mixedOnto = dfd2onto.get_onto(dfd) # Get ontology for DFD
+        compRes = []
         # Server
         srvRes = first(mixedOnto.get_nodes_by_name("SciVi Server"))
         serverTaskHash = None
-        corTable = None
         dataServerPort = get_unused_port()
         if srvRes:
             hosting = first(mixedOnto.get_nodes_linked_to(srvRes, "is_instance")) # Get all plugins
-            serverOnto, corTable = dfd2onto.split_onto(mixedOnto, hosting)
+            serverOnto, serverCorTable = dfd2onto.split_onto(mixedOnto, hosting)
             if self.task_onto_has_operations(serverOnto): 
                 execer = Execer(self.onto, serverOnto, self.nodeStates, self.broadcast,
                                 self.commandServerLoop, dataServerPort)
@@ -507,23 +513,22 @@ class SciViServer:
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
                 execer.start()
+            compRes.append({ "address": serverAddress + ":" + str(dataServerPort), "corTable": serverCorTable, "eon": [] })
         # Edge
         edgeRes = first(mixedOnto.get_nodes_by_name("ESP8266"))
-        eonBytes = []
         if edgeRes:
-            hosting = first(mixedOnto.get_nodes_linked_to(edgeRes, "is_instance"))
-            edgeOnto, corTableEdge = dfd2onto.split_onto(mixedOnto, hosting)
-            if corTable:
-                corTable.update(corTableEdge)
-            else:
-                corTable = corTableEdge
-            eon = Eon(self.onto)
-            bs, eonOnto = eon.get_eon(edgeOnto)
-            eonBytes = []
-            for b in bs:
-                eonBytes.append(b)
-        return { "ont": json.dumps(edgeOnto, cls = OntoEncoder), 
-                 "cor": corTable, "eon": eonBytes }, serverTaskHash, dataServerPort
+            hosts = mixedOnto.get_nodes_linked_to(edgeRes, "is_instance")
+            if hosts:
+                for host in hosts:
+                    edgeOnto, edgeCorTable = dfd2onto.split_onto(mixedOnto, host)
+                    edgeAddress = host.attributes["address"]
+                    eon = Eon(self.onto)
+                    bs, eonOnto = eon.get_eon(edgeOnto)
+                    eonBytes = []
+                    for b in bs:
+                        eonBytes.append(b)
+                    compRes.append({ "address": edgeAddress, "corTable": edgeCorTable, "eon": eonBytes })
+        return { "compRes": compRes }, serverTaskHash
 
     def stop_execer(self, serverTaskHash):
         if serverTaskHash and serverTaskHash in self.execers:
@@ -587,4 +592,7 @@ class SciViServer:
         return list(ip_set)
 
     def scan_ssdp(self):
-        return self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")
+        self.mutex.acquire()
+        result = self.get_devices_list("urn:edge-scivi:device:eon-esp8266:2.0")
+        self.mutex.release()
+        return result

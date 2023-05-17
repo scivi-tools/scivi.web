@@ -85,6 +85,10 @@ def es_page():
 def eon_page():
     return LoadEditorPage('eon'), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route("/pong")
+def pong_page():
+    return LoadEditorPage('pong'), 200, {'Content-Type': 'text/html; charset=utf-8'}
+
 @app.route("/shielder")
 def shielder_page():
     return LoadEditorPage('shielder'), 200, {'Content-Type': 'text/html; charset=utf-8'}
@@ -189,19 +193,16 @@ def gen_mixed():
     dfd = request.get_json(force = True)
     oldExeKey = request.cookies.get("exe")
     exeKey = None
-    dataServerPort = None
     #TODO: send message to browser about initialization
     try:
         srv = getServerInst()
         srv.stop_execer(oldExeKey)
-        res, exeKey, dataServerPort = srv.gen_mixed(dfd)
+        res, exeKey = srv.gen_mixed(dfd, request.host.split(":")[0])
     except Exception as err:
+        print(traceback.format_exc())
         res = { "error": str(err) }
-    res["srvAddr"] = request.host.split(":")[0]
     resp = jsonify(res)
     resp.status_code = 200
-    if dataServerPort:
-        resp.set_cookie("DataServerPort", value = str(dataServerPort), samesite = "Lax")
     if exeKey:
         resp.set_cookie("exe", value = exeKey, samesite = "Lax")
     return resp
@@ -232,7 +233,7 @@ def fwgen(domain, elementName):
 @app.route("/scan_ssdp")
 def scan_ssdp():
     try:
-        res = getSrv().scan_ssdp()
+        res = getServerInst().scan_ssdp()
     except Exception as e:
         print(traceback.format_exc())
         res = None

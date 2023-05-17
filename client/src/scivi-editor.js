@@ -29,6 +29,8 @@ var Split = require("split.js");
 var D3NE = require("d3-node-editor");
 var FileSaver = require("file-saver");
 
+window.SCIVI = require("./scivi-functions.js");
+
 const VISUALIZATION_MODE = 1;
 const IOT_PROGRAMMING_MODE = 2;
 const MIXED_MODE = 3;
@@ -48,6 +50,7 @@ function SciViEditor()
     SciViEditor.prototype.commsReconnects = {};
     SciViEditor.prototype.addressCorrespondences = {};
     SciViEditor.prototype.mode = null;
+    SciViEditor.prototype.selectedNode = null;
     SciViEditor.prototype.command_socket = null;
 }
 
@@ -86,13 +89,16 @@ SciViEditor.prototype.run = function (mode)
         else {
             editor.selected.clear();
             this.selectNode(null);
+            this.selectedNode = null;
         }
         editor.view.update();
     };
 
     editor.eventListener.on("nodeselect", (node) => {
-        this.selectedNode = node;
-        this.selectNode(node);
+        if (node !== this.selectedNode) {
+            this.selectedNode = node;
+            this.selectNode(node);
+        }
     });
 
     editor.eventListener.on("noderemove", (node) => {
@@ -185,10 +191,10 @@ SciViEditor.prototype.run = function (mode)
         }
     });*/
 
-    $("#scivi_btn_poll").click(() => {
+    /*$("#scivi_btn_poll").click(() => {
         // FIXME: address.
         this.startComm("ws://192.168.4.1:81/", {}, [ 0xE1 ]);
-    });
+    });*/
 
     this.editor = editor;
     this.engine = engine;
@@ -216,30 +222,30 @@ SciViEditor.prototype.run = function (mode)
         this.command_socket = new WebSocket("ws://" + addr + ":" + port);
         this.command_socket.onopen = (event) => 
         {
-            console.log('Connected to command server at', addr, ":", port);
+            console.log("Connected to command server at", addr, ":", port);
         };
         this.command_socket.onclose = (event) => 
         {
             if (event.wasClean)
                 console.log(`Connection with command server was closed. Code=${event.code}, reason = ${event.reason}`);
             else
-            alert('Connection was broken with ' + addr + ":" + port);
+                alert("Connection was broken with " + addr + ":" + port);
         };
         this.command_socket.onerror = (error) => 
         {
-            alert('Command Server Error. See log for details');
-            console.log('Command Server Error', error);
+            alert("Command Server Error. See log for details");
+            console.log("Command Server Error", error);
         };
         this.command_socket.onmessage = (event) =>
         {
             var msg = JSON.parse(event.data);
             switch(msg.command)
             {
-                case 'wait_for_initialization': {
+                case "wait_for_initialization": {
                     let progress = msg.progress;
                     $("#scivi_load_progressbar").progressbar({value: progress});
                 } break;
-                default: console.warn('Unknown message from command server', msg); break;
+                default: console.warn("Unknown message from command server", msg); break;
             }
         };
     }
@@ -378,24 +384,19 @@ SciViEditor.prototype.runMixed = function ()
         $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
         $(".scivi_menu").css({"margin-left": "20px"});
 
-        var ont = data["ont"];
-        var cor = data["cor"];
-        var eon = data["eon"];
-        var srvAddr = data["srvAddr"];
+        var compRes = data["compRes"];
+        // Expected resource format:
+        // { address: "IP:Port", corTable: correspondences, eon: [bytes] }
+        // if eon.length == 0, this means serverside resource, else edge resource.
 
-        this.taskOnto = ont;
-        const data_server_port = $.cookie("DataServerPort");
-        
-        if (Object.keys(cor).length > 0) 
-        {
-            if (eon.length > 0) {
-                eon.unshift(0xE0);
-                // FIXME: address should be given by server, moreover, there may be multiple comms required.
-                this.startComm("ws://192.168.4.1:81/", cor, eon);
+        compRes.forEach((res) => {
+            if (res.eon.length > 0) {
+                res.eon.unshift(0x0E);
+                this.startComm("ws://" + res.address + "/", res.corTable, res.eon);
             } else {
-                this.startComm("ws://" + srvAddr + ":" + data_server_port + "/", cor);
+                this.startComm("ws://" + res.address + "/", res.corTable);
             }
-        }
+        });
     });
 }
 
@@ -403,21 +404,6 @@ SciViEditor.prototype.stopMixed = function ()
 {
     this.cleanupComms();
     $.post("/stop_execer", {}, (data) => { if (data["error"]) this.showError(data["error"]); });
-}
-
-SciViEditor.prototype.changeSubTitle = function (nodeID)
-{
-    var el = $("#t" + nodeID);
-    var node = this.getNodeByID(nodeID);
-    node.data.subTitle = el.val();
-}
-
-SciViEditor.prototype.createControl = function (node)
-{
-    if (node.data.inlineSettingsCtrl !== undefined)
-        return node.data.inlineSettingsCtrl;
-    else // FIXME: subtitles are deprecated, remove them.
-        return "<input id='t" + node.id + "' type='text' onchange='editor.changeSubTitle(" + node.id + ");' style='display:none;'>";
 }
 
 SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, workerFunc, settingsFunc)
@@ -438,7 +424,11 @@ SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, worke
                 node.addOutput(new D3NE.Output(item["name"], sockets[item["type"]]));
             });
             settingsFunc(node);
-            node.addControl(new D3NE.Control(_this.createControl(node), (element, control) => { }));
+            if (node.inlineSettingsCtrl !== undefined) {
+                node.addControl(new D3NE.Control("<div></div>", (element, control) => {
+                    element.appendChild(node.inlineSettingsCtrl);
+                }));
+            }
             return node;
         },
         worker(node, inputs, outputs) {
@@ -478,15 +468,14 @@ SciViEditor.prototype.selectNode = function (node)
         $("#scivi_settings_title").html(node.title);
         $("#scivi_settings_title").show();
         $("#scivi_btn_rmnode").show();
+        $("#scivi_settings_content").empty();
         node.syncSettings(node);
-        if (node.data.settingsCtrl)
-            $("#scivi_settings_content").html(node.data.settingsCtrl);
-        else
-            $("#scivi_settings_content").html("");
+        if (node.settingsCtrl)
+            $("#scivi_settings_content").append($(node.settingsCtrl));
     } else {
         $("#scivi_settings_title").hide();
         $("#scivi_btn_rmnode").hide();
-        $("#scivi_settings_content").html("");
+        $("#scivi_settings_content").empty();
     }
 }
 
@@ -573,7 +562,7 @@ SciViEditor.prototype.process = function ()
     nodes.sort((a, b) => a.rank < b.rank ? -1 : a.rank > b.rank ? 1 : 0);
 
     // process each node
-    for(var r = 0; r < runs; ++r)
+    for(var r = 0; r < runs; ++r) {
         for (var i = 0; i < n; ++i) 
         {
             let node = this.getNodeByID(nodes[i].id);
@@ -600,6 +589,7 @@ SciViEditor.prototype.process = function ()
 
             node.outputData = outputs;
         }
+    }
 }
 
 SciViEditor.prototype.viewportContainer = function ()
@@ -680,6 +670,14 @@ SciViEditor.prototype.clearViewport = function ()
         vp.removeChild(vp.firstChild);
     this.visuals = [];
     this.forceDir = undefined;
+
+    var body = document.querySelectorAll("body")[0];
+    for (var i = 0; i < body.children.length;) {
+        if (body.children[i].id !== "embrace")
+            body.removeChild(body.children[i]);
+        else
+            ++i;
+    }
 }
 
 SciViEditor.prototype.getNodeByID = function (nodeID)
@@ -687,63 +685,10 @@ SciViEditor.prototype.getNodeByID = function (nodeID)
     return this.editor.nodes.find ((node) => node.id === nodeID);
 }
 
-SciViEditor.prototype.changeSetting = function (settingName, settingID, nodeID)
-{
-    var el = $("#" + settingID.toString());
-    var value = 0;
-    if (el.is(":checkbox"))
-        value = el.is(":checked");
-    else {
-         value = el.get(0).valueAsNumber;
-         if (isNaN(value))
-            value = el.val();
-    }
-    var node = this.getNodeByID(nodeID);
-    node.data.settingsVal[settingName] = value;
-    node.data.settingsChanged[settingName] = true;
-}
-
-SciViEditor.prototype.getHumanReadableSize = function (size)
-{
-    var suffixes = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
-    var p = Math.floor(Math.log(size) / Math.log(1024.0));
-    var rem = size / Math.pow(1024, p);
-    var v = +(rem).toFixed(2);
-    return v + " " + suffixes[p];
-}
-
-SciViEditor.prototype.uploadFile = function (settingName, settingID, nodeID)
-{
-    var sid = settingID + "_" + nodeID;
-    var f = $("#f_" + sid)[0].files[0];
-    var node = this.getNodeByID(nodeID);
-    var meta = f.name + " (" + this.getHumanReadableSize(f.size) + ")";
-    $("#" + sid).html(meta);
-    node.data.settingsVal[settingName] = f;
-    node.data.settingsVal[settingName + "_meta"] = meta;
-    node.data.settingsChanged[settingName] = true;
-    this.process();
-}
-
-SciViEditor.prototype.uploadFiles = function (settingName, settingID, nodeID)
-{
-    var sid = settingID + "_" + nodeID;
-    var f = $("#f_" + sid)[0].files;
-    var node = this.getNodeByID(nodeID);
-    var meta = "</br>";
-    for (var i = 0, n = f.length; i < n; ++i)
-        meta += f[i].name + " (" + this.getHumanReadableSize(f[i].size) + ")</br>";
-    $("#" + sid).html(meta);
-    node.data.settingsVal[settingName] = f;
-    node.data.settingsVal[settingName + "_meta"] = meta;
-    node.data.settingsChanged[settingName] = true;
-    this.process();
-}
-
 SciViEditor.prototype.updateWidgets = function (node)
 {
     if (this.selectedNode && node.id === this.selectedNode.id)
-        this.selectNode(this.selectedNode);
+        this.selectNode(node);
 }
 
 SciViEditor.prototype.runButtonName = function (mode)
@@ -796,6 +741,19 @@ SciViEditor.prototype.instEdgeNode = function (device, uid, guid, index, count)
     node.settingsVal[settingName] = { device: device, guid: guid };
 }
 
+SciViEditor.prototype.commStateChanged = function ()
+{
+    var n = 0;
+    Object.keys(this.commsReconnects).forEach((key) => {
+        if (this.commsReconnects[key] > 0)
+            ++n;
+    });
+    if (n === 1)
+        $(".loader").show();
+    else if (n === 0)
+        $(".loader").hide();
+}
+
 SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon = null)
 {
     var ws = new WebSocket(address);
@@ -803,8 +761,8 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
     this.addressCorrespondences[address] = addressCorrespondences;
     if (this.commsReconnects[address] === undefined)
         this.commsReconnects[address] = 10;
-    Object.keys(addressCorrespondences)
-    .forEach((key) => {
+    this.commStateChanged();
+    Object.keys(addressCorrespondences).forEach((key) => {
         var cor = addressCorrespondences[key];
         if (cor) {
             for (var j = 0, n = cor.length; j < n; ++j) {
@@ -823,6 +781,7 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
         if (eon) {
             ws.send(Uint8Array.from(eon));
         }
+        this.commStateChanged();
     };
     ws.onclose = (evt) => {
         console.log("WebSocket close on " + address);
@@ -835,6 +794,8 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
             --rc;
             this.commsReconnects[address] = rc;
             setTimeout(() => this.startComm(address, addressCorrespondences, eon), 100);
+        } else {
+            this.commStateChanged();
         }
     };
     ws.onmessage = (evt) => {
@@ -845,18 +806,17 @@ SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon
             ws.close();
         } else {
             // Message contains values computed on the remote.
-            Object.keys(msg)
-            .forEach((key) => {
+            Object.keys(msg).forEach((key) => {
                 var cor = addressCorrespondences[key];
-                if (cor) 
+                if (cor)
                 {
                     for (var j = 0, n = cor.length; j < n; ++j) {
                         var isInput = cor[j][1];
-                        if (!isInput) //means isOutput
+                        if (!isInput) // Means isOutput
                         {
                             var dfdNodeID = cor[j][0];
                             var dfdNode = this.getNodeByID(dfdNodeID);
-                            var socketNmb = cor[j][2];//means gate(output or input) id in dfdNode
+                            var socketNmb = cor[j][2]; // Means gate (output or input) id in dfdNode
                             if (!dfdNode.data.outputDataPool)
                                 dfdNode.data.outputDataPool = [];
                             let l = dfdNode.data.outputDataPool.length;
@@ -912,7 +872,7 @@ SciViEditor.prototype.cleanupComms = function ()
     this.editor.nodes.forEach((node) => node.data.outputDataPool = []);
 }
 
-SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
+/*SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, nodeID)
 {
     var device = $("#d_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
     var guid = $("#g_" + settingID.toString() + "_" + nodeID.toString()).get(0).valueAsNumber;
@@ -923,14 +883,7 @@ SciViEditor.prototype.changeOntoBusAddress = function (settingName, settingID, n
 
 SciViEditor.prototype.pingByOntoBusAddress = function (settingName, settingID, nodeID)
 {
-}
-
-SciViEditor.prototype.getEdgeDevices = function (gotDicevsesCB)
-{
-    $.getJSON("/scan_ssdp", function (data) {
-        console.log(data);
-    });
-}
+}*/
 
 SciViEditor.prototype.saveFile = function (data, fileName, fileExt, fileType, shouldRequestName)
 {

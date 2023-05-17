@@ -211,9 +211,8 @@ class Onto:
 
     def get_typed_nodes_linked_from(self, node: Node, linkName, nodeType) -> List[Node]:
         '''
-        Return array of nodes, which are connected with the given one or any of its is_a parents
-        by the link with given name and are connected by is_a to the node with given name
-        (say, have given type).
+        Return array of nodes, which are connected with the given one by the link with given name
+        and are connected by is_a to the node with given name (say, have given type).
         The direction of link is from the given node to nodes returned.
         @param node - node to find links from.
         @param linkName - name of the link.

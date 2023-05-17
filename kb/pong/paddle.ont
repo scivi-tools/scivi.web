@@ -1,0 +1,370 @@
+{
+    "last_id": "41",
+    "namespaces": {
+        "default": "http://knova.ru/user/1654459655357",
+        "ontolis-avis": "http://knova.ru/ontolis-avis",
+        "owl": "http://www.w3.org/2002/07/owl",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema",
+        "xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "nodes": [
+        {
+            "attributes": {
+            },
+            "id": "1",
+            "name": "Root",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 330,
+            "position_y": 219
+        },
+        {
+            "attributes": {
+            },
+            "id": "2",
+            "name": "Game Object",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 309,
+            "position_y": 274
+        },
+        {
+            "attributes": {
+            },
+            "id": "3",
+            "name": "Paddle",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 319,
+            "position_y": 320
+        },
+        {
+            "attributes": {
+            },
+            "id": "4",
+            "name": "X",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 261,
+            "position_y": 377
+        },
+        {
+            "attributes": {
+            },
+            "id": "5",
+            "name": "Y",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 295,
+            "position_y": 377
+        },
+        {
+            "attributes": {
+                "default": 120
+            },
+            "id": "6",
+            "name": "Width",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 323,
+            "position_y": 375
+        },
+        {
+            "attributes": {
+                "default": 30
+            },
+            "id": "7",
+            "name": "Height",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 369,
+            "position_y": 375
+        },
+        {
+            "attributes": {
+            },
+            "id": "8",
+            "name": "Object",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 481,
+            "position_y": 377
+        },
+        {
+            "attributes": {
+            },
+            "id": "9",
+            "name": "Input",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 200,
+            "position_y": 328
+        },
+        {
+            "attributes": {
+            },
+            "id": "10",
+            "name": "Output",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 451,
+            "position_y": 319
+        },
+        {
+            "attributes": {
+            },
+            "id": "11",
+            "name": "Number",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 314,
+            "position_y": 452
+        },
+        {
+            "attributes": {
+            },
+            "id": "12",
+            "name": "Visual",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 447,
+            "position_y": 451
+        },
+        {
+            "attributes": {
+            },
+            "id": "13",
+            "name": "Type",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 383,
+            "position_y": 518
+        },
+        {
+            "attributes": {
+                "path": "lib/pong/paddle.js"
+            },
+            "id": "33",
+            "name": "Paddle Worker",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 581,
+            "position_y": 257
+        },
+        {
+            "attributes": {
+            },
+            "id": "34",
+            "name": "ClientSideWorker",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 582,
+            "position_y": 200
+        },
+        {
+            "attributes": {
+            },
+            "id": "35",
+            "name": "JavaScript",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 628,
+            "position_y": 328
+        },
+        {
+            "attributes": {
+            },
+            "id": "39",
+            "name": "Setting",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "position_x": 387,
+            "position_y": 320
+        }
+    ],
+    "relations": [
+        {
+            "attributes": {
+            },
+            "destination_node_id": "1",
+            "id": "14",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "2"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "2",
+            "id": "15",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "4",
+            "id": "16",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "5",
+            "id": "17",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "6",
+            "id": "18",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "19",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "8",
+            "id": "20",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "9",
+            "id": "21",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "9",
+            "id": "22",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "10",
+            "id": "25",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "8"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "26",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "4"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "27",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "5"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "28",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "6"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "11",
+            "id": "29",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "7"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "12",
+            "id": "30",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "8"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "31",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "11"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "13",
+            "id": "32",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "12"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "3",
+            "id": "36",
+            "name": "is_instance",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "33"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "34",
+            "id": "37",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "33"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "35",
+            "id": "38",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "33"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "39",
+            "id": "40",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "6"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "39",
+            "id": "41",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1654459655357",
+            "source_node_id": "7"
+        }
+    ],
+    "visualize_ont_path": ""
+}
