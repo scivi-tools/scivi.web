@@ -13,6 +13,7 @@ def p(x):
     return "{}_{}".format(MODULE_PREFIX, x)
 
 ser = GLOB.get(p(SERIAL_KEY))
+
 if not ser:
     import serial
     port_name = SETTINGS_VAL[SERIAL_SETTING_PORT_NAME]
@@ -28,4 +29,5 @@ else:
     data = str(INPUT[SERIAL_INPUT_DATA])
 
     ser.write(data.encode('utf-8'))
-    
+
+PROCESS()
