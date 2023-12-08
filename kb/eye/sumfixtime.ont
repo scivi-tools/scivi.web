@@ -1,5 +1,155 @@
 {
-    "last_id": "24",
+    "history": [
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:55:51Z",
+            "node_id": 25,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1701867351
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:55:57Z",
+            "new_name": "Setting",
+            "new_namespace": "http://knova.ru/user/1659742467996",
+            "node_id": 25,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1701867357
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:56:07Z",
+            "node_id": 26,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1701867367
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:56:35Z",
+            "new_name": "append to scanpath",
+            "new_namespace": "http://knova.ru/user/1659742467996",
+            "node_id": 26,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1701867395
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:56:38Z",
+            "destination_id": 25,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 27,
+            "source_id": 26,
+            "timestamp": 1701867398
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:56:42Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1659742467996",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 27,
+            "timestamp": 1701867402
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:57:00Z",
+            "destination_id": 26,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 28,
+            "source_id": 3,
+            "timestamp": 1701867420
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:57:04Z",
+            "new_name": "has",
+            "new_namespace": "http://knova.ru/user/1659742467996",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 28,
+            "timestamp": 1701867424
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:57:11Z",
+            "node_id": 29,
+            "operation": "Node created",
+            "operation_type": "Do",
+            "timestamp": 1701867431
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T12:57:13Z",
+            "new_name": "Bool",
+            "new_namespace": "http://knova.ru/user/1659742467996",
+            "node_id": 29,
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Node name changed",
+            "operation_type": "Do",
+            "timestamp": 1701867433
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T13:00:54Z",
+            "destination_id": 7,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 30,
+            "source_id": 29,
+            "timestamp": 1701867654
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T13:01:00Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1659742467996",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 30,
+            "timestamp": 1701867660
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T13:01:04Z",
+            "destination_id": 29,
+            "operation": "Relation created",
+            "operation_type": "Do",
+            "relation_id": 31,
+            "source_id": 26,
+            "timestamp": 1701867664
+        },
+        {
+            "author": "goldnotch@mail.ru",
+            "datetime": "2023-12-06T13:01:08Z",
+            "new_name": "is_a",
+            "new_namespace": "http://knova.ru/user/1659742467996",
+            "old_name": "",
+            "old_namespace": "",
+            "operation": "Relation name changed",
+            "operation_type": "Do",
+            "relation_id": 31,
+            "timestamp": 1701867668
+        }
+    ],
+    "last_id": "31",
     "namespaces": {
         "default": "http://knova.ru/user/1659742467996",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -15,8 +165,8 @@
             "id": "1",
             "name": "Root",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": -127,
-            "position_y": -466
+            "position_x": 364,
+            "position_y": 200
         },
         {
             "attributes": {
@@ -24,8 +174,8 @@
             "id": "2",
             "name": "Filter",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 247,
+            "position_y": 192
         },
         {
             "attributes": {
@@ -33,8 +183,8 @@
             "id": "3",
             "name": "Sum Fixation Times",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": -179,
-            "position_y": -376
+            "position_x": 230,
+            "position_y": 282
         },
         {
             "attributes": {
@@ -42,8 +192,8 @@
             "id": "4",
             "name": "Scanpath",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 274,
+            "position_y": 406
         },
         {
             "attributes": {
@@ -51,8 +201,8 @@
             "id": "5",
             "name": "Values",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": -93,
-            "position_y": -292
+            "position_x": 428,
+            "position_y": 377
         },
         {
             "attributes": {
@@ -60,8 +210,8 @@
             "id": "6",
             "name": "Grid",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 463,
+            "position_y": 471
         },
         {
             "attributes": {
@@ -69,8 +219,8 @@
             "id": "7",
             "name": "Type",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 308,
+            "position_y": 603
         },
         {
             "attributes": {
@@ -78,8 +228,8 @@
             "id": "8",
             "name": "Input",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": -291,
-            "position_y": -371
+            "position_x": 173,
+            "position_y": 342
         },
         {
             "attributes": {
@@ -87,8 +237,8 @@
             "id": "9",
             "name": "Output",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 3,
-            "position_y": -374
+            "position_x": 509,
+            "position_y": 343
         },
         {
             "attributes": {
@@ -97,8 +247,8 @@
             "id": "10",
             "name": "SumFixTimeWorker",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 75,
-            "position_y": -453
+            "position_x": 566,
+            "position_y": 213
         },
         {
             "attributes": {
@@ -106,8 +256,8 @@
             "id": "11",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 693,
+            "position_y": 367
         },
         {
             "attributes": {
@@ -115,8 +265,35 @@
             "id": "12",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1659742467996",
-            "position_x": 0,
-            "position_y": 0
+            "position_x": 777,
+            "position_y": 281
+        },
+        {
+            "attributes": {
+            },
+            "id": "25",
+            "name": "Setting",
+            "namespace": "http://knova.ru/user/1659742467996",
+            "position_x": -25,
+            "position_y": 318
+        },
+        {
+            "attributes": {
+            },
+            "id": "26",
+            "name": "append to scanpath",
+            "namespace": "http://knova.ru/user/1659742467996",
+            "position_x": 16,
+            "position_y": 397
+        },
+        {
+            "attributes": {
+            },
+            "id": "29",
+            "name": "Bool",
+            "namespace": "http://knova.ru/user/1659742467996",
+            "position_x": 22,
+            "position_y": 497
         }
     ],
     "relations": [
@@ -227,6 +404,42 @@
             "name": "language",
             "namespace": "http://knova.ru/user/1659742467996",
             "source_node_id": "10"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "25",
+            "id": "27",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1659742467996",
+            "source_node_id": "26"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "26",
+            "id": "28",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1659742467996",
+            "source_node_id": "3"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "7",
+            "id": "30",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1659742467996",
+            "source_node_id": "29"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "29",
+            "id": "31",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1659742467996",
+            "source_node_id": "26"
         }
     ],
     "visualize_ont_path": ""
