@@ -31,7 +31,7 @@ build_image:
   before_script:
     - docker info
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.semograph.com
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN docker.semograph.com
     - docker-compose -f docker-compose.prod.yml build --pull
     - docker push docker.semograph.com/semograph/scivi/app:${CI_COMMIT_REF_NAME}
   dependencies:
@@ -45,7 +45,7 @@ deploy_prod:
   variables:
     DOCKER_HOST: tcp://10.0.6.2:2376
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.semograph.com
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN docker.semograph.com
     - docker stack deploy -c docker-compose.prod.yml scivi --with-registry-auth
   only:
     - master
