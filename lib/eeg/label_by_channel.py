@@ -17,7 +17,8 @@ from os.path import basename
 
 montage = INPUT[LC_INPUT_MONTAGE_SCHEMA]
 
-channels = montage.electrode_names('cap21')
+#channels = montage.electrode_names('cap21')
+channels = montage.electrode_names('cap128')
 info = create_info(channels, 512, 'eeg')
 
 raws = INPUT[LC_INPUT_RAW_SIGNAL]
@@ -25,7 +26,8 @@ raws = INPUT[LC_INPUT_RAW_SIGNAL]
 data = []
 labels = []
 for raw in [raws]:
-    raw = montage.transform_frame_by_montage(raw, 'cap21')[1]
+    #raw = montage.transform_frame_by_montage(raw, 'cap21')[1]
+    raw = montage.transform_frame_by_montage(raw, 'cap128')[1]
     raw = RawArray(raw, info)
     # First, get the data from DC channel
     dc_a = raw.get_data('DC-A') # TODO: pick channel from settings!

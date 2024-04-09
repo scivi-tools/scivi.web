@@ -1,0 +1,1054 @@
+{
+    "cap128": [
+        {
+            "canonical_name": "P7",
+            "color": "black",
+            "comment": "",
+            "index": 95,
+            "name": "T5"
+        },
+        {
+            "canonical_name": "T7",
+            "color": "black",
+            "comment": "",
+            "index": 122,
+            "name": "T3"
+        },
+        {
+            "canonical_name": "O1",
+            "color": "black",
+            "comment": "",
+            "index": 121,
+            "name": "O1"
+        },
+        {
+            "canonical_name": "P3",
+            "color": "black",
+            "comment": "",
+            "index": 99,
+            "name": "P3"
+        },
+        {
+            "canonical_name": "C3",
+            "color": "black",
+            "comment": "",
+            "index": 126,
+            "name": "C3"
+        },
+        {
+            "canonical_name": "F3",
+            "color": "black",
+            "comment": "",
+            "index": 88,
+            "name": "F3"
+        },
+        {
+            "canonical_name": "F7",
+            "color": "black",
+            "comment": "",
+            "index": 84,
+            "name": "F7"
+        },
+        {
+            "canonical_name": "Fp1",
+            "color": "black",
+            "comment": "",
+            "index": 64,
+            "name": "Fp1"
+        },
+        {
+            "canonical_name": "Fz",
+            "color": "black",
+            "comment": "",
+            "index": 22,
+            "name": "Fz"
+        },
+        {
+            "canonical_name": "Cz",
+            "color": "black",
+            "comment": "",
+            "index": 58,
+            "name": "Cz"
+        },
+        {
+            "canonical_name": "Pz",
+            "color": "black",
+            "comment": "",
+            "index": 31,
+            "name": "Pz"
+        },
+        {
+            "canonical_name": "Fp2",
+            "color": "black",
+            "comment": "",
+            "index": 4,
+            "name": "Fp2"
+        },
+        {
+            "canonical_name": "F4",
+            "color": "black",
+            "comment": "",
+            "index": 26,
+            "name": "F4"
+        },
+        {
+            "canonical_name": "F8",
+            "color": "black",
+            "comment": "",
+            "index": 30,
+            "name": "F8"
+        },
+        {
+            "canonical_name": "C4",
+            "color": "black",
+            "comment": "",
+            "index": 62,
+            "name": "C4"
+        },
+        {
+            "canonical_name": "T8",
+            "color": "black",
+            "comment": "",
+            "index": 3,
+            "name": "T4"
+        },
+        {
+            "canonical_name": "P8",
+            "color": "black",
+            "comment": "",
+            "index": 39,
+            "name": "T6"
+        },
+        {
+            "canonical_name": "P4",
+            "color": "black",
+            "comment": "",
+            "index": 35,
+            "name": "P4"
+        },
+        {
+            "canonical_name": "O2",
+            "color": "black",
+            "comment": "",
+            "index": 61,
+            "name": "O2"
+        },
+        {
+            "canonical_name": "FPz",
+            "color": "black",
+            "comment": "",
+            "index": 2,
+            "name": "FPz"
+        },
+        {
+            "canonical_name": "AFz",
+            "color": "black",
+            "comment": "",
+            "index": 74,
+            "name": "AFz"
+        },
+        {
+            "canonical_name": "FCz",
+            "color": "black",
+            "comment": "",
+            "index": 110,
+            "name": "FCz"
+        },
+        {
+            "canonical_name": "CPz",
+            "color": "black",
+            "comment": "",
+            "index": 83,
+            "name": "CPz"
+        },
+        {
+            "canonical_name": "Oz",
+            "color": "black",
+            "comment": "",
+            "index": 125,
+            "name": "Oz"
+        },
+        {
+            "canonical_name": "AF7",
+            "color": "black",
+            "comment": "",
+            "index": 68,
+            "name": "AF7"
+        },
+        {
+            "canonical_name": "AF5h",
+            "color": "black",
+            "comment": "",
+            "index": 70,
+            "name": "AF5h"
+        },
+        {
+            "canonical_name": "AF3h",
+            "color": "black",
+            "comment": "",
+            "index": 72,
+            "name": "AF3h"
+        },
+        {
+            "canonical_name": "AF4h",
+            "color": "black",
+            "comment": "",
+            "index": 8,
+            "name": "AF4h"
+        },
+        {
+            "canonical_name": "AF6h",
+            "color": "black",
+            "comment": "",
+            "index": 10,
+            "name": "AF6h"
+        },
+        {
+            "canonical_name": "AF8",
+            "color": "black",
+            "comment": "",
+            "index": 12,
+            "name": "AF8"
+        },
+        {
+            "canonical_name": "AFp3",
+            "color": "black",
+            "comment": "",
+            "index": 66,
+            "name": "AFp3"
+        },
+        {
+            "canonical_name": "AFp4",
+            "color": "black",
+            "comment": "",
+            "index": 6,
+            "name": "AFp4"
+        },
+        {
+            "canonical_name": "AFF7h",
+            "color": "black",
+            "comment": "",
+            "index": 76,
+            "name": "AFF7h"
+        },
+        {
+            "canonical_name": "AFF5h",
+            "color": "black",
+            "comment": "",
+            "index": 78,
+            "name": "AFF5h"
+        },
+        {
+            "canonical_name": "AFF3h",
+            "color": "black",
+            "comment": "",
+            "index": 80,
+            "name": "AFF3h"
+        },
+        {
+            "canonical_name": "AFF1h",
+            "color": "black",
+            "comment": "",
+            "index": 82,
+            "name": "AFF1h"
+        },
+        {
+            "canonical_name": "AFF2h",
+            "color": "black",
+            "comment": "",
+            "index": 14,
+            "name": "AFF2h"
+        },
+        {
+            "canonical_name": "AFF4h",
+            "color": "black",
+            "comment": "",
+            "index": 16,
+            "name": "AFF4h"
+        },
+        {
+            "canonical_name": "AFF6h",
+            "color": "black",
+            "comment": "",
+            "index": 18,
+            "name": "AFF6h"
+        },
+        {
+            "canonical_name": "AFF8h",
+            "color": "black",
+            "comment": "",
+            "index": 20,
+            "name": "AFF8h"
+        },
+        {
+            "canonical_name": "F1",
+            "color": "black",
+            "comment": "",
+            "index": 90,
+            "name": "F1"
+        },
+        {
+            "canonical_name": "F5",
+            "color": "black",
+            "comment": "",
+            "index": 86,
+            "name": "F5"
+        },
+        {
+            "canonical_name": "F2",
+            "color": "black",
+            "comment": "",
+            "index": 24,
+            "name": "F2"
+        },
+        {
+            "canonical_name": "F6",
+            "color": "black",
+            "comment": "",
+            "index": 28,
+            "name": "F6"
+        },
+        {
+            "canonical_name": "FFT7h",
+            "color": "black",
+            "comment": "",
+            "index": 92,
+            "name": "FFT7h"
+        },
+        {
+            "canonical_name": "FFC5h",
+            "color": "black",
+            "comment": "",
+            "index": 94,
+            "name": "FFC5h"
+        },
+        {
+            "canonical_name": "FFC3h",
+            "color": "black",
+            "comment": "",
+            "index": 96,
+            "name": "FFC3h"
+        },
+        {
+            "canonical_name": "FFC1h",
+            "color": "black",
+            "comment": "",
+            "index": 98,
+            "name": "FFC1h"
+        },
+        {
+            "canonical_name": "FFC2h",
+            "color": "black",
+            "comment": "",
+            "index": 32,
+            "name": "FFC2h"
+        },
+        {
+            "canonical_name": "FFC4h",
+            "color": "black",
+            "comment": "",
+            "index": 34,
+            "name": "FFC4h"
+        },
+        {
+            "canonical_name": "FFC6h",
+            "color": "black",
+            "comment": "",
+            "index": 36,
+            "name": "FFC6h"
+        },
+        {
+            "canonical_name": "FFT8h",
+            "color": "black",
+            "comment": "",
+            "index": 38,
+            "name": "FFT8h"
+        },
+        {
+            "canonical_name": "FT9",
+            "color": "black",
+            "comment": "",
+            "index": 100,
+            "name": "FT9"
+        },
+        {
+            "canonical_name": "FT7",
+            "color": "black",
+            "comment": "",
+            "index": 102,
+            "name": "FT7"
+        },
+        {
+            "canonical_name": "FC5",
+            "color": "black",
+            "comment": "",
+            "index": 104,
+            "name": "FC5"
+        },
+        {
+            "canonical_name": "FC3",
+            "color": "black",
+            "comment": "",
+            "index": 106,
+            "name": "FC3"
+        },
+        {
+            "canonical_name": "FC1",
+            "color": "black",
+            "comment": "",
+            "index": 108,
+            "name": "FC1"
+        },
+        {
+            "canonical_name": "FC2",
+            "color": "black",
+            "comment": "",
+            "index": 40,
+            "name": "FC2"
+        },
+        {
+            "canonical_name": "FC4",
+            "color": "black",
+            "comment": "",
+            "index": 42,
+            "name": "FC4"
+        },
+        {
+            "canonical_name": "FC6",
+            "color": "black",
+            "comment": "",
+            "index": 44,
+            "name": "FC6"
+        },
+        {
+            "canonical_name": "FT8",
+            "color": "black",
+            "comment": "",
+            "index": 46,
+            "name": "FT8"
+        },
+        {
+            "canonical_name": "FT10",
+            "color": "black",
+            "comment": "",
+            "index": 48,
+            "name": "FT10"
+        },
+        {
+            "canonical_name": "FTT7h",
+            "color": "black",
+            "comment": "",
+            "index": 112,
+            "name": "FTT7h"
+        },
+        {
+            "canonical_name": "FCC5h",
+            "color": "black",
+            "comment": "",
+            "index": 114,
+            "name": "FCC5h"
+        },
+        {
+            "canonical_name": "FCC3h",
+            "color": "black",
+            "comment": "",
+            "index": 116,
+            "name": "FCC3h"
+        },
+        {
+            "canonical_name": "FCC1h",
+            "color": "black",
+            "comment": "",
+            "index": 118,
+            "name": "FCC1h"
+        },
+        {
+            "canonical_name": "FCC2h",
+            "color": "black",
+            "comment": "",
+            "index": 50,
+            "name": "FCC2h"
+        },
+        {
+            "canonical_name": "FCC4h",
+            "color": "black",
+            "comment": "",
+            "index": 52,
+            "name": "FCC4h"
+        },
+        {
+            "canonical_name": "FCC6h",
+            "color": "black",
+            "comment": "",
+            "index": 54,
+            "name": "FCC6h"
+        },
+        {
+            "canonical_name": "FCC8h",
+            "color": "black",
+            "comment": "",
+            "index": 56,
+            "name": "FCC8h"
+        },
+        {
+            "canonical_name": "T9",
+            "color": "black",
+            "comment": "\u043a\u043e\u043d\u043d\u0435\u043a\u0442\u043e\u0440",
+            "index": 120,
+            "name": "T9"
+        },
+        {
+            "canonical_name": "C5",
+            "color": "black",
+            "comment": "",
+            "index": 124,
+            "name": "C5"
+        },
+        {
+            "canonical_name": "C1",
+            "color": "black",
+            "comment": "",
+            "index": 65,
+            "name": "C1"
+        },
+        {
+            "canonical_name": "C2",
+            "color": "black",
+            "comment": "",
+            "index": 60,
+            "name": "C2"
+        },
+        {
+            "canonical_name": "C6",
+            "color": "black",
+            "comment": "",
+            "index": 1,
+            "name": "C6"
+        },
+        {
+            "canonical_name": "T10",
+            "color": "black",
+            "comment": "\u043a\u043e\u043d\u043d\u0435\u043a\u0442\u043e\u0440",
+            "index": 5,
+            "name": "T10"
+        },
+        {
+            "canonical_name": "TTP7h",
+            "color": "black",
+            "comment": "",
+            "index": 67,
+            "name": "TTP7h"
+        },
+        {
+            "canonical_name": "CCP5h",
+            "color": "black",
+            "comment": "",
+            "index": 69,
+            "name": "CCP5h"
+        },
+        {
+            "canonical_name": "CCP3h",
+            "color": "black",
+            "comment": "",
+            "index": 71,
+            "name": "CCP3h"
+        },
+        {
+            "canonical_name": "CCP1h",
+            "color": "black",
+            "comment": "",
+            "index": 73,
+            "name": "CCP1h"
+        },
+        {
+            "canonical_name": "CCP2h",
+            "color": "black",
+            "comment": "",
+            "index": 7,
+            "name": "CCP2h"
+        },
+        {
+            "canonical_name": "CCP4h",
+            "color": "black",
+            "comment": "",
+            "index": 9,
+            "name": "CCP4h"
+        },
+        {
+            "canonical_name": "CCP6h",
+            "color": "black",
+            "comment": "",
+            "index": 11,
+            "name": "CCP6h"
+        },
+        {
+            "canonical_name": "TTP8h",
+            "color": "black",
+            "comment": "",
+            "index": 13,
+            "name": "TTP8h"
+        },
+        {
+            "canonical_name": "TP7",
+            "color": "black",
+            "comment": "\u0447\u0443\u0442\u044c \u0441\u043c\u0435\u0449\u0435\u043d",
+            "index": 75,
+            "name": "TP7"
+        },
+        {
+            "canonical_name": "CP5",
+            "color": "black",
+            "comment": "",
+            "index": 77,
+            "name": "CP5"
+        },
+        {
+            "canonical_name": "CP3",
+            "color": "black",
+            "comment": "",
+            "index": 79,
+            "name": "CP3"
+        },
+        {
+            "canonical_name": "CP1",
+            "color": "black",
+            "comment": "",
+            "index": 81,
+            "name": "CP1"
+        },
+        {
+            "canonical_name": "CP2",
+            "color": "black",
+            "comment": "",
+            "index": 15,
+            "name": "CP2"
+        },
+        {
+            "canonical_name": "CP4",
+            "color": "black",
+            "comment": "",
+            "index": 17,
+            "name": "CP4"
+        },
+        {
+            "canonical_name": "CP6",
+            "color": "black",
+            "comment": "",
+            "index": 19,
+            "name": "CP6"
+        },
+        {
+            "canonical_name": "TP8",
+            "color": "black",
+            "comment": "\u0447\u0443\u0442\u044c \u0441\u043c\u0435\u0449\u0435\u043d",
+            "index": 21,
+            "name": "TP8"
+        },
+        {
+            "canonical_name": "TPP7h",
+            "color": "black",
+            "comment": "",
+            "index": 85,
+            "name": "TPP7h"
+        },
+        {
+            "canonical_name": "CPP5h",
+            "color": "black",
+            "comment": "",
+            "index": 87,
+            "name": "CPP5h"
+        },
+        {
+            "canonical_name": "CPP3h",
+            "color": "black",
+            "comment": "",
+            "index": 89,
+            "name": "CPP3h"
+        },
+        {
+            "canonical_name": "CPP1h",
+            "color": "black",
+            "comment": "",
+            "index": 91,
+            "name": "CPP1h"
+        },
+        {
+            "canonical_name": "CPP2h",
+            "color": "black",
+            "comment": "",
+            "index": 23,
+            "name": "CPP2h"
+        },
+        {
+            "canonical_name": "CPP4h",
+            "color": "black",
+            "comment": "",
+            "index": 25,
+            "name": "CPP4h"
+        },
+        {
+            "canonical_name": "CPP6h",
+            "color": "black",
+            "comment": "",
+            "index": 27,
+            "name": "CPP6h"
+        },
+        {
+            "canonical_name": "TPP8h",
+            "color": "black",
+            "comment": "",
+            "index": 29,
+            "name": "TPP8h"
+        },
+        {
+            "canonical_name": "P9",
+            "color": "black",
+            "comment": "\u043d\u0435 \u0437\u0432\u043e\u043d\u0438\u0442\u0441\u044f",
+            "index": 93,
+            "name": "P9"
+        },
+        {
+            "canonical_name": "P5",
+            "color": "black",
+            "comment": "",
+            "index": 97,
+            "name": "P5"
+        },
+        {
+            "canonical_name": "P1",
+            "color": "black",
+            "comment": "",
+            "index": 101,
+            "name": "P1"
+        },
+        {
+            "canonical_name": "P2",
+            "color": "black",
+            "comment": "",
+            "index": 33,
+            "name": "P2"
+        },
+        {
+            "canonical_name": "P6",
+            "color": "black",
+            "comment": "",
+            "index": 37,
+            "name": "P6"
+        },
+        {
+            "canonical_name": "P10",
+            "color": "black",
+            "comment": "",
+            "index": 41,
+            "name": "P10"
+        },
+        {
+            "canonical_name": "PPO9h",
+            "color": "black",
+            "comment": "",
+            "index": 103,
+            "name": "PPO9h"
+        },
+        {
+            "canonical_name": "PPO7h",
+            "color": "black",
+            "comment": "",
+            "index": 105,
+            "name": "PPO7h"
+        },
+        {
+            "canonical_name": "PPO5h",
+            "color": "black",
+            "comment": "",
+            "index": 107,
+            "name": "PPO5h"
+        },
+        {
+            "canonical_name": "PPO3h",
+            "color": "black",
+            "comment": "",
+            "index": 109,
+            "name": "PPO3h"
+        },
+        {
+            "canonical_name": "PPO1h",
+            "color": "black",
+            "comment": "",
+            "index": 111,
+            "name": "PPO1h"
+        },
+        {
+            "canonical_name": "PPO2h",
+            "color": "black",
+            "comment": "",
+            "index": 43,
+            "name": "PPO2h"
+        },
+        {
+            "canonical_name": "PPO4h",
+            "color": "black",
+            "comment": "",
+            "index": 45,
+            "name": "PPO4h"
+        },
+        {
+            "canonical_name": "PPO6h",
+            "color": "black",
+            "comment": "",
+            "index": 47,
+            "name": "PPO6h"
+        },
+        {
+            "canonical_name": "PPO8h",
+            "color": "black",
+            "comment": "",
+            "index": 49,
+            "name": "PPO8h"
+        },
+        {
+            "canonical_name": "PPO10h",
+            "color": "black",
+            "comment": "",
+            "index": 51,
+            "name": "PPO10h"
+        },
+        {
+            "canonical_name": "PO7",
+            "color": "black",
+            "comment": "\u0441\u0438\u043b\u044c\u043d\u043e \u0441\u043c\u0435\u0449\u0435\u043d",
+            "index": 113,
+            "name": "PO7"
+        },
+        {
+            "canonical_name": "PO5h",
+            "color": "black",
+            "comment": "",
+            "index": 115,
+            "name": "PO5h"
+        },
+        {
+            "canonical_name": "PO3h",
+            "color": "black",
+            "comment": "",
+            "index": 117,
+            "name": "PO3h"
+        },
+        {
+            "canonical_name": "PO4h",
+            "color": "black",
+            "comment": "",
+            "index": 53,
+            "name": "PO4h"
+        },
+        {
+            "canonical_name": "PO6h",
+            "color": "black",
+            "comment": "",
+            "index": 55,
+            "name": "PO6h"
+        },
+        {
+            "canonical_name": "PO8",
+            "color": "black",
+            "comment": "\u0441\u0438\u043b\u044c\u043d\u043e \u0441\u043c\u0435\u0449\u0435\u043d",
+            "index": 57,
+            "name": "PO8"
+        },
+        {
+            "canonical_name": "POO3",
+            "color": "black",
+            "comment": "",
+            "index": 123,
+            "name": "POO3"
+        },
+        {
+            "canonical_name": "POO4",
+            "color": "black",
+            "comment": "",
+            "index": 59,
+            "name": "POO4"
+        },
+        {
+            "canonical_name": "I1",
+            "color": "black",
+            "comment": "",
+            "index": 119,
+            "name": "I1"
+        },
+        {
+            "canonical_name": "IZ",
+            "color": "black",
+            "comment": "",
+            "index": 127,
+            "name": "IZ"
+        },
+        {
+            "canonical_name": "I2",
+            "color": "black",
+            "comment": "",
+            "index": 63,
+            "name": "I2"
+        },
+        {
+            "canonical_name": "Nz",
+            "color": "black",
+            "comment": "\u043a\u043e\u043d\u043d\u0435\u043a\u0442\u043e\u0440",
+            "index": 0,
+            "name": "Nz"
+        },
+        {
+            "canonical_name": "POz",
+            "color": "green",
+            "comment": "",
+            "index": -1,
+            "name": "Ground"
+        },
+        {
+            "canonical_name": "AFz",
+            "color": "red",
+            "comment": "",
+            "index": -1,
+            "name": "Ref"
+        },
+        {
+            "canonical_name": "DC-A",
+            "color": "black",
+            "index": 129,
+            "name": "DC-A"
+        }
+    ],
+    "cap21": [
+        {
+            "canonical_name": "Fp1",
+            "color": "black",
+            "index": 2,
+            "name": "FP1"
+        },
+        {
+            "canonical_name": "Fp2",
+            "color": "black",
+            "index": 3,
+            "name": "FP2"
+        },
+        {
+            "canonical_name": "F7",
+            "color": "black",
+            "index": 7,
+            "name": "F7"
+        },
+        {
+            "canonical_name": "F3",
+            "color": "black",
+            "index": 8,
+            "name": "F3"
+        },
+        {
+            "canonical_name": "F4",
+            "color": "black",
+            "index": 10,
+            "name": "F4"
+        },
+        {
+            "canonical_name": "F8",
+            "color": "black",
+            "index": 11,
+            "name": "F8"
+        },
+        {
+            "canonical_name": "T7",
+            "color": "black",
+            "index": 14,
+            "name": "T3"
+        },
+        {
+            "canonical_name": "C3",
+            "color": "black",
+            "index": 15,
+            "name": "C3"
+        },
+        {
+            "canonical_name": "C4",
+            "color": "black",
+            "index": 17,
+            "name": "C4"
+        },
+        {
+            "canonical_name": "T8",
+            "color": "black",
+            "index": 18,
+            "name": "T4"
+        },
+        {
+            "canonical_name": "P7",
+            "color": "black",
+            "index": 21,
+            "name": "T5"
+        },
+        {
+            "canonical_name": "P3",
+            "color": "black",
+            "index": 22,
+            "name": "P3"
+        },
+        {
+            "canonical_name": "P4",
+            "color": "black",
+            "index": 24,
+            "name": "P4"
+        },
+        {
+            "canonical_name": "P8",
+            "color": "black",
+            "index": 25,
+            "name": "T6"
+        },
+        {
+            "canonical_name": "O1",
+            "color": "black",
+            "index": 29,
+            "name": "O1"
+        },
+        {
+            "canonical_name": "O2",
+            "color": "black",
+            "index": 31,
+            "name": "O2"
+        },
+        {
+            "canonical_name": "Fz",
+            "color": "black",
+            "index": 9,
+            "name": "FZ"
+        },
+        {
+            "canonical_name": "Cz",
+            "color": "black",
+            "index": 16,
+            "name": "CZ"
+        },
+        {
+            "canonical_name": "Pz",
+            "color": "black",
+            "index": 23,
+            "name": "PZ"
+        },
+        {
+            "canonical_name": "AFz",
+            "color": "red",
+            "index": -1,
+            "name": "Red"
+        },
+        {
+            "canonical_name": "FCz",
+            "color": "green",
+            "index": -1,
+            "name": "Green"
+        },
+        {
+            "canonical_name": "DC-A",
+            "color": "black",
+            "index": 65,
+            "name": "DC-A"
+        }
+    ]
+}
