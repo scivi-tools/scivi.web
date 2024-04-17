@@ -4,6 +4,8 @@
 from datetime import datetime
 from time import time
 
+import numpy as np
+
 from .EegWriter import EegWriter
 
 # INPUT["something"]
@@ -23,6 +25,7 @@ TIME_KEY           = "Time of Recording"
 DATE_KEY           = "Date of Recording"
 INFORMANT_CODE_KEY = "Informant Code"
 IS_WRITE_KEY       = "Write"
+MONTAGE_SCHEMA_KEY = "Montage Schema"
 
 EEG_DATA_KEY       = "EEG"
 
@@ -37,6 +40,7 @@ match MODE:
         is_write          = INPUT[IS_WRITE_KEY]
         current_filename  = INPUT[FILENAME_KEY]
         current_iteration = INPUT[FILE_NUMBER_KEY]
+        montage           = INPUT[MONTAGE_SCHEMA_KEY]
         current_date      = SETTINGS_VAL[DATE_KEY]
         current_time      = SETTINGS_VAL[TIME_KEY]
         current_informant = SETTINGS_VAL[INFORMANT_CODE_KEY]
@@ -81,7 +85,9 @@ match MODE:
             
                     CACHE[p(WRITER_KEY)] = writer
                 
-                writer.write(INPUT[EEG_DATA_KEY])
+                eeg = np.array(INPUT[EEG_DATA_KEY])
+                eeg = montage.transform_frame_by_montage(eeg, 'cap128') # TODO: move to settings
+                writer.write(eeg)
         else:
             #print("Stopping at {}".format(time()))
             if writer:

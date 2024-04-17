@@ -67,19 +67,20 @@ match MODE:
         elif settings_mode == MODE_OHM_METER:
             impedances, reference, ground = client.get_impedances()
         
-            transformed = client.transform_frame_by_montage(impedances, "cap21")
+            #transformed = client.transform_frame_by_montage(impedances, "cap21")
         
             #print (transformed)
         
-            names = transformed[0]
-            imps = transformed[1]
+            #names = transformed[0]
+            #imps = transformed[1]
         
-            imps = imps[:,0] + imps[:,1]
+            #imps = imps[:,0] + imps[:,1]
         
-            OUTPUT["EEG"] = [
-                names,
-                imps.tolist()
-            ]
+            #OUTPUT["EEG"] = [
+            #    names,
+            #    imps.tolist()
+            #]
+            OUTPUT["EEG"] = impedances.tolist()
         
             print (OUTPUT["EEG"])
         
