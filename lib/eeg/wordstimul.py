@@ -1,11 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from enum import Enum
+
+class gpio_emu(object):
+    def init():
+        print("GPIO EMULATION: INIT")
+
+    def setcfg(port_num, mode):
+        print("GPIO EMULATION: SET CONFIG: PORT", port_num, "MODE", mode)
+
+    def output(port_num, value):
+        print("GPIO EMULATION: SET OUTPUT: PORT", port_num, "VALUE", value)
+
+class port_emu(Enum):
+    GPIO0 = 0
+    GPIO1 = 1
+    GPIO2 = 2
+    GPIO3 = 3
+    GPIO4 = 4
+
 from threading import Thread, Lock
 import pygame
-from pyGPIO.gpio import gpio, port
 from time import sleep
 
+try:
+    from pyGPIO.gpio import gpio, port
+except ModuleNotFoundError:
+    import warnings
+    warnings.warn("pyGPIO module not installed! Falling back to emulation", RuntimeWarning)
+    gpio = gpio_emu
+    port = port_emu
 
 class WordThread(Thread):
     def __init__(self, words, iterCnt, timeOut):
@@ -124,18 +149,23 @@ class WordThread(Thread):
         pygame.mouse.set_visible(True)
         pygame.quit()
 
+match MODE:
+    case 'INITIALIZATION':
+        words = SETTINGS_VAL["Words"]
+        if words:
+            wordThread = WordThread(list(map(lambda w: w.strip(), words.split("\n"))), int(SETTINGS_VAL["Iterations Count"]), int(SETTINGS_VAL["Timeout"]))
+            GLOB["wordThread"] = wordThread
+            wordThread.start()
 
-if "wordThread" in GLOB:
-    wordThread = GLOB["wordThread"]
-else:
-    words = SETTINGS_VAL["Words"]
-    if words:
-        wordThread = WordThread(list(map(lambda w: w.strip(), words.split("\n"))), int(SETTINGS_VAL["Iterations Count"]), int(SETTINGS_VAL["Timeout"]))
-        GLOB["wordThread"] = wordThread
-        REGISTER_SUBTHREAD(wordThread, wordThread.stop)
-        wordThread.start()
+    case 'RUNNING':
+        wordThread = GLOB["wordThread"]
+        wordThread.set_locked(INPUT.get("Locked", False))
+        OUTPUT["Word"] = wordThread.cur_word()
+        OUTPUT["Iteration"] = wordThread.cur_iteration()
 
-wordThread.set_locked(INPUT.get("Locked", False))
+    case 'DESTRUCTION':
+        wordThread = GLOB["wordThread"]
+        wordThread.stop()
 
-OUTPUT["Word"] = wordThread.cur_word()
-OUTPUT["Iteration"] = wordThread.cur_iteration()
+    case _:
+        raise ValueError("Unknown mode: " + MODE)

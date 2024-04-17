@@ -143,19 +143,28 @@ class WordThread(Thread):
         pygame.mouse.set_visible(True)
         pygame.quit()
 
-if "wordThread" in GLOB:
-    wordThread = GLOB["wordThread"]
-else:
-    captions = SETTINGS_VAL["Captions"]
-    paths = SETTINGS_VAL["Paths"]
-    if captions:
-        wordThread = WordThread(list(map(lambda w: w.strip(), captions.split("\n"))), list(map(lambda w: w.strip(), paths.split("\n"))),
+match MODE:
+    case 'INITIALIZATION':
+        captions = SETTINGS_VAL["Captions"]
+        paths = SETTINGS_VAL["Paths"]
+        if captions:
+            wordThread = WordThread(list(map(lambda w: w.strip(), captions.split("\n"))), list(map(lambda w: w.strip(), paths.split("\n"))),
                                 int(SETTINGS_VAL["Iterations Count"]))
-        GLOB["wordThread"] = wordThread
-        REGISTER_SUBTHREAD(wordThread, wordThread.stop)
-        wordThread.start()
+            GLOB["wordThread"] = wordThread
+            wordThread.start()
 
-wordThread.set_locked(INPUT.get("Next", False))
+        wordThread.set_locked(INPUT.get("Next", False))
 
-OUTPUT["Caption"] = wordThread.cur_caption()
-OUTPUT["Iteration"] = wordThread.cur_iteration()
+    case 'RUNNING':
+        wordThread = GLOB["wordThread"]
+        OUTPUT["Caption"] = wordThread.cur_caption()
+        OUTPUT["Iteration"] = wordThread.cur_iteration()
+
+    case 'DESTRUCTION':
+        wordThread = GLOB["wordThread"]
+        wordThread.stop()
+
+    case _:
+        raise ValueError("Unknown mode " + MODE)
+
+PROCESS()
