@@ -1,8 +1,6 @@
 #!/usr/bin/false
 
 from datetime import datetime
-import uuid
-import os
 import numpy as np
 
 import cyrtranslit
@@ -13,8 +11,7 @@ class EegWriter(object):
     def __init__(self, filename, iteration, time, informant_code, directory=None):
         self.wid = EegWriter.compute_id(filename, iteration, time, informant_code)
         if not directory:
-            directory = str(uuid.uuid4())
-            os.mkdir(directory)
+            directory = "." # Sane fallback
 
         # TODO: add date/time?
         self.filename = "{}/{:04}_{}_{:09}.edf".format(directory, iteration, filename, int(random()*10000000))

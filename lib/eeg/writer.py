@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import uuid
+import os
 from datetime import datetime
 from time import time
 
@@ -26,6 +28,7 @@ DATE_KEY           = "Date of Recording"
 INFORMANT_CODE_KEY = "Informant Code"
 IS_WRITE_KEY       = "Write"
 MONTAGE_SCHEMA_KEY = "Montage Schema"
+DIRECTORY_KEY      = "Directory"
 
 EEG_DATA_KEY       = "EEG"
 
@@ -80,8 +83,14 @@ match MODE:
                 if not writer or writer.wid != EegWriter.compute_id(current_filename, current_iteration, current_time, current_informant):
                     if (writer):
                         writer.close()
+
+                    directory = CACHE.get(p(DIRECTORY_KEY))
+                    if not directory:
+                        directory = str(uuid.uuid4())
+                        os.mkdir(directory)
+                        CACHE[p(DIRECTORY_KEY)] = directory
             
-                    writer = EegWriter(current_filename, current_iteration, current_time, current_informant)
+                    writer = EegWriter(current_filename, current_iteration, current_time, current_informant, directory)
             
                     CACHE[p(WRITER_KEY)] = writer
                 
