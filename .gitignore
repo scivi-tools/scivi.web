@@ -10,3 +10,7 @@ lib/voicerecognizer/model
 
 # backups
 *.bak
+
+.vs/*
+.idea/*
+dfds/*
