@@ -14,3 +14,4 @@ lib/voicerecognizer/model
 .vs/*
 .idea/*
 dfds/*
+.venv
