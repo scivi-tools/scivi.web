@@ -261,4 +261,55 @@ def shutdown():
     event_loop_thread.join()
     return 'Server shutting down...'
 
+###############################
+# FIXME: CRUTCH!!!
+###############################
+def nameOf(table):
+    if table == "Observations":
+        return "observations"
+    elif table == "Source Updates":
+        return "sourceUpdates"
+    elif table == "Calibration Updates":
+        return "calibrationUpdates"
+    elif table == "Residuals":
+        return "residuals"
+    else:
+        return "spectrum"
 
+def genImg(settings):
+    import io
+    import pandas as pd
+    import matplotlib
+    from matplotlib import pyplot as plt
+
+    path = "/Users/kostya/Downloads/pt/"
+    view = None
+    viewValid = False
+    for table in settings["tables"]:
+        with open(path + nameOf(table["table"]) + ".csv", "r") as f:
+            dataFrame = pd.read_csv(f)
+        if "filter" in table:
+            dataFrame = dataFrame.query("@dataFrame." + table["filter"])
+        if not viewValid:
+            view = dataFrame
+            viewValid = True
+        else:
+            view = pd.merge(view, dataFrame, on = settings["join"])
+
+    matplotlib.use("agg")
+    fig = plt.figure()
+    plt.hist(view[settings["plot"]], 100, color = "#01A2FF", ec = "blue")
+
+    s = io.StringIO()
+    fig.savefig(s, format = "svg", bbox_inches = "tight")
+
+    return s.getvalue()
+
+
+@app.route("/ajashist", methods = ['POST'])
+def ajashist():
+    settings = request.get_json(force = True)
+    res = { "image": genImg(settings) }
+    resp = jsonify(res)
+    resp.status_code = 200
+    return resp
