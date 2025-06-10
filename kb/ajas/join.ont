@@ -13,9 +13,9 @@
             "attributes": {
             },
             "id": "1",
-            "name": "Join",
+            "name": "Join Plots",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 390,
+            "position_x": 358,
             "position_y": 338
         },
         {
@@ -24,17 +24,17 @@
             "id": "2",
             "name": "Filter",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 392,
+            "position_x": 360,
             "position_y": 262
         },
         {
             "attributes": {
             },
             "id": "4",
-            "name": "A U B",
+            "name": "Combined plot",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 355,
-            "position_y": 425
+            "position_x": 321,
+            "position_y": 412
         },
         {
             "attributes": {
@@ -42,7 +42,7 @@
             "id": "5",
             "name": "Type",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 281,
+            "position_x": 249,
             "position_y": 534
         },
         {
@@ -51,16 +51,16 @@
             "id": "6",
             "name": "Output",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 463,
+            "position_x": 431,
             "position_y": 420
         },
         {
             "attributes": {
             },
             "id": "10",
-            "name": "Grid",
+            "name": "ChartObject",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 311,
+            "position_x": 280,
             "position_y": 481
         },
         {
@@ -70,7 +70,7 @@
             "id": "13",
             "name": "Join Worker",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 607,
+            "position_x": 575,
             "position_y": 284
         },
         {
@@ -79,7 +79,7 @@
             "id": "15",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 615,
+            "position_x": 583,
             "position_y": 376
         },
         {
@@ -88,7 +88,7 @@
             "id": "18",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 603,
+            "position_x": 571,
             "position_y": 200
         },
         {
@@ -97,9 +97,9 @@
                 "inline": true
             },
             "id": "30",
-            "name": "A",
+            "name": "Plot 1",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 300,
+            "position_x": 268,
             "position_y": 345
         },
         {
@@ -108,16 +108,16 @@
             "id": "51",
             "name": "Input",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 232,
+            "position_x": 200,
             "position_y": 282
         },
         {
             "attributes": {
             },
             "id": "52",
-            "name": "B",
+            "name": "Plot 2",
             "namespace": "http://knova.ru/user/1551540440580",
-            "position_x": 268,
+            "position_x": 236,
             "position_y": 375
         }
     ],
