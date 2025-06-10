@@ -1,5 +1,5 @@
 {
-    "last_id": "82",
+    "last_id": "85",
     "namespaces": {
         "default": "http://knova.ru/user/1532855052471",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -53,17 +53,17 @@
                 "color": "#E05EFF"
             },
             "id": "5",
-            "name": "GraphNode",
+            "name": "Vector",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 469,
-            "position_y": 400
+            "position_x": 480,
+            "position_y": 394
         },
         {
             "attributes": {
                 "color": "#6EA7FF"
             },
             "id": "6",
-            "name": "GraphEdge",
+            "name": "Date",
             "namespace": "http://knova.ru/user/1532855052471",
             "position_x": 536,
             "position_y": 427
@@ -100,13 +100,13 @@
         },
         {
             "attributes": {
-                "color": "#00C800"
+                "color": "#F27200"
             },
             "id": "18",
-            "name": "GraphData",
+            "name": "ChartObject",
             "namespace": "http://knova.ru/user/1532855052471",
-            "position_x": 373,
-            "position_y": 411
+            "position_x": 639,
+            "position_y": 437
         },
         {
             "attributes": {
