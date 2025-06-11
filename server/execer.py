@@ -139,7 +139,7 @@ class Execer(Thread):
     def execute_node(self, instNode: Node, mode: ExecutionMode):
         protoNode = first(self.taskOnto.get_nodes_linked_from(instNode, "is_instance"))
         self.execute_worker(instNode, protoNode, mode)
-        
+
     def turn(self, mode: ExecutionMode):
         self.buffer = {}
         self.processScheduled = False
@@ -162,3 +162,30 @@ class Execer(Thread):
                     command = {"command": "wait_for_destruction",
                                     "progress": len(executed) / nodes_to_execute_count}
                     self.push_message_to_send(json.dumps(command))
+
+    def quated_str(self, x):
+        if isinstance(x, str):
+            return f"\"{x}\""
+        else:
+            return str(x)
+
+    def call_api(self, apiID: int, inputs):
+        apiNode = self.onto.get_node_by_id(apiID)
+        apiOperatorNode = first(self.onto.get_nodes_linked_to(apiNode, "has"))
+        apiWorkerNode = first(self.onto.get_nodes_linked_to(apiOperatorNode, "is_instance"))
+        outputs = [ None ]
+        context = { "GLOB": self.glob, "MODE": "APICALL", "OUTPUTS": outputs }
+        if "inline" in apiWorkerNode.attributes:
+            p = "inline"
+            code = apiWorkerNode.attributes["inline"]
+        elif "path" in apiWorkerNode.attributes:
+            p = apiWorkerNode.attributes["path"]
+            context["__name__"] = p.replace("/", ".").strip(".py")
+            with open(p, encoding="utf-8") as f:
+                code = f.read()
+        else:
+            print("Error: Can't execute node. 'path' not in workerNode.attributes");
+            return
+        code += f"\n\nOUTPUTS[0] = {apiNode.name}({",".join(list(map(self.quated_str, inputs)))})\n"
+        self.guarded_exec(apiOperatorNode.name, p, code, context)
+        return outputs[0]
