@@ -97,13 +97,23 @@ class SciViServer:
     async def wait_for_connection(self):
         self.commandServer = await websockets.serve(self.client_handler, port = self.commandServerPort)
         print("Command server started at", self.commandServerPort, "port")
-         
+
     async def client_handler(self, websocket):
         print("Client connected to command server", self.commandServerPort)
         self.webSockets.append(websocket)
         try:
             async for message in websocket:
                 print('message received', message)
+                msg = json.loads(message)
+                if "api" in msg:
+                    outputs = self.execers[msg["exe"]].call_api(msg["api"], msg["inputs"])
+                    response = { \
+                        "command": "api_response", \
+                        "caller": msg["caller"], \
+                        "api": msg["api"], \
+                        "outputs": outputs \
+                    }
+                    self.commandServerLoop.create_task(websocket.send(json.dumps(response)))
         finally:
             self.webSockets.remove(websocket)
             print('Connection with command server was closed')
@@ -135,11 +145,11 @@ class SciViServer:
 
 
     def add_node(self, node: Node):
-        self.tree = self.tree +\
-                    "<li><input type='checkbox' id='i" +\
-                    str(self.treeID) +\
-                    "'/><label for='i" +\
-                    str(self.treeID) +\
+        self.tree = self.tree + \
+                    "<li><input type='checkbox' id='i" + \
+                    str(self.treeID) + \
+                    "'/><label for='i" + \
+                    str(self.treeID) + \
                     "'>" + node + "</label>"
         self.treeID = self.treeID + 1
 
@@ -155,9 +165,9 @@ class SciViServer:
                 self.typeColors[t.name] = t.attributes["color"]
             else:
                 self.typeColors[t.name] = "#000000"
-            result = result +\
-                     "{ 'name': '" + s.name +\
-                     "', 'type': '" + t.name +\
+            result = result + \
+                     "{ 'name': '" + s.name + \
+                     "', 'type': '" + t.name + \
                      "' },"
         return result + "]"
 
@@ -250,7 +260,7 @@ class SciViServer:
         else:
             return 0
 
-    def resolve_containers(self, code, inputs: List[Node], outputs : List[Node], settings : List[Node], viewType: Node):
+    def resolve_containers(self, code, inputs: List[Node], outputs: List[Node], settings: List[Node], viewType: Node, apis: List[Node]):
         props = re.findall(r"PROPERTY\[\"(.+?)\"\]", code)
         for p in props:
             found = False
@@ -284,7 +294,7 @@ class SciViServer:
             #code = re.sub("(INPUT|input)((\[[\"\'](" + inp["name"] + ")[\"\']\])|\." + inp["name"] + ")", "inputs[" + str(i) + "][0]", code);
         for i, outp in enumerate(outputs):
             code = code.replace("OUTPUT[\"" + outp.name + "\"]", "outputs[" + str(i) + "]")
-            
+
         code = code.replace("DATA", "node.data")
         code = code.replace("CACHE", "node.data.cache")
         code = code.replace("PROCESS", "editor.process")
@@ -293,9 +303,18 @@ class SciViServer:
         code = code.replace("SETTINGS_CHANGED", "node.data.settingsChanged")
         code = code.replace("SETTINGS", "node.data.settings")
         code = code.replace("SAVE_FILE", "editor.saveFile")
+
+        if apis:
+            for api in apis:
+                if first(self.onto.get_typed_nodes_linked_from(api, "has", "Input")):
+                    apiCall = f"editor.callAPI(node.id, {api.id}, "
+                else:
+                    apiCall = f"editor.callAPI(node.id, {api.id}"
+                code = code.replace(f"{api.name}(", apiCall)
+
         return code
 
-    def gen_worker(self, workers, inputs, outputs, settings):
+    def gen_worker(self, workers, inputs, outputs, settings, apis: List[Node]):
         w = first(workers)
         if w:
             masks = self.onto.get_typed_nodes_linked_from(w, "has", "Code Mask")
@@ -304,21 +323,21 @@ class SciViServer:
             viewType = first(self.onto.get_typed_nodes_linked_from(proto, "is_a", "View"))
             self.add_dependencies(w)
             return "function (node, inputs, outputs) { " + \
-                self.resolve_containers(code, inputs, outputs, settings, viewType) +\
-                     " }"
+                   self.resolve_containers(code, inputs, outputs, settings, viewType, apis) + \
+                   " }"
         else:
             code = ""
-            return "function (node, inputs, outputs) { " +\
-                        self.resolve_containers(code, inputs, outputs, settings, None) +\
-                        "if (node.data.outputDataPool && node.data.outputDataPool.length > 0) { " +\
-                            "let received_data = node.data.outputDataPool.shift(); " +\
-                            "for (var i = 0, n = outputs.length; i < n; ++i) " +\
-                                "outputs[i] = received_data[i]; " +\
-                        "} " +\
-                        "if (node.data.txAddress) { " +\
-                            "for (var i = 0, n = inputs.length; i < n; ++i) " +\
-                                "editor.transmitInput(node.data.txAddress, node.id, i, inputs[i][0]); " +\
-                        "} " +\
+            return "function (node, inputs, outputs) { " + \
+                        self.resolve_containers(code, inputs, outputs, settings, None, apis) + \
+                        "if (node.data.outputDataPool && node.data.outputDataPool.length > 0) { " + \
+                            "let received_data = node.data.outputDataPool.shift(); " + \
+                            "for (var i = 0, n = outputs.length; i < n; ++i) " + \
+                                "outputs[i] = received_data[i]; " + \
+                        "} " + \
+                        "if (node.data.txAddress) { " + \
+                            "for (var i = 0, n = inputs.length; i < n; ++i) " + \
+                                "editor.transmitInput(node.data.txAddress, node.id, i, inputs[i][0]); " + \
+                        "} " + \
                    "}"
 
     def gen_settings(self, settings: List[Node]):
@@ -405,7 +424,8 @@ class SciViServer:
         outputNodes = sorted(outputNodes, key = lambda outp: outp.id)
         outputs = self.gen_sockets(outputNodes)
         settingNodes = self.onto.get_typed_nodes_linked_from_inherited(leaf, "has", "Setting")
-        worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ClientSideWorker"), inputNodes, outputNodes, settingNodes)
+        worker = self.gen_worker(self.onto.get_typed_nodes_linked_to(leaf, "is_instance", "ClientSideWorker"), \
+                                 inputNodes, outputNodes, settingNodes, self.apis)
         sett = self.gen_settings(settingNodes)
         self.treeNodes = self.treeNodes +\
                          "editor.registerNode('" + leaf.name+ "', " + str(leaf.UID) + ", " + inputs + ", " + outputs + ", " + worker + ", " + sett + ");"
@@ -430,6 +450,9 @@ class SciViServer:
         self.tree = "<ul>"
 
         rootNode = first(self.onto.get_nodes_by_name("Root"))
+        apiNode = first(self.onto.get_nodes_by_name("API"))
+        if apiNode:
+            self.apis = self.onto.get_nodes_linked_to(apiNode, "is_a")
         categories = self.onto.get_nodes_linked_to(rootNode, "is_a")
         for category in categories:
             self.add_tree_level(category.name, self.onto.get_nodes_linked_to(category, "is_a"))
@@ -513,6 +536,7 @@ class SciViServer:
                 self.execers[serverTaskHash] = execer
                 execer.turn(ExecutionMode.INITIALIZATION)
                 execer.start()
+                execer.process()
             compRes.append({ "address": serverAddress + ":" + str(dataServerPort), "corTable": serverCorTable, "eon": [] })
         # Edge
         edgeRes = first(mixedOnto.get_nodes_by_name("ESP8266"))

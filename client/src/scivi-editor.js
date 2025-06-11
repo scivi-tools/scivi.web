@@ -52,6 +52,7 @@ function SciViEditor()
     SciViEditor.prototype.mode = null;
     SciViEditor.prototype.selectedNode = null;
     SciViEditor.prototype.command_socket = null;
+    SciViEditor.prototype.apiResponses = {};
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -244,6 +245,13 @@ SciViEditor.prototype.run = function (mode)
                 case "wait_for_initialization": {
                     let progress = msg.progress;
                     $("#scivi_load_progressbar").progressbar({value: progress});
+                } break;
+                case "api_response": {
+                    let responseKey = `${msg.caller}::${msg.api}`;
+                    if (this.apiResponses[responseKey] !== undefined) {
+                        this.apiResponses[responseKey].resolve(msg.outputs);
+                        delete this.apiResponses[responseKey];
+                    }
                 } break;
                 default: console.warn("Unknown message from command server", msg); break;
             }
@@ -894,4 +902,27 @@ SciViEditor.prototype.saveFile = function (data, fileName, fileExt, fileType, sh
     if (!fileName.includes("."))
         fileName += fileExt;
     FileSaver.saveAs(new Blob([ data ], {type: fileType}), fileName);
+}
+
+SciViEditor.prototype.getCookieValue = function (name)
+{
+    const regex = new RegExp(`(^| )${name}=([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match)
+        return match[2];
+    return null;
+}
+
+SciViEditor.prototype.callAPI = function(dfdNodeID, apiID, ...inputs)
+{
+    const call = { exe: this.getCookieValue("exe"), caller: dfdNodeID, api: apiID, inputs: inputs };
+    const response = { resolve: null, reject: null };
+    const result = new Promise((resolve, reject) => { response.resolve = resolve; response.reject = resolve; });
+    const responseKey = `${dfdNodeID}::${apiID}`;
+    const oldResponse = this.apiResponses[responseKey];
+    if (oldResponse !== undefined)
+        oldResponse.reject();
+    this.apiResponses[responseKey] = response;
+    this.command_socket.send(JSON.stringify(call));
+    return result;
 }
