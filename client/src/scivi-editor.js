@@ -249,7 +249,7 @@ SciViEditor.prototype.run = function (mode)
                 case "api_response": {
                     let responseKey = `${msg.caller}::${msg.api}`;
                     if (this.apiResponses[responseKey] !== undefined) {
-                        this.apiResponses[responseKey].resolve(msg.outputs);
+                        this.apiResponses[responseKey].resolve(this.parseAPITypes(msg.outputs, msg.types));
                         delete this.apiResponses[responseKey];
                     }
                 } break;
@@ -261,7 +261,7 @@ SciViEditor.prototype.run = function (mode)
 
 SciViEditor.prototype.startVisualization = function ()
 {
-    if (!this.inVisualization) 
+    if (!this.inVisualization)
     {
         if (this.mode == VISUALIZATION_MODE)// no wait server if it's just visualization mode
         {
@@ -913,7 +913,7 @@ SciViEditor.prototype.getCookieValue = function (name)
     return null;
 }
 
-SciViEditor.prototype.callAPI = function(dfdNodeID, apiID, ...inputs)
+SciViEditor.prototype.callAPI = function (dfdNodeID, apiID, ...inputs)
 {
     const call = { exe: this.getCookieValue("exe"), caller: dfdNodeID, api: apiID, inputs: inputs };
     const response = { resolve: null, reject: null };
@@ -925,4 +925,28 @@ SciViEditor.prototype.callAPI = function(dfdNodeID, apiID, ...inputs)
     this.apiResponses[responseKey] = response;
     this.command_socket.send(JSON.stringify(call));
     return result;
+}
+
+SciViEditor.prototype.parseAPIType = function (output, type)
+{
+    switch (type) {
+        case "JSON":
+            return JSON.parse(output);
+
+        default:
+            console.warn(`Unsupported API type: <${type}>`);
+            return undefined;
+    }
+}
+
+SciViEditor.prototype.parseAPITypes = function (outputs, types)
+{
+    if (Array.isArray(outputs)) {
+        let result = [];
+        for (let i = 0; i < outputs.length; ++i)
+            result.push(this.parseAPIType(outputs[i], types[i]));
+        return result;
+    } else {
+        return this.parseAPIType(outputs, types);
+    }
 }
