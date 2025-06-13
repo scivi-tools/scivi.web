@@ -173,6 +173,15 @@ class Execer(Thread):
         apiNode = self.onto.get_node_by_id(apiID)
         apiOperatorNode = first(self.onto.get_nodes_linked_to(apiNode, "has"))
         apiWorkerNode = first(self.onto.get_nodes_linked_to(apiOperatorNode, "is_instance"))
+        apiOutputs = self.onto.get_typed_nodes_linked_from(apiNode, "has", "Output")
+        if len(apiOutputs) == 1:
+            apiOutputType = first(self.onto.get_nodes_linked_from(apiOutputs[0], "is_a"))
+            types = apiOutputType.name
+        else:
+            types = []
+            for apiOutput in apiOutputs:
+                apiOutputType = first(self.onto.get_typed_nodes_linked_from(apiOutput, "is_a"))
+                types.append(apiOutputType.name)
         outputs = [ None ]
         context = { "GLOB": self.glob, "MODE": "APICALL", "OUTPUTS": outputs }
         if "inline" in apiWorkerNode.attributes:
@@ -188,4 +197,4 @@ class Execer(Thread):
             return
         code += f"\n\nOUTPUTS[0] = {apiNode.name}({",".join(list(map(self.quated_str, inputs)))})\n"
         self.guarded_exec(apiOperatorNode.name, p, code, context)
-        return outputs[0]
+        return outputs[0], types

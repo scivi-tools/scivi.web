@@ -106,12 +106,13 @@ class SciViServer:
                 print('message received', message)
                 msg = json.loads(message)
                 if "api" in msg:
-                    outputs = self.execers[msg["exe"]].call_api(msg["api"], msg["inputs"])
+                    outputs, types = self.execers[msg["exe"]].call_api(msg["api"], msg["inputs"])
                     response = { \
                         "command": "api_response", \
                         "caller": msg["caller"], \
                         "api": msg["api"], \
-                        "outputs": outputs \
+                        "outputs": outputs, \
+                        "types": types \
                     }
                     self.commandServerLoop.create_task(websocket.send(json.dumps(response)))
         finally:

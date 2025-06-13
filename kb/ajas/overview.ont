@@ -1,5 +1,5 @@
 {
-    "last_id": "16",
+    "last_id": "22",
     "namespaces": {
         "default": "http://knova.ru/user/1749558746829",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -81,6 +81,34 @@
             "namespace": "http://knova.ru/user/1749558746829",
             "position_x": 130,
             "position_y": -122
+        },
+        {
+            "attributes": {
+            },
+            "id": "17",
+            "name": "Dependency",
+            "namespace": "http://knova.ru/user/1749558746829",
+            "position_x": 272,
+            "position_y": -312
+        },
+        {
+            "attributes": {
+                "path": "lib/ajas/report.css"
+            },
+            "id": "18",
+            "name": "Report CSS",
+            "namespace": "http://knova.ru/user/1749558746829",
+            "position_x": 262,
+            "position_y": -248
+        },
+        {
+            "attributes": {
+            },
+            "id": "21",
+            "name": "CSS",
+            "namespace": "http://knova.ru/user/1749558746829",
+            "position_x": 307,
+            "position_y": -185
         }
     ],
     "relations": [
@@ -146,6 +174,33 @@
             "name": "is_instance",
             "namespace": "http://knova.ru/user/1749558746829",
             "source_node_id": "10"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "18",
+            "id": "19",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1749558746829",
+            "source_node_id": "10"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "17",
+            "id": "20",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1749558746829",
+            "source_node_id": "18"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "21",
+            "id": "22",
+            "name": "language",
+            "namespace": "http://knova.ru/user/1749558746829",
+            "source_node_id": "18"
         }
     ],
     "visualize_ont_path": ""
