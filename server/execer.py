@@ -6,6 +6,7 @@ import enum
 import json
 import sys
 import traceback
+import numpy as np
 from threading import Thread, Lock
 from typing import Any, Callable
 
@@ -27,6 +28,16 @@ class OperatorError(Exception):
 
     def __str__(self):
         return "SciVi operator <%s> error in file <%s> line %d:\n%s" % (self.name, self.path, self.line, self.message)
+
+class NPEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super(NPEncoder, self).default(obj)
 
 class Execer(Thread):
     def __init__(self, onto: Onto, taskOnto: Onto, nodeStates: dict[int, dict[str, Any]],
@@ -171,7 +182,7 @@ class Execer(Thread):
 
     def serialize(self, value, type):
         if type == "JSON":
-            return json.dumps(value)
+            return json.dumps(value, cls = NPEncoder)
         else:
             return value
 
