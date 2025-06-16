@@ -428,7 +428,7 @@ class DFD2Onto:
                 rxtxNmb = self.replace_io(result, node, hostNode, rxtxNmb, dfdI, dfdO, corTable)
                 needsRelayout = True
         
-        # Cleanup unusedd operators.
+        # Cleanup unused operators.
         dfdNodes = result.nodes.copy()
         for node in dfdNodes:
             if ("mother" in node.attributes) and \

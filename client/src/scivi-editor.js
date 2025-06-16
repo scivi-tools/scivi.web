@@ -655,6 +655,11 @@ SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
             if (this.visuals[i].style.height)
                 this.visuals[i].style.height = "calc(100% - " + h + "px)";
         }
+    } else if (forceDir === "stack") {
+        let d = $("<div style='overflow: auto; height: 100%'>");
+        for (var i = 0, n = this.visuals.length; i < n; ++i)
+            d[0].appendChild(this.visuals[i]);
+        vp.appendChild(d[0]);
     } else {
         if (this.visuals.length == 1)
             vp.appendChild(el);
