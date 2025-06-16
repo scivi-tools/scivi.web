@@ -8,13 +8,17 @@ def get_solution_stats(solutionID: str) -> dict:
     return GLOB[solutionID].solution_stats()
 
 def get_observations_stats(solutionID: str) -> dict:
-    result = {}
-    obsStats = raccoons.ObsStats(GLOB[solutionID])
-    result["min"] = obsStats.min()
-    result["max"] = obsStats.max()
-    result["avg"] = obsStats.avg()
-    GLOB[solutionID + "_obsStats"] = obsStats
-    return result
+    if solutionID + "_obsStats" in GLOB:
+        obsStats = GLOB[solutionID + "_obsStats"]
+    else:
+        obsStats = raccoons.ObsStats(GLOB[solutionID])
+        GLOB[solutionID + "_obsStats"] = obsStats
+    return { \
+        "min": obsStats.min(), \
+        "max": obsStats.max(), \
+        "avg": obsStats.avg(), \
+        "hist": list(obsStats.histogram(50))
+    }
 
 def solution_id() -> str:
     return str(hash(SETTINGS_VAL["Input Data Path"] + SETTINGS_VAL["Solution Path"]))
