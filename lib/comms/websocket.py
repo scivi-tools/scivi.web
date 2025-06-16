@@ -24,7 +24,7 @@ def ready_to_send():
     if len(tx) == n:
         for addr in tx:
             l = len(tx[addr])
-            if (l == 0) or (l % n != 0):
+            if l == 0:
                 return False
         return True
     return False
