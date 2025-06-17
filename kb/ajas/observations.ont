@@ -1,5 +1,5 @@
 {
-    "last_id": "25",
+    "last_id": "30",
     "namespaces": {
         "default": "http://knova.ru/user/1750028876901",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -119,6 +119,16 @@
             "namespace": "http://knova.ru/user/1750028876901",
             "position_x": 308,
             "position_y": -217
+        },
+        {
+            "attributes": {
+                "path": "lib/ajas/NChart3D.wasm"
+            },
+            "id": "26",
+            "name": "NChart3D.wasm",
+            "namespace": "http://knova.ru/user/1750028876901",
+            "position_x": 354,
+            "position_y": -142
         }
     ],
     "relations": [
@@ -229,6 +239,24 @@
             "name": "language",
             "namespace": "http://knova.ru/user/1750028876901",
             "source_node_id": "21"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "26",
+            "id": "28",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1750028876901",
+            "source_node_id": "6"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "20",
+            "id": "29",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1750028876901",
+            "source_node_id": "26"
         }
     ],
     "visualize_ont_path": ""

@@ -938,6 +938,9 @@ SciViEditor.prototype.parseAPIType = function (output, type)
         case "JSON":
             return JSON.parse(output);
 
+        case "String":
+            return output;
+
         default:
             console.warn(`Unsupported API type: <${type}>`);
             return undefined;
