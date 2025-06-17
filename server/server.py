@@ -188,6 +188,8 @@ class SciViServer:
             return "image/jpeg"
         elif filename.endswith(".wasm"):
             return "application/wasm"
+        elif filename.endswith(".dat"):
+            return "application/x-binary"
         return None
 
     def get_mime(self, node: Node):
