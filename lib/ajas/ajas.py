@@ -27,7 +27,8 @@ def get_observations_per_source(solutionID: str) -> str:
     obsStats = get_obs_stats(solutionID)
     path = f"/tmp/{solutionID}_obs_per_src.dat"
     obsStats.dump_obs_per_src(path, GLOB[solutionID])
-    return path
+    PUBLISH_FILE(path)
+    return f"/storage{path}"
 
 def sdbm(s):
     result = 0

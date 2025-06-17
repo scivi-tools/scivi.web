@@ -202,7 +202,7 @@ class Execer(Thread):
                 types.append(apiOutputType.name)
 
         outputs = [ None ]
-        context = { "GLOB": self.glob, "MODE": "APICALL", "OUTPUTS": outputs }
+        context = { "GLOB": self.glob, "MODE": "APICALL", "OUTPUTS": outputs, "PUBLISH_FILE": self.publish_file }
         if "inline" in apiWorkerNode.attributes:
             p = "inline"
             code = apiWorkerNode.attributes["inline"]
