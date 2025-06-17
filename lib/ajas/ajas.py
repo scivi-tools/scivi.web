@@ -1,5 +1,6 @@
 
 import lib.ajas.raccoons as raccoons
+from ctypes import c_uint64
 
 def get_mission_overview(solutionID: str) -> dict:
     return GLOB[solutionID].mission_overview()
@@ -7,12 +8,14 @@ def get_mission_overview(solutionID: str) -> dict:
 def get_solution_stats(solutionID: str) -> dict:
     return GLOB[solutionID].solution_stats()
 
+def get_obs_stats(solutionID):
+    k = solutionID + "_obsStats"
+    if not k in GLOB:
+        GLOB[k] = raccoons.ObsStats(GLOB[solutionID])
+    return GLOB[k]
+
 def get_observations_stats(solutionID: str) -> dict:
-    if solutionID + "_obsStats" in GLOB:
-        obsStats = GLOB[solutionID + "_obsStats"]
-    else:
-        obsStats = raccoons.ObsStats(GLOB[solutionID])
-        GLOB[solutionID + "_obsStats"] = obsStats
+    obsStats = get_obs_stats(solutionID)
     return { \
         "min": obsStats.min(), \
         "max": obsStats.max(), \
@@ -20,8 +23,20 @@ def get_observations_stats(solutionID: str) -> dict:
         "hist": list(obsStats.histogram(50))
     }
 
+def get_observations_per_source(solutionID: str) -> str:
+    obsStats = get_obs_stats(solutionID)
+    path = f"/tmp/{solutionID}_obs_per_src.dat"
+    obsStats.dump_obs_per_src(path, GLOB[solutionID])
+    return path
+
+def sdbm(s):
+    result = 0
+    for c in s:
+        result = c_uint64(ord(c) + (result << 6) + (result << 16) - result).value
+    return result
+
 def solution_id() -> str:
-    return str(hash(SETTINGS_VAL["Input Data Path"] + SETTINGS_VAL["Solution Path"]))
+    return str(sdbm(SETTINGS_VAL["Input Data Path"] + SETTINGS_VAL["Solution Path"]))
 
 if MODE == "INITIALIZATION":
     ipath = SETTINGS_VAL["Input Data Path"]

@@ -193,12 +193,12 @@ class Execer(Thread):
         apiOutputs = self.onto.get_typed_nodes_linked_from(apiNode, "has", "Output")
         n = len(apiOutputs)
         if n == 1:
-            apiOutputType = first(self.onto.get_nodes_linked_from(apiOutputs[0], "is_a"))
+            apiOutputType = first(self.onto.get_typed_nodes_linked_from(apiOutputs[0], "is_a", "Type"))
             types = apiOutputType.name
         else:
             types = []
             for apiOutput in apiOutputs:
-                apiOutputType = first(self.onto.get_typed_nodes_linked_from(apiOutput, "is_a"))
+                apiOutputType = first(self.onto.get_typed_nodes_linked_from(apiOutput, "is_a", "Type"))
                 types.append(apiOutputType.name)
 
         outputs = [ None ]
