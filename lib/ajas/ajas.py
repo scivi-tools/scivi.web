@@ -23,12 +23,13 @@ def get_observations_stats(solutionID: str) -> dict:
         "hist": list(obsStats.histogram(50))
     }
 
-def get_observations_per_source(solutionID: str) -> str:
+def get_observations_per_source(solutionID: str) -> dict:
     obsStats = get_obs_stats(solutionID)
     path = f"/tmp/{solutionID}_obs_per_src.dat"
-    obsStats.dump_obs_per_src(path, GLOB[solutionID])
+    obsPerSrc = obsStats.dump_obs_per_src(path, GLOB[solutionID])
     PUBLISH_FILE(path)
-    return f"/storage{path}"
+    obsPerSrc["path"] = f"/storage{path}"
+    return obsPerSrc
 
 def sdbm(s):
     result = 0
