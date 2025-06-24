@@ -31,6 +31,14 @@ def get_observations_per_source(solutionID: str) -> dict:
     obsPerSrc["path"] = f"/storage{path}"
     return obsPerSrc
 
+def get_observations_of_src(solutionID: str, srcID: str) -> dict:
+    obsStats = get_obs_stats(solutionID)
+    path = f"/tmp/{solutionID}_obs_of_src_{srcID}.dat"
+    result = obsStats.dump_obs_of_src(int(srcID), path, GLOB[solutionID])
+    PUBLISH_FILE(path)
+    result["path"] = f"/storage{path}"
+    return result
+
 def sdbm(s):
     result = 0
     for c in s:
