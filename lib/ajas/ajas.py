@@ -39,6 +39,14 @@ def get_observations_of_src(solutionID: str, srcID: str) -> dict:
     result["path"] = f"/storage{path}"
     return result
 
+def get_src_uncertainties(solutionID: str) -> dict:
+    obsStats = get_obs_stats(solutionID)
+    path = f"/tmp/{solutionID}_src_uncertainties.dat"
+    srcUns = obsStats.dump_src_uncertainties(path, GLOB[solutionID])
+    PUBLISH_FILE(path)
+    srcUns["path"] = f"/storage{path}"
+    return srcUns
+
 def sdbm(s):
     result = 0
     for c in s:
