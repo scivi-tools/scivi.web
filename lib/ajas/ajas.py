@@ -1,5 +1,6 @@
 
 import lib.ajas.raccoons as raccoons
+import numpy as np
 from ctypes import c_uint64
 
 def get_mission_overview(solutionID: str) -> dict:
@@ -46,6 +47,11 @@ def get_src_uncertainties(solutionID: str) -> dict:
     PUBLISH_FILE(path)
     srcUns["path"] = f"/storage{path}"
     return srcUns
+
+def get_src_stats(solutionID: str) -> dict:
+    srcStats = raccoons.SrcStats().stats(GLOB[solutionID])
+    print(srcStats)
+    return srcStats
 
 def sdbm(s):
     result = 0
