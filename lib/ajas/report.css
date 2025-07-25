@@ -25,6 +25,10 @@
 {
     text-align: right;
 }
+.table-head
+{
+    text-align: center;
+}
 .hline
 {
     border-bottom: thick double #000;
