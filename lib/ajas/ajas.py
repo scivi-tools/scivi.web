@@ -49,8 +49,10 @@ def get_src_uncertainties(solutionID: str) -> dict:
     return srcUns
 
 def get_src_stats(solutionID: str) -> dict:
-    srcStats = raccoons.SrcStats().stats(GLOB[solutionID])
-    print(srcStats)
+    stats = raccoons.SrcStats()
+    srcStats = stats.stats(GLOB[solutionID])
+    srcStats["histUpsilon"] = list(stats.hist_upsilon())
+    srcStats["histRho"] = list(stats.hist_rho())
     return srcStats
 
 def sdbm(s):
