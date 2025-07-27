@@ -50,9 +50,15 @@ def get_src_uncertainties(solutionID: str) -> dict:
 
 def get_src_stats(solutionID: str) -> dict:
     stats = raccoons.SrcStats()
-    srcStats = stats.stats(GLOB[solutionID])
+    pathUpsilon = f"/tmp/{solutionID}_src_updates_upsilon.dat"
+    pathRho = f"/tmp/{solutionID}_src_updates_rho.dat"
+    srcStats = stats.stats(GLOB[solutionID], pathUpsilon, pathRho)
     srcStats["histUpsilon"] = list(stats.hist_upsilon())
     srcStats["histRho"] = list(stats.hist_rho())
+    srcStats["pathUpsilon"] = f"/storage{pathUpsilon}"
+    srcStats["pathRho"] = f"/storage{pathRho}"
+    PUBLISH_FILE(pathUpsilon)
+    PUBLISH_FILE(pathRho)
     return srcStats
 
 def sdbm(s):
