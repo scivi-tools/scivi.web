@@ -61,6 +61,9 @@ def get_src_stats(solutionID: str) -> dict:
     PUBLISH_FILE(pathRho)
     return srcStats
 
+def get_res_stats(solutionID: str) -> dict:
+    return raccoons.ResStats().stats(GLOB[solutionID], 50)
+
 def sdbm(s):
     result = 0
     for c in s:
