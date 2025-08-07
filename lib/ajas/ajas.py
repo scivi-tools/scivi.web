@@ -2,6 +2,14 @@
 import lib.ajas.raccoons as raccoons
 import numpy as np
 from ctypes import c_uint64
+from scipy.optimize import curve_fit
+
+
+def gauss(x, a, x0, sigma):
+    return a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2))
+
+def gaussS1(x, a):
+    return a * np.exp(-x ** 2 / 2)
 
 def get_mission_overview(solutionID: str) -> dict:
     return GLOB[solutionID].mission_overview()
@@ -61,8 +69,51 @@ def get_src_stats(solutionID: str) -> dict:
     PUBLISH_FILE(pathRho)
     return srcStats
 
+def make_hist(detector, name):
+    nameHist = name + "Hist"
+    nameBinCenters = name + "BinCenters"
+    nameBins = name + "Bins"
+    nameGaussS1 = name + "GaussS1"
+    nameGauss = name + "Gauss"
+
+    binCenters = np.array(detector[nameBinCenters])
+    bins = np.array(detector[nameBins])
+
+    maxBins = max(bins)
+    sumBins = sum(bins)
+    meanBins = sum(binCenters * bins) / sumBins
+    sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
+
+    detector[nameHist] = []
+    for x, y in zip(binCenters, bins):
+        detector[nameHist].append(x)
+        detector[nameHist].append(y)
+
+    popt, pcov = curve_fit(gaussS1, binCenters, bins, p0 = [ maxBins ])
+    gs1 = gaussS1(binCenters, *popt)
+    detector[nameGaussS1] = []
+    for x, y in zip(binCenters, gs1):
+        detector[nameGaussS1].append(x)
+        detector[nameGaussS1].append(y)
+
+    popt, pcov = curve_fit(gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
+    gs = gauss(binCenters, *popt)
+    detector[nameGauss] = []
+    for x, y in zip(binCenters, gs):
+        detector[nameGauss].append(x)
+        detector[nameGauss].append(y)
+
+    detector[name + "Thickness"] = (max(binCenters) - min(binCenters)) / 50
+
+    del detector[nameBinCenters]
+    del detector[nameBins]
+
 def get_res_stats(solutionID: str) -> dict:
-    return raccoons.ResStats().stats(GLOB[solutionID], 50)
+    stats = raccoons.ResStats().stats(GLOB[solutionID], 50)
+    for detector in stats["detectors"]:
+        make_hist(detector, "eta")
+        make_hist(detector, "zeta")
+    return stats
 
 def sdbm(s):
     result = 0
