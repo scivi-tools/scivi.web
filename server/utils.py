@@ -11,7 +11,11 @@ class CodeUtils:
         pass
 
     def read_file(self, path):
-        if path.endswith(".png") or path.endswith(".jpg") or path.endswith(".wasm") or path.endswith(".dat"):
+        if path.endswith(".png") or \
+           path.endswith(".jpg") or \
+           path.endswith(".gif") or \
+           path.endswith(".wasm") or \
+           path.endswith(".dat"):
             with open(path, "rb") as f:
                 return f.read()
         else:

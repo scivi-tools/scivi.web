@@ -186,6 +186,8 @@ class SciViServer:
             return "image/png"
         elif filename.endswith(".jpg"):
             return "image/jpeg"
+        elif filename.endswith(".gif"):
+            return "image/gif"
         elif filename.endswith(".wasm"):
             return "application/wasm"
         elif filename.endswith(".dat"):
