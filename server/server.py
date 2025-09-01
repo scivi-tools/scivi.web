@@ -460,6 +460,8 @@ class SciViServer:
         apiNode = first(self.onto.get_nodes_by_name("API"))
         if apiNode:
             self.apis = self.onto.get_nodes_linked_to(apiNode, "is_a")
+        else:
+            self.apis = None
         categories = self.onto.get_nodes_linked_to(rootNode, "is_a")
         for category in categories:
             self.add_tree_level(category.name, self.onto.get_nodes_linked_to(category, "is_a"))
