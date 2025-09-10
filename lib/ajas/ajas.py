@@ -108,8 +108,8 @@ def make_hist(detector, name):
     del detector[nameBinCenters]
     del detector[nameBins]
 
-def get_res_stats(solutionID: str) -> dict:
-    stats = raccoons.ResStats().stats(GLOB[solutionID], 50)
+def get_res_stats(solutionID: str, studentised: bool) -> dict:
+    stats = raccoons.ResStats().stats(GLOB[solutionID], 50, studentised)
     for detector in stats["detectors"]:
         make_hist(detector, "eta")
         make_hist(detector, "zeta")
