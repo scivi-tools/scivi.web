@@ -71,8 +71,6 @@ def LoadEditorPage(onto_name) -> Response:
     return res
 
 
-@app.route("/")
-@app.route("/index.html")
 @app.route("/csv")
 def csv_page():
     return LoadEditorPage('csv'), 200, {'Content-Type': 'text/html; charset=utf-8'}
@@ -129,6 +127,8 @@ def paleo_page():
 def ttype_page():
     return LoadEditorPage('ttype'), 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route("/")
+@app.route("/index.html")
 @app.route("/ajas")
 def ajas_page():
     return LoadEditorPage('ajas'), 200, {'Content-Type': 'text/html; charset=utf-8'}
