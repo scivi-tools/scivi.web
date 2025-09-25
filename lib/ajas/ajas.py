@@ -1,6 +1,7 @@
 
 import lib.ajas.raccoons as raccoons
 import numpy as np
+import os
 from ctypes import c_uint64
 from scipy.optimize import curve_fit
 
@@ -26,10 +27,20 @@ def get_obs_stats(solutionID):
 def get_observations_stats(solutionID: str) -> dict:
     obsStats = get_obs_stats(solutionID)
     return { \
-        "min": obsStats.min(), \
-        "max": obsStats.max(), \
-        "avg": obsStats.avg(), \
-        "hist": list(obsStats.histogram(50))
+        "min": obsStats.min_per_src(), \
+        "max": obsStats.max_per_src(), \
+        "avg": obsStats.avg_per_src(), \
+        "hist": list(obsStats.histogram_per_src(50)) \
+    }
+
+def get_sanity_checks(solutionID: str) -> dict:
+    obsStats = get_obs_stats(solutionID)
+    return { \
+        "calibUnits": int(obsStats.min_per_calib_unit() > 0), \
+        "sources": int(obsStats.min_per_src() > 0), \
+        "spectrum": int(np.round(np.sum(np.fromfile(os.path.join(GLOB[solutionID].solution_path(), "spectrum.dat"), \
+                                                    dtype = np.double))) == \
+                        GLOB[solutionID].mission_overview()["m"]) \
     }
 
 def get_observations_per_source(solutionID: str) -> dict:
