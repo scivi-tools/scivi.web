@@ -439,9 +439,9 @@ SciViEditor.prototype.registerNode = function (name, uid, inputs, outputs, worke
             }
             return node;
         },
-        worker(node, inputs, outputs) {
+        async worker(node, inputs, outputs) {
             try {
-                workerFunc(node, inputs, outputs);
+                await workerFunc(node, inputs, outputs);
             } catch(err) {
                 _this.showError(err);
             }
@@ -501,7 +501,7 @@ SciViEditor.prototype.extendNodes = function ()
     });
 }
 
-SciViEditor.prototype.process = function ()
+SciViEditor.prototype.process = async function ()
 {
     function dumpToArray(nodes)
     {
@@ -593,7 +593,7 @@ SciViEditor.prototype.process = function ()
             for (var j = 0, m = nodes[i].outputs.length; j < m; ++j)
                 outputs.push(null);
             //console.log('call worker for', nodes[i].title, 'with input:', inputs)
-            this.components[nodes[i].title].worker(node, inputs, outputs);
+            await this.components[nodes[i].title].worker(node, inputs, outputs);
 
             node.outputData = outputs;
         }
