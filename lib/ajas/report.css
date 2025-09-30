@@ -25,8 +25,11 @@
 {
     display: flex;
     flex-flow: row wrap;
-    column-gap: 20px;
+    /*column-gap: 20px;*/
     row-gap: 20px;
+
+    width: 1400px;
+    justify-content: space-between;
 }
 .report-dashbox
 {
