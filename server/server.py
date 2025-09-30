@@ -329,7 +329,7 @@ class SciViServer:
             proto = first(self.onto.get_nodes_linked_from(w, "is_instance"))
             viewType = first(self.onto.get_typed_nodes_linked_from(proto, "is_a", "View"))
             self.add_dependencies(w)
-            return "function (node, inputs, outputs) { " + \
+            return "async function (node, inputs, outputs) { " + \
                    self.resolve_containers(code, inputs, outputs, settings, viewType, apis) + \
                    " }"
         else:
