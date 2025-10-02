@@ -80,7 +80,7 @@ def get_src_stats(solutionID: str) -> dict:
     PUBLISH_FILE(pathRho)
     return srcStats
 
-def make_hist(detector, name):
+def make_hist(detector, name, studentised):
     nameHist = name + "Hist"
     nameBinCenters = name + "BinCenters"
     nameBins = name + "Bins"
@@ -100,12 +100,13 @@ def make_hist(detector, name):
         detector[nameHist].append(x)
         detector[nameHist].append(y)
 
-    popt, pcov = curve_fit(gaussS1, binCenters, bins, p0 = [ maxBins ])
-    gs1 = gaussS1(binCenters, *popt)
-    detector[nameGaussS1] = []
-    for x, y in zip(binCenters, gs1):
-        detector[nameGaussS1].append(x)
-        detector[nameGaussS1].append(y)
+    if studentised:
+        popt, pcov = curve_fit(gaussS1, binCenters, bins, p0 = [ maxBins ])
+        gs1 = gaussS1(binCenters, *popt)
+        detector[nameGaussS1] = []
+        for x, y in zip(binCenters, gs1):
+            detector[nameGaussS1].append(x)
+            detector[nameGaussS1].append(y)
 
     popt, pcov = curve_fit(gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
     gs = gauss(binCenters, *popt)
@@ -122,8 +123,8 @@ def make_hist(detector, name):
 def get_res_stats(solutionID: str, studentised: bool) -> dict:
     stats = raccoons.ResStats().stats(GLOB[solutionID], 50, studentised)
     for detector in stats["detectors"]:
-        make_hist(detector, "eta")
-        make_hist(detector, "zeta")
+        make_hist(detector, "eta", studentised)
+        make_hist(detector, "zeta", studentised)
     return stats
 
 def sdbm(s):
