@@ -67,6 +67,50 @@ def get_src_uncertainties(solutionID: str) -> dict:
     srcUns["path"] = f"/storage{path}"
     return srcUns
 
+def assemble_hist(hist, minMax, binCenters, bins, nameHist):
+    hist[nameHist] = []
+    for x, y in zip(binCenters, bins):
+        hist[nameHist].append(x)
+        hist[nameHist].append(y)
+        if x < minMax["minX"]:
+            minMax["minX"] = x
+        if x > minMax["maxX"]:
+            minMax["maxX"] = x
+        if y < minMax["minY"]:
+            minMax["minY"] = y
+        if y > minMax["maxY"]:
+            minMax["maxY"] = y
+
+def make_hist(hist, minMax, name, fitGauss, fitGaussS1):
+    nameHist = name + "Hist"
+    nameBinCenters = name + "BinCenters"
+    nameBins = name + "Bins"
+
+    binCenters = np.array(hist[nameBinCenters])
+    bins = np.array(hist[nameBins])
+
+    maxBins = max(bins)
+    sumBins = sum(bins)
+    meanBins = sum(binCenters * bins) / sumBins
+    sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
+
+    assemble_hist(hist, minMax, binCenters, bins, nameHist)
+
+    if fitGauss:
+        nameGauss = name + "Gauss"
+        popt, pcov = curve_fit(gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
+        gs = gauss(binCenters, *popt)
+        assemble_hist(hist, minMax, binCenters, gs, nameGauss)
+
+    if fitGaussS1:
+        nameGaussS1 = name + "GaussS1"
+        popt, pcov = curve_fit(gaussS1, binCenters, bins, p0 = [ maxBins ])
+        gs1 = gaussS1(binCenters, *popt)
+        assemble_hist(hist, minMax, binCenters, gs1, nameGaussS1)
+
+    del hist[nameBinCenters]
+    del hist[nameBins]
+
 def get_src_stats(solutionID: str) -> dict:
     stats = raccoons.SrcStats()
     pathUpsilonGRS = f"/tmp/{solutionID}_src_updates_upsilon_in_grs.dat"
@@ -74,8 +118,14 @@ def get_src_stats(solutionID: str) -> dict:
     pathUpsilonJORS = f"/tmp/{solutionID}_src_updates_upsilon_in_jors.dat"
     pathRhoJORS = f"/tmp/{solutionID}_src_updates_rho_in_jors.dat"
     srcStats = stats.stats(GLOB[solutionID], pathUpsilonGRS, pathRhoGRS, pathUpsilonJORS, pathRhoJORS)
-    srcStats["histUpsilon"] = list(stats.hist_upsilon())
-    srcStats["histRho"] = list(stats.hist_rho())
+    srcStats["minX"] = 1.0e100
+    srcStats["maxX"] = -1.0e100
+    srcStats["minY"] = 1.0e100
+    srcStats["maxY"] = -1.0e100
+    make_hist(srcStats, srcStats, "upsilonNonGaia", True, False)
+    make_hist(srcStats, srcStats, "rhoNonGaia", True, False)
+    make_hist(srcStats, srcStats, "upsilonGaia", False, False)
+    make_hist(srcStats, srcStats, "rhoGaia", False, False)
     srcStats["pathUpsilonGRS"] = f"/storage{pathUpsilonGRS}"
     srcStats["pathRhoGRS"] = f"/storage{pathRhoGRS}"
     srcStats["pathUpsilonJORS"] = f"/storage{pathUpsilonJORS}"
@@ -86,51 +136,6 @@ def get_src_stats(solutionID: str) -> dict:
     PUBLISH_FILE(pathRhoJORS)
     return srcStats
 
-def assemble_hist(detector, minMax, binCenters, bins, nameHist):
-    detector[nameHist] = []
-    for x, y in zip(binCenters, bins):
-        detector[nameHist].append(x)
-        detector[nameHist].append(y)
-        if x < minMax["minX"]:
-            minMax["minX"] = x
-        if x > minMax["maxX"]:
-            minMax["maxX"] = x
-        if y < minMax["minY"]:
-            minMax["minY"] = y
-        if y > minMax["maxY"]:
-            minMax["maxY"] = y
-
-def make_hist(detector, minMax, name, studentised):
-    nameHist = name + "Hist"
-    nameBinCenters = name + "BinCenters"
-    nameBins = name + "Bins"
-    nameGaussS1 = name + "GaussS1"
-    nameGauss = name + "Gauss"
-
-    binCenters = np.array(detector[nameBinCenters])
-    bins = np.array(detector[nameBins])
-
-    maxBins = max(bins)
-    sumBins = sum(bins)
-    meanBins = sum(binCenters * bins) / sumBins
-    sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
-
-    assemble_hist(detector, minMax, binCenters, bins, nameHist)
-
-    if studentised:
-        popt, pcov = curve_fit(gaussS1, binCenters, bins, p0 = [ maxBins ])
-        gs1 = gaussS1(binCenters, *popt)
-        assemble_hist(detector, minMax, binCenters, gs1, nameGaussS1)
-
-    popt, pcov = curve_fit(gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
-    gs = gauss(binCenters, *popt)
-    assemble_hist(detector, minMax, binCenters, gs, nameGauss)
-
-    detector[name + "Thickness"] = (max(binCenters) - min(binCenters)) / 50
-
-    del detector[nameBinCenters]
-    del detector[nameBins]
-
 def get_res_stats(solutionID: str, studentised: bool) -> dict:
     stats = raccoons.ResStats().stats(GLOB[solutionID], 50, studentised)
     stats["minX"] = 1.0e100
@@ -138,8 +143,8 @@ def get_res_stats(solutionID: str, studentised: bool) -> dict:
     stats["minY"] = 1.0e100
     stats["maxY"] = -1.0e100
     for detector in stats["detectors"]:
-        make_hist(detector, stats, "eta", studentised)
-        make_hist(detector, stats, "zeta", studentised)
+        make_hist(detector, stats, "eta", True, studentised)
+        make_hist(detector, stats, "zeta", True, studentised)
     return stats
 
 def sdbm(s):
