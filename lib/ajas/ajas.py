@@ -80,7 +80,21 @@ def get_src_stats(solutionID: str) -> dict:
     PUBLISH_FILE(pathRho)
     return srcStats
 
-def make_hist(detector, name, studentised):
+def assemble_hist(detector, minMax, binCenters, bins, nameHist):
+    detector[nameHist] = []
+    for x, y in zip(binCenters, bins):
+        detector[nameHist].append(x)
+        detector[nameHist].append(y)
+        if x < minMax["minX"]:
+            minMax["minX"] = x
+        if x > minMax["maxX"]:
+            minMax["maxX"] = x
+        if y < minMax["minY"]:
+            minMax["minY"] = y
+        if y > minMax["maxY"]:
+            minMax["maxY"] = y
+
+def make_hist(detector, minMax, name, studentised):
     nameHist = name + "Hist"
     nameBinCenters = name + "BinCenters"
     nameBins = name + "Bins"
@@ -95,25 +109,16 @@ def make_hist(detector, name, studentised):
     meanBins = sum(binCenters * bins) / sumBins
     sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
 
-    detector[nameHist] = []
-    for x, y in zip(binCenters, bins):
-        detector[nameHist].append(x)
-        detector[nameHist].append(y)
+    assemble_hist(detector, minMax, binCenters, bins, nameHist)
 
     if studentised:
         popt, pcov = curve_fit(gaussS1, binCenters, bins, p0 = [ maxBins ])
         gs1 = gaussS1(binCenters, *popt)
-        detector[nameGaussS1] = []
-        for x, y in zip(binCenters, gs1):
-            detector[nameGaussS1].append(x)
-            detector[nameGaussS1].append(y)
+        assemble_hist(detector, minMax, binCenters, gs1, nameGaussS1)
 
     popt, pcov = curve_fit(gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
     gs = gauss(binCenters, *popt)
-    detector[nameGauss] = []
-    for x, y in zip(binCenters, gs):
-        detector[nameGauss].append(x)
-        detector[nameGauss].append(y)
+    assemble_hist(detector, minMax, binCenters, gs, nameGauss)
 
     detector[name + "Thickness"] = (max(binCenters) - min(binCenters)) / 50
 
@@ -122,9 +127,13 @@ def make_hist(detector, name, studentised):
 
 def get_res_stats(solutionID: str, studentised: bool) -> dict:
     stats = raccoons.ResStats().stats(GLOB[solutionID], 50, studentised)
+    stats["minX"] = 1.0e100
+    stats["maxX"] = -1.0e100
+    stats["minY"] = 1.0e100
+    stats["maxY"] = -1.0e100
     for detector in stats["detectors"]:
-        make_hist(detector, "eta", studentised)
-        make_hist(detector, "zeta", studentised)
+        make_hist(detector, stats, "eta", studentised)
+        make_hist(detector, stats, "zeta", studentised)
     return stats
 
 def sdbm(s):
