@@ -69,15 +69,21 @@ def get_src_uncertainties(solutionID: str) -> dict:
 
 def get_src_stats(solutionID: str) -> dict:
     stats = raccoons.SrcStats()
-    pathUpsilon = f"/tmp/{solutionID}_src_updates_upsilon.dat"
-    pathRho = f"/tmp/{solutionID}_src_updates_rho.dat"
-    srcStats = stats.stats(GLOB[solutionID], pathUpsilon, pathRho)
+    pathUpsilonGRS = f"/tmp/{solutionID}_src_updates_upsilon_in_grs.dat"
+    pathRhoGRS = f"/tmp/{solutionID}_src_updates_rho_in_grs.dat"
+    pathUpsilonJORS = f"/tmp/{solutionID}_src_updates_upsilon_in_jors.dat"
+    pathRhoJORS = f"/tmp/{solutionID}_src_updates_rho_in_jors.dat"
+    srcStats = stats.stats(GLOB[solutionID], pathUpsilonGRS, pathRhoGRS, pathUpsilonJORS, pathRhoJORS)
     srcStats["histUpsilon"] = list(stats.hist_upsilon())
     srcStats["histRho"] = list(stats.hist_rho())
-    srcStats["pathUpsilon"] = f"/storage{pathUpsilon}"
-    srcStats["pathRho"] = f"/storage{pathRho}"
-    PUBLISH_FILE(pathUpsilon)
-    PUBLISH_FILE(pathRho)
+    srcStats["pathUpsilonGRS"] = f"/storage{pathUpsilonGRS}"
+    srcStats["pathRhoGRS"] = f"/storage{pathRhoGRS}"
+    srcStats["pathUpsilonJORS"] = f"/storage{pathUpsilonJORS}"
+    srcStats["pathRhoJORS"] = f"/storage{pathRhoJORS}"
+    PUBLISH_FILE(pathUpsilonGRS)
+    PUBLISH_FILE(pathRhoGRS)
+    PUBLISH_FILE(pathUpsilonJORS)
+    PUBLISH_FILE(pathRhoJORS)
     return srcStats
 
 def assemble_hist(detector, minMax, binCenters, bins, nameHist):
