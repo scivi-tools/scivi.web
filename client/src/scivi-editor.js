@@ -246,6 +246,8 @@ SciViEditor.prototype.run = function (mode)
                     let progress = msg.progress;
                     $("#scivi_load_progressbar").progressbar({value: progress});
                 } break;
+                case "wait_for_destruction": {
+                } break;
                 case "api_response": {
                     let responseKey = `${msg.caller}::${msg.api}`;
                     if (this.apiResponses[responseKey] !== undefined) {
