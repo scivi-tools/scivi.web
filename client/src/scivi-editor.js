@@ -202,10 +202,10 @@ SciViEditor.prototype.run = function (mode)
 
     this.visuals = [];
 
-    var urlParams = new URLSearchParams(window.location.search);
-    var preset = urlParams.get("preset");
-    var autorun = urlParams.get("start");
-    if (preset) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const preset = urlParams.get("preset");
+    if (preset !== null) {
+        const autorun = urlParams.get("start");
         $(".loader").show();
         $.getJSON("preset/" + preset, async (data) => {
             $(".loader").hide();
@@ -214,8 +214,26 @@ SciViEditor.prototype.run = function (mode)
             if (autorun)
                 this.startVisualization();
         });
+    } else {
+        const rtTemplate = urlParams.get("rttemplate");
+        if (rtTemplate !== null) {
+            const storage = opener.sciviStorage;
+            if (storage) {
+                const template = storage[rtTemplate];
+                if (template) {
+                    const autorun = urlParams.get("start");
+                    const runTemplate = async () => {
+                        await editor.fromJSON(JSON.parse(template));
+                        this.extendNodes();
+                        if (autorun)
+                            this.startVisualization();
+                    };
+                    runTemplate();
+                }
+            }
+        }
     }
-    
+
     //--------------- connect to server -----------------
     if (window.location.protocol === "http:") {
         let addr = document.URL.split(':')[1].slice(2);
