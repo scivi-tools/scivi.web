@@ -53,6 +53,9 @@ function SciViEditor()
     SciViEditor.prototype.selectedNode = null;
     SciViEditor.prototype.command_socket = null;
     SciViEditor.prototype.apiResponses = {};
+    // Forked (or shared-backend) mode means that some SciVi client formed a templated DFD for immediate run and spawned
+    // another client (aka forked) that should connect to exactly the same server instance (backend) as the spawner.
+    SciViEditor.prototype.forked = false;
 }
 
 SciViEditor.prototype.run = function (mode)
@@ -202,6 +205,8 @@ SciViEditor.prototype.run = function (mode)
 
     this.visuals = [];
 
+    this.forked = false;
+
     const urlParams = new URLSearchParams(window.location.search);
     const preset = urlParams.get("preset");
     if (preset !== null) {
@@ -215,14 +220,15 @@ SciViEditor.prototype.run = function (mode)
                 this.startVisualization();
         });
     } else {
-        const rtTemplate = urlParams.get("rttemplate");
-        if (rtTemplate !== null) {
+        const forkTemplate = urlParams.get("forktemplate");
+        if (forkTemplate !== null) {
             const storage = opener.sciviStorage;
             if (storage) {
-                const template = storage[rtTemplate];
+                const template = storage[forkTemplate];
                 if (template) {
                     const autorun = urlParams.get("start");
                     const runTemplate = async () => {
+                        this.forked = true;
                         await editor.fromJSON(JSON.parse(template));
                         this.extendNodes();
                         if (autorun)
@@ -394,10 +400,11 @@ SciViEditor.prototype.uploadEON = function ()
 
 SciViEditor.prototype.runMixed = function ()
 {
-    var content = JSON.stringify(this.editor.toJSON(), (key, value) => {
+    const content = JSON.stringify(this.editor.toJSON(), (key, value) => {
         return key === "cache" ? undefined : value;
     });
-    $.post("/gen_mixed", content, (data) => {
+    const genMixedUrl = this.forked ? "/gen_mixed_forked" : "/gen_mixed";
+    $.post(genMixedUrl, content, (data) => {
         document.getElementById('scivi_loadscreen').style.display = 'none';
         if (data["error"]) 
         {
@@ -412,7 +419,7 @@ SciViEditor.prototype.runMixed = function ()
         $("#scivi_btn_visualize").css({"padding-left": "10px", "padding-right": "10px"});
         $(".scivi_menu").css({"margin-left": "20px"});
 
-        var compRes = data["compRes"];
+        const compRes = data["compRes"];
         // Expected resource format:
         // { address: "IP:Port", corTable: correspondences, eon: [bytes] }
         // if eon.length == 0, this means serverside resource, else edge resource.

@@ -41,7 +41,7 @@ def markServerAsUnused(server_id: str):
 def markServerAsUsed(server_id: str):
     if server_id in disposed_servers:
         disposed_servers.remove(server_id)
-    
+
 def getServerInst() -> SciViServer:
     global mutex
     server_id = request.remote_addr
@@ -56,7 +56,7 @@ def poolServerInst(server_id, path_to_onto):
             servers[server_id] = SciViServer(server_id, event_loop, None)
             servers[server_id].server_become_unused_event = markServerAsUnused
         server = servers[server_id]
-        server.setOnto(path_to_onto) # reset ontology
+        server.set_onto(path_to_onto) # reset ontology
         server.gen_tree() # generate js & css code for page
         markServerAsUsed(server_id)
         return server
@@ -209,6 +209,20 @@ def gen_mixed():
     resp.status_code = 200
     if exeKey:
         resp.set_cookie("exe", value = exeKey, samesite = "Lax")
+    return resp
+
+@app.route("/gen_mixed_forked", methods = ['POST'])
+def gen_mixed_forked():
+    dfd = request.get_json(force = True)
+    exeKey = request.cookies.get("exe")
+    try:
+        srv = getServerInst()
+        res = srv.retrieve_comp_res(exeKey)
+    except Exception as err:
+        print(traceback.format_exc())
+        res = { "error": str(err) }
+    resp = jsonify(res)
+    resp.status_code = 200
     return resp
 
 @app.route("/stop_execer", methods = ['POST'])
