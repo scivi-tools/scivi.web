@@ -34,7 +34,7 @@ def get_unused_port():
     so.bind(('localhost', 0))
     _, port = so.getsockname()
     so.close()
-    return port 
+    return port
 
 class Mode(Enum):
     '''
@@ -126,23 +126,25 @@ class SciViServer:
         for socket in self.webSockets:
             self.commandServerLoop.create_task(socket.send(message))
 
-    def setOnto(self, pathToOnto):
-        self.onto = OntoMerger(pathToOnto).onto
-        OntoHasher(self.onto)
-        self.loc = "eng"
-        self.tree = ""
-        self.treeID = 1
-        self.treeHandlers = ""
-        self.treeNodes = ""
-        self.typeColors = {}
-        self.mode = Mode.UNDEFINED
-        self.dependencies = {}
-        self.files = {}
-        self.execers: Dict[str, Execer] = {}
-        self.codeUtils = CodeUtils()
-        if self.pathToOnto != pathToOnto:
-            self.nodeStates = {} # Global storage for each node
-        self.pathToOnto = pathToOnto
+    def set_onto(self, pathToOnto):
+        if pathToOnto != self.pathToOnto:
+            self.onto = OntoMerger(pathToOnto).onto
+            OntoHasher(self.onto)
+            self.loc = "eng"
+            self.tree = ""
+            self.treeID = 1
+            self.treeHandlers = ""
+            self.treeNodes = ""
+            self.typeColors = {}
+            self.mode = Mode.UNDEFINED
+            self.dependencies = {}
+            self.files = {}
+            self.execers: Dict[str, Execer] = {}
+            self.compResources = {}
+            self.codeUtils = CodeUtils()
+            if self.pathToOnto != pathToOnto:
+                self.nodeStates = {} # Global storage for each node
+            self.pathToOnto = pathToOnto
 
 
     def add_node(self, node: Node):
@@ -561,19 +563,30 @@ class SciViServer:
                     for b in bs:
                         eonBytes.append(b)
                     compRes.append({ "address": edgeAddress, "corTable": edgeCorTable, "eon": eonBytes })
-        return { "compRes": compRes }, serverTaskHash
+        compRes = { "compRes": compRes }
+        if serverTaskHash:
+            self.compResources[serverTaskHash] = compRes
+        return compRes, serverTaskHash
+
+    def retrieve_comp_res(self, serverTaskHash):
+        if serverTaskHash and serverTaskHash in self.compResources:
+            return self.compResources[serverTaskHash]
+        else:
+            return None
 
     def stop_execer(self, serverTaskHash):
         if serverTaskHash and serverTaskHash in self.execers:
             self.execers[serverTaskHash].stop()
             self.execers[serverTaskHash].join()
             del self.execers[serverTaskHash]
+            del self.compResources[serverTaskHash]
 
     def stop_all_execers(self):
         for execerTaskHash in self.execers:
             self.execers[execerTaskHash].stop()
             self.execers[execerTaskHash].join()
         self.execers = {}
+        self.compResources = {}
 
     def get_file_from_storage(self, filename, serverTaskHash):
         if filename in self.files:

@@ -19,13 +19,13 @@ SciViFunctions.deepCopy = function(obj)
     return JSON.parse(JSON.stringify(obj))
 }
 
-SciViFunctions.runTemplate = function(template)
+SciViFunctions.forkWithTemplate = function(template)
 {
     if (window.sciviStorage === undefined)
         window.sciviStorage = [];
-    let rtTemplate = window.sciviStorage.length;
-    if (rtTemplate === 5)
-        rtTemplate = 0;
-    window.sciviStorage[rtTemplate] = JSON.stringify(template);
-    window.open(`${window.location.pathname}?rttemplate=${rtTemplate}&start=true`);
+    let forkTemplate = window.sciviStorage.length;
+    if (forkTemplate === 5)
+        forkTemplate = 0;
+    window.sciviStorage[forkTemplate] = JSON.stringify(template);
+    window.open(`${window.location.pathname}?forktemplate=${forkTemplate}&start=true`);
 }
