@@ -151,7 +151,7 @@ class Report:
             if y > minMax["maxY"]:
                 minMax["maxY"] = y
 
-    def make_hist(self, hist, minMax, name, fitGauss, fitGaussS1):
+    def make_hist(self, hist, stats, name, fitGauss, fitGaussS1):
         nameHist = name + "Hist"
         nameBinCenters = name + "BinCenters"
         nameBins = name + "Bins"
@@ -164,19 +164,20 @@ class Report:
         meanBins = sum(binCenters * bins) / sumBins
         sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
 
-        self.assemble_hist(hist, minMax, binCenters, bins, nameHist)
+        self.assemble_hist(hist, stats, binCenters, bins, nameHist)
 
         if fitGauss:
             nameGauss = name + "Gauss"
             popt, pcov = curve_fit(self.gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
+            stats[name + "GaussSigma"] = popt[2]
             gs = self.gauss(binCenters, *popt)
-            self.assemble_hist(hist, minMax, binCenters, gs, nameGauss)
+            self.assemble_hist(hist, stats, binCenters, gs, nameGauss)
 
         if fitGaussS1:
             nameGaussS1 = name + "GaussS1"
             popt, pcov = curve_fit(self.gaussS1, binCenters, bins, p0 = [ maxBins ])
             gs1 = self.gaussS1(binCenters, *popt)
-            self.assemble_hist(hist, minMax, binCenters, gs1, nameGaussS1)
+            self.assemble_hist(hist, stats, binCenters, gs1, nameGaussS1)
 
         del hist[nameBinCenters]
         del hist[nameBins]
