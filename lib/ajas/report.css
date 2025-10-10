@@ -1,8 +1,9 @@
 .report
 {
-    margin-top: 25px;
-    margin-left: 80px;
+    margin-left: 70px;
     font-family: Helvetica;
+    height: calc(100vh - 55px);
+    overflow-y: scroll;
 }
 .report h1, h2
 {
@@ -25,16 +26,16 @@
 {
     display: flex;
     flex-flow: row wrap;
-    column-gap: 20px;
-    row-gap: 20px;
+    column-gap: 10px;
+    row-gap: 10px;
 
-    width: calc(100vw - 150px);
+    width: calc(100vw - 140px);
     /*justify-content: space-between;*/
 }
 .report-dashbox
 {
-    border: 2px solid #ccc;
-    border-radius: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 10px;
@@ -42,7 +43,7 @@
 }
 .report-dashbox:hover
 {
-    box-shadow: 0px 0px 10px #bbb;
+    border: 1px solid #888;
 }
 .report-detector-outer-dashrow
 {
@@ -50,13 +51,25 @@
     flex-flow: row wrap;
     column-gap: 5px;
     row-gap: 5px;
-    width: calc(50vw - 110px);
 }
 .report-detector-dashrow
 {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
+}
+.report-detector-dashbox
+{
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    flex: 1 0 30%;
+}
+.report-detector-dashbox:hover
+{
+    border: 1px solid #888;
 }
 .table-num
 {

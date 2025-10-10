@@ -412,6 +412,41 @@ input[type="file"]
     cursor: default;
 }
 
+.scivi_tabbar
+{
+    margin-top: 18px;
+    margin-left: 70px;
+    margin-right: 70px;
+    background-color: #ddd;
+}
+
+.scivi_tab
+{
+    background-color: #ddd;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 36px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-family: Helvetica Neue;
+    font-size: 16px;
+}
+
+.scivi_tab:hover
+{
+    background-color: #B8B8E0;
+}
+
+.scivi_tab_selected
+{
+    background: #888;
+    color: #fff;
+}
+
 /***************************/
 /*       Loader stuff      */
 /***************************/

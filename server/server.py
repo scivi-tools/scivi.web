@@ -294,13 +294,12 @@ class SciViServer:
         else:
             addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position); }; "
         code = addVisualCall +\
+               "var ADD_TAB = function (con, name) { editor.addTabToViewport(con, node.position, name); }; " +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
-        # TODO: Fix replaces
         for i, inp in enumerate(inputs):
             code = code.replace("HAS_INPUT[\"" + inp.name + "\"]", "(inputs[" + str(i) + "].length > 0)")
             code = code.replace("INPUT[\"" + inp.name + "\"]", "inputs[" + str(i) + "][0]")
-            #code = re.sub("(INPUT|input)((\[[\"\'](" + inp["name"] + ")[\"\']\])|\." + inp["name"] + ")", "inputs[" + str(i) + "][0]", code);
         for i, outp in enumerate(outputs):
             code = code.replace("OUTPUT[\"" + outp.name + "\"]", "outputs[" + str(i) + "]")
 

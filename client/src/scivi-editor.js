@@ -664,27 +664,27 @@ SciViEditor.prototype.placeVisual = function (desiredDepth, currentDepth, rootCo
 
 SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
 {
-    var vp = this.viewportContainer();
+    const vp = this.viewportContainer();
     while (vp.firstChild)
         vp.removeChild(vp.firstChild);
     el.splitIndex = pos[1];
     this.visuals.push(el);
     this.visuals.sort((e1, e2) => { return e1.splitIndex > e2.splitIndex ? 1 : -1; });
     if (forceDir === "vertical" || (forceDir === undefined && this.forceDir === "vertical")) {
-        for (var i = 0, n = this.visuals.length; i < n; ++i)
+        for (let i = 0, n = this.visuals.length; i < n; ++i)
             vp.appendChild(this.visuals[i]);
-        var h = 0;
-        for (var i = 0, n = this.visuals.length; i < n; ++i) {
+        let h = 0;
+        for (let i = 0, n = this.visuals.length; i < n; ++i) {
             if (!this.visuals[i].style.height)
                 h += $(this.visuals[i].firstChild).outerHeight(true);
         }
-        for (var i = 0, n = this.visuals.length; i < n; ++i) {
+        for (let i = 0, n = this.visuals.length; i < n; ++i) {
             if (this.visuals[i].style.height)
                 this.visuals[i].style.height = "calc(100% - " + h + "px)";
         }
     } else if (forceDir === "stack") {
-        let d = $("<div style='overflow: auto; height: 100%'>");
-        for (var i = 0, n = this.visuals.length; i < n; ++i)
+        const d = $("<div style='overflow: auto; height: 100%'>");
+        for (let i = 0, n = this.visuals.length; i < n; ++i)
             d[0].appendChild(this.visuals[i]);
         vp.appendChild(d[0]);
     } else {
@@ -692,15 +692,51 @@ SciViEditor.prototype.addVisualToViewport = function (el, pos, forceDir)
             vp.appendChild(el);
         else
         {
-            var visualContainers = [];
+            const visualContainers = [];
             this.placeVisual(Math.ceil(Math.log(this.visuals.length) / Math.log(2)), 1, vp, visualContainers, [0], forceDir);
-            for (var i = 0, n = this.visuals.length; i < n; ++i)
+            for (let i = 0, n = this.visuals.length; i < n; ++i)
                 visualContainers[i].appendChild(this.visuals[i]);
         }
     }
     if (forceDir !== undefined)
         this.forceDir = forceDir;
     window.dispatchEvent(new Event("resize"));
+}
+
+SciViEditor.prototype.selectTab = function (index)
+{
+    const vp = this.viewportContainer();
+    const tabBar = vp.firstChild;
+    for (let i = 0, n = this.visuals.length; i < n; ++i) {
+        if (i === index) {
+            $(tabBar.children[i]).addClass("scivi_tab_selected");
+            $(this.visuals[i]).show();
+        } else {
+            $(tabBar.children[i]).removeClass("scivi_tab_selected");
+            $(this.visuals[i]).hide();
+        }
+    }
+}
+
+SciViEditor.prototype.addTabToViewport = function (el, pos, name)
+{
+    const vp = this.viewportContainer();
+    while (vp.firstChild)
+        vp.removeChild(vp.firstChild);
+    const tabBar = $("<div class='scivi_tabbar'>");
+    vp.appendChild(tabBar[0]);
+    el.splitIndex = pos[1];
+    el.tabName = name;
+    this.visuals.push(el);
+    this.visuals.sort((e1, e2) => { return e1.splitIndex > e2.splitIndex ? 1 : -1; });
+    for (let i = 0, n = this.visuals.length; i < n; ++i) {
+        const tab = $("<button class='scivi_tab'>");
+        tab.click(() => { this.selectTab(i); });
+        tab.text(this.visuals[i].tabName);
+        tabBar.append(tab);
+        vp.appendChild(this.visuals[i]);
+    }
+    this.selectTab(0);
 }
 
 SciViEditor.prototype.clearViewport = function ()
