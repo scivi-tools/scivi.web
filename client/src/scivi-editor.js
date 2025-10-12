@@ -227,6 +227,10 @@ SciViEditor.prototype.run = function (mode)
                 const template = storage[forkTemplate];
                 if (template) {
                     const autorun = urlParams.get("start");
+                    if (autorun) {
+                        $(".scivi_slide_1").hide();
+                        $("#scivi_btn_visualize").hide();
+                    }
                     const runTemplate = async () => {
                         this.forked = true;
                         await editor.fromJSON(JSON.parse(template));
@@ -312,7 +316,6 @@ SciViEditor.prototype.startVisualization = function ()
             else if (this.mode == MIXED_MODE) 
                 this.runMixed();
         }
-        
     } else {
         this.inVisualization = false;
         this.clearViewport();
