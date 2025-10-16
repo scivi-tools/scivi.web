@@ -21,36 +21,59 @@ class Report:
 
             countObsPerSource = raccoons.CountObsPerSource()
             countObsPerUnit = raccoons.CountObsPerUnit()
+
             resHistogramEta = raccoons.ResHistogram(raccoons.Coordinate.Eta, binNum, False)
             resHistogramZeta = raccoons.ResHistogram(raccoons.Coordinate.Zeta, binNum, False)
             studResHistogramEta = raccoons.ResHistogram(raccoons.Coordinate.Eta, binNum, True)
             studResHistogramZeta = raccoons.ResHistogram(raccoons.Coordinate.Zeta, binNum, True)
-            self.engine.for_each_observation([ \
-                countObsPerSource, \
-                countObsPerUnit, \
-                resHistogramEta, \
-                resHistogramZeta, \
-                studResHistogramEta, \
-                studResHistogramZeta \
+
+            resHistogramSpringEta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Eta, binNum, True, False)
+            resHistogramSpringZeta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Zeta, binNum, True, False)
+            studResHistogramSpringEta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Eta, binNum, True, True)
+            studResHistogramSpringZeta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Zeta, binNum, True, True)
+
+            resHistogramAutumnEta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Eta, binNum, False, False)
+            resHistogramAutumnZeta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Zeta, binNum, False, False)
+            studResHistogramAutumnEta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Eta, binNum, False, True)
+            studResHistogramAutumnZeta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Zeta, binNum, False, True)
+
+            self.engine.for_each_observation([
+                countObsPerSource,
+                countObsPerUnit,
+
+                resHistogramEta,
+                resHistogramZeta,
+                studResHistogramEta,
+                studResHistogramZeta,
+
+                resHistogramSpringEta,
+                resHistogramSpringZeta,
+                studResHistogramSpringEta,
+                studResHistogramSpringZeta,
+
+                resHistogramAutumnEta,
+                resHistogramAutumnZeta,
+                studResHistogramAutumnEta,
+                studResHistogramAutumnZeta
             ])
 
             self.report["missionOvervew"] = self.engine.mission_overview()
 
             self.report["solutionStats"] = self.engine.solution_stats()
 
-            self.report["sanityChecks"] = { \
-                "calibUnits": int(countObsPerUnit.min() > 0), \
-                "sources": int(countObsPerSource.min() > 0), \
-                "spectrum": int(np.round(np.sum(np.fromfile(os.path.join(self.engine.solution_path(), "spectrum.dat"), \
-                                                            dtype = np.double))) == \
-                                self.report["missionOvervew"]["m"]) \
+            self.report["sanityChecks"] = {
+                "calibUnits": int(countObsPerUnit.min() > 0),
+                "sources": int(countObsPerSource.min() > 0),
+                "spectrum": int(np.round(np.sum(np.fromfile(os.path.join(self.engine.solution_path(), "spectrum.dat"),
+                                                            dtype = np.double))) ==
+                                self.report["missionOvervew"]["m"])
             }
 
-            self.report["observationsStats"] = { \
-                "min": countObsPerSource.min(), \
-                "max": countObsPerSource.max(), \
-                "avg": countObsPerSource.avg(), \
-                "hist": list(countObsPerSource.histogram(binNum)) \
+            self.report["observationsStats"] = {
+                "min": countObsPerSource.min(),
+                "max": countObsPerSource.max(),
+                "avg": countObsPerSource.avg(),
+                "hist": list(countObsPerSource.histogram(binNum))
             }
 
             path = os.path.join(cachePath, solutionID + "_obs_per_src.dat")
@@ -79,30 +102,56 @@ class Report:
 
             N = self.report["missionOvervew"]["N"]
             detectorNames = [ "CMOS0", "CMOS1", "CMOS2", "CMOS3" ];
-            self.report["resStats"] = { \
-                "detectors": [], \
-                "minX": 1.0e100, \
-                "maxX": -1.0e100, \
-                "minY": 1.0e100, \
-                "maxY": -1.0e100 \
+            self.report["resStats"] = {
+                "subsets": [
+                    {
+                        "name": "All",
+                        "slices": []
+                    },
+                    {
+                        "name": "Spring/Autumn",
+                        "slices": []
+                    }
+                ],
+                "minX": 1.0e100,
+                "maxX": -1.0e100,
+                "minY": 1.0e100,
+                "maxY": -1.0e100
             }
-            self.report["studResStats"] = { \
-                "detectors": [], \
-                "minX": 1.0e100, \
-                "maxX": -1.0e100, \
-                "minY": 1.0e100, \
-                "maxY": -1.0e100 \
+            self.report["studResStats"] = {
+                "subsets": [
+                    {
+                        "name": "All",
+                        "slices": []
+                    },
+                    {
+                        "name": "Spring/Autumn",
+                        "slices": []
+                    }
+                ],
+                "minX": 1.0e100,
+                "maxX": -1.0e100,
+                "minY": 1.0e100,
+                "maxY": -1.0e100
             }
-            for n in range(N):
-                detector = self.process_detector(n, detectorNames, resHistogramEta, resHistogramZeta)
-                self.make_hist(detector, self.report["resStats"], "eta", True, False)
-                self.make_hist(detector, self.report["resStats"], "zeta", True, False)
-                self.report["resStats"]["detectors"].append(detector)
 
-                detector = self.process_detector(n, detectorNames, studResHistogramEta, studResHistogramZeta)
-                self.make_hist(detector, self.report["studResStats"], "eta", True, True)
-                self.make_hist(detector, self.report["studResStats"], "zeta", True, True)
-                self.report["studResStats"]["detectors"].append(detector)
+            self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 0,
+                                         N, detectorNames,
+                                         resHistogramEta, resHistogramZeta,
+                                         studResHistogramEta, studResHistogramZeta,
+                                         "All")
+
+            self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
+                                         N, detectorNames,
+                                         resHistogramSpringEta, resHistogramSpringZeta,
+                                         studResHistogramSpringEta, studResHistogramSpringZeta,
+                                         "Spring")
+            self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
+                                         N, detectorNames,
+                                         resHistogramAutumnEta, resHistogramAutumnZeta,
+                                         studResHistogramAutumnEta, studResHistogramAutumnZeta,
+                                         "Autumn")
+
 
             with open(cacheFile, "w") as f:
                 json.dump(self.report, f)
@@ -161,43 +210,80 @@ class Report:
 
         maxBins = max(bins)
         sumBins = sum(bins)
-        meanBins = sum(binCenters * bins) / sumBins
-        sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
+        if sumBins > 0.0:
+            meanBins = sum(binCenters * bins) / sumBins
+            sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
+        else:
+            meanBins = 0.0
+            sigmaBins = 0.0
 
         self.assemble_hist(hist, stats, binCenters, bins, nameHist)
 
         if fitGauss:
             nameGauss = name + "Gauss"
-            popt, pcov = curve_fit(self.gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
-            stats[name + "GaussSigma"] = popt[2]
-            gs = self.gauss(binCenters, *popt)
+            if sumBins > 0.0:
+                popt, pcov = curve_fit(self.gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
+                stats[name + "GaussSigma"] = popt[2]
+                gs = self.gauss(binCenters, *popt)
+            else:
+                stats[name + "GaussSigma"] = 0
+                gs = np.zeros(len(binCenters))
             self.assemble_hist(hist, stats, binCenters, gs, nameGauss)
 
         if fitGaussS1:
             nameGaussS1 = name + "GaussS1"
-            popt, pcov = curve_fit(self.gaussS1, binCenters, bins, p0 = [ maxBins ])
-            gs1 = self.gaussS1(binCenters, *popt)
+            if sumBins > 0.0:
+                popt, pcov = curve_fit(self.gaussS1, binCenters, bins, p0 = [ maxBins ])
+                gs1 = self.gaussS1(binCenters, *popt)
+            else:
+                gs1 = np.zeros(len(binCenters))
             self.assemble_hist(hist, stats, binCenters, gs1, nameGaussS1)
 
         del hist[nameBinCenters]
         del hist[nameBins]
 
     def process_detector(self, n, names, histEta, histZeta):
-        return { \
-            "name": names[n], \
-            "count": histEta.count(n), \
+        return {
+            "name": names[n],
+            "count": histEta.count(n),
 
-            "etaMu": histEta.mean(n), \
-            "etaSigma": histEta.st_dev(n), \
-            "etaGamma": histEta.skewness(n), \
-            "etaKappa": histEta.kurtosis(n), \
-            "etaBins": histEta.bins(n), \
-            "etaBinCenters": histEta.bin_centers(n), \
+            "etaMu": histEta.mean(n),
+            "etaSigma": histEta.st_dev(n),
+            "etaGamma": histEta.skewness(n),
+            "etaKappa": histEta.kurtosis(n),
+            "etaBins": histEta.bins(n),
+            "etaBinCenters": histEta.bin_centers(n),
 
-            "zetaMu": histZeta.mean(n), \
-            "zetaSigma": histZeta.st_dev(n), \
-            "zetaGamma": histZeta.skewness(n), \
-            "zetaKappa": histZeta.kurtosis(n), \
-            "zetaBins": histZeta.bins(n), \
-            "zetaBinCenters": histZeta.bin_centers(n) \
+            "zetaMu": histZeta.mean(n),
+            "zetaSigma": histZeta.st_dev(n),
+            "zetaGamma": histZeta.skewness(n),
+            "zetaKappa": histZeta.kurtosis(n),
+            "zetaBins": histZeta.bins(n),
+            "zetaBinCenters": histZeta.bin_centers(n)
         }
+
+    def reasiduals_subset_slice(self,
+                                stats, studStats, subsetIdx,
+                                N, detectorNames, histEta, histZeta, studHistEta, studHistZeta,
+                                sliceName):
+        subsetSlice = {
+            "detectors": [],
+            "name": sliceName
+        }
+        studSubsetSlice = {
+            "detectors": [],
+            "name": sliceName
+        }
+        stats["subsets"][subsetIdx]["slices"].append(subsetSlice)
+        studStats["subsets"][subsetIdx]["slices"].append(studSubsetSlice)
+
+        for n in range(N):
+            detector = self.process_detector(n, detectorNames, histEta, histZeta)
+            self.make_hist(detector, stats, "eta", True, False)
+            self.make_hist(detector, stats, "zeta", True, False)
+            subsetSlice["detectors"].append(detector)
+
+            detector = self.process_detector(n, detectorNames, studHistEta, studHistZeta)
+            self.make_hist(detector, studStats, "eta", True, True)
+            self.make_hist(detector, studStats, "zeta", True, True)
+            studSubsetSlice["detectors"].append(detector)
