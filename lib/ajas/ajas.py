@@ -38,13 +38,11 @@ def get_res_stats(solutionID: str, studentised: bool) -> dict:
     return GLOB[solutionID].res_stats(studentised)
 
 def get_observations_of_src(solutionID: str, srcID: str) -> dict:
-    # obsStats = get_obs_stats(solutionID)
-    # path = f"/tmp/{solutionID}_obs_of_src_{srcID}.dat"
-    # result = obsStats.dump_obs_of_src(int(srcID), path, GLOB[solutionID])
-    # PUBLISH_FILE(path)
-    # result["path"] = f"/storage{path}"
-    # return result
-    return None
+    path = f"/tmp/{solutionID}_obs_of_src_{srcID}.dat"
+    result = GLOB[solutionID].get_obs_of_src(int(srcID), path)
+    PUBLISH_FILE(path)
+    result["path"] = f"/storage{path}"
+    return result
 
 def get_src_uncertainties(solutionID: str) -> dict:
     # obsStats = get_obs_stats(solutionID)
