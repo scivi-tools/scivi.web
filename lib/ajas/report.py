@@ -288,6 +288,6 @@ class Report:
             self.make_hist(detector, studStats, "zeta", True, True)
             studSubsetSlice["detectors"].append(detector)
 
-    def get_obs_of_src(self, srcID, path):
+    def get_obs_of_src(self, srcID, isJORS, path):
         getter = raccoons.ObsGetter()
-        return getter.get_obs_of_src(srcID, path, self.engine)
+        return getter.get_obs_of_src(srcID, isJORS, path, self.engine)

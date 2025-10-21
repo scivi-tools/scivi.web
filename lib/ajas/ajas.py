@@ -37,9 +37,9 @@ def get_src_stats(solutionID: str) -> dict:
 def get_res_stats(solutionID: str, studentised: bool) -> dict:
     return GLOB[solutionID].res_stats(studentised)
 
-def get_observations_of_src(solutionID: str, srcID: str) -> dict:
+def get_observations_of_src(solutionID: str, srcID: str, isJORS: bool) -> dict:
     path = f"/tmp/{solutionID}_obs_of_src_{srcID}.dat"
-    result = GLOB[solutionID].get_obs_of_src(int(srcID), path)
+    result = GLOB[solutionID].get_obs_of_src(int(srcID), isJORS, path)
     PUBLISH_FILE(path)
     result["path"] = f"/storage{path}"
     return result
