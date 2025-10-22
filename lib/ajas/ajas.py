@@ -18,20 +18,30 @@ def get_observations_stats(solutionID: str) -> dict:
 
 def get_observations_per_source(solutionID: str) -> dict:
     result = copy.deepcopy(GLOB[solutionID].observations_per_source())
-    PUBLISH_FILE(result["path"])
-    result["path"] = f"/storage{result["path"]}"
+    PUBLISH_FILE(result["pathNonGaia"])
+    PUBLISH_FILE(result["pathGaia"])
+    result["pathNonGaia"] = f"/storage{result["pathNonGaia"]}"
+    result["pathGaia"] = f"/storage{result["pathGaia"]}"
     return result
 
 def get_src_stats(solutionID: str) -> dict:
     result = copy.deepcopy(GLOB[solutionID].src_stats())
-    PUBLISH_FILE(result["pathUpsilonGRS"])
-    PUBLISH_FILE(result["pathRhoGRS"])
-    PUBLISH_FILE(result["pathUpsilonJORS"])
-    PUBLISH_FILE(result["pathRhoJORS"])
-    result["pathUpsilonGRS"] = f"/storage{result["pathUpsilonGRS"]}"
-    result["pathRhoGRS"] = f"/storage{result["pathRhoGRS"]}"
-    result["pathUpsilonJORS"] = f"/storage{result["pathUpsilonJORS"]}"
-    result["pathRhoJORS"] = f"/storage{result["pathRhoJORS"]}"
+    PUBLISH_FILE(result["pathUpsilonNonGaiaGRS"])
+    PUBLISH_FILE(result["pathUpsilonGaiaGRS"])
+    PUBLISH_FILE(result["pathRhoNonGaiaGRS"])
+    PUBLISH_FILE(result["pathRhoGaiaGRS"])
+    PUBLISH_FILE(result["pathUpsilonNonGaiaJORS"])
+    PUBLISH_FILE(result["pathUpsilonGaiaJORS"])
+    PUBLISH_FILE(result["pathRhoNonGaiaJORS"])
+    PUBLISH_FILE(result["pathRhoGaiaJORS"])
+    result["pathUpsilonNonGaiaGRS"] = f"/storage{result["pathUpsilonNonGaiaGRS"]}"
+    result["pathUpsilonGaiaGRS"] = f"/storage{result["pathUpsilonGaiaGRS"]}"
+    result["pathRhoNonGaiaGRS"] = f"/storage{result["pathRhoNonGaiaGRS"]}"
+    result["pathRhoGaiaGRS"] = f"/storage{result["pathRhoGaiaGRS"]}"
+    result["pathUpsilonNonGaiaJORS"] = f"/storage{result["pathUpsilonNonGaiaJORS"]}"
+    result["pathUpsilonGaiaJORS"] = f"/storage{result["pathUpsilonGaiaJORS"]}"
+    result["pathRhoNonGaiaJORS"] = f"/storage{result["pathRhoNonGaiaJORS"]}"
+    result["pathRhoGaiaJORS"] = f"/storage{result["pathRhoGaiaJORS"]}"
     return result
 
 def get_res_stats(solutionID: str, studentised: bool) -> dict:

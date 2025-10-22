@@ -76,16 +76,26 @@ class Report:
                 "hist": list(countObsPerSource.histogram(binNum))
             }
 
-            path = os.path.join(cachePath, solutionID + "_obs_per_src.dat")
-            self.report["observationsPerSource"] = countObsPerSource.dump_to_file(path)
-            self.report["observationsPerSource"]["path"] = path
+            pathNonGaia = os.path.join(cachePath, solutionID + "_obs_per_src_non_gaia.dat")
+            pathGaia = os.path.join(cachePath, solutionID + "_obs_per_src_gaia.dat")
+            self.report["observationsPerSource"] = countObsPerSource.dump_to_file(pathNonGaia, pathGaia)
+            self.report["observationsPerSource"]["pathNonGaia"] = pathNonGaia
+            self.report["observationsPerSource"]["pathGaia"] = pathGaia
 
             stats = raccoons.SrcStats()
-            pathUpsilonGRS = os.path.join(cachePath, solutionID + "_src_updates_upsilon_in_grs.dat")
-            pathRhoGRS = os.path.join(cachePath, solutionID + "_src_updates_rho_in_grs.dat")
-            pathUpsilonJORS = os.path.join(cachePath, solutionID + "_src_updates_upsilon_in_jors.dat")
-            pathRhoJORS = os.path.join(cachePath, solutionID + "_src_updates_rho_in_jors.dat")
-            srcStats = stats.stats(self.engine, pathUpsilonGRS, pathRhoGRS, pathUpsilonJORS, pathRhoJORS)
+            pathUpsilonNonGaiaGRS = os.path.join(cachePath, solutionID + "_src_updates_upsilon_non_gaia_in_grs.dat")
+            pathUpsilonGaiaGRS = os.path.join(cachePath, solutionID + "_src_updates_upsilon_gaia_in_grs.dat")
+            pathRhoNonGaiaGRS = os.path.join(cachePath, solutionID + "_src_updates_rho_non_gaia_in_grs.dat")
+            pathRhoGaiaGRS = os.path.join(cachePath, solutionID + "_src_updates_rho_gaia_in_grs.dat")
+            pathUpsilonNonGaiaJORS = os.path.join(cachePath, solutionID + "_src_updates_upsilon_non_gaia_in_jors.dat")
+            pathUpsilonGaiaJORS = os.path.join(cachePath, solutionID + "_src_updates_upsilon_gaia_in_jors.dat")
+            pathRhoNonGaiaJORS = os.path.join(cachePath, solutionID + "_src_updates_rho_non_gaia_in_jors.dat")
+            pathRhoGaiaJORS = os.path.join(cachePath, solutionID + "_src_updates_rho_gaia_in_jors.dat")
+            srcStats = stats.stats(self.engine,
+                                   pathUpsilonNonGaiaGRS, pathUpsilonGaiaGRS,
+                                   pathRhoNonGaiaGRS, pathRhoGaiaGRS,
+                                   pathUpsilonNonGaiaJORS, pathUpsilonGaiaJORS,
+                                   pathRhoNonGaiaJORS, pathRhoGaiaJORS)
             srcStats["minX"] = 1.0e100
             srcStats["maxX"] = -1.0e100
             srcStats["minY"] = 1.0e100
@@ -94,10 +104,14 @@ class Report:
             self.make_hist(srcStats, srcStats, "rhoNonGaia", True, False)
             self.make_hist(srcStats, srcStats, "upsilonGaia", False, False)
             self.make_hist(srcStats, srcStats, "rhoGaia", False, False)
-            srcStats["pathUpsilonGRS"] = pathUpsilonGRS
-            srcStats["pathRhoGRS"] = pathRhoGRS
-            srcStats["pathUpsilonJORS"] = pathUpsilonJORS
-            srcStats["pathRhoJORS"] = pathRhoJORS
+            srcStats["pathUpsilonNonGaiaGRS"] = pathUpsilonNonGaiaGRS
+            srcStats["pathUpsilonGaiaGRS"] = pathUpsilonGaiaGRS
+            srcStats["pathRhoNonGaiaGRS"] = pathRhoNonGaiaGRS
+            srcStats["pathRhoGaiaGRS"] = pathRhoGaiaGRS
+            srcStats["pathUpsilonNonGaiaJORS"] = pathUpsilonNonGaiaJORS
+            srcStats["pathUpsilonGaiaJORS"] = pathUpsilonGaiaJORS
+            srcStats["pathRhoNonGaiaJORS"] = pathRhoNonGaiaJORS
+            srcStats["pathRhoGaiaJORS"] = pathRhoGaiaJORS
             self.report["srcStats"] = srcStats
 
             N = self.report["missionOvervew"]["N"]
