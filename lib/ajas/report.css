@@ -100,3 +100,35 @@
     background-color: #EE220C;
     color: #FFF;
 }
+.report-tabbar
+{
+    margin-top: 18px;
+    margin-left: 70px;
+    margin-right: 70px;
+    background-color: #B7B7B7;
+}
+.report-tab
+{
+    background-color: #B7B7B7;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 30px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-family: Helvetica Neue;
+    font-size: 14px;
+}
+.report-tab:hover
+{
+    background-color: #9393E0;
+    color: #FFF;
+}
+.report-tab-selected
+{
+    background: #5F5F5F;
+    color: #fff;
+}
