@@ -88,3 +88,15 @@
     width: 20px;
     height: 20px;
 }
+.report-sanity-ok
+{
+    font-weight: bold;
+    background-color: #1DB100;
+    color: #FFF;
+}
+.report-sanity-fail
+{
+    font-weight: bold;
+    background-color: #EE220C;
+    color: #FFF;
+}
