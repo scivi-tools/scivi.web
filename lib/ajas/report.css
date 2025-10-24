@@ -132,3 +132,24 @@
     background: #5F5F5F;
     color: #fff;
 }
+.report-slider-container
+{
+    display: flex;
+    flex-flow: row wrap;
+    column-gap: 5px;
+    row-gap: 5px;
+    align-items: center;
+    margin-top: -20px;
+    width: 100%;
+}
+.report-subsets-slider
+{
+    width: 500px;
+    margin-left: 30px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.report-subsets-slider .noUi-marker-large
+{
+    height: 6px;
+}

@@ -123,7 +123,8 @@ class Report:
                         "slices": []
                     },
                     {
-                        "name": "Spring/Autumn",
+                        "name": "Season",
+                        "dimensions": [ { "name": "Timespan", "ticks": [ "Spring", "Autumn" ] } ],
                         "slices": []
                     }
                 ],
@@ -139,7 +140,8 @@ class Report:
                         "slices": []
                     },
                     {
-                        "name": "Spring/Autumn",
+                        "name": "Season",
+                        "dimensions": [ { "name": "Timespan", "ticks": [ "Spring", "Autumn" ] } ],
                         "slices": []
                     }
                 ],
@@ -149,22 +151,22 @@ class Report:
                 "maxY": -1.0e100
             }
 
+            # All
             self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 0,
                                          N, detectorNames,
                                          resHistogramEta, resHistogramZeta,
-                                         studResHistogramEta, studResHistogramZeta,
-                                         "All")
+                                         studResHistogramEta, studResHistogramZeta)
 
+            # Spring
             self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
                                          N, detectorNames,
                                          resHistogramSpringEta, resHistogramSpringZeta,
-                                         studResHistogramSpringEta, studResHistogramSpringZeta,
-                                         "Spring")
+                                         studResHistogramSpringEta, studResHistogramSpringZeta)
+            # Autumn
             self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
                                          N, detectorNames,
                                          resHistogramAutumnEta, resHistogramAutumnZeta,
-                                         studResHistogramAutumnEta, studResHistogramAutumnZeta,
-                                         "Autumn")
+                                         studResHistogramAutumnEta, studResHistogramAutumnZeta)
 
 
             with open(cacheFile, "w") as f:
@@ -278,16 +280,9 @@ class Report:
 
     def reasiduals_subset_slice(self,
                                 stats, studStats, subsetIdx,
-                                N, detectorNames, histEta, histZeta, studHistEta, studHistZeta,
-                                sliceName):
-        subsetSlice = {
-            "detectors": [],
-            "name": sliceName
-        }
-        studSubsetSlice = {
-            "detectors": [],
-            "name": sliceName
-        }
+                                N, detectorNames, histEta, histZeta, studHistEta, studHistZeta):
+        subsetSlice = { "detectors": [] }
+        studSubsetSlice = { "detectors": [] }
         stats["subsets"][subsetIdx]["slices"].append(subsetSlice)
         studStats["subsets"][subsetIdx]["slices"].append(studSubsetSlice)
 
