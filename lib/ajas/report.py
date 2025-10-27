@@ -65,16 +65,52 @@ class Report:
             for i in range(9):
                 startPhase = i * np.deg2rad(20.0)
                 endPhase = (i + 1) * np.deg2rad(20.0)
-                phaseTicks.append(f"[{i * 20}&deg;; {(i + 1) * 20}&deg;]")
+                phaseTicks.append(f"[{i * 20}&deg;; {(i + 1) * 20}&deg;)")
                 resPhaseEta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
                                                               binNum, startPhase, endPhase, False))
-                resPhaseZeta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
+                resPhaseZeta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Zeta,
                                                                binNum, startPhase, endPhase, False))
                 studResPhaseEta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
                                                                   binNum, startPhase, endPhase, True))
-                studResPhaseZeta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
+                studResPhaseZeta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Zeta,
                                                                    binNum, startPhase, endPhase, True))
             query += resPhaseEta + resPhaseZeta + studResPhaseEta + studResPhaseZeta
+
+            resColMagEta = []
+            resColMagZeta = []
+            studResColMagEta = []
+            studResColMagZeta = []
+            colorTicks = [ "[-5; 0.57)", "[0.57; 1.23)", "[1.23; 8)" ]
+            magnitudeTicks = [ "[10; 13.1)", "[13.1; 13.98)", "[13.98; 15)" ]
+            colorEdges = [ -5.0, 0.5653515135036375, 1.2293956601188274, 8.0 ]
+            magnitudeEdges = [ 10, 13.09287167663755, 13.978651674833689, 15.0 ]
+            for i in range(3):
+                startColor = colorEdges[i]
+                endColor = colorEdges[i + 1]
+                for j in range(3):
+                    startMagnitude = magnitudeEdges[j]
+                    endMagnitude = magnitudeEdges[j + 1]
+                    resColMagEta.append(raccoons.ResHistogramColMag(raccoons.Coordinate.Eta,
+                                                                    binNum,
+                                                                    startColor, endPhase,
+                                                                    startMagnitude, endMagnitude,
+                                                                    False))
+                    resColMagZeta.append(raccoons.ResHistogramColMag(raccoons.Coordinate.Zeta,
+                                                                     binNum,
+                                                                     startColor, endPhase,
+                                                                     startMagnitude, endMagnitude,
+                                                                     False))
+                    studResColMagEta.append(raccoons.ResHistogramColMag(raccoons.Coordinate.Eta,
+                                                                        binNum,
+                                                                        startColor, endPhase,
+                                                                        startMagnitude, endMagnitude,
+                                                                        True))
+                    studResColMagZeta.append(raccoons.ResHistogramColMag(raccoons.Coordinate.Zeta,
+                                                                         binNum,
+                                                                         startColor, endPhase,
+                                                                         startMagnitude, endMagnitude,
+                                                                         True))
+            query += resColMagEta + resColMagZeta + studResColMagEta + studResColMagZeta
 
             self.engine.for_each_observation(query)
 
@@ -152,6 +188,15 @@ class Report:
                         "name": "Phase",
                         "dimensions": [ { "name": "Phase", "ticks": phaseTicks } ],
                         "slices": []
+                    },
+                    {
+                        "name": "Color & Magnitude",
+                        "dimensions":
+                        [
+                            { "name": "Color", "ticks": colorTicks },
+                            { "name": "Magnitude", "ticks": magnitudeTicks }
+                        ],
+                        "slices": []
                     }
                 ],
                 "minX": 1.0e100,
@@ -173,6 +218,15 @@ class Report:
                     {
                         "name": "Phase",
                         "dimensions": [ { "name": "Phase", "ticks": phaseTicks } ],
+                        "slices": []
+                    },
+                    {
+                        "name": "Color & Magnitude",
+                        "dimensions":
+                        [
+                            { "name": "Color", "ticks": colorTicks },
+                            { "name": "Magnitude", "ticks": magnitudeTicks }
+                        ],
                         "slices": []
                     }
                 ],
@@ -204,6 +258,14 @@ class Report:
                                              N, detectorNames,
                                              resPhaseEta[i], resPhaseZeta[i],
                                              studResPhaseEta[i], studResPhaseZeta[i])
+            # Color & Magnitude
+            for i in range(3):
+                for j in range(3):
+                    idx = i * 3 + j
+                    self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 3,
+                                                 N, detectorNames,
+                                                 resColMagEta[idx], resColMagZeta[idx],
+                                                 studResColMagEta[idx], studResColMagZeta[idx])
 
 
             with open(cacheFile, "w") as f:
