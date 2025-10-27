@@ -37,7 +37,7 @@ class Report:
             studResHistogramAutumnEta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Eta, binNum, False, True)
             studResHistogramAutumnZeta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Zeta, binNum, False, True)
 
-            self.engine.for_each_observation([
+            query = [
                 countObsPerSource,
                 countObsPerUnit,
 
@@ -55,7 +55,28 @@ class Report:
                 resHistogramAutumnZeta,
                 studResHistogramAutumnEta,
                 studResHistogramAutumnZeta
-            ])
+            ]
+
+            resPhaseEta = []
+            resPhaseZeta = []
+            studResPhaseEta = []
+            studResPhaseZeta = []
+            phaseTicks = []
+            for i in range(9):
+                startPhase = i * np.deg2rad(20.0)
+                endPhase = (i + 1) * np.deg2rad(20.0)
+                phaseTicks.append(f"[{i * 20}&deg;; {(i + 1) * 20}&deg;]")
+                resPhaseEta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
+                                                              binNum, startPhase, endPhase, False))
+                resPhaseZeta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
+                                                               binNum, startPhase, endPhase, False))
+                studResPhaseEta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
+                                                                  binNum, startPhase, endPhase, True))
+                studResPhaseZeta.append(raccoons.ResHistogramPhase(raccoons.Coordinate.Eta,
+                                                                   binNum, startPhase, endPhase, True))
+            query += resPhaseEta + resPhaseZeta + studResPhaseEta + studResPhaseZeta
+
+            self.engine.for_each_observation(query)
 
             self.report["missionOvervew"] = self.engine.mission_overview()
 
@@ -126,6 +147,11 @@ class Report:
                         "name": "Season",
                         "dimensions": [ { "name": "Timespan", "ticks": [ "Spring", "Autumn" ] } ],
                         "slices": []
+                    },
+                    {
+                        "name": "Phase",
+                        "dimensions": [ { "name": "Phase", "ticks": phaseTicks } ],
+                        "slices": []
                     }
                 ],
                 "minX": 1.0e100,
@@ -142,6 +168,11 @@ class Report:
                     {
                         "name": "Season",
                         "dimensions": [ { "name": "Timespan", "ticks": [ "Spring", "Autumn" ] } ],
+                        "slices": []
+                    },
+                    {
+                        "name": "Phase",
+                        "dimensions": [ { "name": "Phase", "ticks": phaseTicks } ],
                         "slices": []
                     }
                 ],
@@ -167,6 +198,12 @@ class Report:
                                          N, detectorNames,
                                          resHistogramAutumnEta, resHistogramAutumnZeta,
                                          studResHistogramAutumnEta, studResHistogramAutumnZeta)
+            # Phase
+            for i in range(len(resPhaseEta)):
+                self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 2,
+                                             N, detectorNames,
+                                             resPhaseEta[i], resPhaseZeta[i],
+                                             studResPhaseEta[i], studResPhaseZeta[i])
 
 
             with open(cacheFile, "w") as f:
