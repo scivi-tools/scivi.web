@@ -132,22 +132,26 @@
     background: #5F5F5F;
     color: #fff;
 }
-.report-slider-container
+.report-dimensions
 {
-    display: flex;
-    flex-flow: row wrap;
-    column-gap: 5px;
-    row-gap: 5px;
-    align-items: center;
+    display: table;
     margin-top: -20px;
-    width: 100%;
+}
+.report-dimensions-row
+{
+    display: table-row;
+}
+.report-dimensions-col
+{
+    display: table-cell;
+    vertical-align: middle;
 }
 .report-subsets-slider
 {
     width: 500px;
     margin-left: 30px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 45px;
+    margin-bottom: 45px;
 }
 .report-subsets-slider .noUi-marker-large
 {
