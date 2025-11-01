@@ -37,6 +37,9 @@ class Report:
             studResHistogramAutumnEta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Eta, binNum, False, True)
             studResHistogramAutumnZeta = raccoons.ResHistogramSeasons(raccoons.Coordinate.Zeta, binNum, False, True)
 
+            resHistogram2DColEta = raccoons.ResHistogram2DCol(raccoons.Coordinate.Eta, 128, 128)
+            resHistogram2DColZeta = raccoons.ResHistogram2DCol(raccoons.Coordinate.Zeta, 128, 128)
+
             query = [
                 countObsPerSource,
                 countObsPerUnit,
@@ -54,7 +57,10 @@ class Report:
                 resHistogramAutumnEta,
                 resHistogramAutumnZeta,
                 studResHistogramAutumnEta,
-                studResHistogramAutumnZeta
+                studResHistogramAutumnZeta,
+
+                resHistogram2DColEta,
+                resHistogram2DColZeta
             ]
 
             resPhaseEta = []
@@ -197,6 +203,10 @@ class Report:
                             { "name": "Magnitude", "ticks": magnitudeTicks }
                         ],
                         "slices": []
+                    },
+                    {
+                        "name": "Color",
+                        "slices": []
                     }
                 ],
                 "minX": 1.0e100,
@@ -266,6 +276,12 @@ class Report:
                                                  N, detectorNames,
                                                  resColMagEta[idx], resColMagZeta[idx],
                                                  studResColMagEta[idx], studResColMagZeta[idx])
+
+            # Color
+            self.reasiduals_subset_slice2D(self.report["resStats"], 4,
+                                           N, detectorNames,
+                                           resHistogram2DColEta, resHistogram2DColZeta,
+                                           "color", cachePath, solutionID)
 
 
             with open(cacheFile, "w") as f:
@@ -380,8 +396,8 @@ class Report:
     def reasiduals_subset_slice(self,
                                 stats, studStats, subsetIdx,
                                 N, detectorNames, histEta, histZeta, studHistEta, studHistZeta):
-        subsetSlice = { "detectors": [] }
-        studSubsetSlice = { "detectors": [] }
+        subsetSlice = { "detectors": [], "chart": "column" }
+        studSubsetSlice = { "detectors": [], "chart": "column" }
         stats["subsets"][subsetIdx]["slices"].append(subsetSlice)
         studStats["subsets"][subsetIdx]["slices"].append(studSubsetSlice)
 
@@ -395,6 +411,34 @@ class Report:
             self.make_hist(detector, studStats, "eta", True, True)
             self.make_hist(detector, studStats, "zeta", True, True)
             studSubsetSlice["detectors"].append(detector)
+
+    def process_detector2D(self, n, names, histEta, histZeta, histEtaFile, histZetaFile):
+        return {
+            "name": names[n],
+
+            "eta": histEtaFile,
+            "etaMin": histEta.bin_min(n),
+            "etaMax": histEta.bin_max(n),
+
+            "zeta": histZetaFile,
+            "zetaMin": histZeta.bin_min(n),
+            "zetaMax": histZeta.bin_max(n)
+        }
+
+    def reasiduals_subset_slice2D(self,
+                                  stats, subsetIdx,
+                                  N, detectorNames, histEta, histZeta,
+                                  sliceID, cachePath, solutionID):
+        subsetSlice = { "detectors": [], "chart": "heatmap" }
+        stats["subsets"][subsetIdx]["slices"].append(subsetSlice)
+
+        for n in range(N):
+            histEtaFile = os.path.join(cachePath, f"{solutionID}_{sliceID}_cmos{n}_eta.dat")
+            histZetaFile = os.path.join(cachePath, f"{solutionID}_{sliceID}_cmos{n}_zeta.dat")
+            subsetSlice["detectors"].append(self.process_detector2D(n, detectorNames, histEta, histZeta,
+                                                                    histEtaFile, histZetaFile))
+            histEta.bins(n).tofile(histEtaFile)
+            histZeta.bins(n).tofile(histZetaFile)
 
     def get_obs_of_src(self, srcID, isJORS, path):
         getter = raccoons.ObsGetter()
