@@ -40,6 +40,9 @@ class Report:
             resHistogram2DColEta = raccoons.ResHistogram2DCol(raccoons.Coordinate.Eta, 128, 128)
             resHistogram2DColZeta = raccoons.ResHistogram2DCol(raccoons.Coordinate.Zeta, 128, 128)
 
+            resHistogram2DMagEta = raccoons.ResHistogram2DMag(raccoons.Coordinate.Eta, 128, 128)
+            resHistogram2DMagZeta = raccoons.ResHistogram2DMag(raccoons.Coordinate.Zeta, 128, 128)
+
             query = [
                 countObsPerSource,
                 countObsPerUnit,
@@ -60,7 +63,10 @@ class Report:
                 studResHistogramAutumnZeta,
 
                 resHistogram2DColEta,
-                resHistogram2DColZeta
+                resHistogram2DColZeta,
+
+                resHistogram2DMagEta,
+                resHistogram2DMagZeta
             ]
 
             resPhaseEta = []
@@ -207,6 +213,10 @@ class Report:
                     {
                         "name": "Color",
                         "slices": []
+                    },
+                    {
+                        "name": "Magnitude",
+                        "slices": []
                     }
                 ],
                 "minX": 1.0e100,
@@ -283,6 +293,11 @@ class Report:
                                            resHistogram2DColEta, resHistogram2DColZeta,
                                            "color", cachePath, solutionID)
 
+            # Magnitude
+            self.reasiduals_subset_slice2D(self.report["resStats"], 5,
+                                           N, detectorNames,
+                                           resHistogram2DMagEta, resHistogram2DMagZeta,
+                                           "magnitude", cachePath, solutionID)
 
             with open(cacheFile, "w") as f:
                 json.dump(self.report, f)
