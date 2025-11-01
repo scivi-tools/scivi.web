@@ -16,42 +16,43 @@ def get_sanity_checks(solutionID: str) -> dict:
 def get_observations_stats(solutionID: str) -> dict:
     return GLOB[solutionID].observations_stats()
 
+def publishFile(config, name):
+    PUBLISH_FILE(config[name])
+    config[name] = f"/storage{config[name]}"
+
 def get_observations_per_source(solutionID: str) -> dict:
     result = copy.deepcopy(GLOB[solutionID].observations_per_source())
-    PUBLISH_FILE(result["pathNonGaia"])
-    PUBLISH_FILE(result["pathGaia"])
-    result["pathNonGaia"] = f"/storage{result["pathNonGaia"]}"
-    result["pathGaia"] = f"/storage{result["pathGaia"]}"
+    publishFile(result, "pathNonGaia")
+    publishFile(result, "pathGaia")
     return result
 
 def get_src_stats(solutionID: str) -> dict:
     result = copy.deepcopy(GLOB[solutionID].src_stats())
-    PUBLISH_FILE(result["pathUpsilonNonGaiaGRS"])
-    PUBLISH_FILE(result["pathUpsilonGaiaGRS"])
-    PUBLISH_FILE(result["pathRhoNonGaiaGRS"])
-    PUBLISH_FILE(result["pathRhoGaiaGRS"])
-    PUBLISH_FILE(result["pathUpsilonNonGaiaJORS"])
-    PUBLISH_FILE(result["pathUpsilonGaiaJORS"])
-    PUBLISH_FILE(result["pathRhoNonGaiaJORS"])
-    PUBLISH_FILE(result["pathRhoGaiaJORS"])
-    result["pathUpsilonNonGaiaGRS"] = f"/storage{result["pathUpsilonNonGaiaGRS"]}"
-    result["pathUpsilonGaiaGRS"] = f"/storage{result["pathUpsilonGaiaGRS"]}"
-    result["pathRhoNonGaiaGRS"] = f"/storage{result["pathRhoNonGaiaGRS"]}"
-    result["pathRhoGaiaGRS"] = f"/storage{result["pathRhoGaiaGRS"]}"
-    result["pathUpsilonNonGaiaJORS"] = f"/storage{result["pathUpsilonNonGaiaJORS"]}"
-    result["pathUpsilonGaiaJORS"] = f"/storage{result["pathUpsilonGaiaJORS"]}"
-    result["pathRhoNonGaiaJORS"] = f"/storage{result["pathRhoNonGaiaJORS"]}"
-    result["pathRhoGaiaJORS"] = f"/storage{result["pathRhoGaiaJORS"]}"
+    publishFile(result, "pathUpsilonNonGaiaGRS")
+    publishFile(result, "pathUpsilonGaiaGRS")
+    publishFile(result, "pathRhoNonGaiaGRS")
+    publishFile(result, "pathRhoGaiaGRS")
+    publishFile(result, "pathUpsilonNonGaiaJORS")
+    publishFile(result, "pathUpsilonGaiaJORS")
+    publishFile(result, "pathRhoNonGaiaJORS")
+    publishFile(result, "pathRhoGaiaJORS")
     return result
 
 def get_res_stats(solutionID: str, studentised: bool) -> dict:
-    return GLOB[solutionID].res_stats(studentised)
+    result = GLOB[solutionID].res_stats(studentised)
+    for subset in result["subsets"]:
+        for subsetSlice in subset["slices"]:
+            if subsetSlice["chart"] == "heatmap":
+                for detector in subsetSlice["detectors"]:
+                    publishFile(detector, "eta")
+                    publishFile(detector, "zeta")
+    return result
 
 def get_observations_of_src(solutionID: str, srcID: str, isJORS: bool) -> dict:
     path = f"/tmp/{solutionID}_obs_of_src_{srcID}.dat"
     result = GLOB[solutionID].get_obs_of_src(int(srcID), isJORS, path)
-    PUBLISH_FILE(path)
-    result["path"] = f"/storage{path}"
+    result["path"] = path
+    publishFile(result, "path")
     return result
 
 def get_src_uncertainties(solutionID: str) -> dict:
