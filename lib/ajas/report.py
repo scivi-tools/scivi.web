@@ -332,61 +332,56 @@ class Report:
     def gaussS1(self, x, a):
         return a * np.exp(-x ** 2 / 2)
 
-    def assemble_hist(self, hist, minMax, binCenters, bins, nameHist):
-        hist[nameHist] = []
-        for x, y in zip(binCenters, bins):
-            hist[nameHist].append(x)
-            hist[nameHist].append(y)
-            if x < minMax["minX"]:
-                minMax["minX"] = x
-            if x > minMax["maxX"]:
-                minMax["maxX"] = x
-            if y < minMax["minY"]:
-                minMax["minY"] = y
-            if y > minMax["maxY"]:
-                minMax["maxY"] = y
+    def interleave(self, arr1, arr2):
+        result = np.empty((arr1.size + arr2.size,), dtype = arr1.dtype)
+        result[0::2] = arr1
+        result[1::2] = arr2
+        return result
 
     def make_hist(self, hist, stats, name, fitGauss, fitGaussS1):
         nameHist = name + "Hist"
-        nameBinCenters = name + "BinCenters"
-        nameBins = name + "Bins"
 
-        binCenters = np.array(hist[nameBinCenters])
-        bins = np.array(hist[nameBins])
+        binCenters = np.array(hist[nameHist][0::2])
+        binVals = np.array(hist[nameHist][1::2])
 
-        maxBins = max(bins)
-        sumBins = sum(bins)
+        maxBins = max(binVals)
+        sumBins = sum(binVals)
         if sumBins > 0.0:
-            meanBins = sum(binCenters * bins) / sumBins
-            sigmaBins = np.sqrt(sum(bins * (binCenters - meanBins) ** 2) / sumBins)
+            meanBins = sum(binCenters * binVals) / sumBins
+            sigmaBins = np.sqrt(sum(binVals * (binCenters - meanBins) ** 2) / sumBins)
         else:
             meanBins = 0.0
             sigmaBins = 0.0
 
-        self.assemble_hist(hist, stats, binCenters, bins, nameHist)
+        hist[nameHist] = list(hist[nameHist])
+        stats["minX"] = min(stats["minX"], np.min(binCenters))
+        stats["maxX"] = max(stats["maxX"], np.max(binCenters))
+        stats["minY"] = min(stats["minY"], np.min(binVals))
+        stats["maxY"] = max(stats["maxY"], np.max(binVals))
 
         if fitGauss:
             nameGauss = name + "Gauss"
             if sumBins > 0.0:
-                popt, pcov = curve_fit(self.gauss, binCenters, bins, p0 = [ maxBins, meanBins, sigmaBins ])
+                popt, pcov = curve_fit(self.gauss, binCenters, binVals, p0 = [ maxBins, meanBins, sigmaBins ])
                 stats[name + "GaussSigma"] = popt[2]
                 gs = self.gauss(binCenters, *popt)
             else:
                 stats[name + "GaussSigma"] = 0
                 gs = np.zeros(len(binCenters))
-            self.assemble_hist(hist, stats, binCenters, gs, nameGauss)
+            hist[nameGauss] = list(self.interleave(binCenters, gs))
+            stats["minY"] = min(stats["minY"], np.min(gs))
+            stats["maxY"] = max(stats["maxY"], np.max(gs))
 
         if fitGaussS1:
             nameGaussS1 = name + "GaussS1"
             if sumBins > 0.0:
-                popt, pcov = curve_fit(self.gaussS1, binCenters, bins, p0 = [ maxBins ])
+                popt, pcov = curve_fit(self.gaussS1, binCenters, binVals, p0 = [ maxBins ])
                 gs1 = self.gaussS1(binCenters, *popt)
             else:
                 gs1 = np.zeros(len(binCenters))
-            self.assemble_hist(hist, stats, binCenters, gs1, nameGaussS1)
-
-        del hist[nameBinCenters]
-        del hist[nameBins]
+            hist[nameGaussS1] = list(self.interleave(binCenters, gs1))
+            stats["minY"] = min(stats["minY"], np.min(gs1))
+            stats["maxY"] = max(stats["maxY"], np.max(gs1))
 
     def process_detector(self, n, names, histEta, histZeta):
         return {
@@ -397,15 +392,13 @@ class Report:
             "etaSigma": histEta.st_dev(n),
             "etaGamma": histEta.skewness(n),
             "etaKappa": histEta.kurtosis(n),
-            "etaBins": histEta.bins(n),
-            "etaBinCenters": histEta.bin_centers(n),
+            "etaHist": histEta.bins(n),
 
             "zetaMu": histZeta.mean(n),
             "zetaSigma": histZeta.st_dev(n),
             "zetaGamma": histZeta.skewness(n),
             "zetaKappa": histZeta.kurtosis(n),
-            "zetaBins": histZeta.bins(n),
-            "zetaBinCenters": histZeta.bin_centers(n)
+            "zetaHist": histZeta.bins(n)
         }
 
     def reasiduals_subset_slice(self,
