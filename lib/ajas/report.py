@@ -9,7 +9,7 @@ from scipy.optimize import curve_fit
 class Report:
     def __init__(self, solutionID, inputPath, solutionPath, cachePath):
         self.solutionID = solutionID
-        self.engine = raccoons.Engine(inputPath + "/obs.dat", inputPath + "/src.dat", solutionPath)
+        self.engine = raccoons.Engine({ "inputPath": inputPath, "outputPath": solutionPath })
 
         cacheFile = os.path.join(cachePath, solutionID + "_report.json")
         if os.path.isfile(cacheFile):
@@ -130,12 +130,12 @@ class Report:
 
             self.report["solutionStats"] = self.engine.solution_stats()
 
+            spectrum = raccoons.Spectrum(self.engine)
+
             self.report["sanityChecks"] = {
                 "calibUnits": int(countObsPerUnit.min() > 0),
                 "sources": int(countObsPerSource.min() > 0),
-                "spectrum": int(np.round(np.sum(np.fromfile(os.path.join(self.engine.solution_path(), "spectrum.dat"),
-                                                            dtype = np.double))) ==
-                                self.report["missionOvervew"]["m"])
+                "spectrum": int(np.round(np.sum(spectrum.values())) == self.report["missionOvervew"]["m"])
             }
 
             self.report["observationsStats"] = {
