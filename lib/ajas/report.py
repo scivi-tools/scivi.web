@@ -66,7 +66,7 @@ class Report:
                 resHistogram2DColZeta,
 
                 resHistogram2DMagEta,
-                resHistogram2DMagZeta
+                resHistogram2DMagZeta,
             ]
 
             resPhaseEta = []
@@ -126,6 +126,10 @@ class Report:
 
             self.engine.for_each_observation(query)
 
+            ###########
+            # Overview
+            ###########
+
             self.report["missionOvervew"] = self.engine.mission_overview()
 
             self.report["solutionStats"] = self.engine.solution_stats()
@@ -145,11 +149,19 @@ class Report:
                 "hist": list(countObsPerSource.histogram(binNum))
             }
 
+            ###########
+            # Observations
+            ###########
+
             pathNonGaia = os.path.join(cachePath, solutionID + "_obs_per_src_non_gaia.dat")
             pathGaia = os.path.join(cachePath, solutionID + "_obs_per_src_gaia.dat")
             self.report["observationsPerSource"] = countObsPerSource.dump_to_file(pathNonGaia, pathGaia)
             self.report["observationsPerSource"]["pathNonGaia"] = pathNonGaia
             self.report["observationsPerSource"]["pathGaia"] = pathGaia
+
+            ###########
+            # Sources
+            ###########
 
             stats = raccoons.SrcStats()
             pathUpsilonNonGaiaGRS = os.path.join(cachePath, solutionID + "_src_updates_upsilon_non_gaia_in_grs.dat")
@@ -182,6 +194,10 @@ class Report:
             srcStats["pathRhoNonGaiaJORS"] = pathRhoNonGaiaJORS
             srcStats["pathRhoGaiaJORS"] = pathRhoGaiaJORS
             self.report["srcStats"] = srcStats
+
+            ###########
+            # Residuals
+            ###########
 
             N = self.report["missionOvervew"]["N"]
             detectorNames = [ "CMOS0", "CMOS1", "CMOS2", "CMOS3" ];
@@ -298,6 +314,26 @@ class Report:
                                            N, detectorNames,
                                            resHistogram2DMagEta, resHistogram2DMagZeta,
                                            "magnitude", cachePath, solutionID)
+
+            ###########
+            # Low-order calibration
+            ###########
+
+            loCalibStats = raccoons.LOCalibStats()
+
+            self.engine.for_each_exposure([ loCalibStats ])
+
+            timestampsPath = os.path.join(cachePath, solutionID + "_exp_timestamps.dat")
+            loCalibStats.dump_timestamps(timestampsPath)
+            self.report["loCalibStats"] = {
+                "timestamps": timestampsPath,
+                "params":
+                [
+                    self.loCalibParam(loCalibStats, detectorNames, 0, 0, cachePath, solutionID),
+                    self.loCalibParam(loCalibStats, detectorNames, 1, 0, cachePath, solutionID),
+                    self.loCalibParam(loCalibStats, detectorNames, 0, 1, cachePath, solutionID)
+                ]
+            };
 
             with open(cacheFile, "w") as f:
                 json.dump(self.report, f)
@@ -451,3 +487,64 @@ class Report:
     def get_obs_of_src(self, srcID, isJORS, path):
         getter = raccoons.ObsGetter()
         return getter.get_obs_of_src(srcID, isJORS, path, self.engine)
+
+    def loCalibParam(self, loCalibStats, detectorNames, o, s, cachePath, solutionID):
+        detectors = []
+        for n in range(len(detectorNames)):
+            detectors.append(self.loCalibParamDetector(loCalibStats, detectorNames[n], n, s, o, cachePath, solutionID))
+        return {
+            "name": f"{o}{s}",
+            "detectors": detectors
+        }
+
+    def loCalibParamDetector(self, loCalibStats, name, n, o, s, cachePath, solutionID):
+        etaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Eta, n, o, s)
+        zetaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Zeta, n, o, s)
+        etaFit, etaResiduals = self.fitLOCalib(etaValues)
+        zetaFit, zetaResiduals = self.fitLOCalib(zetaValues)
+        return {
+            "name": name,
+            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{name}_eta"),
+            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{name}_zeta"),
+            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{name}_eta_fit"),
+            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{name}_zeta_fit"),
+            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{name}_eta_res"),
+            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{name}_zeta_res")
+        }
+
+    def fitLOCCalibFunc(self, x, a, b, c, d, e):
+        return a * x + b + c * np.sin(d * x + e)
+
+    def fitLOCCalibInitGuess(self):
+        return [ 1.0, 0.0, 0.0, 0.0, 0.0 ]
+
+    def fitLOCalib(self, values):
+        x = np.arange(len(values))
+        popt, pcov = curve_fit(self.fitLOCCalibFunc, x, values, p0 = self.fitLOCCalibInitGuess())
+        fit = self.fitLOCCalibFunc(x, *popt)
+        residuals = values - fit
+        return fit, residuals
+
+    def makeLODData(self, values, zoom):
+        numPointsToAggregate = int(zoom)
+        if numPointsToAggregate == 1:
+            return values
+        else:
+            return np.mean(values[:(len(values) // numPointsToAggregate) *
+                                   numPointsToAggregate].reshape(-1, numPointsToAggregate),
+                           axis = 1)
+
+    def makeLOD(self, values, zoom, cachePath, tag):
+        lodData = self.makeLODData(values, zoom)
+        lodPath = os.path.join(cachePath, f"{tag}_{zoom}.dat")
+        lodData.tofile(lodPath)
+        return {
+            "zoom": zoom,
+            "data": lodPath
+        }
+
+    def makeLODs(self, values, cachePath, tag):
+        return [
+            self.makeLOD(values, len(values) / 100.0, cachePath, tag),
+            self.makeLOD(values, 1.0, cachePath, tag)
+        ]
