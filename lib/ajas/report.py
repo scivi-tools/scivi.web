@@ -491,7 +491,7 @@ class Report:
     def loCalibParam(self, loCalibStats, detectorNames, o, s, cachePath, solutionID):
         detectors = []
         for n in range(len(detectorNames)):
-            detectors.append(self.loCalibParamDetector(loCalibStats, detectorNames[n], n, s, o, cachePath, solutionID))
+            detectors.append(self.loCalibParamDetector(loCalibStats, detectorNames[n], n, o, s, cachePath, solutionID))
         return {
             "name": f"{o}{s}",
             "detectors": detectors
@@ -504,19 +504,19 @@ class Report:
         zetaFit, zetaResiduals = self.fitLOCalib(zetaValues)
         return {
             "name": name,
-            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{name}_eta"),
-            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{name}_zeta"),
-            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{name}_eta_fit"),
-            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{name}_zeta_fit"),
-            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{name}_eta_res"),
-            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{name}_zeta_res")
+            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta"),
+            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta"),
+            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_fit"),
+            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_fit"),
+            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_res"),
+            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_res")
         }
 
     def fitLOCCalibFunc(self, x, a, b, c, d, e):
         return a * x + b + c * np.sin(d * x + e)
 
     def fitLOCCalibInitGuess(self):
-        return [ 1.0, 0.0, 0.0, 0.0, 0.0 ]
+        return [ 0.0, 0.0, 0.0, 0.0, 0.0 ]
 
     def fitLOCalib(self, values):
         x = np.arange(len(values))
@@ -528,11 +528,14 @@ class Report:
     def makeLODData(self, values, zoom):
         numPointsToAggregate = int(zoom)
         if numPointsToAggregate == 1:
-            return values
+            x = np.arange(len(values))
+            y = values
         else:
-            return np.mean(values[:(len(values) // numPointsToAggregate) *
-                                   numPointsToAggregate].reshape(-1, numPointsToAggregate),
-                           axis = 1)
+            x = np.arange(numPointsToAggregate / 2, len(values), numPointsToAggregate)
+            y = np.mean(values[:(len(values) // numPointsToAggregate) *
+                                numPointsToAggregate].reshape(-1, numPointsToAggregate),
+                        axis = 1)
+        return self.interleave(x, y)
 
     def makeLOD(self, values, zoom, cachePath, tag):
         lodData = self.makeLODData(values, zoom)
@@ -548,3 +551,6 @@ class Report:
             self.makeLOD(values, len(values) / 100.0, cachePath, tag),
             self.makeLOD(values, 1.0, cachePath, tag)
         ]
+
+    def get_lo_calib_stats(self):
+        return self.report["loCalibStats"]
