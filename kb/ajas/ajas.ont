@@ -1,5 +1,5 @@
 {
-    "last_id": "156",
+    "last_id": "167",
     "namespaces": {
         "default": "http://knova.ru/user/1738569000750",
         "ontolis-avis": "http://knova.ru/ontolis-avis",
@@ -430,8 +430,8 @@
             "id": "138",
             "name": "SolutionID",
             "namespace": "http://knova.ru/user/1738569000750",
-            "position_x": 534,
-            "position_y": 421
+            "position_x": 536,
+            "position_y": 420
         },
         {
             "attributes": {
@@ -439,8 +439,8 @@
             "id": "139",
             "name": "SanityChecks",
             "namespace": "http://knova.ru/user/1738569000750",
-            "position_x": 637,
-            "position_y": 420
+            "position_x": 641,
+            "position_y": 421
         },
         {
             "attributes": {
@@ -459,6 +459,33 @@
             "namespace": "http://knova.ru/user/1738569000750",
             "position_x": 1081,
             "position_y": 876
+        },
+        {
+            "attributes": {
+            },
+            "id": "157",
+            "name": "get_lo_calib_stats",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "position_x": 0,
+            "position_y": 0
+        },
+        {
+            "attributes": {
+            },
+            "id": "159",
+            "name": "SolutionID",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "position_x": 0,
+            "position_y": 0
+        },
+        {
+            "attributes": {
+            },
+            "id": "161",
+            "name": "LO Calib Stats",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "position_x": 956,
+            "position_y": 315
         }
     ],
     "relations": [
@@ -1364,6 +1391,78 @@
             "name": "has",
             "namespace": "http://knova.ru/user/1738569000750",
             "source_node_id": "88"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "157",
+            "id": "158",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "1"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "159",
+            "id": "160",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "157"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "161",
+            "id": "162",
+            "name": "has",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "157"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "36",
+            "id": "163",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "161"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "38",
+            "id": "164",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "159"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "3",
+            "id": "165",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "161"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "32",
+            "id": "166",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "157"
+        },
+        {
+            "attributes": {
+            },
+            "destination_node_id": "8",
+            "id": "167",
+            "name": "is_a",
+            "namespace": "http://knova.ru/user/1738569000750",
+            "source_node_id": "159"
         }
     ],
     "visualize_ont_path": ""

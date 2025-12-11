@@ -64,6 +64,25 @@ def get_src_uncertainties(solutionID: str) -> dict:
     # return srcUns
     return None
 
+def get_lo_calib_stats(solutionID: str) -> dict:
+    result = GLOB[solutionID].get_lo_calib_stats()
+    publishFile(result, "timestamps")
+    for param in result["params"]:
+        for detector in param["detectors"]:
+            for etaValues in detector["etaValues"]:
+                publishFile(etaValues, "data")
+            for zetaValues in detector["zetaValues"]:
+                publishFile(zetaValues, "data")
+            for etaFit in detector["etaFit"]:
+                publishFile(etaFit, "data")
+            for zetaFit in detector["zetaFit"]:
+                publishFile(zetaFit, "data")
+            for etaResiduals in detector["etaResiduals"]:
+                publishFile(etaResiduals, "data")
+            for zetaResiduals in detector["zetaResiduals"]:
+                publishFile(zetaResiduals, "data")
+    return result
+
 def sdbm(s):
     result = 0
     for c in s:
