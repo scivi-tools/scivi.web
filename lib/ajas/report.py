@@ -527,10 +527,10 @@ class Report:
 
     def makeLODData(self, values, numPointsToAggregate):
         if numPointsToAggregate == 1:
-            x = np.arange(len(values))
+            x = np.arange(len(values), dtype = np.double)
             y = values
         else:
-            x = np.arange(numPointsToAggregate / 2, len(values), numPointsToAggregate)
+            x = np.arange(numPointsToAggregate / 2, len(values), numPointsToAggregate, dtype = np.double)
             y = np.mean(values[:(len(values) // numPointsToAggregate) *
                                 numPointsToAggregate].reshape(-1, numPointsToAggregate),
                         axis = 1)
