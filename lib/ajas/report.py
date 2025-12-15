@@ -525,8 +525,7 @@ class Report:
         residuals = values - fit
         return fit, residuals
 
-    def makeLODData(self, values, zoom):
-        numPointsToAggregate = int(zoom)
+    def makeLODData(self, values, numPointsToAggregate):
         if numPointsToAggregate == 1:
             x = np.arange(len(values))
             y = values
@@ -537,8 +536,8 @@ class Report:
                         axis = 1)
         return self.interleave(x, y)
 
-    def makeLOD(self, values, zoom, cachePath, tag):
-        lodData = self.makeLODData(values, zoom)
+    def makeLOD(self, values, numPointsToAggregate, zoom, cachePath, tag):
+        lodData = self.makeLODData(values, numPointsToAggregate)
         lodPath = os.path.join(cachePath, f"{tag}_{zoom}.dat")
         lodData.tofile(lodPath)
         return {
@@ -548,8 +547,8 @@ class Report:
 
     def makeLODs(self, values, cachePath, tag):
         return [
-            self.makeLOD(values, len(values) / 100.0, cachePath, tag),
-            self.makeLOD(values, 1.0, cachePath, tag)
+            self.makeLOD(values, int(len(values) / 100.0), 1.0, cachePath, tag),
+            self.makeLOD(values, 1, len(values) / 100.0, cachePath, tag)
         ]
 
     def get_lo_calib_stats(self):
