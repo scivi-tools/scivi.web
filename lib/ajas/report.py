@@ -368,10 +368,17 @@ class Report:
     def gaussS1(self, x, a):
         return a * np.exp(-x ** 2 / 2)
 
-    def interleave(self, arr1, arr2):
+    def interleave2(self, arr1, arr2):
         result = np.empty((arr1.size + arr2.size,), dtype = arr1.dtype)
         result[0::2] = arr1
         result[1::2] = arr2
+        return result
+
+    def interleave3(self, arr1, arr2, arr3):
+        result = np.empty((arr1.size + arr2.size + arr3.size,), dtype = arr1.dtype)
+        result[0::3] = arr1
+        result[1::3] = arr2
+        result[2::3] = arr3
         return result
 
     def make_hist(self, hist, stats, name, fitGauss, fitGaussS1):
@@ -404,7 +411,7 @@ class Report:
             else:
                 stats[name + "GaussSigma"] = 0
                 gs = np.zeros(len(binCenters))
-            hist[nameGauss] = list(self.interleave(binCenters, gs))
+            hist[nameGauss] = list(self.interleave2(binCenters, gs))
             stats["minY"] = min(stats["minY"], np.min(gs))
             stats["maxY"] = max(stats["maxY"], np.max(gs))
 
@@ -415,7 +422,7 @@ class Report:
                 gs1 = self.gaussS1(binCenters, *popt)
             else:
                 gs1 = np.zeros(len(binCenters))
-            hist[nameGaussS1] = list(self.interleave(binCenters, gs1))
+            hist[nameGaussS1] = list(self.interleave2(binCenters, gs1))
             stats["minY"] = min(stats["minY"], np.min(gs1))
             stats["maxY"] = max(stats["maxY"], np.max(gs1))
 
@@ -504,12 +511,12 @@ class Report:
         zetaFit, zetaResiduals = self.fitLOCalib(zetaValues)
         return {
             "name": name,
-            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta"),
-            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta"),
-            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_fit"),
-            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_fit"),
-            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_res"),
-            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_res")
+            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta", self.makeLODDataEnvelope),
+            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta", self.makeLODDataEnvelope),
+            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_fit", self.makeLODDataAverage),
+            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_fit", self.makeLODDataAverage),
+            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_res", self.makeLODDataEnvelope),
+            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_res", self.makeLODDataEnvelope)
         }
 
     def fitLOCCalibFunc(self, x, a, b, c, d, e):
@@ -525,7 +532,22 @@ class Report:
         residuals = values - fit
         return fit, residuals
 
-    def makeLODData(self, values, numPointsToAggregate):
+    def makeLODDataEnvelope(self, values, numPointsToAggregate):
+        if numPointsToAggregate == 1:
+            x = np.arange(len(values), dtype = np.double)
+            y = values
+            return self.interleave2(x, y)
+        else:
+            x = np.arange(numPointsToAggregate / 2, len(values), numPointsToAggregate, dtype = np.double)
+            low = np.min(values[:(len(values) // numPointsToAggregate) *
+                                 numPointsToAggregate].reshape(-1, numPointsToAggregate),
+                         axis = 1)
+            high = np.max(values[:(len(values) // numPointsToAggregate) *
+                                  numPointsToAggregate].reshape(-1, numPointsToAggregate),
+                          axis = 1)
+            return self.interleave3(x, low, high)
+
+    def makeLODDataAverage(self, values, numPointsToAggregate):
         if numPointsToAggregate == 1:
             x = np.arange(len(values), dtype = np.double)
             y = values
@@ -534,10 +556,10 @@ class Report:
             y = np.mean(values[:(len(values) // numPointsToAggregate) *
                                 numPointsToAggregate].reshape(-1, numPointsToAggregate),
                         axis = 1)
-        return self.interleave(x, y)
+        return self.interleave2(x, y)
 
-    def makeLOD(self, values, numPointsToAggregate, zoom, cachePath, tag):
-        lodData = self.makeLODData(values, numPointsToAggregate)
+    def makeLOD(self, values, numPointsToAggregate, zoom, cachePath, tag, aggregationFunc):
+        lodData = aggregationFunc(values, numPointsToAggregate)
         lodPath = os.path.join(cachePath, f"{tag}_{zoom}.dat")
         lodData.tofile(lodPath)
         return {
@@ -545,10 +567,10 @@ class Report:
             "data": lodPath
         }
 
-    def makeLODs(self, values, cachePath, tag):
+    def makeLODs(self, values, cachePath, tag, aggregationFunc):
         return [
-            self.makeLOD(values, int(len(values) / 100.0), 1.0, cachePath, tag),
-            self.makeLOD(values, 1, len(values) / 100.0, cachePath, tag)
+            self.makeLOD(values, int(len(values) / 100.0), 1.0, cachePath, tag, aggregationFunc),
+            self.makeLOD(values, 1, len(values) / 100.0, cachePath, tag, aggregationFunc)
         ]
 
     def get_lo_calib_stats(self):
