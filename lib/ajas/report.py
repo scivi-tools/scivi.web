@@ -562,7 +562,7 @@ class Report:
         if numPointsToAggregate == 1:
             return "Level of detail: all points"
         else:
-            return f"Level of detail: {numPointsToAggregate} points aggregated"
+            return f"Level of detail: each {numPointsToAggregate} points aggregated"
 
     def makeLOD(self, values, numPointsToAggregate, zoom, cachePath, tag, aggregationFunc):
         lodData = aggregationFunc(values, numPointsToAggregate)
