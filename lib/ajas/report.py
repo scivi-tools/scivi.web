@@ -558,13 +558,20 @@ class Report:
                         axis = 1)
         return self.interleave2(x, y)
 
+    def makeLODName(self, numPointsToAggregate):
+        if numPointsToAggregate == 1:
+            return "Level of detail: all points"
+        else:
+            return f"Level of detail: {numPointsToAggregate} points aggregated"
+
     def makeLOD(self, values, numPointsToAggregate, zoom, cachePath, tag, aggregationFunc):
         lodData = aggregationFunc(values, numPointsToAggregate)
         lodPath = os.path.join(cachePath, f"{tag}_{zoom}.dat")
         lodData.tofile(lodPath)
         return {
             "zoom": zoom,
-            "data": lodPath
+            "data": lodPath,
+            "name": self.makeLODName(numPointsToAggregate)
         }
 
     def makeLODs(self, values, cachePath, tag, aggregationFunc):
