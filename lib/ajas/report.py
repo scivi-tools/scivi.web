@@ -575,10 +575,12 @@ class Report:
         }
 
     def makeLODs(self, values, cachePath, tag, aggregationFunc):
-        return [
-            self.makeLOD(values, int(len(values) / 100.0), 1.0, cachePath, tag, aggregationFunc),
-            self.makeLOD(values, 1, len(values) / 100.0, cachePath, tag, aggregationFunc)
-        ]
+        n = 5
+        z = np.geomspace(1.0, len(values) / 100.0, n)
+        result = []
+        for i in range(n):
+            result.append(self.makeLOD(values, int(z[n - i - 1]), z[i], cachePath, tag, aggregationFunc))
+        return result
 
     def get_lo_calib_stats(self):
         return self.report["loCalibStats"]
