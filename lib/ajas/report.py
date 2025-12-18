@@ -495,28 +495,28 @@ class Report:
         getter = raccoons.ObsGetter()
         return getter.get_obs_of_src(srcID, isJORS, path, self.engine)
 
-    def loCalibParam(self, loCalibStats, detectorNames, o, s, cachePath, solutionID):
+    def loCalibParam(self, loCalibStats, detectorNames, r, s, cachePath, solutionID):
         detectors = []
         for n in range(len(detectorNames)):
-            detectors.append(self.loCalibParamDetector(loCalibStats, detectorNames[n], n, o, s, cachePath, solutionID))
+            detectors.append(self.loCalibParamDetector(loCalibStats, detectorNames[n], n, r, s, cachePath, solutionID))
         return {
-            "name": f"{o}{s}",
+            "name": f"{r}{s}",
             "detectors": detectors
         }
 
-    def loCalibParamDetector(self, loCalibStats, name, n, o, s, cachePath, solutionID):
-        etaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Eta, n, o, s)
-        zetaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Zeta, n, o, s)
+    def loCalibParamDetector(self, loCalibStats, name, n, r, s, cachePath, solutionID):
+        etaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Eta, n, r + s, s)
+        zetaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Zeta, n, r + s, s)
         etaFit, etaResiduals = self.fitLOCalib(etaValues)
         zetaFit, zetaResiduals = self.fitLOCalib(zetaValues)
         return {
             "name": name,
-            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta", self.makeLODDataEnvelope),
-            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta", self.makeLODDataEnvelope),
-            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_fit", self.makeLODDataAverage),
-            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_fit", self.makeLODDataAverage),
-            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_eta_res", self.makeLODDataEnvelope),
-            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{o}{s}_{name}_zeta_res", self.makeLODDataEnvelope)
+            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta", self.makeLODDataEnvelope),
+            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta", self.makeLODDataEnvelope),
+            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta_fit", self.makeLODDataAverage),
+            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta_fit", self.makeLODDataAverage),
+            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta_res", self.makeLODDataEnvelope),
+            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta_res", self.makeLODDataEnvelope)
         }
 
     def fitLOCCalibFunc(self, x, a, b, c, d, e):
