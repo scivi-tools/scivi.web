@@ -323,6 +323,8 @@ class Report:
 
             self.engine.for_each_exposure([ loCalibStats ])
 
+            self.lodMaker = raccoons.LODMaker()
+
             timestampsPath = os.path.join(cachePath, solutionID + "_exp_timestamps.dat")
             loCalibStats.dump_timestamps(timestampsPath)
             self.report["loCalibStats"] = {
@@ -538,25 +540,15 @@ class Report:
             y = values
             return self.interleave2(x, y)
         else:
-            x = np.arange(numPointsToAggregate / 2, len(values), numPointsToAggregate, dtype = np.double)
-            low = np.min(values[:(len(values) // numPointsToAggregate) *
-                                 numPointsToAggregate].reshape(-1, numPointsToAggregate),
-                         axis = 1)
-            high = np.max(values[:(len(values) // numPointsToAggregate) *
-                                  numPointsToAggregate].reshape(-1, numPointsToAggregate),
-                          axis = 1)
-            return self.interleave3(x, low, high)
+            return self.lodMaker.aggregate_envelope(numPointsToAggregate, values)
 
     def makeLODDataAverage(self, values, numPointsToAggregate):
         if numPointsToAggregate == 1:
             x = np.arange(len(values), dtype = np.double)
             y = values
+            return self.interleave2(x, y)
         else:
-            x = np.arange(numPointsToAggregate / 2, len(values), numPointsToAggregate, dtype = np.double)
-            y = np.mean(values[:(len(values) // numPointsToAggregate) *
-                                numPointsToAggregate].reshape(-1, numPointsToAggregate),
-                        axis = 1)
-        return self.interleave2(x, y)
+            return self.lodMaker.aggregate_mean(numPointsToAggregate, values)
 
     def makeLODName(self, numPointsToAggregate):
         if numPointsToAggregate == 1:
