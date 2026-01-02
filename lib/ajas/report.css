@@ -83,6 +83,16 @@
 {
     border-bottom: thick double #000;
 }
+.report-legend-block
+{
+    display: flex;
+    flex-flow: row wrap;
+    row-gap: 10px;
+    font-family: Helvetica;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+}
 .report-legend-square
 {
     width: 20px;
