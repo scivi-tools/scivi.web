@@ -15,7 +15,7 @@
             "id": "1",
             "name": "LO Calib Monitor",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 420,
+            "position_x": 523,
             "position_y": 345
         },
         {
@@ -24,7 +24,7 @@
             "id": "2",
             "name": "VisualObject",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 433,
+            "position_x": 536,
             "position_y": 200
         },
         {
@@ -33,17 +33,8 @@
             "id": "3",
             "name": "StackView",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 316,
+            "position_x": 419,
             "position_y": 300
-        },
-        {
-            "attributes": {
-            },
-            "id": "4",
-            "name": "ResConfig",
-            "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 315,
-            "position_y": 410
         },
         {
             "attributes": {
@@ -51,7 +42,7 @@
             "id": "5",
             "name": "Setting",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 304,
+            "position_x": 407,
             "position_y": 482
         },
         {
@@ -61,7 +52,7 @@
             "id": "6",
             "name": "LO Calib Monitor Worker",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 668,
+            "position_x": 771,
             "position_y": 312
         },
         {
@@ -70,7 +61,7 @@
             "id": "7",
             "name": "ClientSideWorker",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 713,
+            "position_x": 816,
             "position_y": 223
         },
         {
@@ -79,7 +70,7 @@
             "id": "8",
             "name": "JavaScript",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 706,
+            "position_x": 809,
             "position_y": 441
         },
         {
@@ -89,7 +80,7 @@
             "id": "9",
             "name": "NChart3D",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 852,
+            "position_x": 955,
             "position_y": 319
         },
         {
@@ -98,7 +89,7 @@
             "id": "10",
             "name": "NChart3D.wasm",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 899,
+            "position_x": 1002,
             "position_y": 372
         },
         {
@@ -107,7 +98,7 @@
             "id": "11",
             "name": "Dependency",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 938,
+            "position_x": 1041,
             "position_y": 250
         },
         {
@@ -116,7 +107,7 @@
             "id": "24",
             "name": "JSON",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 434,
+            "position_x": 537,
             "position_y": 452
         },
         {
@@ -125,7 +116,7 @@
             "id": "26",
             "name": "Type",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 441,
+            "position_x": 544,
             "position_y": 509
         },
         {
@@ -134,7 +125,7 @@
             "id": "28",
             "name": "Solution",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 516,
+            "position_x": 619,
             "position_y": 382
         },
         {
@@ -143,16 +134,16 @@
             "id": "31",
             "name": "String",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 537,
+            "position_x": 640,
             "position_y": 448
         },
         {
             "attributes": {
             },
             "id": "40",
-            "name": "ValConfig",
+            "name": "Config",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 198,
+            "position_x": 301,
             "position_y": 408
         },
         {
@@ -161,7 +152,7 @@
             "id": "44",
             "name": "TSURL",
             "namespace": "http://knova.ru/user/1759921982230",
-            "position_x": 97,
+            "position_x": 200,
             "position_y": 392
         }
     ],
@@ -192,24 +183,6 @@
             "name": "is_a",
             "namespace": "http://knova.ru/user/1759921982230",
             "source_node_id": "1"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "4",
-            "id": "15",
-            "name": "has",
-            "namespace": "http://knova.ru/user/1759921982230",
-            "source_node_id": "1"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "5",
-            "id": "16",
-            "name": "is_a",
-            "namespace": "http://knova.ru/user/1759921982230",
-            "source_node_id": "4"
         },
         {
             "attributes": {
@@ -273,15 +246,6 @@
             "name": "has",
             "namespace": "http://knova.ru/user/1759921982230",
             "source_node_id": "6"
-        },
-        {
-            "attributes": {
-            },
-            "destination_node_id": "24",
-            "id": "25",
-            "name": "is_a",
-            "namespace": "http://knova.ru/user/1759921982230",
-            "source_node_id": "4"
         },
         {
             "attributes": {
