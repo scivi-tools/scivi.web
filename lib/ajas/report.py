@@ -177,14 +177,11 @@ class Report:
                                    pathRhoNonGaiaGRS, pathRhoGaiaGRS,
                                    pathUpsilonNonGaiaJORS, pathUpsilonGaiaJORS,
                                    pathRhoNonGaiaJORS, pathRhoGaiaJORS)
-            srcStats["minX"] = 1.0e100
-            srcStats["maxX"] = -1.0e100
-            srcStats["minY"] = 1.0e100
-            srcStats["maxY"] = -1.0e100
-            self.make_hist(srcStats, srcStats, "upsilonNonGaia", True, False)
-            self.make_hist(srcStats, srcStats, "rhoNonGaia", True, False)
-            self.make_hist(srcStats, srcStats, "upsilonGaia", False, False)
-            self.make_hist(srcStats, srcStats, "rhoGaia", False, False)
+            srcStats["limits"] = self.init_limits()
+            self.make_hist(srcStats, srcStats["limits"], "upsilonNonGaia", True, False)
+            self.make_hist(srcStats, srcStats["limits"], "rhoNonGaia", True, False)
+            self.make_hist(srcStats, srcStats["limits"], "upsilonGaia", False, False)
+            self.make_hist(srcStats, srcStats["limits"], "rhoGaia", False, False)
             srcStats["pathUpsilonNonGaiaGRS"] = pathUpsilonNonGaiaGRS
             srcStats["pathUpsilonGaiaGRS"] = pathUpsilonGaiaGRS
             srcStats["pathRhoNonGaiaGRS"] = pathRhoNonGaiaGRS
@@ -205,17 +202,20 @@ class Report:
                 "subsets": [
                     {
                         "name": "All",
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Season",
                         "dimensions": [ { "name": "Timespan", "ticks": [ "Spring", "Autumn" ] } ],
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Phase",
                         "dimensions": [ { "name": "Phase", "ticks": phaseTicks } ],
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Color & Magnitude",
@@ -224,37 +224,39 @@ class Report:
                             { "name": "Color", "ticks": colorTicks },
                             { "name": "Magnitude", "ticks": magnitudeTicks }
                         ],
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Color",
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Magnitude",
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     }
-                ],
-                "minX": 1.0e100,
-                "maxX": -1.0e100,
-                "minY": 1.0e100,
-                "maxY": -1.0e100
+                ]
             }
             self.report["studResStats"] = {
                 "subsets": [
                     {
                         "name": "All",
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Season",
                         "dimensions": [ { "name": "Timespan", "ticks": [ "Spring", "Autumn" ] } ],
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Phase",
                         "dimensions": [ { "name": "Phase", "ticks": phaseTicks } ],
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     },
                     {
                         "name": "Color & Magnitude",
@@ -263,13 +265,10 @@ class Report:
                             { "name": "Color", "ticks": colorTicks },
                             { "name": "Magnitude", "ticks": magnitudeTicks }
                         ],
-                        "slices": []
+                        "slices": [],
+                        "limits": self.init_limits()
                     }
-                ],
-                "minX": 1.0e100,
-                "maxX": -1.0e100,
-                "minY": 1.0e100,
-                "maxY": -1.0e100
+                ]
             }
 
             # All
@@ -331,9 +330,9 @@ class Report:
                 "timestamps": timestampsPath,
                 "params":
                 [
-                    self.loCalibParam(loCalibStats, detectorNames, 0, 0, cachePath, solutionID),
-                    self.loCalibParam(loCalibStats, detectorNames, 1, 0, cachePath, solutionID),
-                    self.loCalibParam(loCalibStats, detectorNames, 0, 1, cachePath, solutionID)
+                    self.lo_calib_param(loCalibStats, detectorNames, 0, 0, cachePath, solutionID),
+                    self.lo_calib_param(loCalibStats, detectorNames, 1, 0, cachePath, solutionID),
+                    self.lo_calib_param(loCalibStats, detectorNames, 0, 1, cachePath, solutionID)
                 ]
             };
 
@@ -453,16 +452,18 @@ class Report:
         studSubsetSlice = { "detectors": [], "chart": "column" }
         stats["subsets"][subsetIdx]["slices"].append(subsetSlice)
         studStats["subsets"][subsetIdx]["slices"].append(studSubsetSlice)
+        limits = stats["subsets"][subsetIdx]["limits"]
+        studLimits = studStats["subsets"][subsetIdx]["limits"]
 
         for n in range(N):
             detector = self.process_detector(n, detectorNames, histEta, histZeta)
-            self.make_hist(detector, stats, "eta", True, False)
-            self.make_hist(detector, stats, "zeta", True, False)
+            self.make_hist(detector, limits, "eta", True, False)
+            self.make_hist(detector, limits, "zeta", True, False)
             subsetSlice["detectors"].append(detector)
 
             detector = self.process_detector(n, detectorNames, studHistEta, studHistZeta)
-            self.make_hist(detector, studStats, "eta", True, True)
-            self.make_hist(detector, studStats, "zeta", True, True)
+            self.make_hist(detector, studLimits, "eta", True, True)
+            self.make_hist(detector, studLimits, "zeta", True, True)
             studSubsetSlice["detectors"].append(detector)
 
     def process_detector2D(self, n, names, histEta, histZeta, histEtaFile, histZetaFile):
@@ -497,44 +498,44 @@ class Report:
         getter = raccoons.ObsGetter()
         return getter.get_obs_of_src(srcID, isJORS, path, self.engine)
 
-    def loCalibParam(self, loCalibStats, detectorNames, r, s, cachePath, solutionID):
+    def lo_calib_param(self, loCalibStats, detectorNames, r, s, cachePath, solutionID):
         detectors = []
         for n in range(len(detectorNames)):
-            detectors.append(self.loCalibParamDetector(loCalibStats, detectorNames[n], n, r, s, cachePath, solutionID))
+            detectors.append(self.lo_calib_param_detector(loCalibStats, detectorNames[n], n, r, s, cachePath, solutionID))
         return {
             "name": f"{r}{s}",
             "detectors": detectors
         }
 
-    def loCalibParamDetector(self, loCalibStats, name, n, r, s, cachePath, solutionID):
+    def lo_calib_param_detector(self, loCalibStats, name, n, r, s, cachePath, solutionID):
         etaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Eta, n, r + s, s)
         zetaValues = loCalibStats.low_order_param_values(raccoons.Coordinate.Zeta, n, r + s, s)
-        etaFit, etaResiduals = self.fitLOCalib(etaValues)
-        zetaFit, zetaResiduals = self.fitLOCalib(zetaValues)
+        etaFit, etaResiduals = self.fit_lo_calib(etaValues)
+        zetaFit, zetaResiduals = self.fit_lo_calib(zetaValues)
         return {
             "name": name,
-            "etaValues": self.makeLODs(etaValues, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta", self.makeLODDataEnvelope),
-            "zetaValues": self.makeLODs(zetaValues, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta", self.makeLODDataEnvelope),
-            "etaFit": self.makeLODs(etaFit, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta_fit", self.makeLODDataAverage),
-            "zetaFit": self.makeLODs(zetaFit, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta_fit", self.makeLODDataAverage),
-            "etaResiduals": self.makeLODs(etaResiduals, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta_res", self.makeLODDataEnvelope),
-            "zetaResiduals": self.makeLODs(zetaResiduals, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta_res", self.makeLODDataEnvelope)
+            "etaValues": self.make_lods(etaValues, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta", self.make_lod_data_envelope),
+            "zetaValues": self.make_lods(zetaValues, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta", self.make_lod_data_envelope),
+            "etaFit": self.make_lods(etaFit, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta_fit", self.make_lod_data_average),
+            "zetaFit": self.make_lods(zetaFit, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta_fit", self.make_lod_data_average),
+            "etaResiduals": self.make_lods(etaResiduals, cachePath, f"{solutionID}_lod_{r}{s}_{name}_eta_res", self.make_lod_data_envelope),
+            "zetaResiduals": self.make_lods(zetaResiduals, cachePath, f"{solutionID}_lod_{r}{s}_{name}_zeta_res", self.make_lod_data_envelope)
         }
 
-    def fitLOCCalibFunc(self, x, a, b, c, d, e):
+    def fit_lo_calib_func(self, x, a, b, c, d, e):
         return a * x + b + c * np.sin(d * x + e)
 
-    def fitLOCCalibInitGuess(self):
+    def fit_lo_calib_init_guess(self):
         return [ 0.0, 0.0, 0.0, 0.0, 0.0 ]
 
-    def fitLOCalib(self, values):
+    def fit_lo_calib(self, values):
         x = np.arange(len(values))
-        popt, pcov = curve_fit(self.fitLOCCalibFunc, x, values, p0 = self.fitLOCCalibInitGuess())
-        fit = self.fitLOCCalibFunc(x, *popt)
+        popt, pcov = curve_fit(self.fit_lo_calib_func, x, values, p0 = self.fit_lo_calib_init_guess())
+        fit = self.fit_lo_calib_func(x, *popt)
         residuals = values - fit
         return fit, residuals
 
-    def makeLODDataEnvelope(self, values, numPointsToAggregate):
+    def make_lod_data_envelope(self, values, numPointsToAggregate):
         if numPointsToAggregate == 1:
             x = np.arange(len(values), dtype = np.double)
             y = values
@@ -542,7 +543,7 @@ class Report:
         else:
             return self.lodMaker.aggregate_envelope(numPointsToAggregate, values)
 
-    def makeLODDataAverage(self, values, numPointsToAggregate):
+    def make_lod_data_average(self, values, numPointsToAggregate):
         if numPointsToAggregate == 1:
             x = np.arange(len(values), dtype = np.double)
             y = values
@@ -550,29 +551,37 @@ class Report:
         else:
             return self.lodMaker.aggregate_mean(numPointsToAggregate, values)
 
-    def makeLODName(self, numPointsToAggregate):
+    def make_lod_name(self, numPointsToAggregate):
         if numPointsToAggregate == 1:
             return "Level of detail: all points"
         else:
             return f"Level of detail: each {numPointsToAggregate} points aggregated"
 
-    def makeLOD(self, values, numPointsToAggregate, zoom, cachePath, tag, aggregationFunc):
+    def make_lod(self, values, numPointsToAggregate, zoom, cachePath, tag, aggregationFunc):
         lodData = aggregationFunc(values, numPointsToAggregate)
         lodPath = os.path.join(cachePath, f"{tag}_{zoom}.dat")
         lodData.tofile(lodPath)
         return {
             "zoom": zoom,
             "data": lodPath,
-            "name": self.makeLODName(numPointsToAggregate)
+            "name": self.make_lod_name(numPointsToAggregate)
         }
 
-    def makeLODs(self, values, cachePath, tag, aggregationFunc):
+    def make_lods(self, values, cachePath, tag, aggregationFunc):
         n = 5
         z = np.geomspace(1.0, len(values) / 100.0, n)
         result = []
         for i in range(n):
-            result.append(self.makeLOD(values, int(z[n - i - 1]), z[i], cachePath, tag, aggregationFunc))
+            result.append(self.make_lod(values, int(z[n - i - 1]), z[i], cachePath, tag, aggregationFunc))
         return result
 
     def get_lo_calib_stats(self):
         return self.report["loCalibStats"]
+
+    def init_limits(self):
+        return {
+            "minX": 1.0e100,
+            "maxX": -1.0e100,
+            "minY": 1.0e100,
+            "maxY": -1.0e100
+        }
