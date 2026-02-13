@@ -1,3 +1,12 @@
+#
+# report.py
+#
+# Part of the ARI/ZAH Layered Online Reduction Inspection System (LORIS).
+#
+# @author Konstantin Riabinin (konstantin.riabinin@uni-heidelberg.de)
+#
+# This script is a server-side worker creating and caching the report.
+#
 
 import lib.ajas.raccoons as raccoons
 import numpy as np
@@ -7,7 +16,19 @@ from scipy.optimize import curve_fit
 
 
 class Report:
+    '''
+    The Report class provides methods to build the LORIS report.
+    '''
+
     def __init__(self, solutionID, inputPath, solutionPath, cachePath):
+        '''
+        Constructor.
+
+        @param solutionID - solution ID.
+        @param inputPath - path to the input data.
+        @param solutionPath - path to the solution data.
+        @param cachePath - path to the report cache.
+        '''
         self.solutionID = solutionID
         self.engine = raccoons.Engine({ "inputPath": inputPath, "outputPath": solutionPath })
 
@@ -272,47 +293,47 @@ class Report:
             }
 
             # All
-            self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 0,
-                                         N, detectorNames,
-                                         resHistogramEta, resHistogramZeta,
-                                         studResHistogramEta, studResHistogramZeta)
+            self.residuals_subset_slice(self.report["resStats"], self.report["studResStats"], 0,
+                                        N, detectorNames,
+                                        resHistogramEta, resHistogramZeta,
+                                        studResHistogramEta, studResHistogramZeta)
 
             # Spring
-            self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
-                                         N, detectorNames,
-                                         resHistogramSpringEta, resHistogramSpringZeta,
-                                         studResHistogramSpringEta, studResHistogramSpringZeta)
+            self.residuals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
+                                        N, detectorNames,
+                                        resHistogramSpringEta, resHistogramSpringZeta,
+                                        studResHistogramSpringEta, studResHistogramSpringZeta)
             # Autumn
-            self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
-                                         N, detectorNames,
-                                         resHistogramAutumnEta, resHistogramAutumnZeta,
-                                         studResHistogramAutumnEta, studResHistogramAutumnZeta)
+            self.residuals_subset_slice(self.report["resStats"], self.report["studResStats"], 1,
+                                        N, detectorNames,
+                                        resHistogramAutumnEta, resHistogramAutumnZeta,
+                                        studResHistogramAutumnEta, studResHistogramAutumnZeta)
             # Phase
             for i in range(len(resPhaseEta)):
-                self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 2,
-                                             N, detectorNames,
-                                             resPhaseEta[i], resPhaseZeta[i],
-                                             studResPhaseEta[i], studResPhaseZeta[i])
+                self.residuals_subset_slice(self.report["resStats"], self.report["studResStats"], 2,
+                                            N, detectorNames,
+                                            resPhaseEta[i], resPhaseZeta[i],
+                                            studResPhaseEta[i], studResPhaseZeta[i])
             # Color & Magnitude
             for i in range(3):
                 for j in range(3):
                     idx = i * 3 + j
-                    self.reasiduals_subset_slice(self.report["resStats"], self.report["studResStats"], 3,
-                                                 N, detectorNames,
-                                                 resColMagEta[idx], resColMagZeta[idx],
-                                                 studResColMagEta[idx], studResColMagZeta[idx])
+                    self.residuals_subset_slice(self.report["resStats"], self.report["studResStats"], 3,
+                                                N, detectorNames,
+                                                resColMagEta[idx], resColMagZeta[idx],
+                                                studResColMagEta[idx], studResColMagZeta[idx])
 
             # Color
-            self.reasiduals_subset_slice2D(self.report["resStats"], 4,
-                                           N, detectorNames,
-                                           resHistogram2DColEta, resHistogram2DColZeta,
-                                           "color", cachePath, solutionID)
+            self.residuals_subset_slice2D(self.report["resStats"], 4,
+                                          N, detectorNames,
+                                          resHistogram2DColEta, resHistogram2DColZeta,
+                                          "color", cachePath, solutionID)
 
             # Magnitude
-            self.reasiduals_subset_slice2D(self.report["resStats"], 5,
-                                           N, detectorNames,
-                                           resHistogram2DMagEta, resHistogram2DMagZeta,
-                                           "magnitude", cachePath, solutionID)
+            self.residuals_subset_slice2D(self.report["resStats"], 5,
+                                          N, detectorNames,
+                                          resHistogram2DMagEta, resHistogram2DMagZeta,
+                                          "magnitude", cachePath, solutionID)
 
             ###########
             # Low-order calibration
@@ -340,42 +361,110 @@ class Report:
                 json.dump(self.report, f)
 
     def mission_overview(self):
+        '''
+        Get the mission overview.
+
+        @return mission overview dictionary.
+        '''
         return self.report["missionOvervew"]
 
     def solution_stats(self):
+        '''
+        Get the solution statistics.
+
+        @return solution statistics dictionary.
+        '''
         return self.report["solutionStats"]
 
     def sanity_checks(self):
+        '''
+        Get the sanity checks.
+
+        @return sanity checks dictionary.
+        '''
         return self.report["sanityChecks"]
 
     def observations_stats(self):
+        '''
+        Get the observations statistics.
+
+        @return observations statistics dictionary.
+        '''
         return self.report["observationsStats"]
 
     def observations_per_source(self):
+        '''
+        Get the observations per source statistics
+
+        @return observations per source statistics dictionary.
+        '''
         return self.report["observationsPerSource"]
 
     def src_stats(self):
+        '''
+        Get the source statistics
+
+        @return source statistics dictionary.
+        '''
         return self.report["srcStats"]
 
     def res_stats(self, studentised):
+        '''
+        Get the residuals statistics
+
+        @param studentised - flag, determining if the residuals should be studentised (True) or not (False).
+        @return residuals statistics dictionary.
+        '''
         if studentised:
             return self.report["studResStats"]
         else:
             return self.report["resStats"]
 
     def gauss(self, x, a, x0, sigma):
+        '''
+        Gauss function.
+
+        @param x - argument.
+        @param a - scaler.
+        @param x0 - mean.
+        @param sigma - standard deviation.
+        @return the value of the Gauss function.
+        '''
         return a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2))
 
     def gaussS1(self, x, a):
+        '''
+        Gauss function with the standard deviation equals to 1 (aka `sigma = 1`).
+
+        @param x - argument.
+        @param a - scaler.
+        @param x0 - mean.
+        @return the value of the Gauss function.
+        '''
         return a * np.exp(-x ** 2 / 2)
 
     def interleave2(self, arr1, arr2):
+        '''
+        Interleave two arrays.
+
+        @param arr1 - first array.
+        @param arr2 - second array.
+        @return interleaved array.
+        '''
         result = np.empty((arr1.size + arr2.size,), dtype = arr1.dtype)
         result[0::2] = arr1
         result[1::2] = arr2
         return result
 
     def interleave3(self, arr1, arr2, arr3):
+        '''
+        Interleave three arrays
+
+        @param arr1 - first array.
+        @param arr2 - second array.
+        @param arr3 - third array.
+        @return interleaved array.
+        '''
         result = np.empty((arr1.size + arr2.size + arr3.size,), dtype = arr1.dtype)
         result[0::3] = arr1
         result[1::3] = arr2
@@ -383,6 +472,15 @@ class Report:
         return result
 
     def make_hist(self, hist, stats, name, fitGauss, fitGaussS1):
+        '''
+        Make a histogram from an array of binned values, with Gaussian fit and statistical properties.
+
+        @param hist - dictionary of a histogram.
+        @param stats - dictionary of statistical properties.
+        @param name - name of the entity that is being histogrammed.
+        @param fitGauss - flag, determining if Gaussian should be fitted (True) or not (False).
+        @param fitGaussS1 - flag, determining if Gaussian with `sigma = 1` should be fitted (True) or not (False).
+        '''
         nameHist = name + "Hist"
 
         binCenters = np.array(hist[nameHist][0::2])
@@ -428,6 +526,15 @@ class Report:
             stats["maxY"] = max(stats["maxY"], np.max(gs1))
 
     def process_detector(self, n, names, histEta, histZeta):
+        '''
+        Create a dictionary describing an individual detector in the case of 1D residuals subset.
+
+        @param n - number of the detector.
+        @param names - array of detectors' names.
+        @param histEta - histogram of values in `eta` direction.
+        @param histZeta - histogram of values in `zeta` direction.
+        @return dictionary describing the detector.
+        '''
         return {
             "name": names[n],
             "count": histEta.count(n),
@@ -445,9 +552,22 @@ class Report:
             "zetaHist": histZeta.bins(n)
         }
 
-    def reasiduals_subset_slice(self,
-                                stats, studStats, subsetIdx,
-                                N, detectorNames, histEta, histZeta, studHistEta, studHistZeta):
+    def residuals_subset_slice(self,
+                               stats, studStats, subsetIdx,
+                               N, detectorNames, histEta, histZeta, studHistEta, studHistZeta):
+        '''
+        Build a slice of the particular residuals subset that is displayed as column chart (aka is 1D).
+
+        @param stats - dictionary of residuals.
+        @param studStats - dictionary of studentised residuals.
+        @param subsetIdx - index of the subset.
+        @param N - number of detectors.
+        @param detectorNames - detectors' names.
+        @param histEta - histogram of residuals in `eta` direction.
+        @param histZeta - histogram of residuals in `zeta` direction.
+        @param studHistEta - histogram of studentised residuals in `eta` direction.
+        @param studHistZeta - histogram of studentised residuals in `zeta` direction.
+        '''
         subsetSlice = { "detectors": [], "chart": "column" }
         studSubsetSlice = { "detectors": [], "chart": "column" }
         stats["subsets"][subsetIdx]["slices"].append(subsetSlice)
@@ -467,6 +587,17 @@ class Report:
             studSubsetSlice["detectors"].append(detector)
 
     def process_detector2D(self, n, names, histEta, histZeta, histEtaFile, histZetaFile):
+        '''
+        Create a dictionary describing an individual detector in the case of 2D residuals subset.
+
+        @param n - number of the detector.
+        @param names - array of detectors' names.
+        @param histEta - histogram of values in `eta` direction.
+        @param histZeta - histogram of values in `zeta` direction.
+        @param histEtaFile - name of file with values related to `eta` direction.
+        @param histZetaFile - name of file with values related to `zeta` direction.
+        @return dictionary describing the detector.
+        '''
         return {
             "name": names[n],
 
@@ -479,10 +610,23 @@ class Report:
             "zetaMax": histZeta.bin_max(n)
         }
 
-    def reasiduals_subset_slice2D(self,
-                                  stats, subsetIdx,
-                                  N, detectorNames, histEta, histZeta,
-                                  sliceID, cachePath, solutionID):
+    def residuals_subset_slice2D(self,
+                                 stats, subsetIdx,
+                                 N, detectorNames, histEta, histZeta,
+                                 sliceID, cachePath, solutionID):
+        '''
+        Build a slice of the particular residuals subset that is displayed as heatmap chart (aka is 2D).
+
+        @param stats - dictionary of residuals.
+        @param subsetIdx - index of the subset.
+        @param N - number of detectors.
+        @param detectorNames - detectors' names.
+        @param histEta - histogram of residuals in `eta` direction.
+        @param histZeta - histogram of residuals in `zeta` direction.
+        @param sliceID - slice ID.
+        @param cachePath - path to the report cache.
+        @param solutionID - solution ID.
+        '''
         subsetSlice = { "detectors": [], "chart": "heatmap" }
         stats["subsets"][subsetIdx]["slices"].append(subsetSlice)
 
@@ -495,10 +639,29 @@ class Report:
             histZeta.bins(n).tofile(histZetaFile)
 
     def get_obs_of_src(self, srcID, isJORS, path):
+        '''
+        Get observations of given source.
+
+        @param srcID - source ID.
+        @param isJORS - flag, determining if the observations should be expressed in JORS (True) or in GRS (False).
+        @param path - path where to store the file with values.
+        @return dictionary describing the statistics of the observations cloud.
+        '''
         getter = raccoons.ObsGetter()
         return getter.get_obs_of_src(srcID, isJORS, path, self.engine)
 
     def lo_calib_param(self, loCalibStats, detectorNames, r, s, cachePath, solutionID):
+        '''
+        Build a dictionary describing an individual lower-order calibration parameter.
+
+        @param loCalibStats - dictionary of lower-order calibration parameters' statistics.
+        @param detectorNames - detectors' names.
+        @param r - r parameter index.
+        @param s - s parameter index.
+        @param cachePath - path to the report cache.
+        @param solutionID - solution ID.
+        @return dictionary of lower-order calibration parameter.
+        '''
         detectors = []
         for n in range(len(detectorNames)):
             detectors.append(self.lo_calib_param_detector(loCalibStats, detectorNames[n], n, r, s, cachePath, solutionID))
@@ -523,12 +686,28 @@ class Report:
         }
 
     def fit_lo_calib_func(self, x, a, b, c, d, e):
+        '''
+        Function to fit to the lower-order calibration parameters.
+
+        @return function value from the arguments given.
+        '''
         return a * x + b + c * np.sin(d * x + e)
 
     def fit_lo_calib_init_guess(self):
+        '''
+        Initial guess for the function fitted to the lower-order calibration parameters.
+
+        @return initial guess for all the arguments.
+        '''
         return [ 0.0, 0.0, 0.0, 0.0, 0.0 ]
 
     def fit_lo_calib(self, values):
+        '''
+        Calculate the fit of the lower-order calibration parameters.
+
+        @param values - values of the lower-order calibration parameters.
+        @return the fitted values of the function and their residuals.
+        '''
         x = np.arange(len(values))
         popt, pcov = curve_fit(self.fit_lo_calib_func, x, values, p0 = self.fit_lo_calib_init_guess())
         fit = self.fit_lo_calib_func(x, *popt)
@@ -536,6 +715,13 @@ class Report:
         return fit, residuals
 
     def make_lod_data_envelope(self, values, numPointsToAggregate):
+        '''
+        Build LOD from data as an envelope around them.
+
+        @param values - data to build LOD from.
+        @param numPointsToAggregate - number of data points to aggregate.
+        @return description of the LOD.
+        '''
         if numPointsToAggregate == 1:
             x = np.arange(len(values), dtype = np.double)
             y = values
@@ -544,6 +730,13 @@ class Report:
             return self.lodMaker.aggregate_envelope(numPointsToAggregate, values)
 
     def make_lod_data_average(self, values, numPointsToAggregate):
+        '''
+        Build LOD from data by averaging them.
+
+        @param values - data to build LOD from.
+        @param numPointsToAggregate - number of data points to aggregate.
+        @return description of the LOD.
+        '''
         if numPointsToAggregate == 1:
             x = np.arange(len(values), dtype = np.double)
             y = values
@@ -552,12 +745,29 @@ class Report:
             return self.lodMaker.aggregate_mean(numPointsToAggregate, values)
 
     def make_lod_name(self, numPointsToAggregate):
+        '''
+        Create a LOD name.
+
+        @param numPointsToAggregate - number of data points to aggregate.
+        @return string name of the LOD.
+        '''
         if numPointsToAggregate == 1:
             return "Level of detail: all points"
         else:
             return f"Level of detail: each {numPointsToAggregate} points aggregated"
 
     def make_lod(self, values, numPointsToAggregate, zoom, cachePath, tag, aggregationFunc):
+        '''
+        Build LOD from data.
+
+        @param values - data to build LOD from.
+        @param numPointsToAggregate - number of data points to aggregate.
+        @param zoom - zoom level of the LOD.
+        @param cachePath - path to the report cache.
+        @param tag - prefix of file to cache.
+        @param aggregationFunc - aggregation function to build the LOD with.
+        @return description of the LOD.
+        '''
         lodData = aggregationFunc(values, numPointsToAggregate)
         lodPath = os.path.join(cachePath, f"{tag}_{zoom}.dat")
         lodData.tofile(lodPath)
@@ -568,6 +778,15 @@ class Report:
         }
 
     def make_lods(self, values, cachePath, tag, aggregationFunc):
+        '''
+        Build a set of LODs from data.
+
+        @param values - data to build LOD from.
+        @param cachePath - path to the report cache.
+        @param tag - prefix of file to cache.
+        @param aggregationFunc - aggregation function to build the LOD with.
+        @return array of LODs' descriptions.
+        '''
         n = 5
         z = np.geomspace(1.0, len(values) / 100.0, n)
         result = []
@@ -576,9 +795,19 @@ class Report:
         return result
 
     def get_lo_calib_stats(self):
+        '''
+        Get statistics of lower-order calibration parametrers.
+
+        @return statistics of lower-order calibration parametrers.
+        '''
         return self.report["loCalibStats"]
 
     def init_limits(self):
+        '''
+        Create the dictionary for keeping minima and maxima with initial values.
+
+        @return dictionary for keeping minima and maxima.
+        '''
         return {
             "minX": 1.0e100,
             "maxX": -1.0e100,
