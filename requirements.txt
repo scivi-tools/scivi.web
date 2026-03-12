@@ -1,5 +1,0 @@
-flask
-gunicorn
-vosk
-numpy
-websockets
