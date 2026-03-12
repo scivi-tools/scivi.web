@@ -21,7 +21,7 @@ class DFD2Onto:
             return name + self.INST_SUFFIX
 
     def get_instance_number(self, node: Node):
-        m = re.match(".+" + self.INST_SUFFIX + "_(\d+)", node.name)
+        m = re.match(".+" + self.INST_SUFFIX + "_(\\d+)", node.name)
         if m and len(m.groups()) > 0:
             return int(m.groups()[0])
         elif node.name.endswith(self.INST_SUFFIX):
@@ -42,7 +42,7 @@ class DFD2Onto:
     def get_node_order(self, node: Node, onto: Onto, visited_nodes : List[Node] = []):
         if not node:
             return -1
-        
+
         if "order" in node.attributes:
             return node.attributes["order"]
         if self.is_prototype(node, onto) or self.is_resource(node, onto):
