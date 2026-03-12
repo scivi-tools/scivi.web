@@ -590,8 +590,8 @@ class SciViServer:
     def get_file_from_storage(self, filename, serverTaskHash):
         if filename in self.files:
             return self.files[filename]
-        elif (serverTaskHash in self.execers) and ("/" + filename in self.execers[serverTaskHash].publishedFiles):
-            return { "content": self.codeUtils.read_file("/" + filename), "mime": self.guess_mime(filename) }
+        elif (serverTaskHash in self.execers) and (filename in self.execers[serverTaskHash].publishedFiles):
+            return { "content": self.codeUtils.read_file(filename), "mime": self.guess_mime(filename) }
         return None
 
     def gen_firmware(self, elementName):
