@@ -7,6 +7,7 @@ import re
 import importlib
 import datetime
 import socket
+import os
 from typing import Dict, List, Tuple, Optional
 
 import websockets
@@ -591,7 +592,7 @@ class SciViServer:
         if filename in self.files:
             return self.files[filename]
         elif (serverTaskHash in self.execers) and (filename in self.execers[serverTaskHash].publishedFiles):
-            return { "content": self.codeUtils.read_file(filename), "mime": self.guess_mime(filename) }
+            return { "content": self.codeUtils.read_file(os.path.abspath(filename)), "mime": self.guess_mime(filename) }
         return None
 
     def gen_firmware(self, elementName):
