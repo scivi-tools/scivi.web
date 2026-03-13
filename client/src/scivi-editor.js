@@ -1000,12 +1000,15 @@ SciViEditor.prototype.callAPI = function (dfdNodeID, apiID, ...inputs)
 
 SciViEditor.prototype.parseAPIType = function (output, type)
 {
-    switch (type) {
+    switch (type.toString()) {
         case "JSON":
             return JSON.parse(output);
 
         case "String":
             return output;
+
+        case "":
+            return null;
 
         default:
             console.warn(`Unsupported API type: <${type}>`);
