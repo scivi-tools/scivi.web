@@ -712,11 +712,13 @@ SciViEditor.prototype.selectTab = function (index)
     const tabBar = vp.firstChild;
     for (let i = 0, n = this.visuals.length; i < n; ++i) {
         if (i === index) {
-            $(tabBar.children[i]).addClass("scivi_tab_selected");
-            $(this.visuals[i]).show();
+            tabBar.children[i].classList.add("scivi_tab_selected");
+            this.visuals[i].style.visibility = "visible";
+            delete this.visuals[i].style.height;
         } else {
-            $(tabBar.children[i]).removeClass("scivi_tab_selected");
-            $(this.visuals[i]).hide();
+            tabBar.children[i].classList.remove("scivi_tab_selected");
+            this.visuals[i].style.visibility = "hidden";
+            this.visuals[i].style.height = "0px";
         }
     }
 }
