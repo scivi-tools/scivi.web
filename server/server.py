@@ -296,6 +296,8 @@ class SciViServer:
             addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position); }; "
         code = addVisualCall +\
                "var ADD_TAB = function (con, name) { editor.addTabToViewport(con, node.position, name); }; " +\
+               "var SHOW_SPINNER = function () { editor.showSpinner(2); }; " +\
+               "var HIDE_SPINNER = function () { editor.hideSpinner(2); }; " +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
         for i, inp in enumerate(inputs):

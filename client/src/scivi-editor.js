@@ -35,6 +35,9 @@ const VISUALIZATION_MODE = 1;
 const IOT_PROGRAMMING_MODE = 2;
 const MIXED_MODE = 3;
 
+const EDITOR_SPINNER = 1;
+const VIS_SPINNER = 2;
+
 module.exports = SciViEditor;
 
 function SciViEditor()
@@ -211,9 +214,9 @@ SciViEditor.prototype.run = function (mode)
     const preset = urlParams.get("preset");
     if (preset !== null) {
         const autorun = urlParams.get("start");
-        $(".loader").show();
+        this.showSpinner(EDITOR_SPINNER);
         $.getJSON("preset/" + preset, async (data) => {
-            $(".loader").hide();
+            this.hideSpinner(EDITOR_SPINNER);
             await editor.fromJSON(data);
             this.extendNodes();
             if (autorun)
@@ -812,6 +815,16 @@ SciViEditor.prototype.showError = function (err)
     dp.find(".ui-button").css("border", "1px solid #3F3F3F");
 }
 
+SciViEditor.prototype.showSpinner = function (i)
+{
+    $(`#spinner_${i}`).css("display", "flex");
+}
+
+SciViEditor.prototype.hideSpinner = function (i)
+{
+    $(`#spinner_${i}`).css("display", "none");
+}
+
 SciViEditor.prototype.instEdgeNode = function (device, uid, guid, index, count)
 {
     const container = $("#scivi_node_editor")[0];
@@ -824,15 +837,15 @@ SciViEditor.prototype.instEdgeNode = function (device, uid, guid, index, count)
 
 SciViEditor.prototype.commStateChanged = function ()
 {
-    var n = 0;
-    Object.keys(this.commsReconnects).forEach((key) => {
-        if (this.commsReconnects[key] > 0)
-            ++n;
-    });
-    if (n === 1)
-        $(".loader").show();
-    else if (n === 0)
-        $(".loader").hide();
+    // var n = 0;
+    // Object.keys(this.commsReconnects).forEach((key) => {
+    //     if (this.commsReconnects[key] > 0)
+    //         ++n;
+    // });
+    // if (n === 1)
+    //     this.showSpinner(VIS_SPINNER);
+    // else if (n === 0)
+    //     this.hideSpinner(VIS_SPINNER);
 }
 
 SciViEditor.prototype.startComm = function (address, addressCorrespondences, eon = null)
