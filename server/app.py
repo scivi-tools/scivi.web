@@ -9,7 +9,9 @@ from server import SciViServer
 from threading import Lock, Thread
 import traceback
 
-sciviweb = { "root": "." }
+sciviweb = {
+    "root": "../../scivi.web" # Path to the SciVi web repo as seen from the server module.
+}
 
 app = Flask(__name__, static_url_path = "")
 event_loop = asyncio.new_event_loop() # event loop for command servers
