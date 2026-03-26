@@ -7,6 +7,7 @@ import re
 import importlib
 import datetime
 import socket
+import os
 from typing import Dict, List, Tuple, Optional
 
 import websockets
@@ -295,6 +296,8 @@ class SciViServer:
             addVisualCall = "var ADD_VISUAL = function (con) { editor.addVisualToViewport(con, node.position); }; "
         code = addVisualCall +\
                "var ADD_TAB = function (con, name) { editor.addTabToViewport(con, node.position, name); }; " +\
+               "var SHOW_SPINNER = function () { editor.showSpinner(2); }; " +\
+               "var HIDE_SPINNER = function () { editor.hideSpinner(2); }; " +\
                "var UPDATE_WIDGETS = function () { editor.updateWidgets(node); }; " +\
                code
         for i, inp in enumerate(inputs):
@@ -590,8 +593,8 @@ class SciViServer:
     def get_file_from_storage(self, filename, serverTaskHash):
         if filename in self.files:
             return self.files[filename]
-        elif (serverTaskHash in self.execers) and ("/" + filename in self.execers[serverTaskHash].publishedFiles):
-            return { "content": self.codeUtils.read_file("/" + filename), "mime": self.guess_mime(filename) }
+        elif (serverTaskHash in self.execers) and (filename in self.execers[serverTaskHash].publishedFiles):
+            return { "content": self.codeUtils.read_file(os.path.abspath(filename)), "mime": self.guess_mime(filename) }
         return None
 
     def gen_firmware(self, elementName):

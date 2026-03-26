@@ -16,3 +16,5 @@ lib/voicerecognizer/model
 dfds/*
 .venv
 *.so
+
+.DS_Store

@@ -448,27 +448,42 @@ input[type="file"]
 }
 
 /***************************/
-/*       Loader stuff      */
+/*       Spinner stuff      */
 /***************************/
 
-.loader
+.scivi_spinner
 {
-    border: 8px solid #b8b8b9;
-    border-top: 8px solid #333745;
-    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    z-index: 5;
+    transition: opacity 0.3s ease;
+    display: none;
+}
+.scivi_spinner_circle
+{
     width: 60px;
     height: 60px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-top: -30px;
-    margin-left: -30px;
-    display: none;
-    animation: spin 2s linear infinite;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: scivi_spinner_spin 1s linear infinite;
+    margin-bottom: 12px;
 }
-
-@keyframes spin
+@keyframes scivi_spinner_spin
 {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    to
+    {
+        transform: rotate(360deg);
+    }
 }
