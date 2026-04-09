@@ -717,7 +717,7 @@ SciViEditor.prototype.selectTab = function (index)
         if (i === index) {
             tabBar.children[i].classList.add("scivi_tab_selected");
             this.visuals[i].style.visibility = "visible";
-            this.visuals[i].style.height = "auto";
+            this.visuals[i].style.removeProperty("height");
         } else {
             tabBar.children[i].classList.remove("scivi_tab_selected");
             this.visuals[i].style.visibility = "hidden";
