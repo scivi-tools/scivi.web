@@ -27,7 +27,7 @@ class Node:
     merged_id: Optional[int]
     UID: Optional[int]
 
-    def __init__(self,id, name, attributes, namespace, position_x, position_y):
+    def __init__(self, id, name, attributes, namespace, position_x, position_y):
         self.attributes = attributes
         self.id = id
         self.name = name
@@ -123,7 +123,7 @@ class Onto:
                                 link['namespace'],
                                 int(link['source_node_id']),
                                 int(link['destination_node_id'])))
-        
+
         return cls(int(data['last_id']), 
                     data['namespaces'],
                     nodes,
