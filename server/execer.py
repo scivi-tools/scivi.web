@@ -26,6 +26,11 @@ class OperatorError(Exception):
         self.line = line
         self.message = message
 
+    def error_message(self):
+        errMgs = str(self)
+        print(errMgs)
+        return '{ "command": "error", "message": %s }' % (json.dumps(errMgs))
+
     def __str__(self):
         return "SciVi operator <%s> error in file <%s> line %d:\n%s" % (self.name, self.path, self.line, self.message)
 
@@ -119,7 +124,8 @@ class Execer(Thread):
             exec(code, context)
         except Exception as e:
             cl, exc, tb = sys.exc_info()
-            raise OperatorError(name, path, traceback.extract_tb(tb)[-1][1], cl.__name__ + ": " + str(e))
+            opErr = OperatorError(name, path, traceback.extract_tb(tb)[-1][1], cl.__name__ + ": " + str(e))
+            self.push_message_to_send(opErr.error_message())
 
     def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, hasInputs: dict, outputs: dict, settings, cache, node_state: dict):
         context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \

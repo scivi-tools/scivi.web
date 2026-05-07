@@ -286,6 +286,9 @@ SciViEditor.prototype.run = function (mode)
                         delete this.apiResponses[responseKey];
                     }
                 } break;
+                case "error": {
+                    this.showError(msg.message);
+                } break;
                 default: console.warn("Unknown message from command server", msg); break;
             }
         };
@@ -755,13 +758,19 @@ SciViEditor.prototype.clearViewport = function ()
     this.visuals = [];
     this.forceDir = undefined;
 
-    var body = document.querySelectorAll("body")[0];
-    for (var i = 0; i < body.children.length;) {
-        if (body.children[i].id !== "embrace")
-            body.removeChild(body.children[i]);
-        else
-            ++i;
-    }
+    // FIXME: the following COMMENTED OUT code is actually not useless, as some artifacts tend to pop up in the body,
+    // probably because of jquery. So you should debug this and fix properly. Of course, NO new artifacts should pop
+    // up in the body during the visualisation process. Everything should stay local in the viewport container.
+    // Also, now error message dialog (if any) is teleported to the body, and if deleted, can never reappear,
+    // which is positively bad structure.
+    //
+    // var body = document.querySelectorAll("body")[0];
+    // for (var i = 0; i < body.children.length;) {
+    //     if (body.children[i].id !== "embrace")
+    //         body.removeChild(body.children[i]);
+    //     else
+    //         ++i;
+    // }
 }
 
 SciViEditor.prototype.getNodeByID = function (nodeID)
@@ -804,10 +813,11 @@ SciViEditor.prototype.showError = function (err)
         modal: true,
         buttons: {
             Ok: () => {
-                $(this).dialog("close");
+                $("#scivi_error").dialog("close");
             }
         }
     });
+    $("#scivi_error").dialog("open");
     var dp = dlg.parent();
     dp.css("background", "#FBDAC9").css("border", "1px solid #3F3F3F");
     dp.find(".ui-dialog-buttonpane").css("background", "#FBDAC9").css("border-top", "1px solid #3F3F3F");

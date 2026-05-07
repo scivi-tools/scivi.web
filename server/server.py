@@ -125,7 +125,8 @@ class SciViServer:
 
     def broadcast(self, message : str):
         for socket in self.webSockets:
-            self.commandServerLoop.create_task(socket.send(message))
+            # self.commandServerLoop.create_task(socket.send(message))
+            asyncio.run_coroutine_threadsafe(socket.send(message), self.commandServerLoop)
 
     def set_onto(self, pathToOnto):
         if pathToOnto != self.pathToOnto:
