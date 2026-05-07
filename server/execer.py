@@ -84,6 +84,7 @@ class Execer(Thread):
 
     def publish_file(self, path):
         self.publishedFiles.append(path)
+        return f"/storage/{path}"
 
     def get_belonging_instance(self, instNode: Node, protoOfBelonging: Node):
         belongingNodes = self.taskOnto.get_nodes_linked_from(instNode, "has")
