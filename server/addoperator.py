@@ -15,12 +15,17 @@ class Annotation:
     The Annotation class provides storage for annotation pairs.
     '''
 
-    def __init__(self, name, type):
+    def __init__(self, name, type, default):
         '''
         Create annotation with name and type.
+
+        @param name - annotation's name.
+        @param type - annotation's type.
+        @param default - annotation's default.
         '''
         self.name = name
         self.type = type
+        self.default = default
 
 def get_op_annotation(line, annotation):
     '''
@@ -30,7 +35,7 @@ def get_op_annotation(line, annotation):
     @param annotation - annotation name.
     @param name annotation if any, or None.
     '''
-    r = re.match(f".*@{annotation} (?:\"(.+)\"|([^ ]+)) *: *(?:\"(.+)\"|([^ ]+))", line)
+    r = re.match(f".*@{annotation} (?:\"(.+)\"|([^ ]+)) *: *(?:\"(.+)\"|([^ ]+))(?: *: *(?:\"(.+)\"|([^ ]+)))?", line)
     if r == None:
         return None
     else:
@@ -42,7 +47,11 @@ def get_op_annotation(line, annotation):
             type = r.group(4)
         else:
             type = r.group(3)
-        return Annotation(name, type)
+        if r.group(5) == None:
+            default = r.group(6)
+        else:
+            default = r.group(5)
+        return Annotation(name, type, default)
 
 def add_belongings(opNode, opBelongings, belongingsKind, onto):
     '''
@@ -58,7 +67,11 @@ def add_belongings(opNode, opBelongings, belongingsKind, onto):
         if kNode == None:
             kNode = onto.add_node(belongingsKind)
         for item in opBelongings:
-            bNode = onto.add_node(item.name)
+            if item.default == None:
+                bDefault = None
+            else:
+                bDefault = { "default": item.default }
+            bNode = onto.add_node(item.name, bDefault)
             tNode = first(onto.get_nodes_by_name(item.type))
             if tNode == None:
                 tNode = onto.add_node(item.type)

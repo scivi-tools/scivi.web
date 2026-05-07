@@ -207,8 +207,6 @@ class Onto:
         with open(filename, "w", encoding='utf-8') as f:
             json.dump(self, f, sort_keys = True, indent = 4, ensure_ascii = False, cls = OntoEncoder)
 
-    
-
     def get_typed_nodes_linked_from(self, node: Node, linkName, nodeType) -> List[Node]:
         '''
         Return array of nodes, which are connected with the given one by the link with given name
