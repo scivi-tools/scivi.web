@@ -15,16 +15,18 @@ class Annotation:
     The Annotation class provides storage for annotation pairs.
     '''
 
-    def __init__(self, name, type, default):
+    def __init__(self, name, type, domain, default):
         '''
         Create annotation with name and type.
 
         @param name - annotation's name.
         @param type - annotation's type.
+        @param domain - annotation's domain.
         @param default - annotation's default.
         '''
         self.name = name
         self.type = type
+        self.domain = domain
         self.default = default
 
 def get_op_annotation(line, annotation):
@@ -35,7 +37,7 @@ def get_op_annotation(line, annotation):
     @param annotation - annotation name.
     @param name annotation if any, or None.
     '''
-    r = re.match(f".*@{annotation} (?:\"(.+)\"|([^ ]+)) *: *(?:\"(.+)\"|([^ ]+))(?: *: *(?:\"(.+)\"|([^ ]+)))?", line)
+    r = re.match(f".*@{annotation} (?:\"(.+?)\"|([^ ]+)) *: *(?:\"(.+?)\"|([^ ^{{]+))(?: *{{(.*)}})?(?: *: *(?:\"(.+?)\"|([^ ]+)))?", line)
     if r == None:
         return None
     else:
@@ -47,11 +49,12 @@ def get_op_annotation(line, annotation):
             type = r.group(4)
         else:
             type = r.group(3)
-        if r.group(5) == None:
-            default = r.group(6)
+        domain = r.group(5)
+        if r.group(6) == None:
+            default = r.group(7)
         else:
-            default = r.group(5)
-        return Annotation(name, type, default)
+            default = r.group(6)
+        return Annotation(name, type, domain, default)
 
 def add_belongings(opNode, opBelongings, belongingsKind, onto):
     '''
@@ -67,11 +70,12 @@ def add_belongings(opNode, opBelongings, belongingsKind, onto):
         if kNode == None:
             kNode = onto.add_node(belongingsKind)
         for item in opBelongings:
-            if item.default == None:
-                bDefault = None
-            else:
-                bDefault = { "default": item.default }
-            bNode = onto.add_node(item.name, bDefault)
+            bAttrs = {}
+            if item.domain != None:
+                bAttrs["domain"] = item.domain
+            if item.default != None:
+                bAttrs["default"] = item.default
+            bNode = onto.add_node(item.name, bAttrs)
             tNode = first(onto.get_nodes_by_name(item.type))
             if tNode == None:
                 tNode = onto.add_node(item.type)
