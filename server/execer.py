@@ -107,7 +107,7 @@ class Execer(Thread):
             outputInst = first(self.taskOnto.get_nodes_linked_to(inputInst, "is_used"))
             # FIXME: Sometimes there are two nodes of the same name with only
             # one actually connected. Set to True iif at least one is used.
-            hasInputs[inputNode.name] = outputInst is not None or hasInputs[inputNode.name]
+            hasInputs[inputNode.name] = outputInst is not None or (inputNode.name in hasInputs and hasInputs[inputNode.name])
             if outputInst and (outputInst.id in self.buffer):
                 inputs[inputNode.name] = self.buffer[outputInst.id]
         return inputs, hasInputs

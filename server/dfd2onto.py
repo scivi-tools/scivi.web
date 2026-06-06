@@ -43,6 +43,9 @@ class DFD2Onto:
         if not node:
             return -1
 
+        if node in visited_nodes:
+            return 0
+
         if "order" in node.attributes:
             return node.attributes["order"]
         if self.is_prototype(node, onto) or self.is_resource(node, onto):
@@ -50,17 +53,17 @@ class DFD2Onto:
 
         new_visited_nodes = [n for n in visited_nodes]
         new_visited_nodes.append(node)
-        if self.instance_of_type(node, "Input", onto) and node not in visited_nodes:
+        if self.instance_of_type(node, "Input", onto):
             prev_output = first(onto.get_nodes_linked_to(node, "is_used"))
             return self.get_node_order(prev_output, onto, new_visited_nodes) + 1
-        if self.instance_of_type(node, "Output", onto) and node not in visited_nodes:
+        if self.instance_of_type(node, "Output", onto):
             owner = first(onto.get_nodes_linked_to(node, "has"))
             return self.get_node_order(owner, onto, new_visited_nodes) + 1
-        
+
         result = 0
         belongings = onto.get_nodes_linked_from(node, "has")
         for b in belongings:
-            if self.instance_of_type(b, "Input", onto) and node not in visited_nodes:
+            if self.instance_of_type(b, "Input", onto):
                 result = max(result, self.get_node_order(b, onto, new_visited_nodes) + 1)
         return result
 
@@ -87,6 +90,8 @@ class DFD2Onto:
             index += 1
 
     def layout_onto(self, onto: Onto):
+        onto.nodes = sorted(onto.nodes, key = lambda node: node.attributes["position"][0] if "position" in node.attributes else 1e100)
+
         for node in onto.nodes:
             node.attributes["order"] = self.get_node_order(node, onto)
 
@@ -267,7 +272,8 @@ class DFD2Onto:
             instanceNode = self.instanciate_node(motherNode, hostNode, instNmb, \
                                                  { "settingsVal": self.get_dfd_data(dfdNode, "settingsVal"), \
                                                    "settingsType": self.get_dfd_data(dfdNode, "settingsType"), \
-                                                   "dfd": dfdNode["id"] }, \
+                                                   "dfd": dfdNode["id"],
+                                                   "position": dfdNode["position"] }, \
                                                  result, resultI, resultO)
             resultNodesArr[dfdNode["id"]] = instanceNode
         # Add data connection from DFD as is_used links.
@@ -419,7 +425,7 @@ class DFD2Onto:
         dfdO = first(result.get_nodes_by_name("Output"))
         needsRelayout = False
         corTable = {}
-        
+
         # Replace I/O.
         dfdNodes = result.nodes.copy()
         for node in dfdNodes:
@@ -427,7 +433,7 @@ class DFD2Onto:
             if aff and (aff.id != hostNode.id):
                 rxtxNmb = self.replace_io(result, node, hostNode, rxtxNmb, dfdI, dfdO, corTable)
                 needsRelayout = True
-        
+
         # Cleanup unused operators.
         dfdNodes = result.nodes.copy()
         for node in dfdNodes:
