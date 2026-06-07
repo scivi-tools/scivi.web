@@ -54,6 +54,7 @@ class Execer(Thread):
         self.isRunning = True
         self.glob = {}
         self.cache = {}
+        self.buffer = {}
         self.nodeStates = nodeStates
         self.commandServerLoop = eventLoop
         self.processLoop = asyncio.new_event_loop()
@@ -159,7 +160,6 @@ class Execer(Thread):
         self.execute_worker(instNode, protoNode, mode)
 
     def turn(self, mode: ExecutionMode):
-        self.buffer = {}
         self.processScheduled = False
         executed = set()
         nodes_to_execute = []
