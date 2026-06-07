@@ -808,6 +808,8 @@ SciViEditor.prototype.escapeHTML = function (text)
 SciViEditor.prototype.showError = function (err)
 {
     console.log(err);
+    if ($("#scivi_error").hasClass("ui-dialog-content"))
+        return;
     $("#scivi_error_text").html(this.escapeHTML(err));
     var dlg = $("#scivi_error").dialog({
         modal: true,
