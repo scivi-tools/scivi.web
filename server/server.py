@@ -166,6 +166,7 @@ class SciViServer:
                 t = first(self.onto.get_typed_nodes_linked_from(s, "is_a", "Type"))
             if not t:
                 print("WARNING: Ignoring socket with no type <" + s.name + ">")
+                continue
             if "color" in t.attributes:
                 self.typeColors[t.name] = t.attributes["color"]
             else:
