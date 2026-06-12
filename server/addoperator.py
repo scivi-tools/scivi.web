@@ -35,7 +35,7 @@ def get_op_annotation(line, annotation):
 
     @param line - source code line.
     @param annotation - annotation name.
-    @param name annotation if any, or None.
+    @param annotation if any, or `None`.
     '''
     r = re.match(f".*@{annotation} (?:\"(.+?)\"|([^ ]+)) *: *(?:\"(.+?)\"|([^ ^{{]+))(?: *{{(.*)}})?(?: *: *(?:\"(.+?)\"|([^ ]+)))?", line)
     if r == None:
@@ -55,6 +55,23 @@ def get_op_annotation(line, annotation):
         else:
             default = r.group(6)
         return Annotation(name, type, domain, default)
+
+def get_op_directive(line, directive):
+    '''
+    Try to parse operator's directive from the source code line.
+
+    @param line - source code line.
+    @param directive - directive name.
+    @param directive if any, or `None`.
+    '''
+    r = re.match(f".*@{directive} (?:\"(.+?)\"|([^ ]+))", line)
+    if r == None:
+        return None
+    else:
+        if r.group(1) == None:
+            return r.group(2)
+        else:
+            return r.group(1)
 
 def add_belongings(opNode, opBelongings, belongingsKind, onto):
     '''
@@ -83,6 +100,62 @@ def add_belongings(opNode, opBelongings, belongingsKind, onto):
             onto.link_nodes(bNode, tNode, "is_a")
             onto.link_nodes(opNode, bNode, "has")
 
+def add_view(opNode, opView, onto):
+    '''
+    Add view modifier to the operator.
+
+    @param opNode - operator's node.
+    @param opView - name of the view modifier.
+    @param onto - ontology.
+    '''
+    if opView != None:
+        viewRoot = first(onto.get_nodes_by_name("View"))
+        if viewRoot == None:
+            viewRoot = onto.add_node("View")
+        view = first(onto.get_nodes_by_name(opView))
+        if view == None:
+            view = onto.add_node(opView)
+        onto,link_nodes(view, viewRoot, "is_a")
+        onto.link_nodes(opNode, view, "is_a")
+
+def detect_dependency_language(depName):
+    '''
+    Try to figure out language of dependency file by name.
+
+    @param depName - dependency file name.
+    @return language name if detected, `None` if not.
+    '''
+    if depName.endswith(".js"):
+        return "JavaScript"
+    elif depName.endswith(".css"):
+        return "CSS"
+    else:
+        return None
+
+def add_dependencies(opWorker, opDependencies, onto):
+    '''
+    Add dependencies of the operator.
+
+    @param opWorker - operator's worker node.
+    @param opDependencies - array of dependencies.
+    @param onto - ontology.
+    '''
+    if len(opDependencies) > 0:
+        depRoot = first(onto.get_nodes_by_name("Dependency"))
+        if depRoot == None:
+            depRoot = onto.add_node("Dependency")
+        for item in opDependencies:
+            dName = os.path.basename(item)
+            opDep = onto.add_node(dName, { "path": item })
+            onto.link_nodes(opDep, depRoot, "is_a")
+            onto.link_nodes(opWorker, opDep, "has")
+            dLang = detect_dependency_language(dName)
+            if dLang != None:
+                opDepLang = first(onto.get_nodes_by_name(dLang))
+                if opDepLang == None:
+                    opDepLang = onto.add_node(dLang)
+                onto.link_nodes(opDep, opDepLang, "language")
+
 def gen_skeleton(srcFilePath, comment, worker, language, onto):
     '''
     Generate the skeleton of an operator's ontology for an operator written in the given language.
@@ -98,6 +171,8 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
     opSettings = []
     opInputs = []
     opOutputs = []
+    opView = None
+    opDependencies = []
     with open(srcFilePath, "r") as f:
         for line in f:
             line = line.strip()
@@ -106,6 +181,8 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
                 opSetting = get_op_annotation(line, "setting")
                 opInput = get_op_annotation(line, "input")
                 opOutput = get_op_annotation(line, "output")
+                opView = get_op_directive(line, "view")
+                opDep = get_op_directive(line, "dependency")
                 if opName != None and op == None:
                     op = opName
                 if opSetting != None:
@@ -114,6 +191,8 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
                     opInputs.append(opInput)
                 if opOutput != None:
                     opOutputs.append(opOutput)
+                if opDep != None:
+                    opDependencies.append(opDep)
     opNode = onto.add_node(op.name)
     opType = onto.add_node(op.type)
     onto.link_nodes(opNode, opType, "is_a")
@@ -121,11 +200,13 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
     onto.link_nodes(opWorker, opNode, "is_instance")
     serverSideWorker = onto.add_node(worker)
     onto.link_nodes(opWorker, serverSideWorker, "is_a")
-    pythonLang = onto.add_node(language)
-    onto.link_nodes(opWorker, pythonLang, "language")
+    opLang = onto.add_node(language)
+    onto.link_nodes(opWorker, opLang, "language")
     add_belongings(opNode, opSettings, "Setting", onto)
     add_belongings(opNode, opInputs, "Input", onto)
     add_belongings(opNode, opOutputs, "Output", onto)
+    add_view(opNode, opView, onto)
+    add_dependencies(opWorker, opDependencies, onto)
     return op.name
 
 def gen_python(srcFilePath, onto):
