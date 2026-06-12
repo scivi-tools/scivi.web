@@ -83,11 +83,14 @@ def add_belongings(opNode, opBelongings, belongingsKind, onto):
             onto.link_nodes(bNode, tNode, "is_a")
             onto.link_nodes(opNode, bNode, "has")
 
-def gen_python(srcFilePath, onto):
+def gen_skeleton(srcFilePath, comment, worker, language, onto):
     '''
-    Generate operator's ontology for an operator written in Python.
+    Generate the skeleton of an operator's ontology for an operator written in the given language.
 
     @param srcFilePath - path to the source code file.
+    @param comment - sbstring indicating comments in the target language.
+    @param worker - name of the worker type.
+    @param language - name of the language.
     @param onto - empty ontology to fill.
     @return name of the operator extracted from the file.
     '''
@@ -98,7 +101,7 @@ def gen_python(srcFilePath, onto):
     with open(srcFilePath, "r") as f:
         for line in f:
             line = line.strip()
-            if line.startswith("#"):
+            if line.startswith(comment):
                 opName = get_op_annotation(line, "operator")
                 opSetting = get_op_annotation(line, "setting")
                 opInput = get_op_annotation(line, "input")
@@ -116,17 +119,34 @@ def gen_python(srcFilePath, onto):
     onto.link_nodes(opNode, opType, "is_a")
     opWorker = onto.add_node(f"{op.name} Worker", { "path": srcFilePath })
     onto.link_nodes(opWorker, opNode, "is_instance")
-    serverSideWorker = onto.add_node("ServerSideWorker")
+    serverSideWorker = onto.add_node(worker)
     onto.link_nodes(opWorker, serverSideWorker, "is_a")
-    pythonLang = onto.add_node("Python")
+    pythonLang = onto.add_node(language)
     onto.link_nodes(opWorker, pythonLang, "language")
     add_belongings(opNode, opSettings, "Setting", onto)
     add_belongings(opNode, opInputs, "Input", onto)
     add_belongings(opNode, opOutputs, "Output", onto)
     return op.name
 
-def gen_javascript(srcFileName, onto):
-    pass
+def gen_python(srcFilePath, onto):
+    '''
+    Generate operator's ontology for an operator written in Python.
+
+    @param srcFilePath - path to the source code file.
+    @param onto - empty ontology to fill.
+    @return name of the operator extracted from the file.
+    '''
+    return gen_skeleton(srcFilePath, "#", "ServerSideWorker", "Python", onto)
+
+def gen_javascript(srcFilePath, onto):
+    '''
+    Generate operator's ontology for an operator written in JavaScript.
+
+    @param srcFilePath - path to the source code file.
+    @param onto - empty ontology to fill.
+    @return name of the operator extracted from the file.
+    '''
+    return gen_skeleton(srcFilePath, "//", "ClientSideWorker", "JavaScript", onto)
 
 def arrange_nodes(onto):
     '''
