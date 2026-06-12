@@ -578,6 +578,12 @@ class SciViServer:
         else:
             return None
 
+    def retrieve_glob(self, serverTaskHash):
+        if serverTaskHash and serverTaskHash in self.execers:
+            return self.execers[serverTaskHash].glob
+        else:
+            return None
+
     def stop_execer(self, serverTaskHash):
         if serverTaskHash and serverTaskHash in self.execers:
             self.execers[serverTaskHash].stop()
