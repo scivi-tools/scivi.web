@@ -114,8 +114,8 @@ def add_view(opNode, opView, onto):
             viewRoot = onto.add_node("View")
         view = first(onto.get_nodes_by_name(opView))
         if view == None:
-            view = onto.add_node(opView)
-        onto,link_nodes(view, viewRoot, "is_a")
+            view = onto.add_node(opView, { "split": opView })
+        onto.link_nodes(view, viewRoot, "is_a")
         onto.link_nodes(opNode, view, "is_a")
 
 def detect_dependency_language(depName):
@@ -181,7 +181,8 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
                 opSetting = get_op_annotation(line, "setting")
                 opInput = get_op_annotation(line, "input")
                 opOutput = get_op_annotation(line, "output")
-                opView = get_op_directive(line, "view")
+                if not opView:
+                    opView = get_op_directive(line, "view")
                 opDep = get_op_directive(line, "dependency")
                 if opName != None and op == None:
                     op = opName
