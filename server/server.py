@@ -394,6 +394,7 @@ class SciViServer:
                 widgets = self.onto.get_typed_nodes_linked_to(t, "is_used", "Widget")
                 widget = None
                 for w in widgets:
+                    self.add_dependencies(w)
                     if self.get_language(w) == "JavaScript":
                         widget = w
                         break
