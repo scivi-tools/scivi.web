@@ -73,6 +73,25 @@ def get_op_directive(line, directive):
         else:
             return r.group(1)
 
+def add_operator(op, onto):
+    '''
+    Add operator.
+
+    @param op - operator's description.
+    @param onto - ontology to add operator to.
+    @return node of added operator.
+    '''
+    opNode = onto.add_node(op.name)
+    types = op.type.split("->")
+    opType = None
+    for t in types:
+        nextOpType = onto.add_node(t)
+        if opType != None:
+            onto.link_nodes(nextOpType, opType, "is_a")
+        opType = nextOpType
+    onto.link_nodes(opNode, opType, "is_a")
+    return opNode
+
 def add_belongings(opNode, opBelongings, belongingsKind, belongingsAttrs, onto):
     '''
     Add belongings (settings, inputs, or outputs) to the operator.
@@ -199,9 +218,7 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
                     opOutputs.append(opOutput)
                 if opDep != None:
                     opDependencies.append(opDep)
-    opNode = onto.add_node(op.name)
-    opType = onto.add_node(op.type)
-    onto.link_nodes(opNode, opType, "is_a")
+    opNode = add_operator(op, onto)
     opWorker = onto.add_node(f"{op.name} Worker", { "path": srcFilePath })
     onto.link_nodes(opWorker, opNode, "is_instance")
     serverSideWorker = onto.add_node(worker)
