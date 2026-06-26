@@ -73,13 +73,14 @@ def get_op_directive(line, directive):
         else:
             return r.group(1)
 
-def add_belongings(opNode, opBelongings, belongingsKind, onto):
+def add_belongings(opNode, opBelongings, belongingsKind, belongingsAttrs, onto):
     '''
     Add belongings (settings, inputs, or outputs) to the operator.
 
     @param opNode - operator's node.
     @param opBelongings - array of belongings.
     @param belongingsKind - string name of belongings kind ("Setting", "Input", or "Output").
+    @param belongingsAttrs - dict of belonging attributes that should be assigned to the corresponding node.
     @param onto - ontology.
     '''
     if len(opBelongings) > 0:
@@ -87,7 +88,7 @@ def add_belongings(opNode, opBelongings, belongingsKind, onto):
         if kNode == None:
             kNode = onto.add_node(belongingsKind)
         for item in opBelongings:
-            bAttrs = {}
+            bAttrs = belongingsAttrs.copy()
             if item.domain != None:
                 bAttrs["domain"] = item.domain
             if item.default != None:
@@ -169,6 +170,7 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
     '''
     op = None
     opSettings = []
+    opInlineSettings = []
     opInputs = []
     opOutputs = []
     opView = None
@@ -179,6 +181,7 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
             if line.startswith(comment):
                 opName = get_op_annotation(line, "operator")
                 opSetting = get_op_annotation(line, "setting")
+                opInlineSetting = get_op_annotation(line, "inlinesetting")
                 opInput = get_op_annotation(line, "input")
                 opOutput = get_op_annotation(line, "output")
                 if not opView:
@@ -188,6 +191,8 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
                     op = opName
                 if opSetting != None:
                     opSettings.append(opSetting)
+                if opInlineSetting != None:
+                    opInlineSettings.append(opInlineSetting)
                 if opInput != None:
                     opInputs.append(opInput)
                 if opOutput != None:
@@ -203,9 +208,10 @@ def gen_skeleton(srcFilePath, comment, worker, language, onto):
     onto.link_nodes(opWorker, serverSideWorker, "is_a")
     opLang = onto.add_node(language)
     onto.link_nodes(opWorker, opLang, "language")
-    add_belongings(opNode, opSettings, "Setting", onto)
-    add_belongings(opNode, opInputs, "Input", onto)
-    add_belongings(opNode, opOutputs, "Output", onto)
+    add_belongings(opNode, opSettings, "Setting", {}, onto)
+    add_belongings(opNode, opInlineSettings, "Setting", { "inline": True }, onto)
+    add_belongings(opNode, opInputs, "Input", {}, onto)
+    add_belongings(opNode, opOutputs, "Output", {}, onto)
     add_view(opNode, opView, onto)
     add_dependencies(opWorker, opDependencies, onto)
     return op.name
