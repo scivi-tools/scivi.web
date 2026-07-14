@@ -736,7 +736,7 @@ SciViEditor.prototype.addTabToViewport = function (el, pos, name)
         vp.removeChild(vp.firstChild);
     const tabBar = $("<div class='scivi_tabbar'>");
     vp.appendChild(tabBar[0]);
-    el.splitIndex = pos[1];
+    el.splitIndex = pos[0];
     el.tabName = name;
     this.visuals.push(el);
     this.visuals.sort((e1, e2) => { return e1.splitIndex > e2.splitIndex ? 1 : -1; });
