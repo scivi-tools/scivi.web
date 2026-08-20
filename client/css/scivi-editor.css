@@ -447,6 +447,13 @@ input[type="file"]
     color: #fff;
 }
 
+.scivi_row
+{
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+}
+
 /***************************/
 /*       Spinner stuff      */
 /***************************/

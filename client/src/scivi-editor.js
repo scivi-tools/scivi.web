@@ -87,6 +87,7 @@ SciViEditor.prototype.run = function (mode)
     });
 
     $("#scivi_btn_visualize").html(this.runButtonName(mode));
+    $("#scivi_btn_visualize_alt").html(this.runButtonName(mode));
 
     editor.view.resize();
 
@@ -137,13 +138,15 @@ SciViEditor.prototype.run = function (mode)
             editor.removeNode(nodes[0]);
     });
 
-    $("#scivi_btn_visualize").click((e) => {
+    const clickCB = (e) => {
         if (this.inVisualization && e.shiftKey) {
             this.saveFile(JSON.stringify(this.taskOnto), "task.ont", ".ont", "text/plain;charset=utf-8", true)
         } else {
             this.startVisualization();
         }
-    });
+    }
+    $("#scivi_btn_visualize").click(clickCB);
+    $("#scivi_btn_visualize_alt").click(clickCB);
 
     $("#scivi_btn_save").click(() => {
         var content = JSON.stringify(editor.toJSON(), function(key, value) {
