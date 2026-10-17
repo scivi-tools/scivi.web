@@ -107,7 +107,7 @@ class SciViServer:
                 print('message received', message)
                 msg = json.loads(message)
                 if "api" in msg:
-                    outputs, types = self.execers[msg["exe"]].call_api(msg["api"], msg["inputs"])
+                    outputs, types = self.execers[msg["exe"]].call_api(msg["api"], msg["inputs"], msg["caller"])
                     response = { \
                         "command": "api_response", \
                         "caller": msg["caller"], \
@@ -310,6 +310,7 @@ class SciViServer:
 
         code = code.replace("DATA", "node.data")
         code = code.replace("CACHE", "node.data.cache")
+        code = code.replace("OPERATOR_ID", "node.id")
         code = code.replace("PROCESS", "editor.process")
         code = code.replace("IN_VISUALIZATION", "editor.inVisualization")
         code = code.replace("SETTINGS_VAL", "node.data.settingsVal")

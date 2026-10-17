@@ -128,9 +128,14 @@ class Execer(Thread):
             opErr = OperatorError(name, path, traceback.extract_tb(tb)[-1][1], cl.__name__ + ": " + str(e))
             self.push_message_to_send(opErr.error_message())
 
-    def execute_code(self, workerNode: Node, mode: ExecutionMode, inputs: dict, hasInputs: dict, outputs: dict, settings, cache, node_state: dict):
-        context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, "SETTINGS_VAL": settings, \
-                    "CACHE": cache, "GLOB": self.glob, "STATE": node_state,\
+    def execute_code(self,
+                     workerNode: Node, mode: ExecutionMode,
+                     inputs: dict, hasInputs: dict,
+                     outputs: dict, settings,
+                     cache: dict, node_state: dict,
+                     opID: int):
+        context = { "INPUT": inputs, "HAS_INPUT": hasInputs, "OUTPUT": outputs, "SETTINGS_VAL": settings,
+                    "CACHE": cache, "GLOB": self.glob, "STATE": node_state, "OPERATOR_ID": opID,
                     "MODE": mode.name, "PROCESS": self.process, "PUBLISH_FILE": self.publish_file }
         if "inline" in workerNode.attributes:
             self.guarded_exec(workerNode.name, "inline", workerNode.attributes["inline"], context)
@@ -147,12 +152,13 @@ class Execer(Thread):
         workerNode = first(self.onto.get_typed_nodes_linked_to(motherNode, "is_instance", "ServerSideWorker"))
         inputs, hasInputs = self.gen_inputs(instNode, protoNode)
         outputs = {}
-        if not instNode.id in self.cache:
-            self.cache[instNode.id] = {}
-        if not instNode.id in self.nodeStates:
-            self.nodeStates[instNode.id] = {}
+        dfdID = int(instNode.attributes["dfd"])
+        if not dfdID in self.cache:
+            self.cache[dfdID] = {}
+        if not dfdID in self.nodeStates:
+            self.nodeStates[dfdID] = {}
         self.execute_code(workerNode, mode, inputs, hasInputs, outputs, instNode.attributes["settingsVal"],
-                          self.cache[instNode.id], self.nodeStates[instNode.id])
+                          self.cache[dfdID], self.nodeStates[dfdID], dfdID)
         self.store_outputs(instNode, protoNode, outputs)
 
     def execute_node(self, instNode: Node, mode: ExecutionMode):
@@ -181,7 +187,7 @@ class Execer(Thread):
                                     "progress": len(executed) / nodes_to_execute_count}
                     self.push_message_to_send(json.dumps(command))
 
-    def quated_str(self, x):
+    def quoted_str(self, x):
         if isinstance(x, str):
             return f"\"{x}\""
         else:
@@ -193,10 +199,11 @@ class Execer(Thread):
         else:
             return value
 
-    def call_api(self, apiID: int, inputs):
+    def call_api(self, apiID: int, inputs, callerID: int):
         apiNode = self.onto.get_node_by_id(apiID)
         apiOperatorNode = first(self.onto.get_nodes_linked_to(apiNode, "has"))
-        apiWorkerNode = first(self.onto.get_nodes_linked_to(apiOperatorNode, "is_instance"))
+        # HINT: currently, API is calleable for server-side workers only.
+        apiWorkerNode = first(self.onto.get_typed_nodes_linked_to(apiOperatorNode, "is_instance", "ServerSideWorker"))
         apiOutputs = self.onto.get_typed_nodes_linked_from(apiNode, "has", "Output")
         n = len(apiOutputs)
         if n == 1:
@@ -209,7 +216,12 @@ class Execer(Thread):
                 types.append(apiOutputType.name)
 
         outputs = [ None ]
-        context = { "GLOB": self.glob, "MODE": "APICALL", "OUTPUTS": outputs, "PUBLISH_FILE": self.publish_file }
+        if callerID in self.cache:
+            cache = self.cache[callerID]
+        else:
+            cache = {}
+        context = { "GLOB": self.glob, "CACHE": cache, "MODE": "APICALL",
+                    "OUTPUTS": outputs, "PUBLISH_FILE": self.publish_file }
         if "inline" in apiWorkerNode.attributes:
             p = "inline"
             code = apiWorkerNode.attributes["inline"]
@@ -221,7 +233,7 @@ class Execer(Thread):
         else:
             print("Error: Can't execute node. 'path' not in workerNode.attributes");
             return
-        code += f"\n\nOUTPUTS[0] = {apiNode.name}({",".join(list(map(self.quated_str, inputs)))})\n"
+        code += f"\n\nOUTPUTS[0] = {apiNode.name}({",".join(list(map(self.quoted_str, inputs)))})\n"
         self.guarded_exec(apiOperatorNode.name, p, code, context)
 
         if n == 1:

@@ -170,11 +170,12 @@ class DFD2Onto:
             result = dfdOnto.add_node(motherNode.name, { "mother": motherNode.id })
         return result
 
-    def instanciate_node(self, motherNode: Node, hostNode: Node, instNmb, instAttrs, dfdOnto: Onto, dfdI: Node, dfdO: Node):
+    def instanciate_node(self, motherNode: Node, hostNodes: List[Node], instNmb, instAttrs, dfdOnto: Onto, dfdI: Node, dfdO: Node):
         instanceNode = dfdOnto.add_node(self.get_instance_name(motherNode.name, instNmb), instAttrs)
         protoNode = self.add_proto_node(motherNode, dfdOnto)
         dfdOnto.link_nodes(instanceNode, protoNode, "is_instance")
-        dfdOnto.link_nodes(instanceNode, hostNode, "is_hosted")
+        for hostNode in hostNodes:
+            dfdOnto.link_nodes(instanceNode, hostNode, "is_hosted")
         # Add inputs.
         motherInputs = self.onto.get_typed_nodes_linked_from(motherNode, "has", "Input")
         motherInputs = sorted(motherInputs, key = lambda inp: inp.id)
@@ -216,37 +217,39 @@ class DFD2Onto:
 
     def get_hosting(self, node: Node, dfdNode: dict, dfdOnto: Onto):
         '''
-        Get the computing resource instance associated with the given node.
-        If there is an instance in the task ontology, it is returned. Otherwise, it is created and appended to the task ontology.
+        Get the computing resource instances associated with the given node.
+        For each resource, if there is already an instance in the task ontology, it is returned.
+        Otherwise, it is created and appended to the task ontology.
         @param node - node to get hosting for.
         @param dfdNode - corresponding node from the DFD.
         @param dfdOnto - task ontology.
-        @return the computing rource instance for given node.
+        @return the computing rource instances for given node.
         '''
         workers = self.onto.get_nodes_linked_to(node, "is_instance")
         n = len(workers)
         if n == 0:
             raise ValueError("No worker for <" + node.name + ">")
-        elif n > 1:
-            raise ValueError("Ambigous worker for <" + node.name + ">")
-        workerType = first(self.onto.get_nodes_linked_from(workers[0], "is_a"))
-        resources = self.onto.get_nodes_linked_from(workerType, "is_used")
-        n = len(resources)
-        if n == 0:
-            raise ValueError("No computing resource can handle <" + node.name + ">")
-        elif n > 1:
-            raise ValueError("Ambigous computing resource for <" + node.name + ">")
-        res = first(resources)
-        resProto = first(dfdOnto.get_nodes_by_name(res.name))
-        if not resProto:
-            resProto = dfdOnto.add_node(res.name)
-        resAddress = self.get_res_address(resProto, dfdNode)
-        resInstName = resProto.name + "@" + resAddress
-        hosting = first(dfdOnto.get_nodes_by_name(resInstName))
-        if not hosting:
-            hosting = dfdOnto.add_node(resInstName, { "address": resAddress })
-            dfdOnto.link_nodes(hosting, resProto, "is_instance")
-        return hosting
+        result = []
+        for worker in workers:
+            workerType = first(self.onto.get_nodes_linked_from(worker, "is_a"))
+            resources = self.onto.get_nodes_linked_from(workerType, "is_used")
+            n = len(resources)
+            if n == 0:
+                raise ValueError("No computing resource can handle <" + node.name + ">")
+            elif n > 1:
+                raise ValueError("Ambigous computing resource for <" + node.name + ">")
+            res = first(resources)
+            resProto = first(dfdOnto.get_nodes_by_name(res.name))
+            if not resProto:
+                resProto = dfdOnto.add_node(res.name)
+            resAddress = self.get_res_address(resProto, dfdNode)
+            resInstName = resProto.name + "@" + resAddress
+            hosting = first(dfdOnto.get_nodes_by_name(resInstName))
+            if not hosting:
+                hosting = dfdOnto.add_node(resInstName, { "address": resAddress })
+                dfdOnto.link_nodes(hosting, resProto, "is_instance")
+            result.append(hosting)
+        return result
 
     def get_onto(self, dfdJSON) -> Onto:
         dfdNodes = dfdJSON["nodes"]
@@ -261,7 +264,7 @@ class DFD2Onto:
             # Add node.
             resultAttrs = {}
             motherNode = first(self.onto.get_nodes_by_name(dfdNode["title"]))
-            hostNode = self.get_hosting(motherNode, dfdNode, result)
+            hostNodes = self.get_hosting(motherNode, dfdNode, result)
             instNmb = 1
             if dfdNode["title"] in resultInstances:
                 instNmb = resultInstances[dfdNode["title"]]
@@ -269,7 +272,7 @@ class DFD2Onto:
                 resultInstances[dfdNode["title"]] = instNmb
             else:
                 resultInstances[dfdNode["title"]] = instNmb
-            instanceNode = self.instanciate_node(motherNode, hostNode, instNmb, \
+            instanceNode = self.instanciate_node(motherNode, hostNodes, instNmb, \
                                                  { "settingsVal": self.get_dfd_data(dfdNode, "settingsVal"), \
                                                    "settingsType": self.get_dfd_data(dfdNode, "settingsType"), \
                                                    "dfd": dfdNode["id"],
@@ -291,8 +294,11 @@ class DFD2Onto:
 
     def io_has_hosting(self, dfdOnto: Onto, ioNode: Node, hostNode):
         opNode = first(dfdOnto.get_nodes_linked_to(ioNode, "has"))
-        result = first(dfdOnto.get_nodes_linked_from(opNode, "is_hosted"))
-        return hostNode == result
+        opHosts = dfdOnto.get_nodes_linked_from(opNode, "is_hosted")
+        for opHost in opHosts:
+            if hostNode == opHost:
+                return True
+        return False
 
     def find_rxtx(self, dfdOnto: Onto, srcHost: Node, dstHost: Node):
         '''
@@ -371,6 +377,7 @@ class DFD2Onto:
         @return updated rxtxNmb.
         '''
         belongingsToRemove = dfdOnto.get_nodes_linked_from(node, "has")
+        # FIXME: taking first is not realy safe here as we allow multiple hostings for the node.
         targetHost = first(dfdOnto.get_nodes_linked_from(node, "is_hosted"))
         for b in belongingsToRemove:
             isInput = self.instance_of_type(b, "Input", dfdOnto)
@@ -381,7 +388,7 @@ class DFD2Onto:
             for c in connected:
                 if self.io_has_hosting(dfdOnto, c, hostNode):
                     rxtx = self.find_rxtx(dfdOnto, hostNode, targetHost)
-                    rxtxInst = self.instanciate_node(rxtx, hostNode, rxtxNmb, \
+                    rxtxInst = self.instanciate_node(rxtx, [ hostNode ], rxtxNmb, \
                                                      { "settingsVal": { "Node Address": b.id, \
                                                                         "Target Address": targetHost.attributes["address"] }, \
                                                        "settingsType": { "Node Address": "Integer", \
@@ -429,8 +436,13 @@ class DFD2Onto:
         # Replace I/O.
         dfdNodes = result.nodes.copy()
         for node in dfdNodes:
-            aff = first(result.get_nodes_linked_from(node, "is_hosted"))
-            if aff and (aff.id != hostNode.id):
+            nodeHosts = result.get_nodes_linked_from(node, "is_hosted")
+            needsIOReplacement = len(nodeHosts) > 0
+            for nodeHost in nodeHosts:
+                if nodeHost.id == hostNode.id:
+                    needsIOReplacement = False
+                    break
+            if needsIOReplacement:
                 rxtxNmb = self.replace_io(result, node, hostNode, rxtxNmb, dfdI, dfdO, corTable)
                 needsRelayout = True
 
